@@ -1,9 +1,9 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.common.pojo.Entity.Book;
-import cn.gdeiassistant.common.pojo.Entity.Collection;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDistribution;
+import cn.gdeiassistant.common.pojo.entity.Book;
+import cn.gdeiassistant.common.pojo.entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.entity.CollectionDistribution;
 import cn.gdeiassistant.core.bookquery.service.BookQueryService;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
@@ -111,9 +111,10 @@ class LibraryControllerContractTest {
         when(bookQueryService.getBorrowedBooks("session-1", "library-pass"))
                 .thenReturn(List.of(book));
 
-        mockMvc.perform(get("/api/library/borrow")
+        mockMvc.perform(post("/api/library/borrow")
                         .requestAttr("sessionId", "session-1")
-                        .param("password", "library-pass"))
+                        .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                        .content("{\"password\":\"library-pass\"}"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/library-borrow.success.json")

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.EvaluateException;
+package cn.gdeiassistant.common.exception.evaluateexception;
 
 /**
  * 非教学评教功能开放时间时抛出该异常

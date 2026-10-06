@@ -1,15 +1,11 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PhotographLike implements Serializable, Entity {
 

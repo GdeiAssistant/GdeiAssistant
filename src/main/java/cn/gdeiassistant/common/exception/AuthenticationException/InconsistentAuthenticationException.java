@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.AuthenticationException;
+package cn.gdeiassistant.common.exception.authenticationexception;
 
 /**
  * 中国居民身份证校验信息不一致时抛出该异常

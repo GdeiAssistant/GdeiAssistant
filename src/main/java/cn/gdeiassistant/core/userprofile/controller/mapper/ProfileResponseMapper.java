@@ -1,13 +1,13 @@
-package cn.gdeiassistant.core.userProfile.controller.mapper;
+package cn.gdeiassistant.core.userprofile.controller.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userProfile.pojo.UserProfileVO;
-import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
+import cn.gdeiassistant.core.userprofile.pojo.UserProfileVO;
+import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

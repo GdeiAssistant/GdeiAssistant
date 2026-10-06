@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.pojo.Encryption.AESEncryptConfig;
-import cn.gdeiassistant.common.pojo.Encryption.EncryptConfig;
+import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
+import cn.gdeiassistant.common.pojo.encryption.EncryptConfig;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

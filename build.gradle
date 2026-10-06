@@ -138,6 +138,7 @@ tasks.withType(Copy) {
 
 // JaCoCo test coverage
 jacocoTestCoverageVerification {
+    dependsOn test
     violationRules {
         rule {
             limit {
@@ -149,3 +150,40 @@ jacocoTestCoverageVerification {
     }
 }
 check.dependsOn jacocoTestCoverageVerification
+
+// Contract generation is source-derived; CI detects any uncommitted contract drift.
+tasks.register('generateOpenApi', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'cn.gdeiassistant.tooling.GenerateOpenApi'
+}
+tasks.register('checkOpenApi', JavaExec) {
+    dependsOn testClasses
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'cn.gdeiassistant.tooling.GenerateOpenApi'
+    args '--check'
+}
+check.dependsOn checkOpenApi
+
+springBoot {
+    buildInfo { properties { additional = [revision: System.getenv("GDEI_BUILD_REVISION") ?: "local"] } }
+}
+
+// Enforce coverage of this upgrade's critical boundaries while reporting the full legacy codebase.
+// The original full-codebase 40% check remains available through `check`.
+tasks.register('architectureCoverage', JacocoCoverageVerification) {
+    dependsOn test
+    executionData file("${buildDir}/jacoco/test.exec")
+    classDirectories.setFrom(files(sourceSets.main.output.classesDirs.files.collect { directory ->
+        fileTree(dir: directory, includes: [
+            'cn/gdeiassistant/core/delivery/service/DeliveryService*.class',
+            'cn/gdeiassistant/core/marketplace/service/MarketplaceService*.class',
+            'cn/gdeiassistant/core/deletion/service/*.class',
+            'cn/gdeiassistant/common/filter/JwtSessionIdFilter*.class',
+            'cn/gdeiassistant/common/migration/*.class',
+            'cn/gdeiassistant/integration/httpclient/HttpClientUtils*.class'
+        ])
+    }))
+    violationRules { rule { limit { counter = 'LINE'; value = 'COVEREDRATIO'; minimum = 0.40 } } }
+}
+jacocoTestReport { reports { xml.required = true; html.required = true } }

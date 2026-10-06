@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.Encryption;
+package cn.gdeiassistant.common.pojo.encryption;
 
 /**
  * 加密配置 POJO，由 StringEncryptionConfig 中的 @Bean 方法条件化创建，勿加 @Component 等注解。

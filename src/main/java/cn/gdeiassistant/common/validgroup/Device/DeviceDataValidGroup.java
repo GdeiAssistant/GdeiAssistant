@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.validgroup.Device;
+package cn.gdeiassistant.common.validgroup.device;
 
 public interface DeviceDataValidGroup {
 }

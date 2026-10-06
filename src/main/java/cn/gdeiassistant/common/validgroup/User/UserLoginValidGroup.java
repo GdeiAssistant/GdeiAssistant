@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.validgroup.User;
+package cn.gdeiassistant.common.validgroup.user;
 
 public interface UserLoginValidGroup {
 }

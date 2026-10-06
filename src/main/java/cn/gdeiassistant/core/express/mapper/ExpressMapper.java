@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.express.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.ExpressComment;
-import cn.gdeiassistant.common.pojo.Entity.ExpressLike;
+import cn.gdeiassistant.common.pojo.entity.ExpressComment;
+import cn.gdeiassistant.common.pojo.entity.ExpressLike;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import org.apache.ibatis.annotations.*;
 
@@ -125,7 +125,7 @@ public interface ExpressMapper {
             @Result(property = "result", column = "result"),
             @Result(property = "createTime", column = "create_time")
     })
-    List<cn.gdeiassistant.common.pojo.Entity.ExpressGuess> selectReceivedExpressGuessPage(@Param("username") String username,
+    List<cn.gdeiassistant.common.pojo.entity.ExpressGuess> selectReceivedExpressGuessPage(@Param("username") String username,
             @Param("start") int start, @Param("size") int size);
 
     @Select("select ec.id,ec.username,p.nickname,ec.express_id,ec.comment,ec.publish_time" +

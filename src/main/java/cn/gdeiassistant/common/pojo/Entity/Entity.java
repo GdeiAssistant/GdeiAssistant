@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 public interface Entity {
 }

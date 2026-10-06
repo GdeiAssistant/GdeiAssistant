@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.config.Mail;
+package cn.gdeiassistant.common.config.mail;
 
-import cn.gdeiassistant.common.enums.Module.CoreModuleEnum;
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
+import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -23,7 +23,7 @@ class JavaMailConfigTest {
     void missingSmtpConfigurationSkipsMailSenderAndDisablesEmailModule() {
         contextRunner.run(context -> {
             assertThat(context).doesNotHaveBean(JavaMailSenderImpl.class);
-            assertThat(context.getBean(ModuleUtils.class).CheckModuleState(ModuleEnum.EMAIL)).isFalse();
+            assertThat(context.getBean(ModuleUtils.class).checkModuleState(ModuleEnum.EMAIL)).isFalse();
         });
     }
 
@@ -37,7 +37,7 @@ class JavaMailConfigTest {
                 "email.smtp.auth=true"
         ).run(context -> {
             assertThat(context).hasSingleBean(JavaMailSenderImpl.class);
-            assertThat(context.getBean(ModuleUtils.class).CheckModuleState(ModuleEnum.EMAIL)).isTrue();
+            assertThat(context.getBean(ModuleUtils.class).checkModuleState(ModuleEnum.EMAIL)).isTrue();
         });
     }
 
@@ -52,7 +52,7 @@ class JavaMailConfigTest {
         ).run(context -> {
             assertThat(context).hasSingleBean(JavaMailSenderImpl.class);
             assertThat(context.getBean(JavaMailSenderImpl.class).getPort()).isEqualTo(465);
-            assertThat(context.getBean(ModuleUtils.class).CheckModuleState(ModuleEnum.EMAIL)).isTrue();
+            assertThat(context.getBean(ModuleUtils.class).checkModuleState(ModuleEnum.EMAIL)).isTrue();
         });
     }
 

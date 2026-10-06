@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DeliveryException;
+package cn.gdeiassistant.common.exception.deliveryexception;
 
 /**
  * 当接单人和下单人为同一人时，抛出该异常

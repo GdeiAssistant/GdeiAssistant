@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.schedulequery.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Schedule;
+import cn.gdeiassistant.common.pojo.entity.Schedule;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;

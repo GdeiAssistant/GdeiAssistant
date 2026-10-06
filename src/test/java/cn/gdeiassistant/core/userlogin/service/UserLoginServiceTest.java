@@ -1,6 +1,6 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
-import cn.gdeiassistant.core.userData.service.UserDataService;
+import cn.gdeiassistant.core.userdata.service.UserDataService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

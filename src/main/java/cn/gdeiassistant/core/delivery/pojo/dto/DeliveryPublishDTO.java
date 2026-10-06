@@ -7,6 +7,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 发布快递代收订单入参 DTO。
@@ -15,44 +16,44 @@ public class DeliveryPublishDTO implements Serializable {
 
     @NotBlank
     @Length(min = 1, max = 10)
-    private String name;
+    private String taskName;
 
-    @NotBlank
-    @Length(min = 11, max = 11)
-    private String number;
+    @Length(max = 64)
+    private String pickupCode;
 
     @NotBlank
     @Length(max = 11)
-    private String phone;
+    private String contactPhone;
 
     @NotNull
     @DecimalMin(value = "0.01", message = "价格必须大于零")
     @DecimalMax(value = "9999.99", message = "价格超出限制")
-    private Float price;
+    @jakarta.validation.constraints.Digits(integer = 4, fraction = 2)
+    private BigDecimal price;
 
     @NotBlank
-    @Length(min = 1, max = 10)
-    private String company;
+    @Length(min = 1, max = 100)
+    private String pickupLocation;
 
     @NotBlank
     @Length(min = 1, max = 50)
-    private String address;
+    private String deliveryAddress;
 
     @Length(max = 100)
     private String remarks;
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getNumber() { return number; }
-    public void setNumber(String number) { this.number = number; }
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-    public Float getPrice() { return price; }
-    public void setPrice(Float price) { this.price = price; }
-    public String getCompany() { return company; }
-    public void setCompany(String company) { this.company = company; }
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public String getTaskName() { return taskName; }
+    public void setTaskName(String taskName) { this.taskName = taskName; }
+    public String getPickupCode() { return pickupCode; }
+    public void setPickupCode(String pickupCode) { this.pickupCode = pickupCode; }
+    public String getContactPhone() { return contactPhone; }
+    public void setContactPhone(String contactPhone) { this.contactPhone = contactPhone; }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
+    public String getPickupLocation() { return pickupLocation; }
+    public void setPickupLocation(String pickupLocation) { this.pickupLocation = pickupLocation; }
+    public String getDeliveryAddress() { return deliveryAddress; }
+    public void setDeliveryAddress(String deliveryAddress) { this.deliveryAddress = deliveryAddress; }
     public String getRemarks() { return remarks; }
     public void setRemarks(String remarks) { this.remarks = remarks; }
 }

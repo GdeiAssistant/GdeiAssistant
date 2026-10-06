@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.capability.ip.IPLocationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

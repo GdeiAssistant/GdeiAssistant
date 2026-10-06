@@ -1,13 +1,13 @@
 package cn.gdeiassistant.core.collectionquery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionDetailQuery;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
-import cn.gdeiassistant.common.pojo.Entity.Collection;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDistribution;
+import cn.gdeiassistant.common.pojo.entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.entity.CollectionDistribution;
 import cn.gdeiassistant.integration.library.LibraryClient;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

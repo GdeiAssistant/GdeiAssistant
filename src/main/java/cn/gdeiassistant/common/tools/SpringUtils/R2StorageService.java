@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.tools.SpringUtils;
+package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
-import cn.gdeiassistant.common.pojo.Config.R2Config;
+import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
+import cn.gdeiassistant.common.pojo.config.R2Config;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;

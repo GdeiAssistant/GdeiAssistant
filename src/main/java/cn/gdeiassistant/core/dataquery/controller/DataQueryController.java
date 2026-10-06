@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.dataquery.controller;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.core.dataquery.pojo.YellowPageResult;
 import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
-import cn.gdeiassistant.common.pojo.Entity.ElectricFees;
-import cn.gdeiassistant.common.pojo.Entity.YellowPage;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.entity.ElectricFees;
+import cn.gdeiassistant.common.pojo.entity.YellowPage;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.dataquery.service.DataQueryService;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;

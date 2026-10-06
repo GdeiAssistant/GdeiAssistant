@@ -1,13 +1,13 @@
 package cn.gdeiassistant.core.message.service;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper;
 import cn.gdeiassistant.core.message.pojo.entity.InteractionNotificationEntity;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

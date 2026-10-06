@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.tokenRefresh.pojo;
+package cn.gdeiassistant.core.tokenrefresh.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.AccessToken;
-import cn.gdeiassistant.common.pojo.Entity.RefreshToken;
+import cn.gdeiassistant.common.pojo.entity.AccessToken;
+import cn.gdeiassistant.common.pojo.entity.RefreshToken;
 
 public class TokenRefreshResult {
 

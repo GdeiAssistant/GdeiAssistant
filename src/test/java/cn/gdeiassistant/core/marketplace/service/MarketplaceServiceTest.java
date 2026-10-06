@@ -1,15 +1,15 @@
 package cn.gdeiassistant.core.marketplace.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.DatabaseException.NoAccessException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -41,7 +41,7 @@ class MarketplaceServiceTest {
     private UserProfileService userProfileService;
 
     @Mock
-    private cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver publicAuthorResolver;
+    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
 
     @InjectMocks
     private MarketplaceService marketplaceService;
@@ -52,7 +52,7 @@ class MarketplaceServiceTest {
         item.setId(1);
         item.setName("Textbook");
         when(marketplaceMapper.selectAvailableItems(0, 10)).thenReturn(List.of(item));
-        when(publicAuthorResolver.resolve(null)).thenReturn(new cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver.AuthorPublic(null, "用户"));
+        when(publicAuthorResolver.resolve(null)).thenReturn(new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户"));
 
         List<MarketplaceItemEntity> result = marketplaceService.queryItems(0);
 
@@ -84,7 +84,7 @@ class MarketplaceServiceTest {
         item.setId(1);
         item.setUsername("testuser");
         MarketplaceItemVO vo = new MarketplaceItemVO();
-        vo.setSecondhandItem(item);
+        vo.setMarketplaceItem(item);
         vo.setProfile(new ProfileVO());
         when(marketplaceMapper.selectInfoByID(1)).thenReturn(vo);
         when(r2StorageService.generatePresignedUrl(eq("gdeiassistant-userdata"),
@@ -92,14 +92,14 @@ class MarketplaceServiceTest {
         when(r2StorageService.generatePresignedUrl(eq("gdeiassistant-userdata"),
                 eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
         String publicId = "11111111-1111-4111-8111-111111111111";
-        when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.common.tools.Utils.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
+        when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
 
         MarketplaceItemVO result = marketplaceService.queryDetailById(1);
 
-        assertEquals("同学", result.getSecondhandItem().getUsername());
-        assertEquals(publicId, result.getSecondhandItem().getAuthorId());
-        assertEquals(1, result.getSecondhandItem().getPictureURL().size());
-        assertEquals("https://pic1.jpg", result.getSecondhandItem().getPictureURL().get(0));
+        assertEquals("testuser", result.getMarketplaceItem().getUsername());
+        assertEquals(publicId, result.getMarketplaceItem().getAuthorId());
+        assertEquals(1, result.getMarketplaceItem().getPictureURL().size());
+        assertEquals("https://pic1.jpg", result.getMarketplaceItem().getPictureURL().get(0));
         assertEquals("/api/social/users/" + publicId + "/avatar", result.getProfile().getAvatarURL());
     }
 
@@ -119,7 +119,7 @@ class MarketplaceServiceTest {
         item.setUsername("owner");
         item.setState(1);
         MarketplaceItemVO vo = new MarketplaceItemVO();
-        vo.setSecondhandItem(item);
+        vo.setMarketplaceItem(item);
         when(marketplaceMapper.selectInfoByID(1)).thenReturn(vo);
 
         assertThrows(NoAccessException.class,

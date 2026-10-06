@@ -1,24 +1,24 @@
-package cn.gdeiassistant.common.redis.LoginToken;
+package cn.gdeiassistant.common.redis.logintoken;
 
-import cn.gdeiassistant.common.pojo.Entity.AccessToken;
-import cn.gdeiassistant.common.pojo.Entity.Device;
-import cn.gdeiassistant.common.pojo.Entity.RefreshToken;
+import cn.gdeiassistant.common.pojo.entity.AccessToken;
+import cn.gdeiassistant.common.pojo.entity.Device;
+import cn.gdeiassistant.common.pojo.entity.RefreshToken;
 
 public interface LoginTokenDao {
 
-    AccessToken QueryAccessToken(String signature);
+    AccessToken queryAccessToken(String signature);
 
-    RefreshToken QueryRefreshToken(String signature);
+    RefreshToken queryRefreshToken(String signature);
 
-    void InsertAccessToken(AccessToken token);
+    void insertAccessToken(AccessToken token);
 
-    void InsertRefreshToken(RefreshToken token);
+    void insertRefreshToken(RefreshToken token);
 
-    void DeleteAccessToken(String signature);
+    void deleteAccessToken(String signature);
 
-    void DeleteRefreshToken(String signature);
+    void deleteRefreshToken(String signature);
 
-    Device QueryDeviceData(String signature);
+    Device queryDeviceData(String signature);
 
-    void SaveDeviceData(String signature, Device device);
+    void saveDeviceData(String signature, Device device);
 }

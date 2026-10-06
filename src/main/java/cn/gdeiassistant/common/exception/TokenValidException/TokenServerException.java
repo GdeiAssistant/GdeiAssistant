@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.TokenValidException;
+package cn.gdeiassistant.common.exception.tokenvalidexception;
 
 public class TokenServerException extends Exception {
 

@@ -1,17 +1,17 @@
 package cn.gdeiassistant.core.gradequery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.common.pojo.Document.GradeDocument;
-import cn.gdeiassistant.common.pojo.Entity.Grade;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.common.pojo.document.GradeDocument;
+import cn.gdeiassistant.common.pojo.entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import org.jsoup.nodes.Document;

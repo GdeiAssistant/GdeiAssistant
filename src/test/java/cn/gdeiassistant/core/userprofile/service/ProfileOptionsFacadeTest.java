@@ -1,6 +1,6 @@
-package cn.gdeiassistant.core.userProfile.service;
+package cn.gdeiassistant.core.userprofile.service;
 
-import cn.gdeiassistant.core.userProfile.pojo.ProfileOptionsVO;
+import cn.gdeiassistant.core.userprofile.pojo.ProfileOptionsVO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

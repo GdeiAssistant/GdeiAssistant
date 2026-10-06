@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.enums.Module;
+package cn.gdeiassistant.common.enums.module;
 
 public enum CoreModuleEnum {
 

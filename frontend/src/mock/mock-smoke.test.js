@@ -189,7 +189,7 @@ describe('mock smoke', () => {
     const libraryDetail = await request('/api/library/detail?detailURL=detail_swiftui')
     expect(libraryDetail.data.bookname).toBeTruthy()
 
-    const borrowed = await request('/api/library/borrow?password=library123', { token })
+    const borrowed = await request('/api/library/borrow', { method: 'POST', data: { password: 'library123' }, token })
     expect(borrowed.data.length).toBeGreaterThan(0)
 
     const renew = await request('/api/library/renew', {
@@ -278,11 +278,11 @@ describe('mock smoke', () => {
   it('covers community feature flows', async () => {
     const token = await login()
 
-    const marketplace = await request('/api/ershou/item/start/0', { token })
+    const marketplace = await request('/api/marketplace/item/start/0', { token })
     expect(marketplace.data.length).toBeGreaterThan(0)
-    const marketplaceDetail = await request(`/api/ershou/item/id/${marketplace.data[0].id}`, { token })
-    expect(marketplaceDetail.data.secondhandItem.id).toBe(marketplace.data[0].id)
-    const marketplaceProfile = await request('/api/ershou/profile', { token })
+    const marketplaceDetail = await request(`/api/marketplace/item/id/${marketplace.data[0].id}`, { token })
+    expect(marketplaceDetail.data.item.id).toBe(marketplace.data[0].id)
+    const marketplaceProfile = await request('/api/marketplace/profile', { token })
     expect(marketplaceProfile.data).toHaveProperty('doing')
 
     const lostFound = await request('/api/lostandfound/lostitem/start/0', { token })

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.charge.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Charge;
+import cn.gdeiassistant.common.pojo.entity.Charge;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

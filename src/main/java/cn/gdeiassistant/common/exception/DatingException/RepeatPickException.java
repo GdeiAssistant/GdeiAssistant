@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DatingException;
+package cn.gdeiassistant.common.exception.datingexception;
 
 /**
  * 对方未拒绝前，不能发起多次撩一下请求，否则抛出该异常

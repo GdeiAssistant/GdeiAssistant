@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderChainExhaustedException;
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
 import cn.gdeiassistant.core.capability.ProviderChain;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.micrometer.core.instrument.MeterRegistry;

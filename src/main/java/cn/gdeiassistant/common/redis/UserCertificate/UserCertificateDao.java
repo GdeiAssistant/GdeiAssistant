@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.redis.UserCertificate;
+package cn.gdeiassistant.common.redis.usercertificate;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
 
 public interface UserCertificateDao {
 

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.RequestValidException;
+package cn.gdeiassistant.common.exception.requestvalidexception;
 
 public class SignInvalidException extends Exception {
 

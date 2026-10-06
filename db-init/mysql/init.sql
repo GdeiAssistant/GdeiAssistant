@@ -105,14 +105,16 @@ CREATE TABLE `delivery_order` (
   `order_id` int NOT NULL AUTO_INCREMENT COMMENT '订单主键ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '下单者用户名',
   `order_time` datetime NOT NULL COMMENT '下单时间',
-  `name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '姓名',
-  `number` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '学号',
+  `name` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '任务名称',
+  `number` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '取件码，可为空字符串',
   `phone` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '手机号码',
-  `price` float NOT NULL COMMENT '报酬',
-  `company` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '快递公司',
+  `price` decimal(6,2) NOT NULL COMMENT '报酬',
+  `company` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '取件地点',
   `address` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '地址',
   `state` tinyint(1) NOT NULL COMMENT '订单状态',
   `remarks` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '备注',
+  KEY `idx_delivery_feed` (`state`,`order_time` DESC,`order_id` DESC),
+  KEY `idx_delivery_owner` (`username`,`order_id` DESC),
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -132,6 +134,9 @@ CREATE TABLE `delivery_trade` (
   `create_time` datetime NOT NULL COMMENT '创建时间',
   `username` varchar(24) NOT NULL COMMENT '接单者用户名',
   `state` tinyint(1) NOT NULL COMMENT '状态',
+  UNIQUE KEY `uk_delivery_trade_order` (`order_id`),
+  KEY `idx_delivery_trade_owner` (`username`,`create_time` DESC,`trade_id` DESC),
+  CONSTRAINT `fk_delivery_trade_order` FOREIGN KEY (`order_id`) REFERENCES `delivery_order` (`order_id`) ON DELETE RESTRICT,
   PRIMARY KEY (`trade_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -196,7 +201,7 @@ CREATE TABLE `ershou` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `name` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品名',
   `description` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '商品描述',
-  `price` float NOT NULL COMMENT '商品价格',
+  `price` decimal(6,2) NOT NULL COMMENT '商品价格',
   `location` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '交易地点',
   `type` tinyint NOT NULL COMMENT '商品类型',
   `qq` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'QQ号（选填，与手机至少填一种）',
@@ -256,6 +261,8 @@ CREATE TABLE `express_comment` (
   `express_id` int NOT NULL COMMENT '表白信息ID',
   `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '表白评论',
   `publish_time` datetime NOT NULL COMMENT '表白评论发布时间',
+  KEY `idx_express_comment_parent` (`express_id`,`id`),
+  CONSTRAINT `fk_express_comment_parent` FOREIGN KEY (`express_id`) REFERENCES `express` (`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -396,6 +403,8 @@ CREATE TABLE `photograph_comment` (
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '评论者用户名',
   `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '评论内容',
   `create_time` datetime NOT NULL COMMENT '评论信息发布时间',
+  KEY `idx_photograph_comment_parent` (`photo_id`,`comment_id`),
+  CONSTRAINT `fk_photograph_comment_parent` FOREIGN KEY (`photo_id`) REFERENCES `photograph` (`id`) ON DELETE CASCADE,
   PRIMARY KEY (`comment_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -524,6 +533,8 @@ CREATE TABLE `secret_comment` (
   `comment` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '校园树洞评论内容',
   `avatar_theme` tinyint NOT NULL COMMENT '随机头像编号',
   `publish_time` datetime NOT NULL COMMENT '回复时间',
+  KEY `idx_secret_comment_parent` (`content_id`,`id`),
+  CONSTRAINT `fk_secret_comment_parent` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
@@ -564,6 +575,7 @@ CREATE TABLE `secret_like` (
   `content_id` int unsigned NOT NULL COMMENT '校园树洞信息编号ID',
   `username` varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '用户名',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
+  CONSTRAINT `fk_secret_like_parent` FOREIGN KEY (`content_id`) REFERENCES `secret_content` (`id`) ON DELETE CASCADE,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_secret_like_content_user` (`content_id`,`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -817,6 +829,21 @@ INSERT INTO `topic` (`username`,`topic`,`content`,`count`,`publish_time`) VALUES
 -- gdeiassistant_data 库（业务库 data：公告 / 电费 / 黄页 / 阅读）
 -- 黄页功能跨库查询时请使用 gdeiassistant_data.yellow_page、gdeiassistant_data.yellow_page_type
 -- =============================================================================
+CREATE TABLE IF NOT EXISTS account_deletion_cleanup (
+  id varchar(36) NOT NULL,
+  username varchar(24) DEFAULT NULL,
+  resetname varchar(24) NOT NULL,
+  user_id bigint DEFAULT NULL,
+  status varchar(16) NOT NULL,
+  attempts int NOT NULL DEFAULT 0,
+  next_attempt_at datetime NOT NULL,
+  locked_until datetime DEFAULT NULL,
+  error_code varchar(100) DEFAULT NULL,
+  PRIMARY KEY(id),
+  UNIQUE KEY uk_cleanup_resetname(resetname),
+  KEY idx_cleanup_retry(status,next_attempt_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
 USE gdeiassistant_data;
 
 DROP TABLE IF EXISTS `announcement`;
@@ -841,9 +868,9 @@ CREATE TABLE `electricfees` (
   `used_electric_amount` float NOT NULL COMMENT '用电数额',
   `free_electric_amount` float NOT NULL COMMENT '免费电额',
   `fee_based_electric_amount` float NOT NULL COMMENT '计费电数',
-  `electric_price` float NOT NULL COMMENT '电价',
-  `total_electric_bill` float NOT NULL COMMENT '总电费',
-  `average_electric_bill` float NOT NULL COMMENT '平均电费',
+  `electric_price` decimal(10,4) NOT NULL COMMENT '电价',
+  `total_electric_bill` decimal(12,2) NOT NULL COMMENT '总电费',
+  `average_electric_bill` decimal(12,2) NOT NULL COMMENT '平均电费',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 
@@ -950,7 +977,7 @@ CREATE TABLE `charge_order` (
   `version` int NOT NULL DEFAULT 0 COMMENT '乐观锁版本',
   PRIMARY KEY (`order_id`),
   KEY `idx_charge_order_username_created` (`username`, `created_at`),
-  KEY `idx_charge_order_idempotency_hash` (`idempotency_key_hash`),
+  UNIQUE KEY `idx_charge_order_idempotency_hash` (`idempotency_key_hash`),
   KEY `idx_charge_order_status_updated` (`status`, `updated_at`),
   KEY `idx_charge_order_external_order_no` (`external_order_no`),
   KEY `idx_charge_order_user_key_fingerprint` (`username`, `idempotency_key_hash`, `payload_fingerprint`)
@@ -962,6 +989,7 @@ CREATE TABLE `close_log` (
   `username` varchar(24) NOT NULL COMMENT '用户原账户用户名',
   `resetname` varchar(24) NOT NULL COMMENT '用户注销后用户名',
   `time` datetime NOT NULL COMMENT '注销时间',
+  UNIQUE KEY `uk_close_log_resetname` (`resetname`),
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=DYNAMIC;
 

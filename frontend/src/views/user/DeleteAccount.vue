@@ -10,12 +10,13 @@ import { AlertTriangle, ChevronLeft } from 'lucide-vue-next'
 const router = useRouter()
 const { t } = useI18n()
 const { success: toastSuccess } = useToast()
+const password = ref('')
 const agreed = ref(false)
 const showConfirmDialog = ref(false)
 const deleting = ref(false)
 
 function handleDeleteClick() {
-  if (!agreed.value) return
+  if (!agreed.value || !password.value) return
   showConfirmDialog.value = true
 }
 
@@ -28,7 +29,7 @@ async function handleConfirmDelete() {
   deleting.value = true
 
   try {
-    await request.post('/close/submit')
+    await request.post('/close/submit', { password: password.value })
     toastSuccess(t('deleteAccount.success'))
 
     // 清除登录态
@@ -65,6 +66,10 @@ async function handleConfirmDelete() {
         <h2 class="text-lg font-semibold text-[var(--c-text-1)] leading-snug">{{ t('deleteAccount.warningTitle') }}</h2>
       </div>
 
+      <label class="block mb-3">
+        <span>{{ t('loginPage.passwordLabel') }}</span>
+        <input v-model="password" type="password" autocomplete="current-password" class="w-full rounded-lg p-3" />
+      </label>
       <!-- Risk list -->
       <div class="delete-account-card rounded-xl p-5 mb-3">
         <p class="text-[15px] font-medium text-[var(--c-text-1)] mb-4">{{ t('deleteAccount.riskTitle') }}</p>

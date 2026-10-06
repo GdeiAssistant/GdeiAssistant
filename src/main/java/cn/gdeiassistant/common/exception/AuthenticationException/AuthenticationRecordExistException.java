@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.AuthenticationException;
+package cn.gdeiassistant.common.exception.authenticationexception;
 
 /**
  * 插入实名认证记录时已存在原有实名认证数据时抛出该异常，停止插入

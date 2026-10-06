@@ -8,7 +8,7 @@ import cn.gdeiassistant.core.social.pojo.dto.PageDTO;
 import cn.gdeiassistant.core.social.pojo.dto.SocialUserDTO;
 import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -37,13 +37,13 @@ public class SocialRelationService {
     private SocialRealtimeHub realtimeHub;
 
     public SocialUserDTO getMe(String sessionId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         return identityService.buildSocialUser(me, me);
     }
 
     public SocialUserDTO getUser(String sessionId, String publicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity target = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView target = identityService.requireActiveByPublicId(publicId);
         if (!me.getId().equals(target.getId())
                 && relationMapper.countAnyBlock(me.getId(), target.getId()) > 0) {
             throw SocialException.userNotFound();
@@ -52,10 +52,10 @@ public class SocialRelationService {
     }
 
     public PageDTO<SocialUserDTO> searchUsers(String sessionId, String query, String cursor, Integer limit) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         int size = normalizeLimit(limit);
         Cursor c = decodeCursor(cursor);
-        List<UserEntity> rows = userMapper.searchActiveUsers(
+        List<CampusAccountView> rows = userMapper.searchActiveUsers(
                 query == null ? "" : query.trim(),
                 me.getId(),
                 c == null ? null : c.at,
@@ -69,7 +69,7 @@ public class SocialRelationService {
         }
         String next = null;
         if (hasMore && end > 0) {
-            UserEntity last = rows.get(end - 1);
+            CampusAccountView last = rows.get(end - 1);
             next = encodeCursor(last.getCreatedAt(), last.getId());
         }
         return new PageDTO<>(items, next, hasMore);
@@ -77,8 +77,8 @@ public class SocialRelationService {
 
     public PageDTO<SocialUserDTO> listRelationships(String sessionId, String publicId, String kind,
                                                     String cursor, Integer limit) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity owner = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView owner = identityService.requireActiveByPublicId(publicId);
         if (!me.getId().equals(owner.getId())
                 && relationMapper.countAnyBlock(me.getId(), owner.getId()) > 0) {
             throw SocialException.userNotFound();
@@ -99,7 +99,7 @@ public class SocialRelationService {
     }
 
     public PageDTO<SocialUserDTO> listBlocks(String sessionId, String cursor, Integer limit) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         int size = normalizeLimit(limit);
         Cursor c = decodeCursor(cursor);
         List<Map<String, Object>> rows = relationMapper.listBlocks(me.getId(),
@@ -109,8 +109,8 @@ public class SocialRelationService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public SocialUserDTO follow(String sessionId, String publicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity target = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView target = identityService.requireActiveByPublicId(publicId);
         if (me.getId().equals(target.getId())) {
             throw SocialException.invalidRequest("不能关注自己");
         }
@@ -127,8 +127,8 @@ public class SocialRelationService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public SocialUserDTO unfollow(String sessionId, String publicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity target = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView target = identityService.requireActiveByPublicId(publicId);
         identityService.lockUsersInOrder(me.getId(), target.getId());
         me = identityService.requireActiveById(me.getId());
         target = identityService.findById(target.getId());
@@ -142,8 +142,8 @@ public class SocialRelationService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public Map<String, Object> block(String sessionId, String publicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity target = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView target = identityService.requireActiveByPublicId(publicId);
         if (me.getId().equals(target.getId())) {
             throw SocialException.invalidRequest("不能拉黑自己");
         }
@@ -160,8 +160,8 @@ public class SocialRelationService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public Map<String, Object> unblock(String sessionId, String publicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity target = identityService.requireActiveByPublicId(publicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView target = identityService.requireActiveByPublicId(publicId);
         identityService.lockUsersInOrder(me.getId(), target.getId());
         me = identityService.requireActiveById(me.getId());
         target = identityService.requireActiveById(target.getId());
@@ -173,7 +173,7 @@ public class SocialRelationService {
     }
 
     public Map<String, Object> getPrivacy(String sessionId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         PrivacyEntity privacy = privacyMapper.selectPrivacy(me.getUsername());
         Map<String, Object> data = new HashMap<>();
         data.put("dmPolicy", identityService.normalizeDmPolicy(privacy));
@@ -182,7 +182,7 @@ public class SocialRelationService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public Map<String, Object> updatePrivacy(String sessionId, String dmPolicy) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         String normalized = dmPolicy == null ? "" : dmPolicy.trim().toUpperCase();
         if (!List.of("ALL", "FOLLOWING", "MUTUAL", "NONE").contains(normalized)) {
             throw SocialException.invalidRequest("dmPolicy 无效");
@@ -196,7 +196,7 @@ public class SocialRelationService {
         return data;
     }
 
-    private PageDTO<SocialUserDTO> toUserPage(UserEntity me, List<Map<String, Object>> rows,
+    private PageDTO<SocialUserDTO> toUserPage(CampusAccountView me, List<Map<String, Object>> rows,
                                               int size, boolean allowOwnBlocks) {
         List<SocialUserDTO> items = new ArrayList<>();
         boolean hasMore = rows != null && rows.size() > size;
@@ -204,7 +204,7 @@ public class SocialRelationService {
         for (int i = 0; i < end; i++) {
             Map<String, Object> row = rows.get(i);
             long userId = ((Number) row.get("userId")).longValue();
-            UserEntity target = identityService.findById(userId);
+            CampusAccountView target = identityService.findById(userId);
             if (target == null) {
                 continue;
             }

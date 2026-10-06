@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.campuscredential.service;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.campuscredential.mapper.CampusCredentialConsentMapper;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
 import cn.gdeiassistant.core.campuscredential.pojo.entity.CampusCredentialConsentEntity;
@@ -8,8 +8,8 @@ import cn.gdeiassistant.core.campuscredential.pojo.vo.CampusCredentialStatusVO;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -51,7 +51,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(true);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword("saved-password");
 
@@ -86,7 +86,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(true);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword("legacy-saved-password");
 
@@ -110,7 +110,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(false);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword("saved-password");
 
@@ -137,7 +137,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(true);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword("saved-password");
 
@@ -170,7 +170,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(false);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword(null);
 
@@ -203,7 +203,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(false);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword(null);
 
@@ -245,7 +245,7 @@ class CampusCredentialServiceTest {
         privacy.setUsername(USERNAME);
         privacy.setQuickAuthAllow(false);
 
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword(null);
 

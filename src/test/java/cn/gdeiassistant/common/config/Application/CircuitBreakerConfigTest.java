@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Application;
+package cn.gdeiassistant.common.config.application;
 
 import io.github.resilience4j.common.CompositeCustomizer;
 import io.github.resilience4j.common.circuitbreaker.configuration.CircuitBreakerConfigCustomizer;

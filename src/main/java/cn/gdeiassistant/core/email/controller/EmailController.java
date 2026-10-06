@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.email.controller;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
-import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
-import cn.gdeiassistant.common.pojo.Entity.Email;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
+import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeInvalidException;
+import cn.gdeiassistant.common.pojo.entity.Email;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.common.annotation.RateLimit;

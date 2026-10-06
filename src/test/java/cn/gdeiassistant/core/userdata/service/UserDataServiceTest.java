@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.userdata.service;
 
 import cn.gdeiassistant.common.constant.ItemConstantUtils;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.ExportData.ExportDataDao;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.redis.exportdata.ExportDataDao;
 import cn.gdeiassistant.core.data.mapper.AppDataMapper;
-import cn.gdeiassistant.core.userData.service.UserDataService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userdata.service.UserDataService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.core.secret.service.SecretService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -89,17 +89,17 @@ class UserDataServiceTest {
     void checkExportingUserData_returnsFalseWhenNoTokenExists() {
         User user = new User("testuser");
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
-        when(exportDataDao.QueryExportingDataToken("testuser")).thenReturn(null);
+        when(exportDataDao.queryExportingDataToken("testuser")).thenReturn(null);
 
-        assertFalse(userDataService.CheckExportingUserData("session1"));
+        assertFalse(userDataService.checkExportingUserData("session1"));
     }
 
     @Test
     void checkAlreadyExportUserData_returnsFalseWhenNoTokenExists() {
         User user = new User("testuser");
         when(userCertificateService.getUserLoginCertificate("session1")).thenReturn(user);
-        when(exportDataDao.QueryExportDataToken("testuser")).thenReturn(null);
+        when(exportDataDao.queryExportDataToken("testuser")).thenReturn(null);
 
-        assertFalse(userDataService.CheckAlreadyExportUserData("session1"));
+        assertFalse(userDataService.checkAlreadyExportUserData("session1"));
     }
 }

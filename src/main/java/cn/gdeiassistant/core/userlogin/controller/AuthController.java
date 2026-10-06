@@ -1,21 +1,21 @@
-package cn.gdeiassistant.core.userLogin.controller;
+package cn.gdeiassistant.core.userlogin.controller;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
-import cn.gdeiassistant.core.userData.service.UserDataService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.core.userLogin.service.UserLoginService;
+import cn.gdeiassistant.core.userdata.service.UserDataService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import cn.gdeiassistant.common.validgroup.User.UserLoginValidGroup;
+import cn.gdeiassistant.common.validgroup.user.UserLoginValidGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -140,7 +143,7 @@ public class AuthController {
     public DataJsonResult<Void> logout(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
         if (sessionId != null && !sessionId.isEmpty()) {
-            HttpClientUtils.clearHttpClientCookieStore(sessionId);
+            httpClientUtils.clearHttpClientCookieStore(sessionId);
             userCertificateService.clearUserLoginAndSession(sessionId);
         }
         DataJsonResult<Void> result = new DataJsonResult<>(true, null);

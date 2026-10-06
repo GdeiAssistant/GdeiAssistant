@@ -1,15 +1,15 @@
 package cn.gdeiassistant.core.phone.service;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
-import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.VerificationCode.VerificationCodeDao;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
+import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeInvalidException;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.redis.verificationcode.VerificationCodeDao;
 import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
 import cn.gdeiassistant.core.phone.pojo.dto.PhoneBindDTO;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.core.verificationCode.service.VerificationCodeService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.core.verificationcode.service.VerificationCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ public class PhoneService {
         //生成随机数
         int randomCode = (int) ((Math.random() * 9 + 1) * 100000);
         //写入Redis缓存记录
-        verificationCodeDao.SavePhoneVerificationCode(code, phone, randomCode);
+        verificationCodeDao.savePhoneVerificationCode(code, phone, randomCode);
         if (code == 86) {
             //国内手机号
             verificationCodeService.sendChinaPhoneVerificationCodeSms(randomCode, phone);
@@ -74,11 +74,11 @@ public class PhoneService {
      * @param randomCode
      */
     public void checkVerificationCode(int code, String phone, int randomCode) throws VerificationCodeInvalidException {
-        Integer verificationCode = verificationCodeDao.QueryPhoneVerificationCode(code, phone);
+        Integer verificationCode = verificationCodeDao.queryPhoneVerificationCode(code, phone);
         if (verificationCode != null) {
             if (verificationCode.equals(randomCode)) {
                 //移除手机验证码记录
-                verificationCodeDao.DeletePhoneVerificationCode(code, phone);
+                verificationCodeDao.deletePhoneVerificationCode(code, phone);
                 //校验通过
                 return;
             }

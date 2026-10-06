@@ -1,13 +1,13 @@
 package cn.gdeiassistant.core.authentication.service;
 
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
-import cn.gdeiassistant.common.enums.Authentication.AuthenticationEnum;
-import cn.gdeiassistant.common.exception.AuthenticationException.*;
-import cn.gdeiassistant.common.pojo.Entity.Authentication;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.enums.authentication.AuthenticationEnum;
+import cn.gdeiassistant.common.exception.authenticationexception.*;
+import cn.gdeiassistant.common.pojo.entity.Authentication;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.authentication.mapper.AuthenticationMapper;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.AliYunAPIUtils;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.AliYunAPIUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class AuthenticationService {
      * @param sessionId
      * @return
      */
-    public Authentication QueryAuthentication(String sessionId) {
+    public Authentication queryAuthentication(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Authentication authentication = authenticationMapper.selectAuthentication(user.getUsername());
         return authentication;
@@ -58,13 +58,13 @@ public class AuthenticationService {
      * @throws IDPhotoCountLimitationException
      * @throws IDPhotoSizeLimitationException
      */
-    public void UpdateAuthentication(String sessionId
+    public void updateAuthentication(String sessionId
             , Authentication authentication
             , @Nullable MultipartFile[] images) throws NullIDPhotoException, InconsistentAuthenticationException, AuthenticationRecordExistException, IDPhotoCountLimitationException, IDPhotoSizeLimitationException {
         switch (resolveAuthenticationType(authentication)) {
             case MAINLAND_CHINESE_RESIDENT_ID_CARD:
                 //中国居民身份证，使用API进行审核
-                aliYunAPIUtils.VerifyMainLandChineseResidentIDCard(authentication);
+                aliYunAPIUtils.verifyMainLandChineseResidentIDCard(authentication);
                 //校验通过，记录实名认证
                 User user = userCertificateService.getUserLoginCertificate(sessionId);
                 Authentication data = authenticationMapper.selectAuthentication(user.getUsername());
@@ -93,7 +93,7 @@ public class AuthenticationService {
      *
      * @param sessionId
      */
-    public void DeleteAuthentication(String sessionId) {
+    public void deleteAuthentication(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Authentication authentication = authenticationMapper.selectAuthentication(user.getUsername());
         if (authentication != null) {

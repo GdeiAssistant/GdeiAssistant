@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.pojo.Entity.Festival;
+import cn.gdeiassistant.common.pojo.entity.Festival;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;

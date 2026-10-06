@@ -3,7 +3,7 @@ package cn.gdeiassistant.core.social.service;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.social.mapper.SocialRelationMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +30,13 @@ class SocialPermissionMatrixTest {
     @Mock
     private cn.gdeiassistant.core.profile.mapper.ProfileMapper profileMapper;
     @Mock
-    private cn.gdeiassistant.core.userLogin.service.UserCertificateService userCertificateService;
+    private cn.gdeiassistant.core.userlogin.service.UserCertificateService userCertificateService;
 
     @InjectMocks
     private SocialIdentityService identityService;
 
-    private UserEntity sender;
-    private UserEntity receiver;
+    private CampusAccountView sender;
+    private CampusAccountView receiver;
 
     @BeforeEach
     void setUp() {
@@ -99,8 +99,8 @@ class SocialPermissionMatrixTest {
         assertFalse(identityService.evaluateMessagePermission(sender, receiver).allowed);
     }
 
-    private static UserEntity activeUser(long id, String publicId, String username) {
-        UserEntity entity = new UserEntity();
+    private static CampusAccountView activeUser(long id, String publicId, String username) {
+        CampusAccountView entity = new CampusAccountView();
         entity.setId(id);
         entity.setPublicId(publicId);
         entity.setStatus("ACTIVE");

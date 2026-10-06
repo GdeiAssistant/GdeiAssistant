@@ -1,12 +1,12 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.common.redis.UserCertificate.UserCertificateDao;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -34,10 +34,49 @@ import java.util.List;
 @Service
 public class UserCertificateService {
 
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
+    private String eduBaseUrl = "http://jwgl.gdei.edu.cn";
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private final Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
 
     @Autowired
     private UserCertificateDao userCertificateDao;
+
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
+    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}")
+    private String portalLoginUrl = "http://portal.gdei.edu.cn:8001/Login";
+
+    /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize deletion. */
+    public void verifyCurrentPassword(String username, String password) throws Exception {
+        if (username == null || password == null || password.isBlank()) throw new PasswordIncorrectException("请输入当前校园密码");
+        HttpClientSession isolated = httpClientUtils.getHttpClient(null, false, 15);
+        try (CloseableHttpClient client = isolated.getCloseableHttpClient()) {
+            try (CloseableHttpResponse page = client.execute(new HttpGet(casLoginUrl))) {
+                if (page.getStatusLine().getStatusCode() != 200) throw new ServerErrorException("校园认证暂不可用");
+                Document document = Jsoup.parse(EntityUtils.toString(page.getEntity()));
+                Element tokens = document.getElementById("tokens");
+                Element stamp = document.getElementById("stamp");
+                if (tokens == null || stamp == null) throw new ServerErrorException("校园认证响应异常");
+                HttpPost post = new HttpPost(casLoginUrl);
+                post.setEntity(new UrlEncodedFormEntity(List.of(
+                        new BasicNameValuePair("username", username), new BasicNameValuePair("password", password),
+                        new BasicNameValuePair("service", portalLoginUrl), new BasicNameValuePair("tokens", tokens.val()),
+                        new BasicNameValuePair("stamp", stamp.val()), new BasicNameValuePair("imageField.x", "0"),
+                        new BasicNameValuePair("imageField.y", "0")), StandardCharsets.UTF_8));
+                try (CloseableHttpResponse result = client.execute(post)) {
+                    if (result.getStatusLine().getStatusCode() != 200) throw new ServerErrorException("校园认证暂不可用");
+                    Element body = Jsoup.parse(EntityUtils.toString(result.getEntity())).body();
+                    if (!body.hasAttr("bgcolor")) throw new PasswordIncorrectException("用户密码错误");
+                }
+            }
+        } catch (IOException failure) {
+            throw new NetWorkTimeoutException("校园认证连接超时");
+        }
+    }
 
     /**
      * 获取用户Cookie凭证
@@ -176,20 +215,20 @@ public class UserCertificateService {
             CloseableHttpClient httpClient = null;
             CookieStore cookieStore = null;
             try {
-                HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId
+                HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId
                         , false, 15);
                 httpClient = httpClientSession.getCloseableHttpClient();
                 cookieStore = httpClientSession.getCookieStore();
-                HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
+                HttpGet httpGet = new HttpGet(casLoginUrl);
                 HttpResponse httpResponse = httpClient.execute(httpGet);
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                    HttpPost httpPost = new HttpPost("https://security.gdei.edu.cn/cas/login");
+                    HttpPost httpPost = new HttpPost(casLoginUrl);
                     //封装身份认证需要POST发送的相关数据
                     List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
                     basicNameValuePairs.add(new BasicNameValuePair("username", username));
                     basicNameValuePairs.add(new BasicNameValuePair("password", password));
-                    basicNameValuePairs.add(new BasicNameValuePair("service", "http://portal.gdei.edu.cn:8001/Login"));
+                    basicNameValuePairs.add(new BasicNameValuePair("service", portalLoginUrl));
                     basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
                     basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
                     Element tokensEl = document.getElementById("tokens");
@@ -240,14 +279,14 @@ public class UserCertificateService {
                     if (httpResponse.getStatusLine().getStatusCode() == 302) {
                         if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                             //已经通过了认证
-                            LoginCasSystem(sessionId, httpClient, username, password);
+                            loginCasSystem(sessionId, httpClient, username, password);
                         } else {
                             httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
                             httpResponse = httpClient.execute(httpGet);
                             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("我的门户")) {
                                 //登录我的门户成功
-                                LoginCasSystem(sessionId, httpClient, username, password);
+                                loginCasSystem(sessionId, httpClient, username, password);
                             }
                         }
                     }
@@ -255,7 +294,7 @@ public class UserCertificateService {
                 } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
                     if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                         //已经通过了认证
-                        LoginCasSystem(sessionId, httpClient, username, password);
+                        loginCasSystem(sessionId, httpClient, username, password);
                     }
                 }
                 throw new ServerErrorException("教务系统异常");
@@ -276,7 +315,7 @@ public class UserCertificateService {
                     }
                 }
                 if (cookieStore != null) {
-                    HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                    httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
                 }
             }
         }
@@ -292,8 +331,8 @@ public class UserCertificateService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private void LoginCasSystem(String sessionId, CloseableHttpClient httpClient, String username, String password) throws Exception {
-        HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/login_cas.aspx");
+    private void loginCasSystem(String sessionId, CloseableHttpClient httpClient, String username, String password) throws Exception {
+        HttpGet httpGet = new HttpGet(eduBaseUrl + "/login_cas.aspx");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 302) {
             httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
@@ -328,7 +367,7 @@ public class UserCertificateService {
             if (loginRedirect2 == null || loginRedirect2.isEmpty()) {
                 throw new ServerErrorException("CAS login后跳转链接为空");
             }
-            httpGet = new HttpGet("http://jwgl.gdei.edu.cn/" + loginRedirect2);
+            httpGet = new HttpGet(eduBaseUrl + "/" + loginRedirect2);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             //获取学生的教务系统信息
@@ -352,7 +391,7 @@ public class UserCertificateService {
             Long timestamp = Long.valueOf(form1Element
                     .attr("action").split("&")[2].split("=")[1]);
             //进行教务系统身份校验
-            CasVerify(sessionId, httpClient, username, password, keycode, number, timestamp);
+            casVerify(sessionId, httpClient, username, password, keycode, number, timestamp);
         }
         throw new ServerErrorException("教务系统异常");
     }
@@ -371,9 +410,9 @@ public class UserCertificateService {
      * @throws IOException
      * @throws ServerErrorException
      */
-    private void CasVerify(String sessionId, CloseableHttpClient httpClient, String username
+    private void casVerify(String sessionId, CloseableHttpClient httpClient, String username
             , String password, String keycode, String number, Long timestamp) throws Exception {
-        HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/cas_verify.aspx?i=" + username + "&k="
+        HttpGet httpGet = new HttpGet(eduBaseUrl + "/cas_verify.aspx?i=" + username + "&k="
                 + keycode + "&timestamp=" + timestamp);
         CloseableHttpResponse httpResponse = httpClient.execute(httpGet);
         if (httpResponse.getStatusLine().getStatusCode() == 200) {
@@ -383,14 +422,14 @@ public class UserCertificateService {
                 throw new UserGraduatedException("该账号已毕业注销");
             }*/
             httpResponse.close();
-            httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xs_main.aspx?xh=" + number + "&type=1");
+            httpGet = new HttpGet(eduBaseUrl + "/xs_main.aspx?xh=" + number + "&type=1");
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200
                     && "正方教务管理系统".equals(new String(document.title()
                     .getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8))) {
                 //获取学生的身份证号
-                httpGet = new HttpGet("http://jwgl.gdei.edu.cn/xsgrxx.aspx?xh=" + number);
+                httpGet = new HttpGet(eduBaseUrl + "/xsgrxx.aspx?xh=" + number);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     //缓存学生的信息

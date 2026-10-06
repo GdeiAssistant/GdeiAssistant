@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DeliveryException;
+package cn.gdeiassistant.common.exception.deliveryexception;
 
 /**
  * 没有抢到快递代收订单时，抛出该异常

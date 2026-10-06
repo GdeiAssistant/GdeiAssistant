@@ -45,7 +45,7 @@ public class I18nFieldConfig {
                 "data.data[].campus",
                 "data.data[].address"
         ));
-        put("/api/ershou/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
+        put("/api/marketplace/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/lostandfound/**", List.of("data.name", "data.description", "data[].name", "data[].description"));
         put("/api/express/**", List.of("data.nickname", "data.name", "data.content", "data[].nickname", "data[].name", "data[].content"));
         put("/api/secret/**", List.of("data.content", "data[].content"));

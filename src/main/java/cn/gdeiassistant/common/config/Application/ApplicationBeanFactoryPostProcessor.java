@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Application;
+package cn.gdeiassistant.common.config.application;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;

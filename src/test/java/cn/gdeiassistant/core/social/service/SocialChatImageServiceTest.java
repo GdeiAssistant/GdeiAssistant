@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.social.service;
 
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.image.ChatImageCodec;
 import org.junit.jupiter.api.BeforeEach;

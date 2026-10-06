@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.Redirect;
+package cn.gdeiassistant.common.pojo.redirect;
 
 public class RedirectInfo {
 

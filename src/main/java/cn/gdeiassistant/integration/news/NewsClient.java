@@ -1,6 +1,6 @@
 package cn.gdeiassistant.integration.news;
 
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

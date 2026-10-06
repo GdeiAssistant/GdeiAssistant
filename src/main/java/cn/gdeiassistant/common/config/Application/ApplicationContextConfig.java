@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Application;
+package cn.gdeiassistant.common.config.application;
 
 import cn.gdeiassistant.common.errorhandler.RestTemplateResponseErrorHandler;
 import org.springframework.context.annotation.Bean;

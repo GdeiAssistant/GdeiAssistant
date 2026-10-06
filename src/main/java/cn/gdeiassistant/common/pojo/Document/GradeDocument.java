@@ -1,13 +1,13 @@
-package cn.gdeiassistant.common.pojo.Document;
+package cn.gdeiassistant.common.pojo.document;
 
-import cn.gdeiassistant.common.pojo.Entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.Grade;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
 
-@Document
+@Document(collection = "grade")
 public class GradeDocument {
 
     /**
@@ -19,6 +19,7 @@ public class GradeDocument {
     /**
      * 用户名
      */
+    @org.springframework.data.mongodb.core.index.Indexed(unique = true)
     private String username;
 
     /**

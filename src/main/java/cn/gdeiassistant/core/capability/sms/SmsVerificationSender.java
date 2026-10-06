@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.sms;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
 
 public interface SmsVerificationSender {
 

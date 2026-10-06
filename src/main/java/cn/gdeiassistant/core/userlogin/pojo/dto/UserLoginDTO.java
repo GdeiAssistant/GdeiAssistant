@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userLogin.pojo.dto;
+package cn.gdeiassistant.core.userlogin.pojo.dto;
 
 import org.apache.ibatis.type.Alias;
 import jakarta.validation.constraints.NotBlank;

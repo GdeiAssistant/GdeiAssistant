@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.information.controller;
 
-import cn.gdeiassistant.common.pojo.Entity.Festival;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.entity.Festival;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.pojo.vo.InformationVO;
-import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
-import cn.gdeiassistant.common.tools.Utils.FestivalUtils;
+import cn.gdeiassistant.core.information.service.announcement.AnnouncementService;
+import cn.gdeiassistant.common.tools.utils.FestivalUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

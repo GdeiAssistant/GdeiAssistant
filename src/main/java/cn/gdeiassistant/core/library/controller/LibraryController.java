@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.library.controller;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.common.pojo.Entity.Book;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
+import cn.gdeiassistant.common.pojo.entity.Book;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.bookquery.service.BookQueryService;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
@@ -63,13 +63,13 @@ public class LibraryController {
     }
 
     /**
-     * 我的借阅。GET /api/library/borrow?password=xxx
+     * 我的借阅。POST /api/library/borrow，凭证只放在 JSON 请求体
      */
-    @RequestMapping(value = "/borrow", method = RequestMethod.GET)
+    @RequestMapping(value = "/borrow", method = RequestMethod.POST)
     public DataJsonResult<List<Book>> getBorrow(HttpServletRequest request,
-                                                @RequestParam(value = "password", required = false) String password) throws Exception {
+                                                @RequestBody cn.gdeiassistant.common.pojo.dto.PasswordRequest body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        String pwd = (password != null && !password.isEmpty()) ? password : "";
+        String pwd = body.password() == null ? "" : body.password();
         List<Book> list = bookQueryService.getBorrowedBooks(sessionId, pwd);
         return new DataJsonResult<>(true, list);
     }

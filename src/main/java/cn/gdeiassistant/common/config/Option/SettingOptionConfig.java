@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Option;
+package cn.gdeiassistant.common.config.option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

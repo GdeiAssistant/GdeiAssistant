@@ -1,13 +1,13 @@
-package cn.gdeiassistant.core.graduateExam.service;
+package cn.gdeiassistant.core.graduateexam.service;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.pojo.Entity.Postgraduate;
-import cn.gdeiassistant.core.imageRecognition.service.ImageRecognitionService;
-import cn.gdeiassistant.common.tools.Utils.ImageEncodeUtils;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
+import cn.gdeiassistant.common.pojo.entity.Postgraduate;
+import cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService;
+import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import cn.gdeiassistant.integration.chsi.ChsiClient;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -46,7 +46,7 @@ public class GraduateExamService {
                         .select("img").first().attr("src");
                 byte[] imageBytes = chsiClient.fetchPostgraduateCaptchaImage(imageURL);
                 String base64 = ImageEncodeUtils.convertToBase64(new ByteArrayInputStream(imageBytes));
-                checkcode = imageRecognitionService.CheckCodeRecognize(base64, CheckCodeTypeEnum.NUMBER, 4);
+                checkcode = imageRecognitionService.checkCodeRecognize(base64, CheckCodeTypeEnum.NUMBER, 4);
             }
             document = chsiClient.submitPostgraduateQuery(name, examNumber, idNumber, checkcode);
             Element ch_alert_message = document.getElementsByClass("ch-alert-message").first();

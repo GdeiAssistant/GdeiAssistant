@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.QueryException;
+package cn.gdeiassistant.common.exception.queryexception;
 
 /**
  * 查询条件异常类的基类

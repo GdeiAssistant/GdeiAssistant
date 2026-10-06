@@ -1,14 +1,14 @@
 package cn.gdeiassistant.core.token.service;
 
-import cn.gdeiassistant.common.exception.TokenValidException.SuspiciouseRequestException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenNotMatchingException;
-import cn.gdeiassistant.common.pojo.Config.JWTConfig;
-import cn.gdeiassistant.common.pojo.Entity.*;
-import cn.gdeiassistant.core.tokenRefresh.pojo.TokenRefreshResult;
-import cn.gdeiassistant.common.redis.LoginToken.LoginTokenDao;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.exception.tokenvalidexception.SuspiciouseRequestException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
+import cn.gdeiassistant.common.pojo.config.JWTConfig;
+import cn.gdeiassistant.common.pojo.entity.*;
+import cn.gdeiassistant.core.tokenrefresh.pojo.TokenRefreshResult;
+import cn.gdeiassistant.common.redis.logintoken.LoginTokenDao;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -42,12 +42,12 @@ public class LoginTokenService {
      * @return
      */
     public void expireToken(String signature) throws Exception {
-        AccessToken accessToken = loginTokenDao.QueryAccessToken(signature);
+        AccessToken accessToken = loginTokenDao.queryAccessToken(signature);
         if (accessToken == null) {
             throw new TokenNotMatchingException("令牌信息不存在");
         }
-        loginTokenDao.DeleteAccessToken(signature);
-        loginTokenDao.DeleteRefreshToken(StringEncryptUtils.sha256HexString(accessToken.getSignature()));
+        loginTokenDao.deleteAccessToken(signature);
+        loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(accessToken.getSignature()));
     }
 
     /**
@@ -59,7 +59,7 @@ public class LoginTokenService {
     public TokenRefreshResult refreshToken(String sessionId, String refreshTokenSignature) throws Exception {
         TokenRefreshResult result = new TokenRefreshResult();
         //从Redis缓存中查找权限令牌签名
-        RefreshToken token = loginTokenDao.QueryRefreshToken(refreshTokenSignature);
+        RefreshToken token = loginTokenDao.queryRefreshToken(refreshTokenSignature);
         if (token == null) {
             //没有对应的权限令牌
             throw new TokenNotMatchingException("没有对应的权限令牌");
@@ -74,8 +74,8 @@ public class LoginTokenService {
         Map<String, Claim> claimMap = parseToken(token.getAccessTokenSignature());
         String username = claimMap.get("username").asString();
         //从Redis缓存中移除令牌信息
-        loginTokenDao.DeleteAccessToken(token.getAccessTokenSignature());
-        loginTokenDao.DeleteRefreshToken(refreshTokenSignature);
+        loginTokenDao.deleteAccessToken(token.getAccessTokenSignature());
+        loginTokenDao.deleteRefreshToken(refreshTokenSignature);
         //生成新的权限令牌和刷新令牌
         AccessToken accessToken = getAccessToken(username, sessionId);
         RefreshToken refreshToken = getRefreshToken(accessToken);
@@ -102,7 +102,7 @@ public class LoginTokenService {
         refreshToken.setAccessTokenSignature(accessToken.getSignature());
         refreshToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         refreshToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        loginTokenDao.InsertRefreshToken(refreshToken);
+        loginTokenDao.insertRefreshToken(refreshToken);
         return refreshToken;
     }
 
@@ -128,7 +128,7 @@ public class LoginTokenService {
         accessToken.setSignature(token);
         accessToken.setCreateTime(createTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
         accessToken.setExpireTime(expireTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
-        loginTokenDao.InsertAccessToken(accessToken);
+        loginTokenDao.insertAccessToken(accessToken);
         return accessToken;
     }
 
@@ -149,7 +149,7 @@ public class LoginTokenService {
      * @param device
      */
     public void saveDevice(String signature, Device device) {
-        loginTokenDao.SaveDeviceData(signature, device);
+        loginTokenDao.saveDeviceData(signature, device);
     }
 
     /**
@@ -161,7 +161,7 @@ public class LoginTokenService {
      */
     public void validDevice(String signature, String ip, Device device) throws TokenExpiredException, SuspiciouseRequestException {
         //获取上次使用令牌访问时的设备信息
-        Device data = loginTokenDao.QueryDeviceData(signature);
+        Device data = loginTokenDao.queryDeviceData(signature);
         if (data == null) {
             //没有找到对应的设备信息记录
             throw new TokenExpiredException("令牌已过期");
@@ -181,8 +181,8 @@ public class LoginTokenService {
             if (!locationAvailable) {
                 //属地服务不可用或返回数据不完整，跳过地理位置校验但仍校验设备UnionID
                 //设备UnionID已在上方判断不匹配，因此此处应拒绝
-                loginTokenDao.DeleteAccessToken(signature);
-                loginTokenDao.DeleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
+                loginTokenDao.deleteAccessToken(signature);
+                loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
                 throw new SuspiciouseRequestException("可疑的登录请求");
             }
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
@@ -191,8 +191,8 @@ public class LoginTokenService {
                 return;
             }
             //IP地址非同一省份，令牌失效
-            loginTokenDao.DeleteAccessToken(signature);
-            loginTokenDao.DeleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
+            loginTokenDao.deleteAccessToken(signature);
+            loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
             throw new SuspiciouseRequestException("可疑的登录请求");
         }
         //设备UnionID相同，校验通过

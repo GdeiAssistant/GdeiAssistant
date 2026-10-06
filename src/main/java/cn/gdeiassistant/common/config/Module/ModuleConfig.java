@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.config.Module;
+package cn.gdeiassistant.common.config.module;
 
-import cn.gdeiassistant.common.enums.Module.CoreModuleEnum;
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
+import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

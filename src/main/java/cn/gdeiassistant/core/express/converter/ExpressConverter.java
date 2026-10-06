@@ -13,7 +13,7 @@ public interface ExpressConverter {
     @Mapping(target = "username", expression = "java(null)")
     @Mapping(target = "realname", expression = "java(null)")
     @Mapping(target = "canGuess",
-            expression = "java(cn.gdeiassistant.common.tools.Utils.StringUtils.isNotBlank(entity.getRealname()))")
+            expression = "java(cn.gdeiassistant.common.tools.utils.StringUtils.isNotBlank(entity.getRealname()))")
     ExpressVO toVO(ExpressEntity entity);
 
     List<ExpressVO> toVOList(List<ExpressEntity> entities);

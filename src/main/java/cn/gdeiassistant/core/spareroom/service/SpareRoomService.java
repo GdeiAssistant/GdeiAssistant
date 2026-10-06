@@ -1,14 +1,14 @@
-package cn.gdeiassistant.core.spareRoom.service;
+package cn.gdeiassistant.core.spareroom.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.core.spareRoom.pojo.dto.EmptyClassroomQueryDTO;
-import cn.gdeiassistant.core.spareRoom.pojo.vo.SpareRoomVO;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.core.spareroom.pojo.dto.EmptyClassroomQueryDTO;
+import cn.gdeiassistant.core.spareroom.pojo.vo.SpareRoomVO;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import org.apache.http.message.BasicNameValuePair;

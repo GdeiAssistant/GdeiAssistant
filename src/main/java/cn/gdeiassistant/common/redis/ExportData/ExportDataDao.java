@@ -1,14 +1,14 @@
-package cn.gdeiassistant.common.redis.ExportData;
+package cn.gdeiassistant.common.redis.exportdata;
 
 public interface ExportDataDao {
 
-    String QueryExportingDataToken(String username);
+    String queryExportingDataToken(String username);
 
-    void RemoveExportingDataToken(String username);
+    void removeExportingDataToken(String username);
 
-    void SaveExportingDataToken(String username, String token);
+    void saveExportingDataToken(String username, String token);
 
-    String QueryExportDataToken(String username);
+    String queryExportDataToken(String username);
 
-    void SaveExportDataToken(String username, String token);
+    void saveExportDataToken(String username, String token);
 }

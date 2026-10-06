@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.AuthenticationException;
+package cn.gdeiassistant.common.exception.authenticationexception;
 
 /**
  * 证件照片的文件大小超过限制时抛出该异常

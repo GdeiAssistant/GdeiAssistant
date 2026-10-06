@@ -1,12 +1,12 @@
-package cn.gdeiassistant.core.spareRoom.controller;
+package cn.gdeiassistant.core.spareroom.controller;
 
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
-import cn.gdeiassistant.core.spareRoom.pojo.dto.EmptyClassroomQueryDTO;
-import cn.gdeiassistant.core.spareRoom.pojo.vo.SpareRoomVO;
-import cn.gdeiassistant.core.spareRoom.service.SpareRoomService;
+import cn.gdeiassistant.core.spareroom.pojo.dto.EmptyClassroomQueryDTO;
+import cn.gdeiassistant.core.spareroom.pojo.vo.SpareRoomVO;
+import cn.gdeiassistant.core.spareroom.service.SpareRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;

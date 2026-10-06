@@ -1,16 +1,16 @@
 package cn.gdeiassistant.core.bookquery.service;
 
-import cn.gdeiassistant.common.exception.BookRenewException.BookRenewOvertimeException;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.bookrenewexception.BookRenewOvertimeException;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
-import cn.gdeiassistant.common.pojo.Entity.Book;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.Book;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.library.LibraryClient;
 import cn.gdeiassistant.integration.library.pojo.LibraryRenewResult;
 import org.jsoup.nodes.Document;

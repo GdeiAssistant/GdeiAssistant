@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CloseAccountException;
+package cn.gdeiassistant.common.exception.closeaccountexception;
 
 /**
  * 用户账号状态异常时抛出该异常

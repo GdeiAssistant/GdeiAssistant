@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.dataquery.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.YellowPage;
+import cn.gdeiassistant.common.pojo.entity.YellowPage;
 import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
 
 import java.io.Serializable;

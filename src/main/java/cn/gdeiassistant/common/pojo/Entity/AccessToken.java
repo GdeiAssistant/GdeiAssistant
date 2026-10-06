@@ -1,8 +1,6 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 /**
  * 用户使用移动端登录后，服务端会在系统中生成一个令牌信息，包含用户名、时间戳等信息
@@ -10,8 +8,6 @@ import org.springframework.stereotype.Component;
  * 权限令牌有效期为7天
  */
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccessToken extends Token {
 

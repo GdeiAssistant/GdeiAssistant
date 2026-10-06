@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.delayTask.pojo;
+package cn.gdeiassistant.core.delaytask.pojo;
 
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;

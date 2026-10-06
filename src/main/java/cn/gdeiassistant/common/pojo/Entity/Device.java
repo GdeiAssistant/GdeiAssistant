@@ -1,10 +1,8 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
-import cn.gdeiassistant.common.validgroup.Device.DeviceDataValidGroup;
+import cn.gdeiassistant.common.validgroup.device.DeviceDataValidGroup;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
@@ -12,8 +10,6 @@ import java.io.Serializable;
  * 记录上次使用令牌访问时的设备MAC地址（或以算法或其他方式生成的可以用于唯一识别设备的内容）、请求的IP地址
  */
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Device implements Serializable {
 

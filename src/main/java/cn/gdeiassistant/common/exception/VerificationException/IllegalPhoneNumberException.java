@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.VerificationException;
+package cn.gdeiassistant.common.exception.verificationexception;
 
 /**
  * 当用户输入的手机不合法时，抛出该异常

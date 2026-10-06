@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.enums.Authentication;
+package cn.gdeiassistant.common.enums.authentication;
 
 public enum AuthenticationEnum {
 

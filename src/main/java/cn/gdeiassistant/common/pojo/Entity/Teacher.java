@@ -1,15 +1,11 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Teacher implements Serializable, Entity{
 

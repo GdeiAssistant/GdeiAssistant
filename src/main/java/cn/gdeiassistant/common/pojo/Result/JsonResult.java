@@ -1,12 +1,8 @@
-package cn.gdeiassistant.common.pojo.Result;
+package cn.gdeiassistant.common.pojo.result;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Component
-@Scope("prototype")
 public class JsonResult implements Serializable {
 
     private Integer code;

@@ -1,9 +1,9 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ public class PublicAuthorResolver {
         }
         String authorId = null;
         if (userMapper != null) {
-            UserEntity author = userMapper.selectUser(campusUsername);
+            CampusAccountView author = userMapper.selectUser(campusUsername);
             if (author != null && author.isActive() && author.getPublicId() != null) {
                 authorId = author.getPublicId();
             }

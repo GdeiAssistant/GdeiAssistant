@@ -7,7 +7,12 @@ import path from 'path'
 const backendProxyTarget = process.env.DEV_BACKEND_PROXY_TARGET || 'http://localhost:8080'
 
 export default defineConfig({
-  plugins: [vue(), tailwindcss()],
+  plugins: [vue(), tailwindcss(), {
+    name: 'release-version',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'version.json', source: JSON.stringify({ revision: process.env.GITHUB_SHA || process.env.GDEI_BUILD_REVISION || 'local' }) })
+    }
+  }],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

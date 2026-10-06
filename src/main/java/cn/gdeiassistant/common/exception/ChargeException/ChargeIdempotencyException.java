@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.ChargeException;
+package cn.gdeiassistant.common.exception.chargeexception;
 
 public class ChargeIdempotencyException extends Exception {
 

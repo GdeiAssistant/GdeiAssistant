@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.AuthenticationException;
+package cn.gdeiassistant.common.exception.authenticationexception;
 
 /**
  * 实名认证为非中国居民身份证时且未上传照片则抛出该异常

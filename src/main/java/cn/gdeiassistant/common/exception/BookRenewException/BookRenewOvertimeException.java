@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.BookRenewException;
+package cn.gdeiassistant.common.exception.bookrenewexception;
 
 /**
  * 图书续借超过次数限制时抛出该异常

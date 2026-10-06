@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.campuscredential.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.campuscredential.mapper.CampusCredentialConsentMapper;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
 import cn.gdeiassistant.core.campuscredential.pojo.entity.CampusCredentialConsentEntity;
@@ -11,8 +11,8 @@ import cn.gdeiassistant.core.campuscredential.pojo.vo.CampusCredentialStatusVO;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +29,9 @@ import java.util.Set;
 
 @Service
 public class CampusCredentialService {
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
 
     public static final String CONSENT_TYPE_CAMPUS_CREDENTIAL = "CAMPUS_CREDENTIAL";
     public static final String SCENE_LOGIN = "LOGIN";
@@ -143,7 +146,7 @@ public class CampusCredentialService {
 
     public CampusCredentialStatusVO getStatusByUsername(String username) {
         PrivacyEntity privacyEntity = privacyMapper.selectPrivacy(username);
-        UserEntity userEntity = userMapper.selectUser(username);
+        CampusAccountView userEntity = userMapper.selectUser(username);
         CampusCredentialConsentEntity latestConsent = campusCredentialConsentMapper
                 .selectLatestConsent(username, CONSENT_TYPE_CAMPUS_CREDENTIAL);
         CampusCredentialConsentEntity activeConsent = campusCredentialConsentMapper
@@ -208,7 +211,7 @@ public class CampusCredentialService {
         if (StringUtils.isBlank(username)) {
             return false;
         }
-        UserEntity userEntity = userMapper.selectUser(username);
+        CampusAccountView userEntity = userMapper.selectUser(username);
         return userEntity != null && StringUtils.isNotBlank(userEntity.getPassword());
     }
 
@@ -217,7 +220,7 @@ public class CampusCredentialService {
         userCertificateService.clearReusableCredentials(username);
         if (StringUtils.isNotBlank(sessionId)) {
             try {
-                HttpClientUtils.clearHttpClientCookieStore(sessionId);
+                httpClientUtils.clearHttpClientCookieStore(sessionId);
             } catch (Exception e) {
                 logger.warn("清理校园凭证关联 CookieStore 失败", e);
             }

@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+import { getDeliveryMine } from '../../api/delivery'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { createDeliveryStatusMap, createDeliveryTypeMap } from '../community/communityContent'
@@ -70,7 +70,7 @@ function goDetail(id) {
 async function loadData() {
   loading.value = true
   try {
-    const res = await request.get('/delivery/mine')
+    const res = await getDeliveryMine()
     const data = res?.data || {}
     const published = data.published || []
     const accepted = data.accepted || []
@@ -82,8 +82,8 @@ async function loadData() {
       reward: o.price ?? 0,
       time: o.orderTime,
       type: 'express',
-      pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
-      deliveryAddress: o.address || ''
+      pickupAddress: o.pickupLocation ? t('delivery.pickupAddressWithCompany', { company: o.pickupLocation }) : t('delivery.pickupShort'),
+      deliveryAddress: o.deliveryAddress || ''
     })) : []
     acceptedList.value = Array.isArray(accepted) ? accepted.map((o) => ({
       id: o.orderId,
@@ -93,8 +93,8 @@ async function loadData() {
       reward: o.price ?? 0,
       time: o.orderTime,
       type: 'express',
-      pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
-      deliveryAddress: o.address || ''
+      pickupAddress: o.pickupLocation ? t('delivery.pickupAddressWithCompany', { company: o.pickupLocation }) : t('delivery.pickupShort'),
+      deliveryAddress: o.deliveryAddress || ''
     })) : []
   } catch (e) {
     publishedList.value = []

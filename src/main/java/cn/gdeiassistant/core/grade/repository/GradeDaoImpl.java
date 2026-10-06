@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.grade.repository;
 
-import cn.gdeiassistant.common.pojo.Document.GradeDocument;
+import cn.gdeiassistant.common.pojo.document.GradeDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -21,7 +21,12 @@ public class GradeDaoImpl implements GradeDao {
     @Override
     public void saveGrade(GradeDocument gradeDocument) {
         if (mongoTemplate != null) {
-            mongoTemplate.save(gradeDocument, "grade");
+            org.bson.Document values = new org.bson.Document();
+            mongoTemplate.getConverter().write(gradeDocument, values);
+            values.remove("_id");
+            mongoTemplate.upsert(new Query(Criteria.where("username").is(gradeDocument.getUsername())),
+                    org.springframework.data.mongodb.core.query.Update.fromDocument(
+                            new org.bson.Document("$set", values)), "grade");
         }
     }
 

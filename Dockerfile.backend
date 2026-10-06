@@ -1,5 +1,7 @@
 # Stage 1: Build
 FROM eclipse-temurin:17-jdk-alpine AS builder
+ARG GDEI_BUILD_REVISION=local
+ENV GDEI_BUILD_REVISION=$GDEI_BUILD_REVISION
 WORKDIR /app
 COPY . .
 # 赋予 gradlew 执行权限并打包（跳过耗时的测试）

@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.pojo.Config;
+package cn.gdeiassistant.common.pojo.config;
 
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;

@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
-  /** 模块基础路径，如 '/ershou' */
+  /** 模块基础路径，如 '/marketplace' */
   basePath: { type: String, required: true },
   /** 模块主色，如 'var(--c-ershou)' */
   moduleColor: { type: String, default: 'var(--c-topic)' },

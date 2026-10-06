@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.message.service.provider;
 
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.secret.mapper.SecretMapper;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;

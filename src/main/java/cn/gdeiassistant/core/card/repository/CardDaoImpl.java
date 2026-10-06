@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.card.repository;
 
-import cn.gdeiassistant.common.pojo.Document.CardTestDocument;
+import cn.gdeiassistant.common.pojo.document.CardTestDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

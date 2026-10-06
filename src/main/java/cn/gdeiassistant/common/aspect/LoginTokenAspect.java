@@ -1,12 +1,12 @@
 package cn.gdeiassistant.common.aspect;
 
-import cn.gdeiassistant.common.exception.TokenValidException.SuspiciouseRequestException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenExpiredException;
-import cn.gdeiassistant.common.exception.TokenValidException.TokenNotMatchingException;
-import cn.gdeiassistant.common.pojo.Entity.Device;
+import cn.gdeiassistant.common.exception.tokenvalidexception.SuspiciouseRequestException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
+import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
+import cn.gdeiassistant.common.pojo.entity.Device;
 import cn.gdeiassistant.core.token.service.LoginTokenService;
-import cn.gdeiassistant.common.tools.Utils.IPAddressUtils;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.common.tools.utils.IPAddressUtils;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.apache.commons.lang3.ArrayUtils;
@@ -39,17 +39,17 @@ public class LoginTokenAspect {
     private JwtUtil jwtUtil;
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.DeviceUpdateRequirement)")
-    public void LoginAction() {
+    public void loginAction() {
 
     }
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.RestAuthentication)")
-    public void QueryAction() {
+    public void queryAction() {
 
     }
 
-    @Before("LoginAction()")
-    public void GetIPAddress(JoinPoint joinPoint) {
+    @Before("loginAction()")
+    public void getIPAddress(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         //获取设备信息
@@ -60,8 +60,8 @@ public class LoginTokenAspect {
         device.setIP(ip);
     }
 
-    @After("LoginAction()")
-    public void UpdateDevice(JoinPoint joinPoint) {
+    @After("loginAction()")
+    public void updateDevice(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         //获取设备信息
@@ -73,8 +73,8 @@ public class LoginTokenAspect {
         loginTokenService.saveDevice(signature, device);
     }
 
-    @Before("QueryAction()")
-    public void AuthenticateToken(JoinPoint joinPoint) throws TokenExpiredException
+    @Before("queryAction()")
+    public void authenticateToken(JoinPoint joinPoint) throws TokenExpiredException
             , TokenNotMatchingException, SuspiciouseRequestException {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];

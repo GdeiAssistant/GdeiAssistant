@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.dataquery.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
-import cn.gdeiassistant.common.pojo.Entity.ElectricFees;
-import cn.gdeiassistant.common.pojo.Entity.YellowPage;
-import cn.gdeiassistant.core.electricFees.mapper.ElectricFeesMapper;
-import cn.gdeiassistant.core.yellowPage.mapper.YellowPageMapper;
+import cn.gdeiassistant.common.pojo.entity.ElectricFees;
+import cn.gdeiassistant.common.pojo.entity.YellowPage;
+import cn.gdeiassistant.core.electricfees.mapper.ElectricFeesMapper;
+import cn.gdeiassistant.core.yellowpage.mapper.YellowPageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -69,7 +69,7 @@ public class DataQueryService {
      *
      * @param electricFeesList
      */
-    public void InsertElectricFeesBatch(List<ElectricFees> electricFeesList) {
+    public void insertElectricFeesBatch(List<ElectricFees> electricFeesList) {
         electricFeesMapper.insertElectricFeesBatch(electricFeesList);
     }
 
@@ -78,7 +78,7 @@ public class DataQueryService {
      *
      * @param yellowPageList
      */
-    public void InsertYellowPageBatch(List<YellowPage> yellowPageList) {
+    public void insertYellowPageBatch(List<YellowPage> yellowPageList) {
         yellowPageMapper.insertYellowPageBatch(yellowPageList);
     }
 }

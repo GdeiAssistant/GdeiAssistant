@@ -1,10 +1,10 @@
-package cn.gdeiassistant.core.iPAddress.service;
+package cn.gdeiassistant.core.ipaddress.service;
 
-import cn.gdeiassistant.common.enums.IPAddress.IPAddressEnum;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.core.iPAddress.mapper.IPAddressMapper;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.ipaddress.mapper.IPAddressMapper;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.capability.ip.IPLocationResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

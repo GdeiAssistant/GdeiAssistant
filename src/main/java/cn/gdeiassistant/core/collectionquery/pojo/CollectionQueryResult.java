@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.collectionquery.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.Collection;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.context.annotation.Scope;

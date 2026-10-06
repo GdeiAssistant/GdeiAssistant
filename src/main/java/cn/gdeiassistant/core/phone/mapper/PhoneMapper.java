@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.phone.mapper;
 
-import cn.gdeiassistant.common.pojo.Alias.DataEncryption;
+import cn.gdeiassistant.common.pojo.alias.DataEncryption;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;

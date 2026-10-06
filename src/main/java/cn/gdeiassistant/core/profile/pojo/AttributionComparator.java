@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.profile.pojo;
 
-import cn.gdeiassistant.common.pojo.Entity.Attribution;
+import cn.gdeiassistant.common.pojo.entity.Attribution;
 
 import java.text.Collator;
 import java.util.Comparator;

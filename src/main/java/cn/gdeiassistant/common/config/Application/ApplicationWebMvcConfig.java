@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Application;
+package cn.gdeiassistant.common.config.application;
 
 import cn.gdeiassistant.common.constant.SettingConstantUtils;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.deletion.controller;
 
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.deletion.service.AccountDeletionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,10 +25,10 @@ public class AccountDeletionController {
      * @return
      */
     @RequestMapping(value = "/api/close/submit", method = RequestMethod.POST)
-    public JsonResult deleteAccount(HttpServletRequest request, String password) throws Exception {
+    public JsonResult deleteAccount(HttpServletRequest request, @org.springframework.web.bind.annotation.RequestBody cn.gdeiassistant.common.pojo.dto.PasswordRequest body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         //检查是否符合删除账号条件
-        DataJsonResult<Map<String,String>> result = accountDeletionService.checkAccountDeletability(sessionId, password);
+        DataJsonResult<Map<String,String>> result = accountDeletionService.checkAccountDeletability(sessionId, body.password());
         if (result.isSuccess()) {
             //符合删除账号条件，进行账号删除
             accountDeletionService.deleteAccount(sessionId);

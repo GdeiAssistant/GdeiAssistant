@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.Alias;
+package cn.gdeiassistant.common.pojo.alias;
 
 import org.apache.ibatis.type.Alias;
 

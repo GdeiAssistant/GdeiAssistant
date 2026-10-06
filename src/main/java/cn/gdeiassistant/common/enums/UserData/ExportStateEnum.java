@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.enums.UserData;
+package cn.gdeiassistant.common.enums.userdata;
 
 public enum ExportStateEnum {
 

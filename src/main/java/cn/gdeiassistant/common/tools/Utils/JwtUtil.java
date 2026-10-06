@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.pojo.Config.JWTConfig;
+import cn.gdeiassistant.common.pojo.config.JWTConfig;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;

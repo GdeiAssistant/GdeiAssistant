@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.information.service.SchoolNews;
+package cn.gdeiassistant.core.information.service.schoolnews;
 
 import cn.gdeiassistant.common.constant.ResourcesConstantUtils;
-import cn.gdeiassistant.common.pojo.Entity.NewInfo;
+import cn.gdeiassistant.common.pojo.entity.NewInfo;
 import cn.gdeiassistant.core.news.repository.NewDao;
 import cn.gdeiassistant.integration.news.NewsClient;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -31,14 +31,14 @@ import java.util.regex.Pattern;
 
 @Service
 @Profile("production")
-public class SchoolNewsCornService {
+public class SchoolNewsCronService {
 
     private static final int MAX_PAGES_PER_CATEGORY = 12;
     private static final int MAX_ITEMS_PER_CATEGORY = 216;
     private static final Pattern DATE_PATTERN = Pattern.compile("(\\d{4}-\\d{2}-\\d{2})");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    private final Logger logger = LoggerFactory.getLogger(SchoolNewsCornService.class);
+    private final Logger logger = LoggerFactory.getLogger(SchoolNewsCronService.class);
 
     @Autowired
     private NewDao newDao;

@@ -5,7 +5,7 @@
 ![Vue](https://img.shields.io/badge/Vue.js-3.x-4FC08D.svg)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)
 
-广东第二师范学院校园助手系统采用了网络爬虫模拟登录技术和 Spring Boot 4 以及 Vue 3 框架开发构建，实现了前后端分离和无状态架构。
+广东第二师范学院校园助手系统采用了网络爬虫模拟登录技术和 Spring Boot 4 以及 Vue 3 框架开发构建，实现前后端分离。应用使用 JWT 标识客户端会话，并通过 Redis 校验会话撤销和保存上游登录状态；它属于有状态的会话系统。
 
 项目适配了 Docker 容器化与 GraalVM Native Image 技术，支持以原生二进制文件运行，具有毫秒级启动与极低内存占用的优势。
 
@@ -107,7 +107,7 @@ npm run dev
 
 更完整的环境矩阵见：`docs/environment-matrix.md`。
 
-多端 API 契约（OpenAPI 骨架，作为 Android / iOS / 小程序与后端的统一参考）：[`docs/openapi.yaml`](docs/openapi.yaml)。
+多端 API 契约（从 Controller 请求/响应类型生成的 OpenAPI，作为 Android / iOS / 小程序与后端的统一参考）：[`docs/openapi.yaml`](docs/openapi.yaml)。
 
 ## 技术栈
 
@@ -171,3 +171,14 @@ npm run test:e2e
 ## 许可证
 
 [Apache License 2.0](LICENSE) · Copyright (c) 2016-2026 GdeiAssistant
+
+
+### 演示环境架构升级（2026-10-07）
+
+请求字段、公共身份和金额契约已统一；跑腿与二手市场公共数据不返回校园账号。后端采用 Controller / Service / Repository，客户端继续使用现有 MVVM、Repository 与 Mapper；职责过大的账号和社交模块按功能拆分，不引入新架构框架。
+
+运行 `./gradlew generateOpenApi` 更新接口文档，`./gradlew test checkOpenApi architectureCoverage jacocoTestReport` 校验契约、本次关键模块覆盖率并输出全库报告。已有数据库启用 `ARCHITECTURE_MIGRATION_ENABLED=true` 后执行保留记录的重复安全升级；初始化文件用于新库，不能覆盖已有库。升级会先拒绝重复键、孤立关系及越界金额；Mongo 成绩/课表缓存同步迁移类名元数据并建立 username 唯一索引。
+
+外部教务系统经核实只支持 HTTP，保留上游协议。自有站点/API 使用 HTTPS；上游入口可通过 `campus.upstream.*` 配置。校园凭据仅在服务端消费，客户端借阅和注销凭据放入 JSON 请求体。注销在应用事务内关闭账号并登记持久清理任务，Redis、Mongo、对象存储与日志清理在提交后重试；应用账号状态立即阻断旧会话。
+
+测试覆盖率：本次 CI 对升级涉及的关键模块执行 40% 行覆盖率门槛；全库覆盖率仍有历史缺口（本轮约 29%），原 `./gradlew check` 的全库 40% 目标保留，尚未达到，不能把定向验证通过写成全库覆盖率达标。

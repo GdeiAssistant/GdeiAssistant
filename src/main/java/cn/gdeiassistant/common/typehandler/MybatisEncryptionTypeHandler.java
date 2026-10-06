@@ -1,7 +1,7 @@
 package cn.gdeiassistant.common.typehandler;
 
-import cn.gdeiassistant.common.pojo.Alias.DataEncryption;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.pojo.alias.DataEncryption;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedTypes;

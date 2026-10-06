@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderException;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.ServiceProvider;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;

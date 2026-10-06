@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.pojo.Excel;
+package cn.gdeiassistant.common.pojo.excel;
 
 import cn.gdeiassistant.common.annotation.ExcelField;
-import cn.gdeiassistant.common.tools.Utils.ReflectionUtils;
+import cn.gdeiassistant.common.tools.utils.ReflectionUtils;
 import java.util.ArrayList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.DateUtil;

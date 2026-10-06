@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userProfile.service;
+package cn.gdeiassistant.core.userprofile.service;
 
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
 

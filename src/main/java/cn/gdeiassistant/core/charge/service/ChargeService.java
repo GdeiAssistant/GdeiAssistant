@@ -1,19 +1,19 @@
 package cn.gdeiassistant.core.charge.service;
 
-import cn.gdeiassistant.common.exception.ChargeException.AmountNotAvailableException;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.pojo.Entity.Charge;
-import cn.gdeiassistant.common.pojo.Entity.Cookie;
+import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.pojo.entity.Charge;
+import cn.gdeiassistant.common.pojo.entity.Cookie;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeLogEntity;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.charge.mapper.ChargeMapper;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -42,6 +42,9 @@ import java.util.Map;
 @Service
 public class ChargeService {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private final Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
     @Autowired
@@ -65,16 +68,16 @@ public class ChargeService {
             if (amount <= 0 || amount > 500) {
                 throw new AmountNotAvailableException("充值金额超过范围");
             }
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, 15);
+            HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            LoginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), false);
             //发送充值请求
-            Map<String, String> ecardDataMap = SendChargeRequest(httpClient, amount);
+            Map<String, String> ecardDataMap = sendChargeRequest(httpClient, amount);
             //确认充值请求
-            Charge charge = ConfirmChargeRequest(httpClient, cookieStore, ecardDataMap);
+            Charge charge = confirmChargeRequest(httpClient, cookieStore, ecardDataMap);
             ChargeVO vo = new ChargeVO();
             vo.setAlipayURL(charge.getAlipayURL());
             vo.setCookieList(charge.getCookieList());
@@ -97,7 +100,7 @@ public class ChargeService {
                 }
             }
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -113,7 +116,7 @@ public class ChargeService {
      * @throws IOException
      * @throws PasswordIncorrectException
      */
-    private void LoginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws ServerErrorException, IOException, PasswordIncorrectException {
+    private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws ServerErrorException, IOException, PasswordIncorrectException {
         HttpGet httpGet = new HttpGet("https://security.gdei.edu.cn/cas/login");
         HttpResponse httpResponse = httpClient.execute(httpGet);
         Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -240,7 +243,7 @@ public class ChargeService {
      * @param amount
      * @throws Exception
      */
-    private Map<String, String> SendChargeRequest(CloseableHttpClient httpClient, int amount)
+    private Map<String, String> sendChargeRequest(CloseableHttpClient httpClient, int amount)
             throws Exception {
         HttpPost httpPost = new HttpPost("http://ecard.gdei.edu.cn/CardManage/CardInfo/DoPay");
         BasicNameValuePair basicNameValuePair1 = new BasicNameValuePair("fbankno", "epay");
@@ -343,7 +346,7 @@ public class ChargeService {
      * @return
      * @throws Exception
      */
-    private Charge ConfirmChargeRequest(CloseableHttpClient httpClient, CookieStore cookieStore
+    private Charge confirmChargeRequest(CloseableHttpClient httpClient, CookieStore cookieStore
             , Map<String, String> ecardDataMap) throws Exception {
         Charge charge = new Charge();
         List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
@@ -402,7 +405,7 @@ public class ChargeService {
      * @param sessionId
      * @param amount
      */
-    public void SaveChargeLog(String sessionId, int amount) {
+    public void saveChargeLog(String sessionId, int amount) {
         try {
             User user = userCertificateService.getUserLoginCertificate(sessionId);
             ChargeLogEntity entity = new ChargeLogEntity();

@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.redis.ExportData;
+package cn.gdeiassistant.common.redis.exportdata;
 
-import cn.gdeiassistant.common.tools.SpringUtils.RedisDaoUtils;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,17 +18,17 @@ public class ExportDataDaoImpl implements ExportDataDao {
     private RedisDaoUtils redisDaoUtils;
 
     @Override
-    public String QueryExportingDataToken(String username) {
+    public String queryExportingDataToken(String username) {
         return redisDaoUtils.get(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username));
     }
 
     @Override
-    public void RemoveExportingDataToken(String username) {
+    public void removeExportingDataToken(String username) {
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username));
     }
 
     @Override
-    public void SaveExportingDataToken(String username, String token) {
+    public void saveExportingDataToken(String username, String token) {
         redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username)
                 , token);
         //一小时后以任务超时处理
@@ -37,12 +37,12 @@ public class ExportDataDaoImpl implements ExportDataDao {
     }
 
     @Override
-    public String QueryExportDataToken(String username) {
+    public String queryExportDataToken(String username) {
         return redisDaoUtils.get(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username));
     }
 
     @Override
-    public void SaveExportDataToken(String username, String token) {
+    public void saveExportDataToken(String username, String token) {
         redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username), token);
         redisDaoUtils.expire(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username)
                 , 24, TimeUnit.HOURS);

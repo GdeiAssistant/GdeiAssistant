@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.JSSDK;
+package cn.gdeiassistant.common.pojo.jssdk;
 
 public class JSSDKSignature {
 

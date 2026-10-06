@@ -1,13 +1,13 @@
-package cn.gdeiassistant.core.graduateExam.controller;
+package cn.gdeiassistant.core.graduateexam.controller;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.ErrorQueryConditionException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.pojo.Entity.Postgraduate;
-import cn.gdeiassistant.core.graduateExam.pojo.GraduateExamQuery;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.core.graduateExam.service.GraduateExamService;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
+import cn.gdeiassistant.common.pojo.entity.Postgraduate;
+import cn.gdeiassistant.core.graduateexam.pojo.GraduateExamQuery;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.core.graduateexam.service.GraduateExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;

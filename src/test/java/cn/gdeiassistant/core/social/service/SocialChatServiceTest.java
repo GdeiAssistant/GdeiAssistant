@@ -9,7 +9,7 @@ import cn.gdeiassistant.core.social.pojo.entity.ChatMessageEntity;
 import cn.gdeiassistant.core.social.pojo.entity.ConversationEntity;
 import cn.gdeiassistant.core.social.pojo.entity.ConversationMemberEntity;
 import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,8 +39,8 @@ class SocialChatServiceTest {
     @InjectMocks
     private SocialChatService chatService;
 
-    private UserEntity me;
-    private UserEntity peer;
+    private CampusAccountView me;
+    private CampusAccountView peer;
     private ConversationEntity conversation;
 
     @BeforeEach
@@ -289,8 +289,8 @@ class SocialChatServiceTest {
                 "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");
     }
 
-    private static UserEntity user(long id, String publicId, String username) {
-        UserEntity entity = new UserEntity();
+    private static CampusAccountView user(long id, String publicId, String username) {
+        CampusAccountView entity = new CampusAccountView();
         entity.setId(id);
         entity.setPublicId(publicId);
         entity.setStatus("ACTIVE");

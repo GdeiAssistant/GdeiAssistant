@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DatabaseException;
+package cn.gdeiassistant.common.exception.databaseexception;
 
 public class NotAvailableStateException extends Exception {
 

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
 public class PageUtils {
 

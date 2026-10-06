@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
-import cn.gdeiassistant.common.redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 

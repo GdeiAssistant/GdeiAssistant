@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DeliveryException;
+package cn.gdeiassistant.common.exception.deliveryexception;
 
 /**
  * 当前用户无权限修改该交易信息时抛出该异常

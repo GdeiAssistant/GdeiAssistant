@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.cron.mapper;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.User;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;

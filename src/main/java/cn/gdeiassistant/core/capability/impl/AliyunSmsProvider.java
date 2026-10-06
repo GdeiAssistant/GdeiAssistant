@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderException;
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
-import cn.gdeiassistant.common.pojo.Config.AliYunSMSConfig;
-import cn.gdeiassistant.common.tools.SpringUtils.AliYunSMSUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
+import cn.gdeiassistant.common.pojo.config.AliYunSMSConfig;
+import cn.gdeiassistant.common.tools.springutils.AliYunSMSUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.ServiceProvider;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +33,9 @@ public class AliyunSmsProvider implements ServiceProvider<SmsRequest, Void> {
     public Void execute(SmsRequest request) throws ProviderException {
         try {
             if (request.isGlobal()) {
-                aliYunSMSUtils.SendGlobalPhoneVerificationCodeSMS(request.getCode(), request.getAreaCode(), request.getPhone());
+                aliYunSMSUtils.sendGlobalPhoneVerificationCodeSMS(request.getCode(), request.getAreaCode(), request.getPhone());
             } else {
-                aliYunSMSUtils.SendChinaPhoneVerificationCodeSMS(request.getCode(), request.getPhone());
+                aliYunSMSUtils.sendChinaPhoneVerificationCodeSMS(request.getCode(), request.getPhone());
             }
             return null;
         } catch (ClientException | SendSMSException e) {

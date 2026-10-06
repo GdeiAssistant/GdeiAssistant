@@ -6,7 +6,6 @@
     "doing": [
       {
         "id": 101,
-        "username": "20231234",
         "name": "九成新计算器",
         "description": "考试周自提",
         "price": 38.5,
@@ -19,13 +18,13 @@
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/101_1.jpg"
         ],
-        "authorId": null
+        "authorId": null,
+        "displayName": "用户"
       }
     ],
     "sold": [
       {
         "id": 103,
-        "username": "20231234",
         "name": "旧教材",
         "description": "已停止出售",
         "price": 12.0,
@@ -38,13 +37,13 @@
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/103_1.jpg"
         ],
-        "authorId": null
+        "authorId": null,
+        "displayName": "用户"
       }
     ],
     "off": [
       {
         "id": 102,
-        "username": "20231234",
         "name": "二手风扇",
         "description": "宿舍清仓",
         "price": 25.0,
@@ -57,7 +56,8 @@
         "pictureURL": [
           "https://cdn.gdeiassistant.cn/ershou/102_1.jpg"
         ],
-        "authorId": null
+        "authorId": null,
+        "displayName": "用户"
       }
     ]
   }

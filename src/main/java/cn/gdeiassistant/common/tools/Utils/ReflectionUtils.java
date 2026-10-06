@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.pojo.Entity.Entity;
+import cn.gdeiassistant.common.pojo.entity.Entity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;

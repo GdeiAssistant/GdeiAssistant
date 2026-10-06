@@ -1,9 +1,9 @@
-package cn.gdeiassistant.common.tools.SpringUtils;
+package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
-import cn.gdeiassistant.common.exception.VerificationException.*;
-import cn.gdeiassistant.common.pojo.Config.AliYunSMSConfig;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
+import cn.gdeiassistant.common.exception.verificationexception.*;
+import cn.gdeiassistant.common.pojo.config.AliYunSMSConfig;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.aliyuncs.CommonRequest;
 import com.aliyuncs.CommonResponse;
 import com.aliyuncs.DefaultAcsClient;
@@ -25,7 +25,7 @@ public class AliYunSMSUtils {
     /**
      * 国内手机发送短信验证码
      */
-    public void SendChinaPhoneVerificationCodeSMS(int code, String phone) throws ClientException, SendSMSException {
+    public void sendChinaPhoneVerificationCodeSMS(int code, String phone) throws ClientException, SendSMSException {
         if (aliyunSMSConfig == null || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeyId())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeySecret())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunChinaTemplateCode())) {
@@ -71,7 +71,7 @@ public class AliYunSMSUtils {
     /**
      * 港澳台和国际手机发送短信验证码
      */
-    public void SendGlobalPhoneVerificationCodeSMS(int code, int areaCode, String phone) throws ClientException, SendSMSException {
+    public void sendGlobalPhoneVerificationCodeSMS(int code, int areaCode, String phone) throws ClientException, SendSMSException {
         if (aliyunSMSConfig == null || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeyId())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeySecret())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunGlobalTemplateCode())) {

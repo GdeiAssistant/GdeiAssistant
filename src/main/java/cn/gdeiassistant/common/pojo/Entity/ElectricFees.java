@@ -1,14 +1,10 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import cn.gdeiassistant.common.annotation.ExcelField;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ElectricFees implements Serializable, Entity {
 
@@ -43,13 +39,13 @@ public class ElectricFees implements Serializable, Entity {
     private Float feeBasedElectricAmount;
 
     //电价
-    private Float electricPrice;
+    private java.math.BigDecimal electricPrice;
 
     //总电费
-    private Float totalElectricBill;
+    private java.math.BigDecimal totalElectricBill;
 
     //平均电费
-    private Float averageElectricBill;
+    private java.math.BigDecimal averageElectricBill;
 
     @ExcelField(title = "大楼", align = 2, sort = 1)
     public String getBuildingNumber() {
@@ -133,29 +129,29 @@ public class ElectricFees implements Serializable, Entity {
     }
 
     @ExcelField(title = "电价", align = 2, sort = 10)
-    public Float getElectricPrice() {
+    public java.math.BigDecimal getElectricPrice() {
         return electricPrice;
     }
 
-    public void setElectricPrice(Float electricPrice) {
+    public void setElectricPrice(java.math.BigDecimal electricPrice) {
         this.electricPrice = electricPrice;
     }
 
     @ExcelField(title = "总电费", align = 2, sort = 11)
-    public Float getTotalElectricBill() {
+    public java.math.BigDecimal getTotalElectricBill() {
         return totalElectricBill;
     }
 
-    public void setTotalElectricBill(Float totalElectricBill) {
+    public void setTotalElectricBill(java.math.BigDecimal totalElectricBill) {
         this.totalElectricBill = totalElectricBill;
     }
 
     @ExcelField(title = "平均电费", align = 2, sort = 12)
-    public Float getAverageElectricBill() {
+    public java.math.BigDecimal getAverageElectricBill() {
         return averageElectricBill;
     }
 
-    public void setAverageElectricBill(Float averageElectricBill) {
+    public void setAverageElectricBill(java.math.BigDecimal averageElectricBill) {
         this.averageElectricBill = averageElectricBill;
     }
 

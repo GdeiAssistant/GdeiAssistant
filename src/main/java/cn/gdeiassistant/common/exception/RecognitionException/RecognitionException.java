@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.RecognitionException;
+package cn.gdeiassistant.common.exception.recognitionexception;
 
 public class RecognitionException extends Exception {
 

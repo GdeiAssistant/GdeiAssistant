@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.collection.repository;
 
-import cn.gdeiassistant.common.pojo.Entity.Collection;
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.entity.Collection;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
 
 import java.util.List;
 

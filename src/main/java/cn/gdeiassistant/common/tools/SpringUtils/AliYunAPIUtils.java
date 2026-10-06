@@ -1,11 +1,11 @@
-package cn.gdeiassistant.common.tools.SpringUtils;
+package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.common.exception.AuthenticationException.InconsistentAuthenticationException;
-import cn.gdeiassistant.common.exception.CommonException.FeatureNotEnabledException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.pojo.Config.AliYunAPIConfig;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.common.pojo.Entity.Authentication;
+import cn.gdeiassistant.common.exception.authenticationexception.InconsistentAuthenticationException;
+import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
+import cn.gdeiassistant.common.pojo.config.AliYunAPIConfig;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
+import cn.gdeiassistant.common.pojo.entity.Authentication;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -28,7 +28,7 @@ public class AliYunAPIUtils {
      *
      * @param authentication
      */
-    public void VerifyMainLandChineseResidentIDCard(Authentication authentication) throws InconsistentAuthenticationException {
+    public void verifyMainLandChineseResidentIDCard(Authentication authentication) throws InconsistentAuthenticationException {
         if (StringUtils.isBlank(aliyunAPIConfig.getOfficial_appCode())) {
             throw new FeatureNotEnabledException("阿里云实名认证 API 未配置，无法校验身份证");
         }
@@ -58,7 +58,7 @@ public class AliYunAPIUtils {
      * @return
      * @throws RecognitionException
      */
-    public String CharacterNumberRecognize(String image) throws RecognitionException {
+    public String characterNumberRecognize(String image) throws RecognitionException {
         if (StringUtils.isBlank(aliyunAPIConfig.getOfficial_appCode())) {
             throw new FeatureNotEnabledException("阿里云 OCR API 未配置，无法识别图片数字");
         }

@@ -10,7 +10,7 @@ import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
 import cn.gdeiassistant.core.cetquery.pojo.entity.CetNumberEntity;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import cn.gdeiassistant.core.privacy.pojo.entity.PrivacyEntity;
-import cn.gdeiassistant.common.pojo.Entity.*;
+import cn.gdeiassistant.common.pojo.entity.*;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.common.db.DataSQLBuilder;
 import org.apache.ibatis.annotations.ResultMap;

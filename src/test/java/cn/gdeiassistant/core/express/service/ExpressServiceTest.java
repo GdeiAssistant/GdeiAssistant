@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.express.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.ExpressException.NoRealNameException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.expressexception.NoRealNameException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.express.mapper.ExpressMapper;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

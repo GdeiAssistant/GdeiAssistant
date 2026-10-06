@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.QueryException;
+package cn.gdeiassistant.common.exception.queryexception;
 
 /**
  * 快速连接教务系统时，若教务系统进行时间戳验证失败，则抛出该异常

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userProfile.controller.support;
+package cn.gdeiassistant.core.userprofile.controller.support;
 
 import org.junit.jupiter.api.Test;
 

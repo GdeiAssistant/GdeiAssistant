@@ -15,6 +15,6 @@ public class MarketplaceItemVO implements Serializable {
 
     public ProfileVO getProfile() { return profile; }
     public void setProfile(ProfileVO profile) { this.profile = profile; }
-    public MarketplaceItemEntity getSecondhandItem() { return marketplaceItem; }
-    public void setSecondhandItem(MarketplaceItemEntity marketplaceItem) { this.marketplaceItem = marketplaceItem; }
+    public MarketplaceItemEntity getMarketplaceItem() { return marketplaceItem; }
+    public void setMarketplaceItem(MarketplaceItemEntity marketplaceItem) { this.marketplaceItem = marketplaceItem; }
 }

@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.schedule.repository;
 
-import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
-import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.pojo.Document.CustomScheduleDocument;
-import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
-import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
-import cn.gdeiassistant.common.pojo.Entity.Schedule;
-import cn.gdeiassistant.common.tools.Utils.ScheduleUtils;
+import cn.gdeiassistant.common.exception.customscheduleexception.CountOverLimitException;
+import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
+import cn.gdeiassistant.common.pojo.document.CustomScheduleDocument;
+import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
+import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
+import cn.gdeiassistant.common.pojo.entity.Schedule;
+import cn.gdeiassistant.common.tools.utils.ScheduleUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -46,7 +46,12 @@ public class ScheduleDaoImpl implements ScheduleDao {
     @Override
     public void saveSchedule(ScheduleDocument scheduleDocument){
         if (mongoTemplate != null) {
-            mongoTemplate.save(scheduleDocument, "schedule");
+            org.bson.Document values = new org.bson.Document();
+            mongoTemplate.getConverter().write(scheduleDocument, values);
+            values.remove("_id");
+            mongoTemplate.upsert(new Query(Criteria.where("username").is(scheduleDocument.getUsername())),
+                    org.springframework.data.mongodb.core.query.Update.fromDocument(
+                            new org.bson.Document("$set", values)), "schedule");
         }
     }
 

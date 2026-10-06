@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.DataSource;
+package cn.gdeiassistant.common.config.datasource;
 
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;

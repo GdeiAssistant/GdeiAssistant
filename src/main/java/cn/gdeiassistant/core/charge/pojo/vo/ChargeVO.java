@@ -16,7 +16,7 @@ public class ChargeVO implements Serializable {
     private String alipayURL;
 
     @JSONField(ordinal = 2)
-    private List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList;
+    private List<cn.gdeiassistant.common.pojo.entity.Cookie> cookieList;
 
     @JSONField(ordinal = 3)
     private String orderId;
@@ -38,11 +38,11 @@ public class ChargeVO implements Serializable {
         this.alipayURL = alipayURL;
     }
 
-    public List<cn.gdeiassistant.common.pojo.Entity.Cookie> getCookieList() {
+    public List<cn.gdeiassistant.common.pojo.entity.Cookie> getCookieList() {
         return cookieList;
     }
 
-    public void setCookieList(List<cn.gdeiassistant.common.pojo.Entity.Cookie> cookieList) {
+    public void setCookieList(List<cn.gdeiassistant.common.pojo.entity.Cookie> cookieList) {
         this.cookieList = cookieList;
     }
 

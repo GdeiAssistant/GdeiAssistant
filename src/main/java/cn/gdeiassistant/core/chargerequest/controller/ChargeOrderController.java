@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.chargerequest.controller;
 
 import cn.gdeiassistant.common.annotation.RestAuthentication;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeOrderVO;
 import cn.gdeiassistant.core.charge.service.ChargeOrderService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

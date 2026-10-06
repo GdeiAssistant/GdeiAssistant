@@ -1,8 +1,6 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -11,8 +9,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-@Component
-@Scope("prototype")
 @JsonIgnoreProperties(value = {"handler", "secretCommentList"}, ignoreUnknown = true)
 public class Secret implements Serializable, Entity {
 

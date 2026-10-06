@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
 /**
  * Replaces internal deleted-account identifiers with a user-friendly label.

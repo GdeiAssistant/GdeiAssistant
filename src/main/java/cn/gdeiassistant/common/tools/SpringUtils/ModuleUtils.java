@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.tools.SpringUtils;
+package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.common.enums.Module.CoreModuleEnum;
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
+import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
@@ -21,7 +21,7 @@ public class ModuleUtils {
      *
      * @param moduleEnum
      */
-    public void DisableModule(ModuleEnum moduleEnum) {
+    public void disableModule(ModuleEnum moduleEnum) {
         moduleStateMap.put(moduleEnum, false);
     }
 
@@ -30,7 +30,7 @@ public class ModuleUtils {
      *
      * @param coreModuleEnum
      */
-    public void DisableCoreModule(CoreModuleEnum coreModuleEnum) {
+    public void disableCoreModule(CoreModuleEnum coreModuleEnum) {
         coreModuleEnumBooleanMap.put(coreModuleEnum, false);
     }
 
@@ -39,7 +39,7 @@ public class ModuleUtils {
      *
      * @param moduleEnum
      */
-    public void EnableModule(ModuleEnum moduleEnum) {
+    public void enableModule(ModuleEnum moduleEnum) {
         moduleStateMap.put(moduleEnum, true);
     }
 
@@ -48,7 +48,7 @@ public class ModuleUtils {
      *
      * @param coreModuleEnum
      */
-    public void EnableCoreModule(CoreModuleEnum coreModuleEnum) {
+    public void enableCoreModule(CoreModuleEnum coreModuleEnum) {
         coreModuleEnumBooleanMap.put(coreModuleEnum, true);
     }
 
@@ -58,7 +58,7 @@ public class ModuleUtils {
      * @param moduleEnum
      * @return
      */
-    public boolean CheckModuleState(ModuleEnum moduleEnum) {
+    public boolean checkModuleState(ModuleEnum moduleEnum) {
         if (moduleStateMap.containsKey(moduleEnum)) {
             return moduleStateMap.get(moduleEnum);
         }
@@ -71,7 +71,7 @@ public class ModuleUtils {
      * @param coreModuleEnum
      * @return
      */
-    public boolean CheckCoreModuleState(CoreModuleEnum coreModuleEnum) {
+    public boolean checkCoreModuleState(CoreModuleEnum coreModuleEnum) {
         if (coreModuleEnumBooleanMap.containsKey(coreModuleEnum)) {
             return coreModuleEnumBooleanMap.get(coreModuleEnum);
         }
@@ -83,7 +83,7 @@ public class ModuleUtils {
      *
      * @return
      */
-    public String PrintCoreModuleStateLog() {
+    public String printCoreModuleStateLog() {
         //未启用的核心功能模块提示信息
         StringBuilder coreMessage = new StringBuilder();
         //未启用的核心功能模块配置文件路径提示信息
@@ -113,7 +113,7 @@ public class ModuleUtils {
      *
      * @return
      */
-    public String PrintModuleStateLog() {
+    public String printModuleStateLog() {
         //未启用的功能模块提示信息
         StringBuilder message = new StringBuilder();
         //未启用的功能模块配置文件路径提示信息

@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.tools.SpringUtils;
+package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -39,7 +39,7 @@ public class EmailUtils {
      * @throws MessagingException
      * @throws IOException
      */
-    public void SendEmail(String sender, String recipient, String subject, String text
+    public void sendEmail(String sender, String recipient, String subject, String text
             , InputStream[] inputStreams) throws MessagingException, IOException {
         if (javaMailSender != null) {
             MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();

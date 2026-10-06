@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.gradequery.controller;
 
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.gradequery.service.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;

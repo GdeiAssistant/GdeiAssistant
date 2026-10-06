@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CustomScheduleException;
+package cn.gdeiassistant.common.exception.customscheduleexception;
 
 public class GenerateScheduleException extends Exception {
 

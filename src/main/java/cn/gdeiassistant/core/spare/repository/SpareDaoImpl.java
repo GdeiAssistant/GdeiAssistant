@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.spare.repository;
 
-import cn.gdeiassistant.common.pojo.Document.SpareTestDocument;
-import cn.gdeiassistant.common.pojo.Entity.SpareRoom;
+import cn.gdeiassistant.common.pojo.document.SpareTestDocument;
+import cn.gdeiassistant.common.pojo.entity.SpareRoom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

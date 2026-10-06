@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.enums.IPAddress;
+package cn.gdeiassistant.common.enums.ipaddress;
 
 public enum IPAddressEnum {
 

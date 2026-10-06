@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.ChargeException;
+package cn.gdeiassistant.common.exception.chargeexception;
 
 /**
  * 用户充值金额超过范围时抛出该异常

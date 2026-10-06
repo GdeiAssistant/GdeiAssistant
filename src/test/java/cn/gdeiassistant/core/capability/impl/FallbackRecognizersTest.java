@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.config.Mail;
+package cn.gdeiassistant.common.config.mail;
 
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -27,7 +27,7 @@ public class JavaMailConfig {
     @PostConstruct
     public void disableEmailModuleWhenSmtpMissing() {
         if (!isMailSenderConfigured()) {
-            moduleUtils.DisableModule(ModuleEnum.EMAIL);
+            moduleUtils.disableModule(ModuleEnum.EMAIL);
         }
     }
 
@@ -38,10 +38,10 @@ public class JavaMailConfig {
      */
     @Bean
     @ConditionalOnExpression(
-            "#{T(cn.gdeiassistant.common.tools.Utils.StringUtils).isNotBlank('${email.smtp.host:}') " +
-                    "and T(cn.gdeiassistant.common.tools.Utils.StringUtils).isNumeric('${email.smtp.port:465}') " +
-                    "and T(cn.gdeiassistant.common.tools.Utils.StringUtils).isNotBlank('${email.smtp.username:}') " +
-                    "and T(cn.gdeiassistant.common.tools.Utils.StringUtils).isNotBlank('${email.smtp.password:}')}"
+            "#{T(cn.gdeiassistant.common.tools.utils.StringUtils).isNotBlank('${email.smtp.host:}') " +
+                    "and T(cn.gdeiassistant.common.tools.utils.StringUtils).isNumeric('${email.smtp.port:465}') " +
+                    "and T(cn.gdeiassistant.common.tools.utils.StringUtils).isNotBlank('${email.smtp.username:}') " +
+                    "and T(cn.gdeiassistant.common.tools.utils.StringUtils).isNotBlank('${email.smtp.password:}')}"
     )
     public JavaMailSenderImpl javaMailSender() {
         String host = environment.getProperty("email.smtp.host");

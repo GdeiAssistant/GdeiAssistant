@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.ExpressException;
+package cn.gdeiassistant.common.exception.expressexception;
 
 /**
  * 表白墙模块猜一下功能异常基类

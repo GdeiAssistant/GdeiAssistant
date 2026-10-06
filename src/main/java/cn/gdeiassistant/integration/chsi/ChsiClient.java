@@ -1,7 +1,7 @@
 package cn.gdeiassistant.integration.chsi;
 
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.tools.Utils.ImageEncodeUtils;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import okhttp3.*;
@@ -26,6 +26,9 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ChsiClient {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private static final Logger logger = LoggerFactory.getLogger(ChsiClient.class);
     private static final String CET_BASE = "http://www.chsi.com.cn/cet";
     private static final String KAOYAN_CJCX = "https://yz.chsi.com.cn/apply/cjcx";
@@ -41,7 +44,7 @@ public class ChsiClient {
      * @return 验证码图片 Base64 字符串
      */
     public String fetchCetCaptchaImageBase64(String sessionId) throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CHSI_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CHSI_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -63,7 +66,7 @@ public class ChsiClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -79,7 +82,7 @@ public class ChsiClient {
      */
     public Document fetchCetQueryPage(String sessionId, String number, String name, String checkcode)
             throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, CHSI_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CHSI_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -95,7 +98,7 @@ public class ChsiClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }

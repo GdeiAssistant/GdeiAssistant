@@ -1,17 +1,17 @@
-package cn.gdeiassistant.common.redis.VerificationCode;
+package cn.gdeiassistant.common.redis.verificationcode;
 
 public interface VerificationCodeDao {
 
-    Integer QueryPhoneVerificationCode(int code, String phone);
+    Integer queryPhoneVerificationCode(int code, String phone);
 
-    void SavePhoneVerificationCode(int code, String phone, int randomCode);
+    void savePhoneVerificationCode(int code, String phone, int randomCode);
 
-    void DeletePhoneVerificationCode(int code, String phone);
+    void deletePhoneVerificationCode(int code, String phone);
 
-    Integer QueryEmailVerificationCode(String email);
+    Integer queryEmailVerificationCode(String email);
 
-    void SaveEmailVerificationCode(String email, int randomCode);
+    void saveEmailVerificationCode(String email, int randomCode);
 
-    void DeleteEmailVerificationCode(String email);
+    void deleteEmailVerificationCode(String email);
 
 }

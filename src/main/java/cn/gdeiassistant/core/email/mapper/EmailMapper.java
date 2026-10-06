@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.email.mapper;
 
-import cn.gdeiassistant.common.pojo.Alias.DataEncryption;
-import cn.gdeiassistant.common.pojo.Entity.Email;
+import cn.gdeiassistant.common.pojo.alias.DataEncryption;
+import cn.gdeiassistant.common.pojo.entity.Email;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 

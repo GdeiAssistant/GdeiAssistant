@@ -1,10 +1,10 @@
-package cn.gdeiassistant.common.config.Encryption;
+package cn.gdeiassistant.common.config.encryption;
 
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.pojo.Encryption.AESEncryptConfig;
-import cn.gdeiassistant.common.pojo.Encryption.EncryptConfig;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
+import cn.gdeiassistant.common.pojo.encryption.EncryptConfig;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
@@ -45,7 +45,7 @@ public class StringEncryptionConfig implements EnvironmentAware {
                             return aesEncryptionConfig;
                         }
                         //安全加密功能模块未配置
-                        moduleUtils.DisableModule(ModuleEnum.ENCRYPTION);
+                        moduleUtils.disableModule(ModuleEnum.ENCRYPTION);
                         break;
 
                 }

@@ -1,9 +1,9 @@
 package cn.gdeiassistant.integration.edu;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.common.tools.Utils.WeekUtils;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.common.tools.utils.WeekUtils;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -35,8 +35,12 @@ import java.util.List;
 @Component
 public class EduSystemClient {
 
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     private static final Logger logger = LoggerFactory.getLogger(EduSystemClient.class);
-    private static final String JWGL_BASE = "http://jwgl.gdei.edu.cn";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
+    private String JWGL_BASE = "http://jwgl.gdei.edu.cn";
     private static final int EDU_REQUEST_TIMEOUT_SEC = 15;
 
     /**
@@ -49,7 +53,7 @@ public class EduSystemClient {
     @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchGradeListPage(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -86,7 +90,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -104,7 +108,7 @@ public class EduSystemClient {
     public Document fetchGradeByYear(String sessionId, EduSessionCredential credential,
                                      String viewState, String yearOptionValue)
             throws IOException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -123,7 +127,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -138,7 +142,7 @@ public class EduSystemClient {
     @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchScheduleDocument(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -235,7 +239,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -246,7 +250,7 @@ public class EduSystemClient {
     @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchSpareRoomInitialDocument(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -282,7 +286,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -297,7 +301,7 @@ public class EduSystemClient {
     public Document submitSpareRoomForm(String sessionId, EduSessionCredential credential,
                                         String formAction, List<BasicNameValuePair> formParams)
             throws IOException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -311,7 +315,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -322,7 +326,7 @@ public class EduSystemClient {
     @CircuitBreaker(name = "eduSystem", fallbackMethod = "eduSystemFallback")
     public Document fetchEduMainPage(String sessionId, EduSessionCredential credential)
             throws IOException, TimeStampIncorrectException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -353,7 +357,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -367,7 +371,7 @@ public class EduSystemClient {
     public Document fetchEduPage(String sessionId, EduSessionCredential credential, String relativePath)
             throws IOException, ServerErrorException {
         String path = relativePath != null && relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -380,7 +384,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -399,7 +403,7 @@ public class EduSystemClient {
     public Document fetchTeacherScheduleDocument(String sessionId, String teacherUsername, String teacherName,
                                                  String year, String term)
             throws IOException, PasswordIncorrectException, ServerErrorException {
-        HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, true, EDU_REQUEST_TIMEOUT_SEC);
+        HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
         try {
@@ -454,7 +458,7 @@ public class EduSystemClient {
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.spareRoomQuery.pojo;
+package cn.gdeiassistant.core.spareroomquery.pojo;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

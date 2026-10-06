@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.topic.pojo.entity;
 
-import cn.gdeiassistant.common.pojo.Entity.Entity;
+import cn.gdeiassistant.common.pojo.entity.Entity;
 
 import java.io.Serializable;
 import java.util.Date;

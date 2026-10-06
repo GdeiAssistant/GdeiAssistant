@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Redis;
+package cn.gdeiassistant.common.config.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

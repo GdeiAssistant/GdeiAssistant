@@ -2,7 +2,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+import { getDeliveryOrders } from '../../api/delivery'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -20,7 +20,7 @@ const deliveryTypeMap = computed(() => createDeliveryTypeMap(t))
 const PAGE_SIZE = 10
 const fetchDeliveryData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/delivery/order/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getDeliveryOrders(start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((o) => ({
     id: o.orderId,
@@ -29,8 +29,8 @@ const fetchDeliveryData = async (page) => {
     time: o.orderTime,
     size: t('delivery.smallSize'),
     type: 'express',
-    pickupAddress: o.company ? t('delivery.pickupAddressWithCompany', { company: o.company }) : t('delivery.pickupShort'),
-    deliveryAddress: maskAddress(o.address || '')
+    pickupAddress: o.pickupLocation ? t('delivery.pickupAddressWithCompany', { company: o.pickupLocation }) : t('delivery.pickupShort'),
+    deliveryAddress: maskAddress(o.deliveryAddress || '')
   })) : []
   return { list, hasMore: list.length >= PAGE_SIZE }
 }

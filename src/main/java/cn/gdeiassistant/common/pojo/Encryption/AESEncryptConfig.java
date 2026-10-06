@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.pojo.Encryption;
+package cn.gdeiassistant.common.pojo.encryption;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

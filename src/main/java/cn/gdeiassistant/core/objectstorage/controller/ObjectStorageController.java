@@ -1,11 +1,11 @@
-package cn.gdeiassistant.core.objectStorage.controller;
+package cn.gdeiassistant.core.objectstorage.controller;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RestAuthentication;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.core.objectStorage.service.UploadService;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
+import cn.gdeiassistant.core.objectstorage.service.UploadService;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

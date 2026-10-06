@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.deletion.service;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.DatabaseException.UserNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.*;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
+import cn.gdeiassistant.common.pojo.entity.*;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.cet.mapper.CetMapper;
@@ -19,12 +19,12 @@ import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import cn.gdeiassistant.core.close.mapper.CloseMapper;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,17 +36,11 @@ import java.util.Map;
 @Service
 public class AccountDeletionService {
 
-    @Autowired
-    private UserProfileService userProfileService;
 
     @Autowired
     private UserCertificateService userCertificateService;
 
-    @Autowired
-    private GradeDao gradeDao;
 
-    @Autowired
-    private ScheduleDao scheduleDao;
 
     @Autowired
     private UserMapper userMapper;
@@ -72,8 +66,6 @@ public class AccountDeletionService {
     @Autowired
     private PrivacyMapper privacyMapper;
 
-    @Autowired
-    private CloseMapper closeMapper;
 
     @Autowired(required = false)
     private DatingMapper datingMapper;
@@ -93,17 +85,20 @@ public class AccountDeletionService {
     @Autowired(required = false)
     private cn.gdeiassistant.core.express.mapper.ExpressMapper expressMapper;
 
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.social.websocket.SocialRealtimeHub socialRealtimeHub;
 
     @Autowired(required = false)
     private cn.gdeiassistant.core.social.mapper.SocialRelationMapper socialRelationMapper;
 
+    @Autowired
+    private cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper cleanupMapper;
+    @Autowired
+    private org.springframework.context.ApplicationEventPublisher events;
+
     /**
      * 关闭待处理的社区功能信息
      */
-    @Transactional("appTranscationManager")
-    public void CloseSocialDataState(String username) throws Exception {
+    @Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void closeSocialDataState(String username) throws Exception {
         List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
                 .selectItemsByUsername(username);
         for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
@@ -144,19 +139,20 @@ public class AccountDeletionService {
      * @return
      */
     public DataJsonResult<Map<String, String>> checkAccountDeletability(String sessionId, String password)
-            throws UserNotExistException, PasswordIncorrectException {
+            throws Exception {
         Map<String, String> map = new HashMap<>();
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         //检查用户账号状态
-        UserEntity queryUser = userMapper.selectUser(user.getUsername());
+        CampusAccountView queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser == null) {
             //若账号不存在，则抛出异常
             throw new UserNotExistException("用户账号不存在");
         }
-        if (!queryUser.getPassword().equals(password)) {
-            //账号密码错误
-            throw new PasswordIncorrectException("用户账号密码不匹配");
+        if (password == null || password.isBlank()) {
+            throw new PasswordIncorrectException("请输入当前校园密码");
         }
+        // Fresh authentication works even when credentials were never persisted.
+        userCertificateService.verifyCurrentPassword(user.getUsername(), password);
         //检查有无待处理的社区功能信息
         List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
                 .selectItemsByUsername(user.getUsername());
@@ -197,10 +193,10 @@ public class AccountDeletionService {
      * @param sessionId
      * @throws Exception
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value="appTransactionManager", rollbackFor=Exception.class)
     public void deleteAccount(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        UserEntity existing = userMapper.selectUser(user.getUsername());
+        CampusAccountView existing = userMapper.selectUser(user.getUsername());
         // 与发信/关注同一把有序 app_user 行锁，关闭后发送侧锁后重查会得到 CONTACT_UNAVAILABLE
         if (existing != null && existing.getId() != null) {
             userMapper.selectUserByIdForUpdate(existing.getId());
@@ -222,8 +218,6 @@ public class AccountDeletionService {
             phoneMapper.deletePhone(user.getUsername());
         }
         //删除教务缓存信息
-        gradeDao.removeGrade(user.getUsername());
-        scheduleDao.removeSchedule(user.getUsername());
         //隐藏用户的交友资料
         if (datingMapper != null) {
             datingMapper.hideDatingProfilesByUsername(user.getUsername());
@@ -234,7 +228,6 @@ public class AccountDeletionService {
         //重置用户隐私配置
         privacyMapper.resetPrivacy(user.getUsername());
         //删除用户头像
-        userProfileService.deleteAvatar(user.getUsername());
         //删除用户账号信息
         Integer count = userMapper.selectDeletedUserCount("del_"
                 + StringEncryptUtils.sha1HexString(user.getUsername()).substring(0, 15));
@@ -262,26 +255,9 @@ public class AccountDeletionService {
             userMapper.closeAppUser(existing.getId());
         }
         userMapper.closeUser(deletedUsername, user.getUsername());
-        // 撤销该用户全部 Redis 会话，使既有 JWT 立即失效
-        userCertificateService.clearReusableCredentials(user.getUsername());
-        if (existing != null && existing.getId() != null && socialRealtimeHub != null) {
-            socialRealtimeHub.disconnectUser(existing.getId());
-        }
-        //保存注销日志
-        SaveCloseLog(user.getUsername(), count);
+        String cleanupId = java.util.UUID.randomUUID().toString();
+        cleanupMapper.enqueue(cleanupId, user.getUsername(), deletedUsername, existing == null ? null : existing.getId());
+        events.publishEvent(new DeletionCleanupWorker.CleanupRequested(cleanupId));
     }
 
-    /**
-     * 记录账号关闭日志
-     *
-     * @param username
-     * @param count
-     */
-    private void SaveCloseLog(String username, int count) {
-        CloseLog closeLog = new CloseLog();
-        closeLog.setUsername(username);
-        closeLog.setResetname("del_" + StringEncryptUtils.sha1HexString(username)
-                .substring(0, 15) + "_" + count);
-        closeMapper.insertCloseLog(closeLog);
-    }
 }

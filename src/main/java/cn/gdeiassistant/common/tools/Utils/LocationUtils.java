@@ -1,9 +1,9 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.pojo.Entity.Attribution;
-import cn.gdeiassistant.common.pojo.Entity.City;
-import cn.gdeiassistant.common.pojo.Entity.Region;
-import cn.gdeiassistant.common.pojo.Entity.State;
+import cn.gdeiassistant.common.pojo.entity.Attribution;
+import cn.gdeiassistant.common.pojo.entity.City;
+import cn.gdeiassistant.common.pojo.entity.Region;
+import cn.gdeiassistant.common.pojo.entity.State;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -30,9 +30,9 @@ public class LocationUtils {
 
     static {
         //加载地区信息
-        LoadLocationData();
+        loadLocationData();
         //加载手机号归属地信息
-        LoadPhoneAttributionData();
+        loadPhoneAttributionData();
     }
 
     public static Map<Integer, Attribution> getAttributionMap() {
@@ -73,7 +73,7 @@ public class LocationUtils {
         return emojiStr.toString();
     }
 
-    private static void LoadLocationData() {
+    private static void loadLocationData() {
         Resource resource = new ClassPathResource("location.xml");
         SAXReader saxReader = new SAXReader();
         Document document = null;
@@ -128,7 +128,7 @@ public class LocationUtils {
         }
     }
 
-    private static void LoadPhoneAttributionData() {
+    private static void loadPhoneAttributionData() {
         Resource resource = new ClassPathResource("phone.xml");
         SAXReader saxReader = new SAXReader();
         Document document = null;

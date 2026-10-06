@@ -1,8 +1,8 @@
 package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.constant.ObservabilityConstants;
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
@@ -60,12 +60,12 @@ public class RequestLogAspect {
     // ----------------------------------------------------------------
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.RequestLogPersistence)")
-    public void RequestAction() {
+    public void requestAction() {
 
     }
 
-    @AfterReturning("RequestAction()")
-    public void RestSaveQueryLog(JoinPoint joinPoint) {
+    @AfterReturning("requestAction()")
+    public void restSaveQueryLog(JoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
         String[] parameterName = ((CodeSignature) joinPoint.getSignature()).getParameterNames();
         HttpServletRequest request = (HttpServletRequest) args[0];
@@ -162,7 +162,7 @@ public class RequestLogAspect {
 
             if (elapsed > observabilityConstants.getSlowRequestThresholdMs()) {
                 // Use handler (ClassName.method) as the metric tag, NOT path.
-                // Paths such as /api/ershou/keyword/{keyword}/... contain free-text user
+                // Paths such as /api/marketplace/keyword/{keyword}/... contain free-text user
                 // input that would cause unbounded metric-label cardinality.
                 // Handler names are a closed, bounded set derived from the codebase.
                 String handler = joinPoint.getSignature().getDeclaringType().getSimpleName()

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.secret.converter;
 
-import cn.gdeiassistant.common.tools.Utils.AnonymizeUtils;
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretCommentEntity;
 import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;

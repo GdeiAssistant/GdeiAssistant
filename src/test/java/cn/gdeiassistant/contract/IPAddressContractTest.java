@@ -1,9 +1,9 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.core.iPAddress.controller.IPAddressController;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
+import cn.gdeiassistant.core.ipaddress.controller.IPAddressController;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;

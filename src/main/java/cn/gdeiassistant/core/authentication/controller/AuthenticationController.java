@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.authentication.controller;
 
-import cn.gdeiassistant.common.exception.AuthenticationException.*;
-import cn.gdeiassistant.common.pojo.Entity.Authentication;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.authenticationexception.*;
+import cn.gdeiassistant.common.pojo.entity.Authentication;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.authentication.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
@@ -28,9 +28,9 @@ public class AuthenticationController {
      * @return
      */
     @RequestMapping(value = "/api/authentication/status", method = RequestMethod.GET)
-    public DataJsonResult<Boolean> GetAuthenticationStatus(HttpServletRequest request) {
+    public DataJsonResult<Boolean> getAuthenticationStatus(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        Authentication authentication = authenticationService.QueryAuthentication(sessionId);
+        Authentication authentication = authenticationService.queryAuthentication(sessionId);
         return new DataJsonResult<>(true, authentication != null);
     }
 
@@ -48,11 +48,11 @@ public class AuthenticationController {
      * @throws IDPhotoSizeLimitationException
      */
     @RequestMapping(value = "/api/authentication/update", method = RequestMethod.POST)
-    public JsonResult UpdateAuthentication(HttpServletRequest request
+    public JsonResult updateAuthentication(HttpServletRequest request
             , @Validated Authentication authentication
             , @Nullable MultipartFile[] images) throws NullIDPhotoException, InconsistentAuthenticationException, AuthenticationRecordExistException, IDPhotoCountLimitationException, IDPhotoSizeLimitationException {
         String sessionId = (String) request.getAttribute("sessionId");
-        authenticationService.UpdateAuthentication(sessionId, authentication, images);
+        authenticationService.updateAuthentication(sessionId, authentication, images);
         return new JsonResult(true);
     }
 
@@ -63,9 +63,9 @@ public class AuthenticationController {
      * @return
      */
     @RequestMapping(value = "/api/authentication/delete", method = RequestMethod.POST)
-    public JsonResult DeleteAuthentication(HttpServletRequest request) {
+    public JsonResult deleteAuthentication(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        authenticationService.DeleteAuthentication(sessionId);
+        authenticationService.deleteAuthentication(sessionId);
         return new JsonResult(true);
     }
 }

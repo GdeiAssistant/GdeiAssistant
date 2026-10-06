@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.spare.repository;
 
-import cn.gdeiassistant.common.pojo.Entity.SpareRoom;
+import cn.gdeiassistant.common.pojo.entity.SpareRoom;
 
 import java.util.List;
 

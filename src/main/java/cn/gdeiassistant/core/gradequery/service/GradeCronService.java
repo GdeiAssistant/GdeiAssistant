@@ -1,15 +1,15 @@
 package cn.gdeiassistant.core.gradequery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.pojo.Document.GradeDocument;
-import cn.gdeiassistant.common.pojo.Entity.Grade;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.pojo.document.GradeDocument;
+import cn.gdeiassistant.common.pojo.entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.gradequery.pojo.GradeCacheResult;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.cron.mapper.CronMapper;
-import cn.gdeiassistant.core.userLogin.service.UserLoginService;
+import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;

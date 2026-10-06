@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderChainExhaustedException;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.capability.ProviderChain;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import io.micrometer.core.instrument.MeterRegistry;

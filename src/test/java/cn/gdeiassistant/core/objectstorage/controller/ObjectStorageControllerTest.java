@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.objectStorage.controller;
+package cn.gdeiassistant.core.objectstorage.controller;
 
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.core.objectStorage.service.UploadService;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.core.objectstorage.service.UploadService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,14 +1,14 @@
-package cn.gdeiassistant.core.userLogin.service;
+package cn.gdeiassistant.core.userlogin.service;
 
-import cn.gdeiassistant.common.enums.Recognition.CheckCodeTypeEnum;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
+import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.imageRecognition.service.ImageRecognitionService;
+import cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import cn.gdeiassistant.common.tools.Utils.ImageEncodeUtils;
+import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -33,6 +33,12 @@ import java.util.List;
 @Service
 public class TeacherLoginService {
 
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
+    private String eduBaseUrl = "http://jwgl.gdei.edu.cn";
+
+    @org.springframework.beans.factory.annotation.Autowired
+    private HttpClientUtils httpClientUtils;
+
     @Autowired
     private ImageRecognitionService imageRecognitionService;
 
@@ -46,25 +52,25 @@ public class TeacherLoginService {
      * @param password
      * @return
      */
-    public void TeacherLogin(String sessionId, String username, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException, RecognitionException {
+    public void teacherLogin(String sessionId, String username, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException, RecognitionException {
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            HttpClientSession httpClientSession = HttpClientUtils.getHttpClient(sessionId, false, 15);
+            HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            HttpGet httpGet = new HttpGet("http://jwgl.gdei.edu.cn/");
+            HttpGet httpGet = new HttpGet(eduBaseUrl + "/");
             HttpResponse httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("欢迎使用正方教务管理系统！请登录")) {
                 //获取验证码图片
-                httpGet = new HttpGet("http://jwgl.gdei.edu.cn/CheckCode.aspx");
+                httpGet = new HttpGet(eduBaseUrl + "/CheckCode.aspx");
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() == 200) {
                     InputStream checkCodeImage = httpResponse.getEntity().getContent();
-                    String checkCode = imageRecognitionService.CheckCodeRecognize(ImageEncodeUtils.convertToBase64(checkCodeImage)
+                    String checkCode = imageRecognitionService.checkCodeRecognize(ImageEncodeUtils.convertToBase64(checkCodeImage)
                             , CheckCodeTypeEnum.ENGLISH_WITH_NUMBER, 4);
-                    HttpPost httpPost = new HttpPost("http://jwgl.gdei.edu.cn/default2.aspx");
+                    HttpPost httpPost = new HttpPost(eduBaseUrl + "/default2.aspx");
                     List<BasicNameValuePair> basicNameValuePairList = new ArrayList<>();
                     basicNameValuePairList.add(new BasicNameValuePair("__VIEWSTATE", document
                             .getElementsByAttributeValue("name", "__VIEWSTATE").val()));
@@ -81,7 +87,7 @@ public class TeacherLoginService {
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                        httpGet = new HttpGet("http://jwgl.gdei.edu.cn/js_main.aspx?xh=" + username);
+                        httpGet = new HttpGet(eduBaseUrl + "/js_main.aspx?xh=" + username);
                         httpResponse = httpClient.execute(httpGet);
                         document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
@@ -120,7 +126,7 @@ public class TeacherLoginService {
                 }
             }
             if (cookieStore != null) {
-                HttpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
+                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }

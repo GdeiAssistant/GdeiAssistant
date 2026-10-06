@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.DataSource;
+package cn.gdeiassistant.common.config.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -18,7 +18,7 @@ import javax.sql.DataSource;
         "cn.gdeiassistant.core.charge.mapper",
         "cn.gdeiassistant.core.close.mapper",
         "cn.gdeiassistant.core.logdata.mapper",
-        "cn.gdeiassistant.core.iPAddress.mapper"
+        "cn.gdeiassistant.core.ipaddress.mapper"
 }, sqlSessionFactoryRef = "logSqlSessionFactory")
 public class LogDataSourceConfig {
 

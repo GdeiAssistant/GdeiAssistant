@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.social.websocket;
 
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.common.redis.UserCertificate.UserCertificateDao;
-import cn.gdeiassistant.common.tools.Utils.JwtUtil;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
+import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import com.auth0.jwt.interfaces.Claim;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
@@ -62,7 +62,7 @@ class SocialRealtimeHandlerAuthTest {
         when(jwtUtil.verifyAndParse("tok")).thenReturn(Map.of("sessionId", sid, "username", username, "exp", expiry));
         User login = new User(); login.setUsername("alice");
         when(userCertificateDao.queryUserLoginCertificate("sid")).thenReturn(login);
-        UserEntity active = new UserEntity(); active.setId(1L); active.setStatus("ACTIVE");
+        CampusAccountView active = new CampusAccountView(); active.setId(1L); active.setStatus("ACTIVE");
         when(userMapper.selectUser("alice")).thenReturn(active);
         when(session.getId()).thenReturn("ws-1");
         when(session.isOpen()).thenReturn(true);
@@ -120,7 +120,7 @@ class SocialRealtimeHandlerAuthTest {
         User login = new User();
         login.setUsername("alice");
         when(userCertificateDao.queryUserLoginCertificate("sid")).thenReturn(login);
-        UserEntity closed = new UserEntity();
+        CampusAccountView closed = new CampusAccountView();
         closed.setId(1L);
         closed.setStatus("CLOSED");
         when(userMapper.selectUser("alice")).thenReturn(closed);

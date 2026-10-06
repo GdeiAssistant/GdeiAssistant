@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.ChargeException;
+package cn.gdeiassistant.common.exception.chargeexception;
 
 /**
  * 用户身份凭证过期时抛出该异常

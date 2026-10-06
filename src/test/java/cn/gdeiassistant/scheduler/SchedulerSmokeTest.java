@@ -1,7 +1,7 @@
 package cn.gdeiassistant.scheduler;
 
 import cn.gdeiassistant.core.gradequery.service.GradeCronService;
-import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsCornService;
+import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsCronService;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleCronService;
 import cn.gdeiassistant.core.secret.service.SecretService;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class SchedulerSmokeTest {
     private ScheduleCronService scheduleCronService;
 
     @Mock
-    private SchoolNewsCornService schoolNewsCornService;
+    private SchoolNewsCronService schoolNewsCronService;
 
     @Mock
     private SecretService secretService;
@@ -58,9 +58,9 @@ class SchedulerSmokeTest {
         verify(scheduleCronService).synchronizeScheduleData();
 
         NewsScheduler newsScheduler = new NewsScheduler();
-        ReflectionTestUtils.setField(newsScheduler, "schoolNewsCornService", schoolNewsCornService);
+        ReflectionTestUtils.setField(newsScheduler, "schoolNewsCronService", schoolNewsCronService);
         newsScheduler.collectNews();
-        verify(schoolNewsCornService).collectNews();
+        verify(schoolNewsCronService).collectNews();
 
         SecretScheduler secretScheduler = new SecretScheduler();
         ReflectionTestUtils.setField(secretScheduler, "secretService", secretService);

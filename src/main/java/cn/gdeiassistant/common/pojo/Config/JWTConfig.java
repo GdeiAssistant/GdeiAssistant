@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.pojo.Config;
+package cn.gdeiassistant.common.pojo.config;
 
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +26,7 @@ public class JWTConfig {
         if (StringUtils.isNotBlank(secret) && !INSECURE_PLACEHOLDER.equals(secret)) {
             this.secret = secret;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.JWT);
+            moduleUtils.disableModule(ModuleEnum.JWT);
         }
     }
 

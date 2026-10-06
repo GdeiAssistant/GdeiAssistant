@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderException;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.capability.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

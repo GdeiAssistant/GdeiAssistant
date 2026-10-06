@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CommonException;
+package cn.gdeiassistant.common.exception.commonexception;
 
 /**
  * MongoDB 缓存清理失败时抛出（MySQL 主流程已成功）。

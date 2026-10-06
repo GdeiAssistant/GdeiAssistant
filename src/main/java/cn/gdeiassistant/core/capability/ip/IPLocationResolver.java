@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.ip;
 
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 
 public interface IPLocationResolver {
 

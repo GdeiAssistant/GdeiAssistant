@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.AuthenticationException;
+package cn.gdeiassistant.common.exception.authenticationexception;
 
 /**
  * 上传的证件照片超过限制数量时抛出该异常

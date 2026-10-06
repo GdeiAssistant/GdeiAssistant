@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.photograph.service;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.photograph.converter.PhotographCommentConverter;
 import cn.gdeiassistant.core.photograph.converter.PhotographConverter;
@@ -9,8 +9,8 @@ import cn.gdeiassistant.core.photograph.mapper.PhotographMapper;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographCommentEntity;
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographEntity;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.SpringUtils.R2StorageService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -101,7 +101,7 @@ class PhotographServiceTest {
         when(photographMapper.selectPhotographCountById(999)).thenReturn(0);
 
         assertThrows(DataNotExistException.class,
-                () -> photographService.LikePhotograph(999, "session1"));
+                () -> photographService.likePhotograph(999, "session1"));
 
         verify(photographMapper, never()).insertPhotographLike(anyInt(), anyString());
     }
@@ -138,7 +138,7 @@ class PhotographServiceTest {
         when(photographMapper.selectPhotographByIdAndUsername(eq(1), eq("testuser")))
                 .thenReturn(null);
 
-        photographService.LikePhotograph(1, "session1");
+        photographService.likePhotograph(1, "session1");
 
         verify(photographMapper).insertPhotographLike(1, "testuser");
         verify(interactionNotificationService).createInteractionNotification(

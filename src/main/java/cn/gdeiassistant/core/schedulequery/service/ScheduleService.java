@@ -1,30 +1,30 @@
 package cn.gdeiassistant.core.schedulequery.service;
 
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
-import cn.gdeiassistant.common.exception.CommonException.PasswordIncorrectException;
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
-import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
-import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.exception.QueryException.TimeStampIncorrectException;
-import cn.gdeiassistant.common.exception.RecognitionException.RecognitionException;
-import cn.gdeiassistant.common.pojo.Document.CustomScheduleDocument;
-import cn.gdeiassistant.common.pojo.Document.ScheduleDocument;
-import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
-import cn.gdeiassistant.common.pojo.Entity.Schedule;
-import cn.gdeiassistant.common.pojo.Entity.TeacherSchedule;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
+import cn.gdeiassistant.common.exception.customscheduleexception.CountOverLimitException;
+import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
+import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
+import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
+import cn.gdeiassistant.common.pojo.document.CustomScheduleDocument;
+import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
+import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
+import cn.gdeiassistant.common.pojo.entity.Schedule;
+import cn.gdeiassistant.common.pojo.entity.TeacherSchedule;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.userLogin.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.core.userLogin.service.TeacherLoginService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.core.userlogin.service.TeacherLoginService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
-import cn.gdeiassistant.common.tools.Utils.ScheduleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
-import cn.gdeiassistant.common.tools.Utils.WeekUtils;
+import cn.gdeiassistant.common.tools.utils.ScheduleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
+import cn.gdeiassistant.common.tools.utils.WeekUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -108,7 +108,7 @@ public class ScheduleService {
      *
      * @param sessionId 当前会话
      * @param position  自定义课程 position
-     * @throws cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException 当该 position 非当前用户自定义课程时
+     * @throws cn.gdeiassistant.common.exception.databaseexception.DataNotExistException 当该 position 非当前用户自定义课程时
      */
     public void deleteCustomSchedule(String sessionId, Integer position) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
@@ -398,7 +398,7 @@ public class ScheduleService {
             document = eduSystemClient.fetchTeacherScheduleDocument(sessionId, username, teacherName, year, term);
         } catch (ServerErrorException e) {
             if (e.getMessage() != null && e.getMessage().contains("需要重新登录")) {
-                teacherLoginService.TeacherLogin(sessionId, username, password);
+                teacherLoginService.teacherLogin(sessionId, username, password);
                 try {
                     document = eduSystemClient.fetchTeacherScheduleDocument(sessionId, username, teacherName, year, term);
                 } catch (IOException ex) {

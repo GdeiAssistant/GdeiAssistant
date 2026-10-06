@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CloseAccountException;
+package cn.gdeiassistant.common.exception.closeaccountexception;
 
 /**
  * 关闭账号时，用户有未处理的社区功能信息时，抛出该异常

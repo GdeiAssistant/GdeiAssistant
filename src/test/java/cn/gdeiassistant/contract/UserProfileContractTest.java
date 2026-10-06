@@ -1,15 +1,15 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.common.pojo.Entity.Introduction;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.Introduction;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.i18n.I18nTranslationService;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
-import cn.gdeiassistant.core.userProfile.controller.ProfileController;
-import cn.gdeiassistant.core.userProfile.controller.mapper.ProfileResponseMapper;
-import cn.gdeiassistant.core.userProfile.service.ProfileLocalizationService;
-import cn.gdeiassistant.core.userProfile.service.ProfileOptionsFacade;
+import cn.gdeiassistant.core.userprofile.controller.ProfileController;
+import cn.gdeiassistant.core.userprofile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
+import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

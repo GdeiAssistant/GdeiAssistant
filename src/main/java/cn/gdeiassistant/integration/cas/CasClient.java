@@ -1,6 +1,6 @@
 package cn.gdeiassistant.integration.cas;
 
-import cn.gdeiassistant.common.exception.CommonException.ServerErrorException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.cas.pojo.CasSessionCredential;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;

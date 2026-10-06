@@ -11,7 +11,7 @@ import java.util.List;
 public interface SecretCommentConverter {
 
     @Mapping(target = "username",
-            expression = "java(cn.gdeiassistant.common.tools.Utils.AnonymizeUtils.treeholeAnonymousLabel())")
+            expression = "java(cn.gdeiassistant.common.tools.utils.AnonymizeUtils.treeholeAnonymousLabel())")
     SecretCommentVO toVO(SecretCommentEntity entity);
 
     List<SecretCommentVO> toVOList(List<SecretCommentEntity> entities);

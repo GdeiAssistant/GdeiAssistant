@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.user.pojo.entity;
 
-import cn.gdeiassistant.common.pojo.Entity.Entity;
+import cn.gdeiassistant.common.pojo.entity.Entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,7 +9,7 @@ import java.util.Date;
  * 应用账号 + 校园凭证联合视图（查询结果），仅用于 MyBatis 映射与登录内部流转。
  * 权威模型：app_user + campus_credential；campus_username 仍作为校园侧关联键。
  */
-public class UserEntity implements Serializable, Entity {
+public class CampusAccountView implements Serializable, Entity {
 
     private Long id;
     private String publicId;

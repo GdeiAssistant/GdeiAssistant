@@ -1,17 +1,17 @@
 package cn.gdeiassistant.core.phone.controller;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
-import cn.gdeiassistant.common.exception.VerificationException.SendSMSException;
-import cn.gdeiassistant.common.exception.VerificationException.VerificationCodeInvalidException;
-import cn.gdeiassistant.common.pojo.Entity.Attribution;
+import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
+import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeInvalidException;
+import cn.gdeiassistant.common.pojo.entity.Attribution;
 import cn.gdeiassistant.core.phone.pojo.dto.PhoneBindDTO;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.profile.pojo.AttributionComparator;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.phone.service.PhoneService;
-import cn.gdeiassistant.common.tools.Utils.LocationUtils;
+import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class PhoneController {
      */
     @RateLimit(maxRequests = 3, windowSeconds = 60)
     @RequestMapping(value = "/api/phone/verification", method = RequestMethod.POST)
-    public JsonResult GetPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
+    public JsonResult getPhoneVerificationCode(HttpServletRequest request, @Validated @NotNull @Min(0) @Max(999) Integer code
             , @Validated @NotBlank @Length(min = 7, max = 11) @Pattern(regexp = "^[0-9]*$") String phone) throws SendSMSException {
         if (LocationUtils.getAttributionMap().get(code) == null) {
             return failure(request, "不受支持的国际手机区号");

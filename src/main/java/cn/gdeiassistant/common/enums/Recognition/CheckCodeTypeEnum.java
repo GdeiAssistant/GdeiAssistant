@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.enums.Recognition;
+package cn.gdeiassistant.common.enums.recognition;
 
 public enum CheckCodeTypeEnum {
 

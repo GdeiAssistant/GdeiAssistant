@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CloseAccountException;
+package cn.gdeiassistant.common.exception.closeaccountexception;
 
 public abstract class CloseAccountException extends Exception {
 

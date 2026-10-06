@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.redis.CookieStore;
+package cn.gdeiassistant.common.redis.cookiestore;
 
-import cn.gdeiassistant.common.tools.SpringUtils.RedisDaoUtils;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.apache.http.client.CookieStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,19 +24,19 @@ public class CookieStoreDaoImpl implements CookieStoreDao {
      * @param cookieStore
      */
     @Override
-    public void SaveCookieStore(String sessionId, CookieStore cookieStore) {
+    public void saveCookieStore(String sessionId, CookieStore cookieStore) {
         String key = StringEncryptUtils.sha256HexString(PREFIX + sessionId);
         redisDaoUtils.setSerializable(key, (Serializable) cookieStore);
         redisDaoUtils.expire(key, 1, TimeUnit.HOURS);
     }
 
     @Override
-    public CookieStore QueryCookieStore(String sessionId) {
+    public CookieStore queryCookieStore(String sessionId) {
         return redisDaoUtils.getSerializable(StringEncryptUtils.sha256HexString(PREFIX + sessionId));
     }
 
     @Override
-    public void ClearCookieStore(String sessionId) {
+    public void clearCookieStore(String sessionId) {
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(PREFIX + sessionId));
     }
 }

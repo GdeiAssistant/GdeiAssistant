@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.book.repository;
 
-import cn.gdeiassistant.common.pojo.Document.BookListDocument;
-import cn.gdeiassistant.common.pojo.Entity.Book;
+import cn.gdeiassistant.common.pojo.document.BookListDocument;
+import cn.gdeiassistant.common.pojo.entity.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;

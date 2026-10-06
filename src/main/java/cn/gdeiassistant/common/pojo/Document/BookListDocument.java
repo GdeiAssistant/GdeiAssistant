@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.pojo.Document;
+package cn.gdeiassistant.common.pojo.document;
 
-import cn.gdeiassistant.common.pojo.Entity.Book;
+import cn.gdeiassistant.common.pojo.entity.Book;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

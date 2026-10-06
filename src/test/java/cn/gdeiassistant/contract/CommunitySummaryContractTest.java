@@ -47,7 +47,7 @@ class CommunitySummaryContractTest {
         doingItem.setUsername("20231234");
         doingItem.setName("九成新计算器");
         doingItem.setDescription("考试周自提");
-        doingItem.setPrice(38.5f);
+        doingItem.setPrice(new java.math.BigDecimal("38.5"));
         doingItem.setLocation("海珠校区");
         doingItem.setType(8);
         doingItem.setQq("123456");
@@ -60,7 +60,7 @@ class CommunitySummaryContractTest {
         offItem.setUsername("20231234");
         offItem.setName("二手风扇");
         offItem.setDescription("宿舍清仓");
-        offItem.setPrice(25.0f);
+        offItem.setPrice(new java.math.BigDecimal("25.0"));
         offItem.setLocation("白云校区");
         offItem.setType(5);
         offItem.setQq("654321");
@@ -73,7 +73,7 @@ class CommunitySummaryContractTest {
         soldItem.setUsername("20231234");
         soldItem.setName("旧教材");
         soldItem.setDescription("已停止出售");
-        soldItem.setPrice(12.0f);
+        soldItem.setPrice(new java.math.BigDecimal("12.0"));
         soldItem.setLocation("花都校区");
         soldItem.setType(8);
         soldItem.setQq("777888");
@@ -84,7 +84,7 @@ class CommunitySummaryContractTest {
         when(marketplaceService.queryPersonalItems("session-1"))
                 .thenReturn(List.of(doingItem, soldItem, offItem));
 
-        mockMvc.perform(get("/api/ershou/profile")
+        mockMvc.perform(get("/api/marketplace/profile")
                         .requestAttr("sessionId", "session-1"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(

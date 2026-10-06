@@ -1,6 +1,6 @@
-package cn.gdeiassistant.common.pojo.Document;
+package cn.gdeiassistant.common.pojo.document;
 
-import cn.gdeiassistant.common.pojo.Entity.CollectionDetail;
+import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
 
 import java.io.Serializable;
 

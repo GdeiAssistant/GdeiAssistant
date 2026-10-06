@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.pojo.Config;
+package cn.gdeiassistant.common.pojo.config;
 
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -30,7 +30,7 @@ public class AliYunSMSConfig {
         if (StringUtils.isNotBlank(smsAliyunUserId)) {
             this.smsAliyunUserId = smsAliyunUserId;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -39,7 +39,7 @@ public class AliYunSMSConfig {
         if (StringUtils.isNotBlank(smsAliyunAccessKeyId)) {
             this.smsAliyunAccessKeyId = smsAliyunAccessKeyId;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -48,7 +48,7 @@ public class AliYunSMSConfig {
         if (StringUtils.isNotBlank(smsAliyunAccessKeySecret)) {
             this.smsAliyunAccessKeySecret = smsAliyunAccessKeySecret;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -57,7 +57,7 @@ public class AliYunSMSConfig {
         if (StringUtils.isNotBlank(smsAliyunChinaTemplateCode)) {
             this.smsAliyunChinaTemplateCode = smsAliyunChinaTemplateCode;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 
@@ -66,7 +66,7 @@ public class AliYunSMSConfig {
         if (StringUtils.isNotBlank(smsAliyunGlobalTemplateCode)) {
             this.smsAliyunGlobalTemplateCode = smsAliyunGlobalTemplateCode;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_SMS);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_SMS);
         }
     }
 

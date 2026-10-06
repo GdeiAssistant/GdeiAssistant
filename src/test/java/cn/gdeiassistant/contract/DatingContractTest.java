@@ -6,7 +6,7 @@ import cn.gdeiassistant.core.dating.pojo.dto.DatingPickSubmitDTO;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.dating.service.DatingService;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

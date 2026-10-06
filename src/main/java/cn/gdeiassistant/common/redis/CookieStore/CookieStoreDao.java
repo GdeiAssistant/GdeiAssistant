@@ -1,12 +1,12 @@
-package cn.gdeiassistant.common.redis.CookieStore;
+package cn.gdeiassistant.common.redis.cookiestore;
 
 import org.apache.http.client.CookieStore;
 
 public interface CookieStoreDao {
 
-    void SaveCookieStore(String sessionId, CookieStore cookieStore);
+    void saveCookieStore(String sessionId, CookieStore cookieStore);
 
-    CookieStore QueryCookieStore(String sessionId);
+    CookieStore queryCookieStore(String sessionId);
 
-    void ClearCookieStore(String sessionId);
+    void clearCookieStore(String sessionId);
 }

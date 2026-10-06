@@ -1,12 +1,12 @@
 package cn.gdeiassistant.core.chargerequest.controller;
 
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
-import cn.gdeiassistant.common.exception.ChargeException.AmountNotAvailableException;
-import cn.gdeiassistant.common.exception.ChargeException.ChargeIdempotencyException;
-import cn.gdeiassistant.common.exception.CommonException.NetWorkTimeoutException;
+import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
+import cn.gdeiassistant.common.exception.chargeexception.ChargeIdempotencyException;
+import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.common.interceptor.ApiAuthInterceptor;
-import cn.gdeiassistant.common.pojo.Entity.User;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderEntity;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderStatus;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
@@ -14,8 +14,8 @@ import cn.gdeiassistant.core.charge.service.ChargeIdempotencyService;
 import cn.gdeiassistant.core.charge.service.ChargeOrderService;
 import cn.gdeiassistant.core.charge.service.ChargeService;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -102,7 +102,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.data.message").value("支付请求已生成，请完成支付并刷新余额。"));
 
         verify(chargeService).ChargeRequest(SESSION_ID, 50);
-        verify(chargeService).SaveChargeLog(SESSION_ID, 50);
+        verify(chargeService).saveChargeLog(SESSION_ID, 50);
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markPaymentSessionCreated(ORDER_ID,
                 "https://pay.example.invalid/synthetic-charge");
@@ -124,7 +124,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         verify(chargeService).ChargeRequest(SESSION_ID, 30);
-        verify(chargeService).SaveChargeLog(SESSION_ID, 30);
+        verify(chargeService).saveChargeLog(SESSION_ID, 30);
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markPaymentSessionCreated(ORDER_ID,
                 "https://pay.example.invalid/synthetic-charge");
@@ -151,7 +151,7 @@ class ChargeRequestControllerTest {
         verify(chargeIdempotencyService).begin(USERNAME, ChargeIdempotencyService.ENDPOINT_CARD_CHARGE,
                 IDEMPOTENCY_KEY, 50, DEVICE_ID);
         verify(chargeService).ChargeRequest(SESSION_ID, 50);
-        verify(chargeService).SaveChargeLog(SESSION_ID, 50);
+        verify(chargeService).saveChargeLog(SESSION_ID, 50);
         verify(chargeOrderService).findByIdempotency(USERNAME, IDEMPOTENCY_KEY_HASH, FINGERPRINT);
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markPaymentSessionCreated(ORDER_ID,
@@ -180,7 +180,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.code").value(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT));
 
         verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
-        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
 
@@ -203,7 +203,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.message").value("相同充值请求已处理，请勿重复提交"));
 
         verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
-        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
 
@@ -329,7 +329,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(false));
 
         verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
-        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeIdempotencyService);
     }
 
@@ -363,7 +363,7 @@ class ChargeRequestControllerTest {
 
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markUnknown(eq(ORDER_ID), any(NetWorkTimeoutException.class));
-        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
     }
 
     @Test
@@ -383,7 +383,7 @@ class ChargeRequestControllerTest {
 
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markFailed(eq(ORDER_ID), any(AmountNotAvailableException.class));
-        verify(chargeService, never()).SaveChargeLog(anyString(), anyInt());
+        verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
     }
 
     @Test
@@ -463,7 +463,7 @@ class ChargeRequestControllerTest {
 
     private void mockAuthenticatedUser(String storedPassword) {
         when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(new User(USERNAME, storedPassword));
-        UserEntity userEntity = new UserEntity();
+        CampusAccountView userEntity = new CampusAccountView();
         userEntity.setUsername(USERNAME);
         userEntity.setPassword(storedPassword);
         when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);

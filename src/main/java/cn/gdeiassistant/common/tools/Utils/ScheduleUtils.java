@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.tools.Utils;
+package cn.gdeiassistant.common.tools.utils;
 
-import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
-import cn.gdeiassistant.common.pojo.Entity.Schedule;
+import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
+import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
+import cn.gdeiassistant.common.pojo.entity.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;

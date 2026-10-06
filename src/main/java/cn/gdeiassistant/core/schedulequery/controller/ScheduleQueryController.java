@@ -1,13 +1,13 @@
 package cn.gdeiassistant.core.schedulequery.controller;
 
 import cn.gdeiassistant.common.annotation.QueryLogPersistence;
-import cn.gdeiassistant.common.exception.CustomScheduleException.CountOverLimitException;
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
-import cn.gdeiassistant.common.exception.CustomScheduleException.GenerateScheduleException;
-import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
-import cn.gdeiassistant.common.pojo.Entity.CustomSchedule;
-import cn.gdeiassistant.common.pojo.Result.DataJsonResult;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.exception.customscheduleexception.CountOverLimitException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
+import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
+import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
+import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
+import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleService;

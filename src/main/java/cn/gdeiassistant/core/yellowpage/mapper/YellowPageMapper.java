@@ -1,7 +1,7 @@
-package cn.gdeiassistant.core.yellowPage.mapper;
+package cn.gdeiassistant.core.yellowpage.mapper;
 
 import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
-import cn.gdeiassistant.common.pojo.Entity.YellowPage;
+import cn.gdeiassistant.common.pojo.entity.YellowPage;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;

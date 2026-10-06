@@ -1,7 +1,7 @@
-package cn.gdeiassistant.common.redis.VerificationCode;
+package cn.gdeiassistant.common.redis.verificationcode;
 
-import cn.gdeiassistant.common.tools.SpringUtils.RedisDaoUtils;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -23,7 +23,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param phone
      * @return
      */
-    public Integer QueryPhoneVerificationCode(int code, String phone) {
+    public Integer queryPhoneVerificationCode(int code, String phone) {
         String s = redisDaoUtils.get(StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone));
         return (s == null || s.isEmpty()) ? null : Integer.parseInt(s);
     }
@@ -35,7 +35,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param phone
      */
     @Override
-    public void DeletePhoneVerificationCode(int code, String phone) {
+    public void deletePhoneVerificationCode(int code, String phone) {
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone));
     }
 
@@ -46,7 +46,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param phone
      * @param randomCode
      */
-    public void SavePhoneVerificationCode(int code, String phone, int randomCode) {
+    public void savePhoneVerificationCode(int code, String phone, int randomCode) {
         String key = StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone);
         redisDaoUtils.set(key, String.valueOf(randomCode));
         redisDaoUtils.expire(key, 5, TimeUnit.MINUTES);
@@ -57,12 +57,12 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * @param email
      * @return
      */
-    public Integer QueryEmailVerificationCode(String email){
+    public Integer queryEmailVerificationCode(String email){
         String s = redisDaoUtils.get(StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email));
         return (s == null || s.isEmpty()) ? null : Integer.parseInt(s);
     }
 
-    public void SaveEmailVerificationCode(String email, int randomCode){
+    public void saveEmailVerificationCode(String email, int randomCode){
         String key = StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email);
         redisDaoUtils.set(key, String.valueOf(randomCode));
         redisDaoUtils.expire(key, 5, TimeUnit.MINUTES);
@@ -72,7 +72,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
      * 删除电子邮件验证码记录
      * @param email
      */
-    public void DeleteEmailVerificationCode(String email){
+    public void deleteEmailVerificationCode(String email){
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email));
     }
 }

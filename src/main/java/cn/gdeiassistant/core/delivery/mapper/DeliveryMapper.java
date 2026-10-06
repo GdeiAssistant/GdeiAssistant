@@ -18,12 +18,12 @@ public interface DeliveryMapper {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),
             @Result(property = "orderTime", column = "order_time"),
-            @Result(property = "name", column = "name"),
-            @Result(property = "number", column = "number"),
-            @Result(property = "phone", column = "phone"),
+            @Result(property = "taskName", column = "name"),
+            @Result(property = "pickupCode", column = "number"),
+            @Result(property = "contactPhone", column = "phone"),
             @Result(property = "price", column = "price"),
-            @Result(property = "company", column = "company"),
-            @Result(property = "address", column = "address"),
+            @Result(property = "pickupLocation", column = "company"),
+            @Result(property = "deliveryAddress", column = "address"),
             @Result(property = "state", column = "state"),
             @Result(property = "remarks", column = "remarks"),
     })
@@ -51,7 +51,7 @@ public interface DeliveryMapper {
     @ResultType(String.class)
     String selectDeliveryTradeUsernameByOrderId(Integer orderId);
 
-    @Select("select order_id,username,order_time,price,company,address,state from delivery_order where state=0 order by order_time desc limit #{start},#{size}")
+    @Select("select order_id,username,order_time,price,company,address,state from delivery_order where state=0 order by order_time desc,order_id desc limit #{start},#{size}")
     @ResultMap("DeliveryOrder")
     List<DeliveryOrderEntity> selectDeliveryOrderPage(@Param("start") Integer start, @Param("size") Integer size);
 
@@ -73,8 +73,8 @@ public interface DeliveryMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "deliveryOrder.orderId", column = "deliveryOrderId"),
             @Result(property = "deliveryOrder.username", column = "deliveryOrderUsername"),
-            @Result(property = "deliveryOrder.company", column = "deliveryOrderCompany"),
-            @Result(property = "deliveryOrder.address", column = "deliveryOrderAddress"),
+            @Result(property = "deliveryOrder.pickupLocation", column = "deliveryOrderCompany"),
+            @Result(property = "deliveryOrder.deliveryAddress", column = "deliveryOrderAddress"),
             @Result(property = "deliveryOrder.state", column = "deliveryOrderState"),
     })
     List<DeliveryTradeEntity> selectPersonalDeliveryInteractionPage(@Param("username") String username,
@@ -86,12 +86,12 @@ public interface DeliveryMapper {
             @Result(property = "orderId", column = "order_id"),
             @Result(property = "username", column = "username"),
             @Result(property = "orderTime", column = "order_time"),
-            @Result(property = "name", column = "name"),
-            @Result(property = "number", column = "number"),
-            @Result(property = "phone", column = "phone"),
+            @Result(property = "taskName", column = "name"),
+            @Result(property = "pickupCode", column = "number"),
+            @Result(property = "contactPhone", column = "phone"),
             @Result(property = "price", column = "price"),
-            @Result(property = "company", column = "company"),
-            @Result(property = "address", column = "address"),
+            @Result(property = "pickupLocation", column = "company"),
+            @Result(property = "deliveryAddress", column = "address"),
             @Result(property = "state", column = "state"),
             @Result(property = "remarks", column = "remarks")
     })
@@ -105,14 +105,14 @@ public interface DeliveryMapper {
             @Result(property = "username", column = "username"),
             @Result(property = "orderTime", column = "order_time"),
             @Result(property = "price", column = "price"),
-            @Result(property = "company", column = "company"),
-            @Result(property = "address", column = "address"),
+            @Result(property = "pickupLocation", column = "company"),
+            @Result(property = "deliveryAddress", column = "address"),
             @Result(property = "state", column = "state")
     })
     List<DeliveryOrderEntity> selectAcceptedDeliveryOrderByUsername(String username);
 
     @Insert("insert into delivery_order (username,order_time,name,number,phone,price,company,address,remarks,state) values(#{username}" +
-            ",now(),#{name},#{number},#{phone},#{price},#{company},#{address},#{remarks},0)")
+            ",now(),#{taskName},#{pickupCode},#{contactPhone},#{price},#{pickupLocation},#{deliveryAddress},#{remarks},0)")
     @Options(useGeneratedKeys = true, keyProperty = "orderId")
     void insertDeliveryOrder(DeliveryOrderEntity entity);
 

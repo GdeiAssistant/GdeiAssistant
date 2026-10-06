@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.capability.email;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
 
 public interface EmailVerificationSender {
 

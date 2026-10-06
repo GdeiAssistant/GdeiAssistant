@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CommonException;
+package cn.gdeiassistant.common.exception.commonexception;
 
 public class ServerErrorException extends Exception {
 

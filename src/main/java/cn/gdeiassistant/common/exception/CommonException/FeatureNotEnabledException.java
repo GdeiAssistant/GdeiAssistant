@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.CommonException;
+package cn.gdeiassistant.common.exception.commonexception;
 
 /**
  * 功能未开启异常（特性开关 / 功能降级）。

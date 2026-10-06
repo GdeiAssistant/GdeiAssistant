@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.capability.impl;
 
-import cn.gdeiassistant.common.exception.VerificationException.SendEmailException;
-import cn.gdeiassistant.common.tools.SpringUtils.EmailUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
+import cn.gdeiassistant.common.tools.springutils.EmailUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.email.EmailVerificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +44,7 @@ public class SmtpEmailVerificationSender implements EmailVerificationSender {
             throw new SendEmailException("邮件功能未启用：请先配置 SMTP（email.smtp.host/username/password）");
         }
         try {
-            emailUtils.SendEmail(senderEmail, recipientEmail, "广东二师助手邮箱验证码", text, new InputStream[0]);
+            emailUtils.sendEmail(senderEmail, recipientEmail, "广东二师助手邮箱验证码", text, new InputStream[0]);
         } catch (MessagingException | IOException e) {
             throw new SendEmailException("SMTP 邮件发送失败，请检查 SMTP 配置或服务状态");
         }

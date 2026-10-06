@@ -1,15 +1,15 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.common.exception.DatabaseException.DataNotExistException;
+import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.announcement.controller.AnnouncementController;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
-import cn.gdeiassistant.core.information.service.Announcement.AnnouncementService;
-import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsService;
+import cn.gdeiassistant.core.information.service.announcement.AnnouncementService;
+import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsService;
 import cn.gdeiassistant.core.message.controller.MessageController;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.MessageService;
-import cn.gdeiassistant.core.schoolNews.controller.SchoolNewsController;
+import cn.gdeiassistant.core.schoolnews.controller.SchoolNewsController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.gradequery.pojo.vo;
 
-import cn.gdeiassistant.common.pojo.Entity.Grade;
+import cn.gdeiassistant.common.pojo.entity.Grade;
 
 import java.util.List;
 

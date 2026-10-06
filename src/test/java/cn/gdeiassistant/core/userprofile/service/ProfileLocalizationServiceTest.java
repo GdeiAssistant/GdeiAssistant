@@ -1,8 +1,8 @@
-package cn.gdeiassistant.core.userProfile.service;
+package cn.gdeiassistant.core.userprofile.service;
 
 import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
-import cn.gdeiassistant.core.userProfile.pojo.ProfileLocationValueVO;
+import cn.gdeiassistant.core.userprofile.pojo.ProfileLocationValueVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 

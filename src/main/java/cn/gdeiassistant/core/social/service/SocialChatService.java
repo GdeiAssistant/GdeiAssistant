@@ -12,7 +12,7 @@ import cn.gdeiassistant.core.social.pojo.entity.ChatMessageEntity;
 import cn.gdeiassistant.core.social.pojo.entity.ConversationEntity;
 import cn.gdeiassistant.core.social.pojo.entity.ConversationMemberEntity;
 import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
-import cn.gdeiassistant.core.user.pojo.entity.UserEntity;
+import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -53,7 +53,7 @@ public class SocialChatService {
     private SocialChatImageService chatImageService;
 
     public Map<String, Object> unreadTotal(String sessionId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         Map<String, Object> data = new HashMap<>();
         data.put("total", chatMapper.countTotalUnread(me.getId()));
         return data;
@@ -61,8 +61,8 @@ public class SocialChatService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public ConversationDTO createOrGetConversation(String sessionId, String peerPublicId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
-        UserEntity peer = identityService.requireActiveByPublicId(peerPublicId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView peer = identityService.requireActiveByPublicId(peerPublicId);
         if (me.getId().equals(peer.getId())) {
             throw SocialException.invalidRequest("不能与自己创建会话");
         }
@@ -96,7 +96,7 @@ public class SocialChatService {
     }
 
     public PageDTO<ConversationDTO> listConversations(String sessionId, String cursor, Integer limit) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         int size = normalizeLimit(limit);
         Cursor c = decodeTimeCursor(cursor);
         List<ConversationEntity> rows = chatMapper.listConversations(me.getId(),
@@ -116,14 +116,14 @@ public class SocialChatService {
     }
 
     public ConversationDTO getConversation(String sessionId, String conversationId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         return toConversationDTO(me, conversation);
     }
 
     public PageDTO<ChatMessageDTO> listMessages(String sessionId, String conversationId,
                                                 String beforeSeq, String afterSeq, Integer limit) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         if (beforeSeq != null && !beforeSeq.isBlank() && afterSeq != null && !afterSeq.isBlank()) {
             throw SocialException.invalidRequest("beforeSeq 与 afterSeq 互斥");
@@ -175,7 +175,7 @@ public class SocialChatService {
                                            String clientMessageId, byte[] rawImage, String claimedContentType) {
         String clientId = requireClientMessageId(clientMessageId);
 
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         ChatMessageEntity existing = chatMapper.selectByClientMessageId(conversation.getId(), me.getId(), clientId);
         if (existing != null && !TYPE_IMAGE.equals(normalizeType(existing.getType()))) {
@@ -196,7 +196,7 @@ public class SocialChatService {
         if (existing != null) {
             return confirmExistingImage(existing, canonical.sha256Hex);
         }
-        UserEntity peer = identityService.findById(peerId);
+        CampusAccountView peer = identityService.findById(peerId);
         if (peer == null || !peer.isActive()) {
             throw SocialException.contactUnavailable();
         }
@@ -262,7 +262,7 @@ public class SocialChatService {
      * 历史读图：会话成员 + 消息属于该会话即可；不按当前 canSend / 拉黑 / 隐私判断。
      */
     public ImageDownload downloadImage(String sessionId, String conversationId, String messageId) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         long mid;
         try {
@@ -302,7 +302,7 @@ public class SocialChatService {
 
     @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED)
     public Map<String, Object> markRead(String sessionId, String conversationId, String lastReadSeqRaw) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         long lastReadSeq;
         try {
@@ -352,7 +352,7 @@ public class SocialChatService {
     private ChatMessageDTO commitNewMessage(String sessionId, String conversationId, String clientId,
                                             Predicate<ChatMessageEntity> samePayload,
                                             Consumer<ChatMessageEntity> populate) {
-        UserEntity me = identityService.requireActiveViewer(sessionId);
+        CampusAccountView me = identityService.requireActiveViewer(sessionId);
         ConversationEntity conversation = requireMemberConversation(me.getId(), conversationId);
         ChatMessageEntity existing = chatMapper.selectByClientMessageId(conversation.getId(), me.getId(), clientId);
         if (existing != null) {
@@ -366,7 +366,7 @@ public class SocialChatService {
         if (existing != null) {
             return confirmExisting(existing, samePayload);
         }
-        UserEntity peer = identityService.findById(peerId);
+        CampusAccountView peer = identityService.findById(peerId);
         if (peer == null || !peer.isActive()) {
             throw SocialException.contactUnavailable();
         }
@@ -460,9 +460,9 @@ public class SocialChatService {
         return conversation;
     }
 
-    private ConversationDTO toConversationDTO(UserEntity me, ConversationEntity conversation) {
+    private ConversationDTO toConversationDTO(CampusAccountView me, ConversationEntity conversation) {
         long peerId = peerIdOf(conversation, me.getId());
-        UserEntity peer = identityService.findById(peerId);
+        CampusAccountView peer = identityService.findById(peerId);
         SocialUserDTO peerDto;
         boolean canSend;
         String reason;
@@ -498,7 +498,7 @@ public class SocialChatService {
         dto.setId(String.valueOf(entity.getId()));
         dto.setConversationId(String.valueOf(entity.getConversationId()));
         dto.setSeq(String.valueOf(entity.getSeq()));
-        UserEntity sender = identityService.findById(entity.getSenderId());
+        CampusAccountView sender = identityService.findById(entity.getSenderId());
         dto.setSenderId(sender != null && sender.getPublicId() != null ? sender.getPublicId() : "");
         dto.setClientMessageId(entity.getClientMessageId());
         String type = normalizeType(entity.getType());

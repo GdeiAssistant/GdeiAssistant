@@ -1,10 +1,10 @@
-package cn.gdeiassistant.common.redis.LoginToken;
+package cn.gdeiassistant.common.redis.logintoken;
 
-import cn.gdeiassistant.common.pojo.Entity.AccessToken;
-import cn.gdeiassistant.common.pojo.Entity.Device;
-import cn.gdeiassistant.common.pojo.Entity.RefreshToken;
-import cn.gdeiassistant.common.tools.SpringUtils.RedisDaoUtils;
-import cn.gdeiassistant.common.tools.Utils.StringEncryptUtils;
+import cn.gdeiassistant.common.pojo.entity.AccessToken;
+import cn.gdeiassistant.common.pojo.entity.Device;
+import cn.gdeiassistant.common.pojo.entity.RefreshToken;
+import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 查找令牌签名对应的记录信息（Value 存 JSON 字符串，与 redisTemplate 的 StringRedisSerializer 一致）
      */
     @Override
-    public AccessToken QueryAccessToken(String signature) {
+    public AccessToken queryAccessToken(String signature) {
         String key = StringEncryptUtils.sha256HexString(ACCESS_TOKEN_PREFIX + signature);
         String json = redisDaoUtils.get(key);
         if (json == null || json.isEmpty()) return null;
@@ -46,7 +46,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 查找刷新令牌对应信息（Value 存 accessTokenSignature 字符串）
      */
     @Override
-    public RefreshToken QueryRefreshToken(String signature) {
+    public RefreshToken queryRefreshToken(String signature) {
         String key = StringEncryptUtils.sha256HexString(REFRESH_TOKEN_PREFIX + signature);
         String accessTokenSignature = redisDaoUtils.get(key);
         if (accessTokenSignature == null || accessTokenSignature.isEmpty()) return null;
@@ -60,7 +60,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 插入权限令牌信息（存 JSON 字符串）
      */
     @Override
-    public void InsertAccessToken(AccessToken token) {
+    public void insertAccessToken(AccessToken token) {
         String key = StringEncryptUtils.sha256HexString(ACCESS_TOKEN_PREFIX + token.getSignature());
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(token));
@@ -74,7 +74,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 插入刷新令牌信息（Value 存 accessTokenSignature 字符串）
      */
     @Override
-    public void InsertRefreshToken(RefreshToken token) {
+    public void insertRefreshToken(RefreshToken token) {
         String key = StringEncryptUtils.sha256HexString(REFRESH_TOKEN_PREFIX + token.getSignature());
         redisDaoUtils.set(key, token.getAccessTokenSignature());
         redisDaoUtils.expire(key, 30, TimeUnit.DAYS);
@@ -87,7 +87,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * @return
      */
     @Override
-    public void DeleteAccessToken(String signature) {
+    public void deleteAccessToken(String signature) {
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(ACCESS_TOKEN_PREFIX + signature));
     }
 
@@ -98,7 +98,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * @return
      */
     @Override
-    public void DeleteRefreshToken(String signature) {
+    public void deleteRefreshToken(String signature) {
         redisDaoUtils.delete(StringEncryptUtils.sha256HexString(REFRESH_TOKEN_PREFIX + signature));
     }
 
@@ -106,7 +106,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 查询访问设备信息（Value 存 JSON 字符串）
      */
     @Override
-    public Device QueryDeviceData(String signature) {
+    public Device queryDeviceData(String signature) {
         String key = StringEncryptUtils.sha256HexString(DEVICE_DATA_PREFIX + signature);
         String json = redisDaoUtils.get(key);
         if (json == null || json.isEmpty()) return null;
@@ -121,7 +121,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
      * 保存访问设备信息（存 JSON 字符串）
      */
     @Override
-    public void SaveDeviceData(String signature, Device device) {
+    public void saveDeviceData(String signature, Device device) {
         String key = StringEncryptUtils.sha256HexString(DEVICE_DATA_PREFIX + signature);
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(device));

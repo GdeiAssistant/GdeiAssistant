@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DeliveryException;
+package cn.gdeiassistant.common.exception.deliveryexception;
 
 /**
  * 快递代收订单状态已更新时，抛出该异常

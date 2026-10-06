@@ -1,10 +1,10 @@
 package cn.gdeiassistant.core.cron.controller;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
-import cn.gdeiassistant.common.pojo.Result.JsonResult;
+import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.gradequery.service.GradeCronService;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleCronService;
-import cn.gdeiassistant.core.information.service.SchoolNews.SchoolNewsCornService;
+import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsCronService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CronController {
     private ScheduleCronService scheduleCronService;
 
     @Autowired(required = false)
-    private SchoolNewsCornService schoolNewsCornService;
+    private SchoolNewsCronService schoolNewsCronService;
 
     @Value("${app.cron.secret}")
     private String cronSecret;
@@ -97,10 +97,10 @@ public class CronController {
         if (!authenticateCron(secret, response)) {
             return null;
         }
-        if (schoolNewsCornService == null) {
+        if (schoolNewsCronService == null) {
             return new JsonResult(false);
         }
-        return runCronTask("news", schoolNewsCornService::collectNews);
+        return runCronTask("news", schoolNewsCronService::collectNews);
     }
 
 }

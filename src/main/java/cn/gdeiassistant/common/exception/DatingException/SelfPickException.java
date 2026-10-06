@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DatingException;
+package cn.gdeiassistant.common.exception.datingexception;
 
 /**
  * 不能向自己发布的卖室友信息发送撩一下请求，否则抛出该异常

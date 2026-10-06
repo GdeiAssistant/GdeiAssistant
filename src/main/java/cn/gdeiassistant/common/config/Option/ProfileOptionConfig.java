@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.Option;
+package cn.gdeiassistant.common.config.option;
 
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
 import org.springframework.context.annotation.Bean;

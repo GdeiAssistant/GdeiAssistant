@@ -62,6 +62,7 @@ jobs:
           context: .
           file: ./Dockerfile.backend
           push: true
+          build-args: GDEI_BUILD_REVISION=${{ github.sha }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

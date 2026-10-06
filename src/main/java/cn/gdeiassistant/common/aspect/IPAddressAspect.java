@@ -1,11 +1,11 @@
 package cn.gdeiassistant.common.aspect;
 
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
-import cn.gdeiassistant.common.pojo.Entity.IPAddressRecord;
-import cn.gdeiassistant.common.pojo.Entity.User;
-import cn.gdeiassistant.core.iPAddress.service.IPAddressService;
-import cn.gdeiassistant.core.userLogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.Utils.IPAddressUtils;
+import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
+import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.tools.utils.IPAddressUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,7 +27,7 @@ public class IPAddressAspect {
     private UserCertificateService userCertificateService;
 
     @After("@annotation(annotation)")
-    public void SaveLoginIPAddress(JoinPoint joinPoint, RecordIPAddress annotation) {
+    public void saveLoginIPAddress(JoinPoint joinPoint, RecordIPAddress annotation) {
         Object[] args = joinPoint.getArgs();
         HttpServletRequest request = (HttpServletRequest) args[0];
         // 统一从 JwtSessionIdFilter 注入的 attribute 获取 sessionId

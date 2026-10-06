@@ -1,6 +1,6 @@
 package cn.gdeiassistant.contract;
 
-import cn.gdeiassistant.common.exception.QueryException.NotAvailableConditionException;
+import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.cetquery.controller.CetQueryController;

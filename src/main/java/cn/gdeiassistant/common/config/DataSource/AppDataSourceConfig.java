@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.DataSource;
+package cn.gdeiassistant.common.config.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -25,6 +25,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.data.mapper",
         "cn.gdeiassistant.core.dating.mapper",
         "cn.gdeiassistant.core.delivery.mapper",
+        "cn.gdeiassistant.core.deletion.mapper",
         "cn.gdeiassistant.core.email.mapper",
         "cn.gdeiassistant.core.message.mapper",
         "cn.gdeiassistant.core.marketplace.mapper",
@@ -50,6 +51,7 @@ public class AppDataSourceConfig {
     }
 
     @Primary
+    @org.springframework.context.annotation.DependsOn("architectureDatabaseUpgrade")
     @Bean(name = "appSqlSessionFactory")
     public SqlSessionFactoryBean appSqlSessionFactory(@Qualifier("appDataSource") DataSource appDataSource) throws IOException {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();

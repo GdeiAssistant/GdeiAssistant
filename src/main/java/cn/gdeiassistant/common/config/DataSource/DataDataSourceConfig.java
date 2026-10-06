@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.config.DataSource;
+package cn.gdeiassistant.common.config.datasource;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -16,8 +16,8 @@ import javax.sql.DataSource;
 @Configuration
 @MapperScan(basePackages = {
         "cn.gdeiassistant.core.announcement.mapper",
-        "cn.gdeiassistant.core.electricFees.mapper",
-        "cn.gdeiassistant.core.yellowPage.mapper"
+        "cn.gdeiassistant.core.electricfees.mapper",
+        "cn.gdeiassistant.core.yellowpage.mapper"
 }, sqlSessionFactoryRef = "dataSqlSessionFactory")
 public class DataDataSourceConfig {
 

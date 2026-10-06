@@ -1,12 +1,8 @@
-package cn.gdeiassistant.common.pojo.Entity;
+package cn.gdeiassistant.common.pojo.entity;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 
-@Component
-@Scope("prototype")
 public class LostAndFoundInfo implements Serializable, Entity {
 
     private LostAndFoundItem lostAndFoundItem;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.news.repository;
 
-import cn.gdeiassistant.common.pojo.Entity.NewInfo;
+import cn.gdeiassistant.common.pojo.entity.NewInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;

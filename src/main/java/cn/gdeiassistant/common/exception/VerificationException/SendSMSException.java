@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.VerificationException;
+package cn.gdeiassistant.common.exception.verificationexception;
 
 /**
  * 发送手机验证码失败时，抛出该异常

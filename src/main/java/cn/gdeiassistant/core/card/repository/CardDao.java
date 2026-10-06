@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.card.repository;
 
-import cn.gdeiassistant.common.pojo.Document.CardTestDocument;
+import cn.gdeiassistant.common.pojo.document.CardTestDocument;
 
 /**
  * MongoDB 集合 "card"：测试账号饭卡信息与消费流水。

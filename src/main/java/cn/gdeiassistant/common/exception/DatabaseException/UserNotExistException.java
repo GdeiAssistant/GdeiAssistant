@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.DatabaseException;
+package cn.gdeiassistant.common.exception.databaseexception;
 
 /**
  * 查询的用户不存在时抛出该异常

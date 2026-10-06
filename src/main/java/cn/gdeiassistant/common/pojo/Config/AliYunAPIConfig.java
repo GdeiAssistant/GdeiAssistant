@@ -1,8 +1,8 @@
-package cn.gdeiassistant.common.pojo.Config;
+package cn.gdeiassistant.common.pojo.config;
 
-import cn.gdeiassistant.common.enums.Module.ModuleEnum;
-import cn.gdeiassistant.common.tools.SpringUtils.ModuleUtils;
-import cn.gdeiassistant.common.tools.Utils.StringUtils;
+import cn.gdeiassistant.common.enums.module.ModuleEnum;
+import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
+import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -39,7 +39,7 @@ public class AliYunAPIConfig {
         if (StringUtils.isNotBlank(official_appCode)) {
             this.official_appCode = official_appCode;
         } else {
-            moduleUtils.DisableModule(ModuleEnum.ALIYUN_API);
+            moduleUtils.disableModule(ModuleEnum.ALIYUN_API);
         }
     }
 }

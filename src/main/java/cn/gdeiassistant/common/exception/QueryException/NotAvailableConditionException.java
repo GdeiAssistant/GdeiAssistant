@@ -1,4 +1,4 @@
-package cn.gdeiassistant.common.exception.QueryException;
+package cn.gdeiassistant.common.exception.queryexception;
 
 /**
  * 查询条件暂不可用时抛出该异常

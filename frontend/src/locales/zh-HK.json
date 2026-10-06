@@ -1660,12 +1660,12 @@
       "hometownLabel": "家鄉：",
       "qqLabel": "QQ：",
       "wechatLabel": "微信：",
-      "hiddenContact": "對方接受了撩一下後才可見哦",
-      "placeholder": "來說點什麼吧，不超過50字",
+      "hiddenContact": "對方接受咗你嘅留言之後先睇得到",
+      "placeholder": "寫啲嘢啦，唔好超過50字",
       "submitAction": "撩一下",
-      "success": "發送成功，請耐心等待對方回覆",
-      "emptyMessage": "請輸入撩一下的留言資訊",
-      "tooLongMessage": "撩一下輸入的內容太長了"
+      "success": "留言已送出，等對方覆你啦",
+      "emptyMessage": "請先寫低你嘅留言",
+      "tooLongMessage": "留言太長，唔可以超過50字"
     },
     "publish": {
       "title": "發佈資料",

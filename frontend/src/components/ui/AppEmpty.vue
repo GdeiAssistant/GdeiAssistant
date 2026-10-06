@@ -77,21 +77,21 @@ const actionStyle = computed(() => {
 
 .app-empty__icon {
   display: grid;
-  width: 68px;
-  height: 68px;
+  width: 56px;
+  height: 56px;
   margin-bottom: 16px;
   place-items: center;
-  border-radius: 24px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--empty-accent) 14%, transparent), color-mix(in srgb, var(--empty-accent) 8%, rgba(59, 130, 246, 0.12)));
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--empty-accent) 12%, var(--c-surface));
   color: var(--empty-accent);
-  font-size: 34px;
+  font-size: 28px;
 }
 
 .app-empty__title {
   margin: 0;
   color: var(--c-text-1);
   font-size: 15px;
-  font-weight: 820;
+  font-weight: 650;
 }
 
 .app-empty__description {
@@ -100,9 +100,5 @@ const actionStyle = computed(() => {
   color: var(--c-text-2);
   font-size: 13px;
   line-height: 1.6;
-}
-
-.app-empty__action {
-  box-shadow: 0 14px 26px color-mix(in srgb, var(--empty-accent) 24%, transparent);
 }
 </style>

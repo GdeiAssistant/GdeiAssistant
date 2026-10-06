@@ -30,69 +30,64 @@ const { toasts } = useToast()
   position: fixed;
   right: 24px;
   bottom: 24px;
-  z-index: 200;
+  z-index: 6000;
   display: flex;
   pointer-events: none;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .toast-item {
   display: flex;
   min-height: 44px;
+  max-width: 420px;
   align-items: center;
-  gap: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 16px;
-  background: rgba(16, 32, 51, 0.92);
-  box-shadow: 0 18px 38px rgba(15, 39, 49, 0.18);
-  color: #fff;
+  gap: 10px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-text-1);
+  box-shadow: var(--shadow-md);
+  color: var(--c-bg);
   font-size: 14px;
-  font-weight: 760;
-  padding: 0 16px;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 10px 16px;
   pointer-events: auto;
-  backdrop-filter: blur(16px);
 }
 
-.toast-icon--success {
-  color: color-mix(in srgb, var(--c-primary) 78%, #67e8f9);
+.toast-icon--success,
+.toast-icon--loading {
+  color: color-mix(in srgb, var(--c-primary) 70%, var(--c-bg));
 }
 
 .toast-icon--error {
-  color: color-mix(in srgb, var(--c-danger, #ef4444) 82%, #fda4af);
+  color: color-mix(in srgb, var(--c-danger) 70%, var(--c-bg));
 }
 
-.toast-icon--loading {
-  color: color-mix(in srgb, var(--c-primary) 72%, #e0f2fe);
-}
-
-.toast-enter-active { animation: toast-in 0.25s ease-out; }
-.toast-leave-active { animation: toast-out 0.2s ease-in forwards; }
+.toast-enter-active { animation: toast-in 0.2s ease-out; }
+.toast-leave-active { animation: toast-out 0.16s ease-in forwards; }
 .toast-enter-from,
 .toast-leave-to {
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
 }
 
 @keyframes toast-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes toast-out {
   from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(8px); }
+  to { opacity: 0; transform: translateY(6px); }
 }
 
 @media (max-width: 767px) {
   .toast-stack {
-    right: 14px;
-    bottom: 92px;
-    left: 14px;
-  }
-
-  .toast-item {
-    justify-content: center;
+    right: 16px;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+    align-items: center;
   }
 }
 </style>

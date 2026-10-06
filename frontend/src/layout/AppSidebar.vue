@@ -2,7 +2,7 @@
 import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { BookOpen, ChevronRight } from 'lucide-vue-next'
+import { ChevronRight } from 'lucide-vue-next'
 import { getCurrentUserProfile } from '@/api/user'
 import { createFooterItems, createNavItems } from './navigation'
 
@@ -41,9 +41,7 @@ function avatarInitial() {
 <template>
   <aside class="campus-sidebar" :aria-label="t('navigationAccessibility.sidebarNavigation')">
     <div class="campus-sidebar__brand">
-      <div class="campus-sidebar__mark" aria-hidden="true">
-        <BookOpen class="w-5 h-5" />
-      </div>
+      <img class="campus-sidebar__mark" src="/favicon.svg" alt="" aria-hidden="true" width="32" height="32" />
       <span class="campus-sidebar__brand-name">{{ $t('about.appName') }}</span>
     </div>
 
@@ -88,170 +86,157 @@ function avatarInitial() {
 <style scoped>
 .campus-sidebar {
   position: fixed;
-  left: 14px;
-  top: 14px;
-  bottom: 14px;
-  z-index: 48;
-  display: flex;
-  width: 204px;
-  flex-direction: column;
-  overflow: hidden;
-  border: 1px solid rgba(205, 222, 226, 0.78);
-  border-radius: 26px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(250, 255, 253, 0.9)),
-    radial-gradient(circle at 45% 100%, rgba(173, 234, 202, 0.28), transparent 46%);
-  box-shadow: 0 22px 56px rgba(32, 69, 78, 0.1);
-  backdrop-filter: blur(22px);
-}
-
-.campus-sidebar::after {
-  position: absolute;
-  right: 0;
+  top: 0;
   bottom: 0;
   left: 0;
-  height: 168px;
-  pointer-events: none;
-  content: '';
-  background:
-    linear-gradient(145deg, transparent 42%, rgba(42, 157, 128, 0.07) 42% 44%, transparent 44%),
-    radial-gradient(ellipse at 24% 88%, rgba(86, 192, 160, 0.18), transparent 46%),
-    radial-gradient(ellipse at 65% 100%, rgba(75, 153, 201, 0.12), transparent 42%);
+  z-index: 48;
+  display: flex;
+  width: var(--rail-width, 248px);
+  flex-direction: column;
+  border-right: 1px solid var(--c-border);
+  background: var(--c-surface);
 }
 
 .campus-sidebar__brand {
-  position: relative;
   display: flex;
   align-items: center;
-  gap: 11px;
-  padding: 22px 18px 18px;
+  gap: 10px;
+  height: 64px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--c-divider);
 }
 
 .campus-sidebar__mark {
-  display: grid;
-  width: 38px;
-  height: 38px;
-  place-items: center;
-  border-radius: 14px;
-  color: #fff;
-  background: linear-gradient(135deg, #14b985, #3aa7e8);
-  box-shadow: 0 12px 24px rgba(20, 185, 133, 0.22);
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 8px;
 }
 
 .campus-sidebar__brand-name {
   min-width: 0;
+  overflow: hidden;
   color: var(--c-text-1);
-  font-size: 17px;
-  font-weight: 850;
-  letter-spacing: -0.01em;
+  font-size: 15px;
+  font-weight: 650;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .campus-sidebar__nav {
-  position: relative;
-  z-index: 1;
   flex: 1;
-  padding: 4px 12px 16px;
+  overflow-y: auto;
+  padding: 16px 12px;
 }
 
 .campus-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.campus-sidebar__list > li + li {
-  margin-top: 7px;
-}
-
 .campus-sidebar__item {
+  position: relative;
   display: flex;
   width: 100%;
-  min-height: 46px;
+  min-height: 40px;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   border: 0;
-  border-radius: 16px;
+  border-radius: var(--radius-control);
   background: transparent;
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
   font-size: 14px;
-  font-weight: 760;
-  padding: 0 13px;
-  transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease;
+  font-weight: 500;
+  padding: 0 12px;
+  text-align: left;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .campus-sidebar__item:hover {
   color: var(--c-text-1);
-  background: rgba(255, 255, 255, 0.72);
-  transform: translateX(2px);
+  background: var(--c-surface-hover);
 }
 
-.campus-sidebar__item--active {
+.campus-sidebar__item--active,
+.campus-sidebar__item--active:hover {
   color: var(--c-primary);
-  background: linear-gradient(135deg, rgba(20, 185, 133, 0.15), rgba(58, 167, 232, 0.12));
-  box-shadow: inset 0 0 0 1px rgba(32, 170, 130, 0.12);
+  background: var(--c-primary-soft);
+  font-weight: 600;
 }
 
 .campus-sidebar__icon {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
   flex: none;
+  stroke-width: 1.75;
 }
 
 .campus-sidebar__label {
   flex: 1;
-  text-align: left;
+  min-width: 0;
 }
 
 .campus-sidebar__dot {
   min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
   border-radius: 999px;
-  background: #ff6b6b;
+  background: var(--c-danger);
   color: #fff;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   line-height: 20px;
   text-align: center;
 }
 
+[data-theme="dark"] .campus-sidebar__dot {
+  color: #2A0C0C;
+}
+
 .campus-sidebar__footer {
-  position: relative;
-  z-index: 1;
-  padding: 14px 12px 16px;
-  border-top: 1px solid rgba(211, 225, 229, 0.72);
+  padding: 12px;
+  border-top: 1px solid var(--c-divider);
 }
 
 .campus-sidebar__profile {
   display: flex;
   width: 100%;
-  min-height: 56px;
+  min-height: 52px;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  border: 0;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.68);
+  margin-top: 8px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-bg);
   color: inherit;
   cursor: pointer;
   font: inherit;
-  padding: 8px;
+  padding: 8px 10px;
   text-align: left;
-  box-shadow: inset 0 0 0 1px rgba(216, 229, 232, 0.68);
+  transition: border-color 0.15s ease;
+}
+
+.campus-sidebar__profile:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 45%, var(--c-border));
 }
 
 .campus-sidebar__avatar {
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   flex: none;
   place-items: center;
-  border-radius: 14px;
-  color: #fff;
-  background: linear-gradient(135deg, #1fb981, #4aa5f0);
+  border-radius: 999px;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
   font-size: 13px;
-  font-weight: 850;
+  font-weight: 650;
 }
 
 .campus-sidebar__profile-text {
@@ -264,7 +249,7 @@ function avatarInitial() {
   margin: 0;
   color: var(--c-text-1);
   font-size: 13px;
-  font-weight: 760;
+  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -278,29 +263,17 @@ function avatarInitial() {
 
 @media (max-width: 767px) {
   .campus-sidebar {
-    transform: translateX(calc(-100% - 20px));
-    transition: transform 0.22s ease;
+    width: min(280px, 84vw);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.22s ease, visibility 0s linear 0.22s;
   }
 
   .campus-sidebar--open {
     transform: translateX(0);
+    visibility: visible;
+    transition: transform 0.22s ease, visibility 0s;
   }
-}
-
-[data-theme="dark"] .campus-sidebar {
-  border-color: rgba(68, 89, 112, 0.72);
-  background:
-    linear-gradient(180deg, rgba(18, 30, 42, 0.96), rgba(16, 25, 35, 0.92)),
-    radial-gradient(circle at 45% 100%, rgba(45, 212, 191, 0.1), transparent 46%);
-  box-shadow: 0 22px 56px rgba(0, 0, 0, 0.28);
-}
-
-[data-theme="dark"] .campus-sidebar__item:hover,
-[data-theme="dark"] .campus-sidebar__profile {
-  background: rgba(32, 48, 68, 0.72);
-}
-
-[data-theme="dark"] .campus-sidebar__footer {
-  border-top-color: rgba(68, 89, 112, 0.72);
 }
 </style>

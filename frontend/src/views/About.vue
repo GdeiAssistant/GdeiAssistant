@@ -909,9 +909,9 @@ onMounted(() => {
 
 [data-theme="dark"] .about-cookie-banner__content {
   border-color: rgba(255, 255, 255, 0.12);
-  background: rgba(16, 32, 51, 0.9);
+  background: var(--c-surface-raised, #1C2724);
   color: #fff;
-  box-shadow: 0 22px 60px rgba(16, 32, 51, 0.28);
+  box-shadow: var(--shadow-lg);
 }
 
 [data-theme="dark"] .about-cookie-banner__content a {

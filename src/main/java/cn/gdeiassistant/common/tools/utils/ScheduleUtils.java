@@ -38,7 +38,16 @@ public class ScheduleUtils {
      * @throws GenerateScheduleException
      */
     public static Schedule generateCustomSchedule(CustomSchedule customSchedule) throws GenerateScheduleException {
-        //进行数据合法性校验
+        // Validate again at the service boundary; cache/import callers do not run Bean Validation.
+        if (customSchedule == null || customSchedule.getPosition() == null
+                || customSchedule.getPosition() < 0 || customSchedule.getPosition() > 69
+                || customSchedule.getScheduleLength() == null || customSchedule.getScheduleLength() < 1
+                || customSchedule.getScheduleLength() > 5
+                || customSchedule.getPosition() / 7 + customSchedule.getScheduleLength() > 10
+                || customSchedule.getMinScheduleWeek() == null || customSchedule.getMaxScheduleWeek() == null
+                || customSchedule.getMinScheduleWeek() < 1 || customSchedule.getMaxScheduleWeek() > 20) {
+            throw new GenerateScheduleException("自定义课程数据不合法");
+        }
         if (customSchedule.getMinScheduleWeek() > customSchedule.getMaxScheduleWeek()) {
             throw new GenerateScheduleException("自定义课程数据不合法");
         }
@@ -81,10 +90,14 @@ public class ScheduleUtils {
      * @return
      */
     private static String generateScheduleLesson(Integer row, Integer column, Integer length) {
+        if (row == null || column == null || length == null || row < 0 || row > 9
+                || column < 0 || column > 6 || length < 1 || length > 5 || row + length > 10) {
+            throw new IllegalArgumentException("自定义课程节数不合法");
+        }
         StringBuilder stringBuilder = new StringBuilder("周");
         stringBuilder.append(COLUMNS[column]).append("第").append(row + 1);
         if (length > 1) {
-            for (int i = row + 1; i <= length + row; i++) {
+            for (int i = row + 2; i <= length + row; i++) {
                 stringBuilder.append(",").append(i);
             }
         }

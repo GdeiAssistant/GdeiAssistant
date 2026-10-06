@@ -153,7 +153,7 @@ public class MarketplaceController {
                         marketplaceService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
                     }
                 }
-            } else {
+            } else if (imageKeys != null) {
                 for (int i = 1; i <= imageKeys.length; i++) {
                     marketplaceService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
                 }

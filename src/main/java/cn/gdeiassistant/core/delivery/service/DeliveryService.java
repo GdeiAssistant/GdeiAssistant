@@ -263,6 +263,7 @@ public class DeliveryService {
      */
     @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void updateOrderAndInsertTradeRecord(Integer orderId, String username) throws Exception {
+        if (orderId == null || orderId <= 0) throw new IllegalArgumentException("订单编号不合法");
         //设置排他锁更新订单状态，并发情况下只允许一个线程修改该订单ID的订单状态
         int result = deliveryMapper.updateOrderState(orderId, 1);
         if (result > 0) {

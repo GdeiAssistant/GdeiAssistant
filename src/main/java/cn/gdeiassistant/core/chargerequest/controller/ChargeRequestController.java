@@ -53,7 +53,7 @@ public class ChargeRequestController {
     @RestAuthentication
     @RequestLogPersistence
     @RateLimit(maxRequests = 3, windowSeconds = 60)
-    public DataJsonResult<ChargeVO> ChargeRequest(HttpServletRequest request
+    public DataJsonResult<ChargeVO> chargeRequest(HttpServletRequest request
             , @Validated ChargeRequestDTO requestParams) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
 
@@ -103,7 +103,7 @@ public class ChargeRequestController {
         }
 
         try {
-            ChargeVO charge = chargeService.ChargeRequest(sessionId, requestParams.getAmount());
+            ChargeVO charge = chargeService.chargeRequest(sessionId, requestParams.getAmount());
             chargeService.saveChargeLog(sessionId, requestParams.getAmount());
             chargeOrderService.markPaymentSessionCreated(order.getOrderId(), charge.getAlipayURL());
             if (idempotencyContext != null) {

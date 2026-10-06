@@ -101,7 +101,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.data.status").value(ChargeOrderStatus.PAYMENT_SESSION_CREATED.name()))
                 .andExpect(jsonPath("$.data.message").value("支付请求已生成，请完成支付并刷新余额。"));
 
-        verify(chargeService).ChargeRequest(SESSION_ID, 50);
+        verify(chargeService).chargeRequest(SESSION_ID, 50);
         verify(chargeService).saveChargeLog(SESSION_ID, 50);
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markPaymentSessionCreated(ORDER_ID,
@@ -123,7 +123,7 @@ class ChargeRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        verify(chargeService).ChargeRequest(SESSION_ID, 30);
+        verify(chargeService).chargeRequest(SESSION_ID, 30);
         verify(chargeService).saveChargeLog(SESSION_ID, 30);
         verify(chargeOrderService).markProcessing(ORDER_ID);
         verify(chargeOrderService).markPaymentSessionCreated(ORDER_ID,
@@ -150,7 +150,7 @@ class ChargeRequestControllerTest {
 
         verify(chargeIdempotencyService).begin(USERNAME, ChargeIdempotencyService.ENDPOINT_CARD_CHARGE,
                 IDEMPOTENCY_KEY, 50, DEVICE_ID);
-        verify(chargeService).ChargeRequest(SESSION_ID, 50);
+        verify(chargeService).chargeRequest(SESSION_ID, 50);
         verify(chargeService).saveChargeLog(SESSION_ID, 50);
         verify(chargeOrderService).findByIdempotency(USERNAME, IDEMPOTENCY_KEY_HASH, FINGERPRINT);
         verify(chargeOrderService).markProcessing(ORDER_ID);
@@ -179,7 +179,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value(ErrorConstantUtils.CHARGE_IDEMPOTENCY_CONFLICT));
 
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
@@ -202,7 +202,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("相同充值请求已处理，请勿重复提交"));
 
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
@@ -225,7 +225,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.message").value("同一幂等键不能用于不同充值参数"));
 
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
 
@@ -233,7 +233,7 @@ class ChargeRequestControllerTest {
     void shouldAllowSameUserDifferentIdempotencyKeysToProcessSeparately() throws Exception {
         mockAuthenticatedUser(PASSWORD);
         ChargeVO charge = syntheticCharge();
-        when(chargeService.ChargeRequest(SESSION_ID, 40)).thenReturn(charge);
+        when(chargeService.chargeRequest(SESSION_ID, 40)).thenReturn(charge);
         ChargeIdempotencyService.ChargeIdempotencyContext firstContext =
                 new ChargeIdempotencyService.ChargeIdempotencyContext("redis-key-1", "fingerprint-1");
         ChargeIdempotencyService.ChargeIdempotencyContext secondContext =
@@ -264,7 +264,7 @@ class ChargeRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        verify(chargeService, times(2)).ChargeRequest(SESSION_ID, 40);
+        verify(chargeService, times(2)).chargeRequest(SESSION_ID, 40);
         verify(chargeIdempotencyService).markSuccess(firstContext, "synthetic-order-id-1",
                 ChargeOrderStatus.PAYMENT_SESSION_CREATED.name());
         verify(chargeIdempotencyService).markSuccess(secondContext, "synthetic-order-id-2",
@@ -289,7 +289,7 @@ class ChargeRequestControllerTest {
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value(ErrorConstantUtils.CHARGE_IDEMPOTENCY_UNAVAILABLE));
 
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verifyNoInteractions(chargeOrderService);
     }
 
@@ -328,7 +328,7 @@ class ChargeRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verify(chargeService, never()).saveChargeLog(anyString(), anyInt());
         verifyNoInteractions(chargeIdempotencyService);
     }
@@ -350,7 +350,7 @@ class ChargeRequestControllerTest {
     void shouldMarkOrderUnknownWhenExternalChargeStatusIsUnclear() throws Exception {
         mockAuthenticatedUser(PASSWORD);
         mockChargeOrderWithoutIdempotency(50, ORDER_ID);
-        when(chargeService.ChargeRequest(SESSION_ID, 50))
+        when(chargeService.chargeRequest(SESSION_ID, 50))
                 .thenThrow(new NetWorkTimeoutException("synthetic network timeout"));
 
         mockMvc.perform(post("/api/card/charge")
@@ -370,7 +370,7 @@ class ChargeRequestControllerTest {
     void shouldMarkOrderFailedWhenExternalBusinessFailureIsClear() throws Exception {
         mockAuthenticatedUser(PASSWORD);
         mockChargeOrderWithoutIdempotency(50, ORDER_ID);
-        when(chargeService.ChargeRequest(SESSION_ID, 50))
+        when(chargeService.chargeRequest(SESSION_ID, 50))
                 .thenThrow(new AmountNotAvailableException("synthetic amount rejected"));
 
         mockMvc.perform(post("/api/card/charge")
@@ -411,14 +411,14 @@ class ChargeRequestControllerTest {
 
         verify(chargeIdempotencyService).markSuccess(context, ORDER_ID,
                 ChargeOrderStatus.PAYMENT_SESSION_CREATED.name());
-        verify(chargeService, never()).ChargeRequest(anyString(), anyInt());
+        verify(chargeService, never()).chargeRequest(anyString(), anyInt());
         verify(chargeOrderService, never()).createOrder(anyString(), anyInt(), any(), any(), any(), any());
     }
 
     private void mockSuccessfulChargeWithoutIdempotency(int amount) throws Exception {
         mockAuthenticatedUser(PASSWORD);
         mockChargeOrderWithoutIdempotency(amount, ORDER_ID);
-        when(chargeService.ChargeRequest(SESSION_ID, amount)).thenReturn(syntheticCharge());
+        when(chargeService.chargeRequest(SESSION_ID, amount)).thenReturn(syntheticCharge());
     }
 
     private void mockSuccessfulChargeWithIdempotency(int amount, String rawIdempotencyKey,
@@ -426,7 +426,7 @@ class ChargeRequestControllerTest {
                                                     String orderId) throws Exception {
         mockAuthenticatedUser(PASSWORD);
         mockChargeOrderWithIdempotency(amount, rawIdempotencyKey, idempotencyKeyHash, fingerprint, orderId);
-        when(chargeService.ChargeRequest(SESSION_ID, amount)).thenReturn(syntheticCharge());
+        when(chargeService.chargeRequest(SESSION_ID, amount)).thenReturn(syntheticCharge());
     }
 
     private void mockChargeOrderWithoutIdempotency(int amount, String orderId) throws Exception {

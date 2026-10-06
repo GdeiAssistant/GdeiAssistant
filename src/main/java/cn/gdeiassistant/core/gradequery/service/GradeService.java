@@ -77,6 +77,9 @@ public class GradeService {
      * @throws Exception
      */
     public GradeQueryResult queryGrade(String sessionId, Integer year) throws Exception {
+        // Missing year means the latest academic year for both cache and remote paths.
+        if (year == null) year = -1;
+        if (year < -1) throw new NotAvailableConditionException("当前学年暂不可查询");
         //优先从缓存中获取
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
@@ -88,7 +91,7 @@ public class GradeService {
                 gradeDocument.setGradeList(gradeLists);
             }
             //若未指定查询学年，则默认查询最后学年的成绩信息
-            if (year == null) {
+            if (year == -1) {
                 year = gradeLists.size() - 1;
             }
             if (gradeLists.size() == 0) {

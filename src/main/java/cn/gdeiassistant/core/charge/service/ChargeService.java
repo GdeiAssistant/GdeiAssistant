@@ -60,14 +60,12 @@ public class ChargeService {
      * @param amount
      * @return ChargeVO
      */
-    public ChargeVO ChargeRequest(String sessionId, int amount) throws Exception {
+    public ChargeVO chargeRequest(String sessionId, int amount) throws Exception {
+        if (amount <= 0 || amount > 500) throw new AmountNotAvailableException("用户充值金额超过范围");
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
         try {
-            if (amount <= 0 || amount > 500) {
-                throw new AmountNotAvailableException("充值金额超过范围");
-            }
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();

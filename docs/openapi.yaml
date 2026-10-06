@@ -5048,7 +5048,7 @@
     },
     "/api/card/charge": {
       "post": {
-        "operationId": "ChargeRequestController_ChargeRequest_post__api_card_charge",
+        "operationId": "ChargeRequestController_chargeRequest_post__api_card_charge",
         "requestBody": {
           "content": {
             "application/x-www-form-urlencoded": {
@@ -5146,7 +5146,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "ChargeRequest",
+        "summary": "chargeRequest",
         "tags": [
           "ChargeRequest"
         ]

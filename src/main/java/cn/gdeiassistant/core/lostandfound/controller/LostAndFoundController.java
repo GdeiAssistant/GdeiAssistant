@@ -171,7 +171,7 @@ public class LostAndFoundController {
                         lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
                     }
                 }
-            } else {
+            } else if (imageKeys != null) {
                 for (int i = 1; i <= imageKeys.length; i++) {
                     lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
                 }

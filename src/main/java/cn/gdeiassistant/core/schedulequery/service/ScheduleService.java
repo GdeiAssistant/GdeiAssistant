@@ -73,13 +73,14 @@ public class ScheduleService {
      */
     public void addCustomSchedule(String sessionId, CustomSchedule customSchedule)
             throws GenerateScheduleException, CountOverLimitException, NotAvailableConditionException {
+        ScheduleUtils.generateCustomSchedule(customSchedule);
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         CustomScheduleDocument doc = getCustomSchedule(sessionId);
         if (doc != null && doc.getScheduleMap() != null) {
             int newRow = customSchedule.getPosition() / 7;
             int newCol = customSchedule.getPosition() % 7;
             int newLen = customSchedule.getScheduleLength() != null ? customSchedule.getScheduleLength() : 1;
-            int newRowEnd = newRow + newLen - 1;
+            int newRowEnd = Math.addExact(newRow, newLen - 1);
             int minWeek = customSchedule.getMinScheduleWeek() != null ? customSchedule.getMinScheduleWeek() : 1;
             int maxWeek = customSchedule.getMaxScheduleWeek() != null ? customSchedule.getMaxScheduleWeek() : 20;
             for (Schedule s : doc.getScheduleMap().values()) {
@@ -88,7 +89,7 @@ public class ScheduleService {
                 if (newCol != exCol) continue;
                 int exRow = s.getRow() != null ? s.getRow() : (s.getPosition() / 7);
                 int exLen = s.getScheduleLength() != null ? s.getScheduleLength() : 1;
-                int exRowEnd = exRow + exLen - 1;
+                long exRowEnd = (long) exRow + exLen - 1;
                 if (newRowEnd < exRow || exRowEnd < newRow) continue;
                 Integer exMin = s.getMinScheduleWeek();
                 Integer exMax = s.getMaxScheduleWeek();
@@ -181,12 +182,12 @@ public class ScheduleService {
                                         maxColumnIndex = 6;
                                     }
                                     //遍历当前行,获取课表信息
-                                    for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
+                                    for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition && currentPosition < schedulesWithSpecialEmptySchedule.length; currentPosition++) {
                                         if (schedulesWithSpecialEmptySchedule[currentPosition][0] == specialEmptySchedule) {
                                             //当前position指向特殊空Schedule对象,跳过当前单元格
                                         } else {
                                             //判断当前行是否已经遍历完
-                                            if (currentPosition % 7 <= maxColumnIndex) {
+                                            if (currentPosition % 7 <= maxColumnIndex && currentColumnIndexInThisRow < tds.size()) {
                                                 //判断当前position的课程信息是否为空课表信息
                                                 //下面的字符非空格而是一个特殊的Unicode字符
                                                 if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
@@ -199,21 +200,11 @@ public class ScheduleService {
                                                         //通过rowspan属性得到课程时长
                                                         rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
                                                         //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
-                                                        switch (rowspan) {
-                                                            case 2:
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                                break;
-
-                                                            case 3:
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
-                                                                break;
-
-                                                            case 4:
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 7][0] = specialEmptySchedule;
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 14][0] = specialEmptySchedule;
-                                                                schedulesWithSpecialEmptySchedule[currentPosition + 21][0] = specialEmptySchedule;
-                                                                break;
+                                                        if (rowspan < 1 || rowspan > 4) throw new ServerErrorException("课表课程长度不合法");
+                                                        for (int offset = 1; offset < rowspan; offset++) {
+                                                            int covered = currentPosition + offset * 7;
+                                                            if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException("课表课程超出范围");
+                                                            schedulesWithSpecialEmptySchedule[covered][0] = specialEmptySchedule;
                                                         }
                                                     } else {
                                                         //如果td标签没有rowspan属性,则该课程课程时长为默认的1
@@ -231,6 +222,7 @@ public class ScheduleService {
                                                                 //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                             } else {
                                                                 //有效的课表头信息,进行信息处理
+                                                                if (j > string.length - 4) throw new ServerErrorException("课表课程信息不完整");
                                                                 String[] time = string[j + 2].split("[{]");
                                                                 //课程周数
                                                                 String week = null;
@@ -289,6 +281,7 @@ public class ScheduleService {
                                                                     schedule.setColumn(currentColumnIndexInThisRow - 1);
                                                                 }
                                                                 schedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
+                                                                if (n >= schedulesWithSpecialEmptySchedule[currentPosition].length) throw new ServerErrorException("课表同一单元课程数量过多");
                                                                 schedulesWithSpecialEmptySchedule[currentPosition][n] = schedule;
                                                                 n++;
                                                                 j = j + 4;
@@ -439,12 +432,12 @@ public class ScheduleService {
                                     maxColumnIndex = 6;
                                 }
                                 //遍历当前行,获取课表信息
-                                for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition; currentPosition++) {
+                                for (currentRowMaxPosition = currentRowMaxPosition + 7; currentPosition < currentRowMaxPosition && currentPosition < schedulesWithSpecialEmptySchedule.length; currentPosition++) {
                                     if (schedulesWithSpecialEmptySchedule[currentPosition] == specialEmptySchedule) {
                                         //当前position指向特殊空Schedule对象,跳过当前单元格
                                     } else {
                                         //判断当前行是否已经遍历完
-                                        if (currentPosition % 7 <= maxColumnIndex) {
+                                        if (currentPosition % 7 <= maxColumnIndex && currentColumnIndexInThisRow < tds.size()) {
                                             //判断当前position的课程信息是否为空课表信息
                                             //下面的字符非空格而是一个特殊的Unicode字符
                                             if (tds.get(currentColumnIndexInThisRow).text().equals(" ")) {
@@ -457,21 +450,11 @@ public class ScheduleService {
                                                     //通过rowspan属性得到课程时长
                                                     rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
                                                     //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
-                                                    switch (rowspan) {
-                                                        case 2:
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
-                                                            break;
-
-                                                        case 3:
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14] = specialEmptySchedule;
-                                                            break;
-
-                                                        case 4:
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 7] = specialEmptySchedule;
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 14] = specialEmptySchedule;
-                                                            schedulesWithSpecialEmptySchedule[currentPosition + 21] = specialEmptySchedule;
-                                                            break;
+                                                    if (rowspan < 1 || rowspan > 4) throw new ServerErrorException("课表课程长度不合法");
+                                                    for (int offset = 1; offset < rowspan; offset++) {
+                                                        int covered = currentPosition + offset * 7;
+                                                        if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException("课表课程超出范围");
+                                                        schedulesWithSpecialEmptySchedule[covered] = specialEmptySchedule;
                                                     }
                                                 } else {
                                                     //如果td标签没有rowspan属性,则该课程课程时长为默认的1
@@ -481,17 +464,18 @@ public class ScheduleService {
                                                 String[] string = tds.get(currentColumnIndexInThisRow).text().split(" ");
                                                 //记录单元格中的独立课表信息下标
                                                 for (int j = 0; j < string.length; j++) {
-                                                    if (string.length == 0) {
-                                                        schedulesWithSpecialEmptySchedule[currentPosition] = specialEmptySchedule;
-                                                    } else if (string[j].isEmpty() || string[j].charAt(0) == '<' || string[j].equals(" ") || string[j].charAt(0) == '(') {
+                                                    if (string[j].isEmpty() || string[j].charAt(0) == '<' || string[j].equals(" ") || string[j].charAt(0) == '(') {
                                                         //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                     } else {
                                                         //有效的课表头信息,进行信息处理
+                                                        if (j > string.length - 6) throw new ServerErrorException("教师课表课程信息不完整");
                                                         String scheduleName = string[j];
                                                         String scheduleType = string[j + 1];
                                                         String scheduleTime = string[j + 2];
-                                                        String scheduleWeek = (scheduleTime.split("\\("))[0];
-                                                        String scheduleLesson = ((scheduleTime.split("\\("))[1]).split("\\)")[0];
+                                                        String[] timeParts = scheduleTime.split("\\(", 2);
+                                                        if (timeParts.length < 2 || !timeParts[1].contains(")")) throw new ServerErrorException("教师课表时间格式不合法");
+                                                        String scheduleWeek = timeParts[0];
+                                                        String scheduleLesson = timeParts[1].split("\\)")[0];
                                                         String scheduleLocation = string[j + 4];
                                                         String scheduleClass = string[j + 5];
                                                         TeacherSchedule teacherSchedule = new TeacherSchedule();

@@ -28,12 +28,12 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3 class="!mt-0 text-center">《校园跑腿 / 全民快递规则》</h3>
           <p class="text-center">发布日期：2026年4月25日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--warm px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>平台角色：</strong>平台主要提供任务信息发布、接单沟通、状态展示和辅助管理能力，不当然成为快递企业、承运人、仓储保管人、代收代付机构或保险人。</p>
-            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 5 月 11 日起生效；生效日前仍适用修订前相关规则。</p>
+            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 10 月 14 日起生效；生效日前仍适用修订前相关规则。</p>
           </div>
 
           <h3>第一条 发布、接单与履约</h3>
@@ -61,6 +61,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p><strong>4.1</strong> 因取消、超时、无法取件、错取、漏送、丢失、损坏、地址错误、沟通不畅、双方失联等引起的争议，原则上由发布人和接单人自行协商处理。</p>
           <p><strong>4.2</strong> 平台可根据投诉、举报、风控或安全需要，对任务内容、账号和相关记录采取隐藏、下架、限制接单、限制发布、保留必要证据或协助处理等措施。</p>
           <p><strong>4.3</strong> 如争议涉及违法线索、人身或财产安全风险，平台可依法配合有权机关处理。</p>
+          <p><strong>4.4</strong> 平台目前不代收、不托管、不结算任务报酬，也不就任务撮合向用户收取佣金或服务费；如后续调整，平台将另行公示，涉及用户重要权益的将依法取得您的同意。本规则未尽事宜及争议处理，适用 <a href="/agreement">《用户协议》</a> 第十二条、第十三条。</p>
 
           <h3>第五条 安全提示</h3>
           <ul>

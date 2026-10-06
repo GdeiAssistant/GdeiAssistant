@@ -28,8 +28,8 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3 class="!mt-0 text-center">《侵权投诉与反通知规则》</h3>
           <p class="text-center">发布日期：2026年2月17日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--warm px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>适用范围：</strong>当您认为平台内内容侵犯著作权、商标权、肖像权、名誉权、隐私权、商业秘密或其他合法权益时，可依本规则提交投诉；被投诉用户也可提交反通知或申诉。</p>
@@ -56,7 +56,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <h3>第三条 平台收到投诉后的处理</h3>
           <p><strong>3.1</strong> 平台收到投诉后，会结合材料完整性、初步证据、传播风险、内容类型、用户历史情况和法律要求进行审查。</p>
           <p><strong>3.2</strong> 对明显违法、涉嫌严重侵权、泄露敏感个人信息、冒用身份、存在持续扩散风险或其他紧急情形，平台可先行采取删除、屏蔽、限制展示、断开链接、限制账号功能、保留记录等必要措施。</p>
-          <p><strong>3.3</strong> 平台通常会在合理期限内处理，但不承诺固定小时数内完成，也不当然对争议实体权利归属作出最终裁判。</p>
+          <p><strong>3.3</strong> 平台一般情况下会在收到完整投诉材料后十五个工作日内处理并反馈结果；涉及复杂权属争议或需补充材料的，处理期限相应顺延，但平台不承诺固定小时数内完成，也不当然对争议实体权利归属作出最终裁判。</p>
 
           <h3>第四条 反通知与申诉机制</h3>
           <p><strong>4.1</strong> 被投诉用户认为内容不侵权、已获授权、属于合理使用、事实真实或投诉存在明显错误的，可提交反通知、申诉或不侵权说明。</p>

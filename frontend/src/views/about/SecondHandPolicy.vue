@@ -28,12 +28,12 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3 class="!mt-0 text-center">《二手交易规则》</h3>
           <p class="text-center">发布日期：2026年4月25日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--success px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>平台角色：</strong>平台主要提供信息发布、展示、搜索、沟通和辅助管理能力，不当然成为买卖、担保、支付、鉴定、仓储、运输或履约主体。</p>
-            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 5 月 11 日起生效；生效日前仍适用修订前相关规则。</p>
+            <p class="!mb-0"><strong>生效说明：</strong>本规则自 2026 年 10 月 14 日起生效；生效日前仍适用修订前相关规则。</p>
           </div>
 
           <h3>第一条 发布要求</h3>
@@ -67,6 +67,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <p><strong>5.1</strong> 因商品质量、权属、价格、付款、退款、退货、交付、描述不符或线下争议引起的纠纷，原则上由交易双方自行协商处理。</p>
           <p><strong>5.2</strong> 平台可基于投诉、举报、风控、安全或合规需要，对相关内容采取隐藏、下架、删除、限制发布、限制账号、保留必要记录或协助处理纠纷等措施。</p>
           <p><strong>5.3</strong> 如涉嫌诈骗、销赃、侵权或其他违法行为，平台可依法配合有权机关处理。</p>
+          <p><strong>5.4</strong> 平台目前不就交易撮合向用户收取佣金、服务费或抽成；如后续调整收费模式，平台将另行公示，涉及用户重要权益的将依法取得您的同意。本规则未尽事宜及争议处理，适用 <a href="/agreement">《用户协议》</a> 第十二条、第十三条。</p>
         </div>
       </div>
     </div>

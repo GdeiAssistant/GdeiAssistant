@@ -45,12 +45,12 @@ const rows = [
   },
   {
     type: 'AI OCR / 验证码识别',
-    providers: '可能包括 DeepSeek、OpenAI、Gemini、Claude、豆包等',
+    providers: '境内服务商（如豆包、DeepSeek 等）及境外服务商（如 OpenAI、Gemini、Claude 等），以实际部署启用的服务为准',
     purpose: '验证码、数字或图片文字识别',
     data: '验证码图片、识别请求、必要的请求元数据',
     disable: '视配置而定',
-    crossBorder: '视实际部署、服务商区域和配置而定；平台将按适用规则进行告知、评估或取得必要授权',
-    note: '未启用时不会发生该类传输'
+    crossBorder: '涉及境外服务商的，构成向境外提供个人信息；平台将依法履行告知义务、开展影响评估、通过标准合同等法定途径，并单独取得您的同意；您可拒绝使用涉及境外识别服务的功能',
+    note: '优先使用境内服务；未启用时不会发生该类传输'
   },
   {
     type: '云服务器、数据库、缓存、日志、监控、备份',
@@ -85,8 +85,8 @@ const rows = [
 
           <h3 class="!mt-0 text-center">《第三方服务清单》</h3>
           <p class="text-center">发布日期：2026年4月25日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--neutral px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>说明：</strong>以下服务商为“可能包括”或“根据实际部署选择”的范围，不代表所有服务在每个版本、终端或部署环境中均已启用。</p>
@@ -119,6 +119,10 @@ const rows = [
               </tbody>
             </table>
           </div>
+
+          <h3>移动端与小程序端说明</h3>
+          <p><strong>2.1</strong> 在移动应用或微信小程序端，除上述服务外，还可能集成必要的客户端能力（如本地存储、设备信息读取、图片上传等）。实际集成的第三方 SDK 清单（含 SDK 名称、提供方、处理目的、申请的权限及合规信息链接）以对应端的《隐私政策》及页面公示为准；本清单未列明的 SDK，不构成已集成或已启用的推定。</p>
+          <p><strong>2.2</strong> 如后续新增第三方服务或 SDK，平台将更新本清单，涉及用户重要权益的将依法另行告知并取得必要同意。</p>
         </div>
       </div>
     </div>

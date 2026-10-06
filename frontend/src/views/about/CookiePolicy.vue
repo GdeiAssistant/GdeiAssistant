@@ -28,8 +28,8 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3 class="!mt-0 text-center">《广东二师助手 Cookie 与本地存储说明》</h3>
           <p class="text-center">发布日期：2026年2月17日</p>
-          <p class="text-center">更新日期：2026年4月25日</p>
-          <p class="text-center">生效日期：2026年5月11日</p>
+          <p class="text-center">更新日期：2026年10月7日</p>
+          <p class="text-center">生效日期：2026年10月14日</p>
 
           <div class="policy-notice policy-notice--warm px-4 py-3 mb-5 text-sm leading-relaxed">
             <p class="!mb-2"><strong>使用方式说明：</strong>平台通常会通过浏览器本地存储、请求头或其他必要的站点数据维持登录状态和界面偏好；是否使用浏览器 Cookie 以及具体方式，取决于终端、版本和实际部署。</p>
@@ -37,7 +37,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           </div>
 
           <h3>第一条 我们使用哪些技术</h3>
-          <p><strong>1.1</strong> Cookie 是网站写入浏览器的小型文本数据。本说明中的“Cookie 与同类技术”还包括 localStorage、sessionStorage、浏览器缓存以及其他用于保存本地状态、偏好或临时会话信息的技术。</p>
+          <p><strong>1.1</strong> Cookie 是网站写入浏览器的小型文本数据。本说明中的“Cookie 与同类技术”还包括 localStorage、sessionStorage、浏览器缓存、移动应用或小程序中的本地存储与设备侧缓存，以及其他用于保存本地状态、偏好或临时会话信息的技术。</p>
           <p><strong>1.2</strong> 当前 Web 端通常会读取或保存以下状态：</p>
           <ul>
             <li>登录令牌或会话标识，用于维持登录状态并向接口附加必要凭证；</li>
@@ -74,7 +74,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
 
           <h3>第六条 更新与生效</h3>
           <p><strong>6.1</strong> 平台可根据法律法规、前端技术方案、登录状态保存机制或安全策略变化，对本说明进行更新。</p>
-          <p><strong>6.2</strong> 本次修订内容将自 2026 年 5 月 11 日起适用；生效日前仍适用修订前版本。</p>
+          <p><strong>6.2</strong> 本次修订内容将自 2026 年 10 月 14 日起适用；生效日前仍适用修订前版本。</p>
         </div>
       </div>
     </div>

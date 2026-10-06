@@ -827,12 +827,10 @@
   "card": {
     "action": {
       "info": {
-        "badge": "정보",
         "description": "캠퍼스카드 잔액·상태·분실 여부를 확인하고 온라인 분실 신고를 할 수 있습니다",
         "title": "기본 정보"
       },
       "records": {
-        "badge": "이용 내역",
         "description": "날짜별로 캠퍼스카드 당일 이용 내역을 조회합니다",
         "title": "이용 내역"
       }
@@ -936,10 +934,6 @@
     "releaseToRefresh": "놓으면 새로고침",
     "select": "선택해 주세요",
     "loadFailed": "불러오지 못했습니다. 잠시 후 다시 시도해 주세요"
-  },
-  "dataSource": {
-    "mock": "Mock 데이터 소스",
-    "remote": "원격 데이터 소스"
   },
   "deleteAccount": {
     "agreement": "위 계정 삭제 안내를 충분히 읽고 동의합니다",
@@ -1279,7 +1273,6 @@
       "empty": "대출 기록이 없습니다",
       "initialHint": "도서관 비밀번호 입력 후 대출 기록을 조회하세요",
       "intro": "도서관 비밀번호로 대출 기록을 봅니다. 연장 시에도 다시 확인합니다.",
-      "mockPassword": "데모 비밀번호: 123456",
       "passwordLabel": "도서관 비밀번호",
       "passwordPlaceholder": "도서관 비밀번호를 입력하세요",
       "passwordRequired": "도서관 비밀번호를 입력해 주세요",
@@ -1304,14 +1297,11 @@
       "title": "소장 상세",
       "emptyDescription": "현재 이 책의 소장 상세 정보를 찾을 수 없습니다. 이전 화면에서 다시 선택하거나 나중에 확인하세요."
     },
-    "heroBadge": "도서관",
     "heroDescription": "소장 도서를 검색하고 현재 대출을 관리하세요.",
     "heroTitle": "도서관",
     "home": {
-      "borrowBadge": "대출",
       "borrowDescription": "도서관 비밀번호로 대출 확인·연장",
       "borrowTitle": "내 대출",
-      "searchBadge": "검색",
       "searchDescription": "서명·저자·출판사로 소장 검색",
       "searchTitle": "소장 검색"
     },
@@ -1360,8 +1350,7 @@
     "title": "GdeiAssistant",
     "usernameLabel": "계정",
     "usernamePlaceholder": "캠퍼스 네트워크 계정을 입력하세요",
-    "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다.",
-    "visualIntro": "시간표, 캠퍼스카드, 소식과 캠퍼스 생활을 하나의 깔끔한 입구에 모았습니다."
+    "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다."
   },
   "loginRecord": {
     "clientDevice": "{network} 클라이언트",
@@ -1630,14 +1619,9 @@
   "community": {
     "navAriaLabel": "커뮤니티 탐색",
     "defaultPublish": "정보 게시",
-    "noticeFallback": "교내 공지",
-    "heroSubtitle": "캠퍼스의 매력을 발견하고 일상을 연결하세요",
     "backHome": "기능 홈으로 돌아가기",
     "railAriaLabel": "캠퍼스 생활 사이드바",
-    "todayCampus": "오늘의 캠퍼스",
-    "goSee": "둘러보기",
     "myPosts": "내 게시물",
-    "manage": "관리",
     "latest": "최신 소식",
     "safetyTitle": "안전 안내",
     "safetyTip": "거래와 대리 수령은 가능하면 교내에서 직접 확인하고, 개인정보 유출을 피하세요."

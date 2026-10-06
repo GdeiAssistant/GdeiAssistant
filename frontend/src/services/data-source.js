@@ -35,7 +35,3 @@ export function toggleDataSourceMode() {
 export function isMockMode() {
   return getDataSourceMode() === DATA_SOURCE_MODES.mock
 }
-
-export function getDataSourceLabel(isMock = isMockMode(), t = (key) => key) {
-  return isMock ? t('dataSource.mock') : t('dataSource.remote')
-}

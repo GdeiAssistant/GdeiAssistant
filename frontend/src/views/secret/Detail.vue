@@ -376,7 +376,7 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- 底部固定输入框 -->
-    <div class="border-t border-[var(--c-border)] p-2 bg-[var(--c-surface)] fixed bottom-0 left-0 right-0 w-full flex items-center gap-2.5 box-border">
+    <div class="secret-detail-commentbar border-t border-[var(--c-border)] p-2 bg-[var(--c-surface)] fixed bottom-0 left-0 right-0 w-full flex items-center gap-2.5 box-border">
       <input
         type="text"
         name="comment"
@@ -406,3 +406,12 @@ onBeforeUnmount(() => {
   </div>
   </div>
 </template>
+
+<style scoped>
+/* 移动端社区底部 tabbar（fixed, z 500）会盖住评论输入栏：抬到 tabbar 上方 */
+@media (max-width: 767px) {
+  .secret-detail-commentbar {
+    bottom: calc(57px + env(safe-area-inset-bottom, 0px));
+  }
+}
+</style>

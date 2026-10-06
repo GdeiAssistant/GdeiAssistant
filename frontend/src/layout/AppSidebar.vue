@@ -56,7 +56,6 @@ function avatarInitial() {
           >
             <component :is="item.icon" class="campus-sidebar__icon" />
             <span class="campus-sidebar__label">{{ item.label }}</span>
-            <span v-if="item.path === '/info'" class="campus-sidebar__dot">3</span>
           </button>
         </li>
       </ul>
@@ -180,23 +179,6 @@ function avatarInitial() {
 .campus-sidebar__label {
   flex: 1;
   min-width: 0;
-}
-
-.campus-sidebar__dot {
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 999px;
-  background: var(--c-danger);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 20px;
-  text-align: center;
-}
-
-[data-theme="dark"] .campus-sidebar__dot {
-  color: #2A0C0C;
 }
 
 .campus-sidebar__footer {

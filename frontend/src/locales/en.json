@@ -247,21 +247,17 @@
     "loading": "Signing in...",
     "failed": "Login failed",
     "thirdPartyUnavailable": "This login method is not available yet",
-    "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable.",
-    "visualIntro": "Schedules, campus cards, news, and campus life—all in one clean entry point."
+    "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable."
   },
   "libraryPage": {
     "title": "Library",
-    "heroBadge": "Library",
     "heroTitle": "Library",
     "heroDescription": "Search the catalog and manage your current borrowing records.",
     "home": {
       "searchTitle": "Catalog Search",
       "searchDescription": "Search library holdings by title, author, and publisher",
-      "searchBadge": "Search",
       "borrowTitle": "My Borrowing",
-      "borrowDescription": "Check your borrowing records and renew items with your library password",
-      "borrowBadge": "Borrow"
+      "borrowDescription": "Check your borrowing records and renew items with your library password"
     },
     "search": {
       "title": "Catalog Search",
@@ -293,7 +289,6 @@
     "borrow": {
       "title": "My Borrowing",
       "intro": "Enter your library password to view borrowing records. Renewals will verify the password again.",
-      "mockPassword": "Mock password: 123456",
       "passwordLabel": "Library Password",
       "passwordPlaceholder": "Enter your library password",
       "passwordRequired": "Please enter your library password",
@@ -542,13 +537,11 @@
     "action": {
       "info": {
         "title": "Basic Info",
-        "description": "View balance, status, and current loss status, with online reporting support",
-        "badge": "Info"
+        "description": "View balance, status, and current loss status, with online reporting support"
       },
       "records": {
         "title": "Transactions",
-        "description": "Check your campus card transactions by date",
-        "badge": "Records"
+        "description": "Check your campus card transactions by date"
       }
     },
     "search": {
@@ -1338,10 +1331,6 @@
       "emptyAccepted": "No accepted tasks yet"
     }
   },
-  "dataSource": {
-    "mock": "Mock Data Source",
-    "remote": "Remote Data Source"
-  },
   "about": {
     "appName": "GdeiAssistant",
     "enterSystem": "Enter",
@@ -1630,14 +1619,9 @@
   "community": {
     "navAriaLabel": "Community navigation",
     "defaultPublish": "Post",
-    "noticeFallback": "Campus notice",
-    "heroSubtitle": "Discover campus life and stay connected",
     "backHome": "Back to home",
     "railAriaLabel": "Campus life sidebar",
-    "todayCampus": "Campus today",
-    "goSee": "Explore",
     "myPosts": "My posts",
-    "manage": "Manage",
     "latest": "Latest",
     "safetyTitle": "Safety tip",
     "safetyTip": "For trading and deliveries, prefer meeting on campus in person and avoid sharing private information."

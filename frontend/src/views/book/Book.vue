@@ -102,7 +102,7 @@ function confirmRenew() {
     </div>
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
-      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.borrow.intro') }}<br><span class="text-xs text-[var(--c-text-3)]">{{ t('libraryPage.borrow.mockPassword') }}</span></p>
+      <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.borrow.intro') }}</p>
 
       <!-- Password form -->
       <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">

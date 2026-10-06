@@ -11,7 +11,6 @@ import CommunityHeader from '../components/community/CommunityHeader.vue'
 import CommunityModuleLayout from '../components/community/CommunityModuleLayout.vue'
 import Evaluate from '../views/evaluate/Evaluate.vue'
 import SecretDetail from '../views/secret/Detail.vue'
-import { getDataSourceLabel } from './data-source'
 import { resolveLoadingMessage } from '../composables/useToast'
 import zhCN from '../locales/zh-CN.json'
 import zhHK from '../locales/zh-HK.json'
@@ -52,9 +51,7 @@ async function mountLocalized(component, path = '/') {
 
 describe('shared ui i18n helpers', () => {
   const messages = {
-    'common.loading': 'Loading...',
-    'dataSource.mock': 'Mock Data Source',
-    'dataSource.remote': 'Remote Data Source'
+    'common.loading': 'Loading...'
   }
 
   const t = (key) => messages[key] ?? key
@@ -63,20 +60,13 @@ describe('shared ui i18n helpers', () => {
     expect(resolveLoadingMessage(undefined, t)).toBe('Loading...')
     expect(resolveLoadingMessage('Please wait', t)).toBe('Please wait')
   })
-
-  it('resolves the data source label from translation keys', () => {
-    expect(getDataSourceLabel(true, t)).toBe('Mock Data Source')
-    expect(getDataSourceLabel(false, t)).toBe('Remote Data Source')
-  })
 })
 
 describe('community and page i18n resources', () => {
   const REQUIRED_KEYS = [
     'community.navAriaLabel',
     'community.defaultPublish',
-    'community.heroSubtitle',
     'community.safetyTip',
-    'loginPage.visualIntro',
     'cetPage.resultTitle',
     'cetPage.resultDisclaimer',
     'cetPage.writingScore',
@@ -153,11 +143,8 @@ describe('community and page i18n resources', () => {
         await nextTick()
         expect(host.querySelector('.community-header__back').getAttribute('aria-label')).toBe(LOCALES[code].common.back)
         expect(host.querySelector('.community-tabbar').getAttribute('aria-label')).toBe(LOCALES[code].community.navAriaLabel)
-        expect(host.querySelector('.community-module-layout__hero-copy p').textContent).toBe(LOCALES[code].community.heroSubtitle)
-        expect(host.querySelector('.community-module-layout__activity-list small').textContent).toBe(LOCALES[code].community.noticeFallback)
         expect(host.textContent).toContain(LOCALES[code].evaluatePage.riskNotice)
         expect(document.body.textContent).toContain(LOCALES[code].evaluatePage.confirmMessage)
-        expect(host.textContent).toContain('用户公告原文')
         expect(host.textContent).toContain('用户标题')
         expect(checkbox.checked).toBe(true)
       }

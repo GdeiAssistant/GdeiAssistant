@@ -61,12 +61,12 @@ function isLocaleSelected(code) {
         <ChevronLeft :size="18" aria-hidden="true" />
         <span>{{ t('common.back') }}</span>
       </button>
-      <span class="subpage-bar__title">{{ t('appearance.title') }}</span>
+      <h1 class="subpage-bar__title">{{ t('appearance.title') }}</h1>
       <span aria-hidden="true"></span>
     </div>
 
     <div class="appearance-body">
-      <h2 class="appearance-heading">{{ t('appearance.title') }}</h2>
+      <div class="appearance-heading" aria-hidden="true">{{ t('appearance.title') }}</div>
 
       <section class="appearance-section">
         <h3 class="section-title">{{ t('appearance.theme.label') }}</h3>
@@ -135,6 +135,10 @@ function isLocaleSelected(code) {
 </template>
 
 <style scoped>
+.subpage-bar__title {
+  margin: 0;
+}
+
 .appearance-page {
   min-height: 100vh;
   color: var(--c-text-1);

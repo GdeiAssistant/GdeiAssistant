@@ -1,9 +1,10 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { ArrowRight, Send, ShieldCheck, Sparkles } from 'lucide-vue-next'
+import { ArrowRight, Megaphone, Send, ShieldCheck, Sparkles } from 'lucide-vue-next'
 import CommunityTabbar from './CommunityTabbar.vue'
+import request from '../../utils/request'
 
 const props = defineProps({
   title: { type: String, required: true },
@@ -16,6 +17,7 @@ const props = defineProps({
 
 const router = useRouter()
 const { t } = useI18n()
+const campusItems = ref([])
 
 const publishTarget = computed(() => {
   return props.publishPath || props.tabs.find((tab) => tab.key === 'publish')?.path || props.basePath
@@ -28,6 +30,22 @@ const activeModuleLabel = computed(() => {
 function goTo(path) {
   router.push(path)
 }
+
+onMounted(async () => {
+  try {
+    const res = await request.get('/information/announcement/start/0/size/2')
+    if (res?.success && Array.isArray(res?.data)) {
+      campusItems.value = res.data.map((item) => ({
+        id: item.id,
+        title: item.title,
+        meta: item.publishTime || '',
+        path: item.id ? `/info/announcements/${item.id}` : '/info'
+      }))
+    }
+  } catch (_) {
+    // 公告拉取失败时侧栏直接不显示这张卡，不放假数据
+  }
+})
 </script>
 
 <template>
@@ -58,6 +76,25 @@ function goTo(path) {
       </main>
 
       <aside class="community-module-layout__rail" :aria-label="t('community.railAriaLabel')">
+        <section v-if="campusItems.length" class="community-module-layout__rail-card community-module-layout__rail-card--today">
+          <div class="community-module-layout__rail-head">
+            <h2>{{ t('community.todayCampus') }}</h2>
+            <span>{{ t('community.goSee') }}</span>
+          </div>
+          <ul class="community-module-layout__activity-list">
+            <li v-for="(item, index) in campusItems" :key="item.id" @click="goTo(item.path)">
+              <component
+                :is="index === 0 ? Megaphone : Sparkles"
+                class="community-module-layout__rail-icon"
+              />
+              <div>
+                <strong>{{ item.title }}</strong>
+                <small v-if="item.meta">{{ item.meta }}</small>
+              </div>
+            </li>
+          </ul>
+        </section>
+
         <section class="community-module-layout__rail-card community-module-layout__rail-card--manage">
           <div class="community-module-layout__rail-head">
             <h2>{{ t('community.myPosts') }}</h2>
@@ -218,6 +255,62 @@ function goTo(path) {
   font-weight: 650;
 }
 
+.community-module-layout__rail-head span {
+  color: var(--c-text-3);
+  font-size: 12px;
+}
+
+.community-module-layout__activity-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.community-module-layout__activity-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.community-module-layout__activity-list li + li {
+  border-top: 1px solid var(--c-divider);
+}
+
+.community-module-layout__activity-list li:hover {
+  background: var(--c-surface-hover);
+}
+
+.community-module-layout__activity-list strong,
+.community-module-layout__activity-list small {
+  display: block;
+}
+
+.community-module-layout__activity-list strong {
+  color: var(--c-text-1);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.community-module-layout__activity-list small {
+  margin-top: 2px;
+  color: var(--c-text-3);
+  font-size: 12px;
+}
+
+.community-module-layout__rail-icon {
+  box-sizing: content-box;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  padding: 8px;
+  border-radius: var(--radius-control);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+}
+
 .community-module-layout__quick-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -364,7 +457,8 @@ function goTo(path) {
 @media (prefers-reduced-motion: reduce) {
   .community-module-layout__primary,
   .community-module-layout__secondary,
-  .community-module-layout__quick-grid button {
+  .community-module-layout__quick-grid button,
+  .community-module-layout__activity-list li {
     transition: none;
   }
 }

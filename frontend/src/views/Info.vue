@@ -74,11 +74,6 @@
             class="info-interaction-badge min-w-[18px] h-[18px] px-1 rounded-full text-white text-[10px] font-bold flex items-center justify-center"
           >{{ dmUnreadCount > 99 ? '99+' : dmUnreadCount }}</span>
         </div>
-        <button
-          type="button"
-          class="text-xs text-[var(--c-primary)] bg-transparent border-none cursor-pointer"
-          @click="router.push('/social/chats')"
-        >{{ $t('info.expand') }}</button>
       </template>
       <div class="p-4">
         <button

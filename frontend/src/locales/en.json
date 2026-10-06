@@ -1605,7 +1605,7 @@
     "relNone": "Not following",
     "relFollowing": "Following",
     "relFollowedBy": "Follows you",
-    "relMutual": "Friends",
+    "relMutual": "Mutual",
     "policyAll": "Everyone signed in",
     "policyAllDesc": "Any logged-in user can message me",
     "policyFollowing": "People I follow",

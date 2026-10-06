@@ -312,6 +312,7 @@ const showSuccess = (msg) => {
 function saveBirthday(year, month, date) {
   return updateBirthday({ year, month, date })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveFaculty() {
@@ -324,6 +325,7 @@ function saveFaculty() {
       userInfo.value.majorCode = ''
       showSuccess()
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveMajor() {
@@ -331,6 +333,7 @@ function saveMajor() {
   if (!majorCode) return Promise.resolve()
   return updateMajor({ major: majorCode })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveEnrollment() {
@@ -338,20 +341,21 @@ function saveEnrollment() {
   const year = y ? parseInt(String(y), 10) : null
   return updateEnrollment({ year })
     .then(() => { showSuccess() })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveLocation() {
   const { locationRegion, locationState, locationCity } = userInfo.value
   if (!locationRegion) return Promise.resolve()
   const payload = { region: locationRegion, state: locationState || undefined, city: locationCity || undefined }
-  return updateLocation(payload).then(() => { showSuccess() })
+  return updateLocation(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
 }
 
 function saveHometown() {
   const { hometownRegion, hometownState, hometownCity } = userInfo.value
   if (!hometownRegion) return Promise.resolve()
   const payload = { region: hometownRegion, state: hometownState || undefined, city: hometownCity || undefined }
-  return updateHometown(payload).then(() => { showSuccess() })
+  return updateHometown(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
 }
 
 const openBirthdayPicker = () => {
@@ -463,7 +467,7 @@ const openNicknameDialog = () => { tempNickname.value = userInfo.value.nickname 
 const confirmNickname = () => {
   const nickname = (tempNickname.value || '').trim()
   if (!nickname) {
-    showNicknameDialog.value = false
+    toastError(t('profile.nicknamePlaceholder'))
     return
   }
   updateNickname({ nickname })
@@ -472,6 +476,7 @@ const confirmNickname = () => {
       showSuccess()
       showNicknameDialog.value = false
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
@@ -483,6 +488,7 @@ const confirmIntro = () => {
       showSuccess()
       showIntroDialog.value = false
     })
+    .catch(() => { toastError(t('common.saveFailed')) })
 }
 
 async function fetchUserProfile() {

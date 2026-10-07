@@ -1,9 +1,11 @@
 <script setup>
+import { postTopicByIdLike, getTopicKeywordPage050 } from "../../api/topicEndpoints.js"
+
 import { Heart } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { showErrorTopTips } from '@/utils/toast.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
@@ -15,7 +17,7 @@ const searching = ref(false)
 
 function handleLike(item) {
   if (item.isLiked) return
-  request.post(`/topic/id/${item.id}/like`)
+  postTopicByIdLike(item.id)
     .then(() => {
       item.isLiked = true
       item.likeCount = (item.likeCount || 0) + 1
@@ -29,7 +31,7 @@ function doSearch() {
     return
   }
   searching.value = true
-  request.get(`/topic/keyword/${encodeURIComponent(trimmedKeyword)}/start/0/size/50`)
+  getTopicKeywordPage050(trimmedKeyword)
     .then((res) => {
       const rawList = res?.data || []
       searchResults.value = Array.isArray(rawList) ? rawList.map((item) => ({

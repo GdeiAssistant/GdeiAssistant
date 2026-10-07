@@ -1,9 +1,11 @@
 <script setup>
+import { postSecretByIdLike, postSecretByIdComment, getSecretById, getSecretByIdComments } from "../../api/secretEndpoints.js"
+
 import { Inbox } from 'lucide-vue-next'
 import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
@@ -156,12 +158,12 @@ const seekAudio = (event) => {
 // 点赞/取消点赞
 const toggleLike = () => {
   if (secret.value.liked) {
-    request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 0 } }).then(() => {
+    postSecretByIdLike(secret.value.id, null, { params: { like: 0 } }).then(() => {
       secret.value.liked = false
       secret.value.likeCount--
     }).catch(() => {})
   } else {
-    request.post(`/secret/id/${secret.value.id}/like`, null, { params: { like: 1 } }).then(() => {
+    postSecretByIdLike(secret.value.id, null, { params: { like: 1 } }).then(() => {
       secret.value.liked = true
       secret.value.likeCount++
     }).catch(() => {})
@@ -178,7 +180,7 @@ const submitComment = () => {
     showDialog('secret.detail.commentTooLong', { max: 50 })
     return
   }
-  request.post(`/secret/id/${route.params.id}/comment`, null, { params: { comment: commentText.value.trim() } }).then(() => {
+  postSecretByIdComment(route.params.id, null, { params: { comment: commentText.value.trim() } }).then(() => {
     commentText.value = ''
     loadComments()
   }).catch(() => {})
@@ -189,7 +191,7 @@ const loadDetail = async () => {
   try {
     loading.value = true
     destroyAudio()
-    const res = await request.get(`/secret/id/${route.params.id}`)
+    const res = await getSecretById(route.params.id)
     const data = res?.data
     if (data && res.success !== false) {
       secret.value = {
@@ -214,7 +216,7 @@ const loadDetail = async () => {
 // 加载评论
 const loadComments = async () => {
   try {
-    const res = await request.get(`/secret/id/${route.params.id}/comments`)
+    const res = await getSecretByIdComments(route.params.id)
     comments.value = res?.data || []
   } catch (err) {
     comments.value = []

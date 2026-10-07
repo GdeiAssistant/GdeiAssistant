@@ -17,10 +17,12 @@
 </template>
 
 <script setup>
+import { getInformationAnnouncementById } from "../../api/informationEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '@/utils/request'
+
 
 const route = useRoute()
 const { t } = useI18n()
@@ -29,7 +31,7 @@ const loading = ref(true)
 
 onMounted(async () => {
   try {
-    const res = await request.get(`/information/announcement/id/${route.params.id}`)
+    const res = await getInformationAnnouncementById(route.params.id)
     if (res?.success && res.data) {
       item.value = res.data
     }

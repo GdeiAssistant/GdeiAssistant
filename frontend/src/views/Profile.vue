@@ -313,53 +313,42 @@ const showSuccess = (msg) => {
   toastSuccess(msg || t('common.saveSuccess'))
 }
 
+// Serialize edits of the same field; commit confirmed values only.
+const pendingEdits = new Map()
+let profileGeneration = 0
+function saveConfirmed(field, request, patch) {
+  profileGeneration++
+  const previous = pendingEdits.get(field) || Promise.resolve()
+  const operation = previous.catch(() => {}).then(request).then(() => {
+    Object.assign(userInfo.value, patch)
+    showSuccess()
+  }).catch(() => { toastError(t('common.saveFailed')) })
+  pendingEdits.set(field, operation)
+  return operation.finally(() => {
+    if (pendingEdits.get(field) === operation) pendingEdits.delete(field)
+  })
+}
+
 function saveBirthday(year, month, date) {
-  return updateBirthday({ year, month, date })
-    .then(() => { showSuccess() })
-    .catch(() => { toastError(t('common.saveFailed')) })
+  const birthday = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
+  return saveConfirmed('birthday', () => updateBirthday({ year, month, date }), { birthday })
 }
 
-function saveFaculty() {
-  const code = userInfo.value.facultyCode
+function saveFaculty(code) {
   if (!Number.isInteger(code)) return Promise.resolve()
-  return updateFaculty({ faculty: code })
-    .then(() => {
-      userInfo.value.facultyCode = code
-      userInfo.value.major = ''
-      userInfo.value.majorCode = ''
-      showSuccess()
-    })
-    .catch(() => { toastError(t('common.saveFailed')) })
+  return saveConfirmed('education', () => updateFaculty({ faculty: code }), {
+    faculty: '', facultyCode: code, major: '', majorCode: ''
+  })
 }
 
-function saveMajor() {
-  const majorCode = userInfo.value.majorCode || ''
+function saveMajor(majorCode) {
   if (!majorCode) return Promise.resolve()
-  return updateMajor({ major: majorCode })
-    .then(() => { showSuccess() })
-    .catch(() => { toastError(t('common.saveFailed')) })
+  return saveConfirmed('education', () => updateMajor({ major: majorCode }), { major: '', majorCode })
 }
 
-function saveEnrollment() {
-  const y = userInfo.value.enrollment
-  const year = y ? parseInt(String(y), 10) : null
-  return updateEnrollment({ year })
-    .then(() => { showSuccess() })
-    .catch(() => { toastError(t('common.saveFailed')) })
-}
-
-function saveLocation() {
-  const { locationRegion, locationState, locationCity } = userInfo.value
-  if (!locationRegion) return Promise.resolve()
-  const payload = { region: locationRegion, state: locationState || undefined, city: locationCity || undefined }
-  return updateLocation(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
-}
-
-function saveHometown() {
-  const { hometownRegion, hometownState, hometownCity } = userInfo.value
-  if (!hometownRegion) return Promise.resolve()
-  const payload = { region: hometownRegion, state: hometownState || undefined, city: hometownCity || undefined }
-  return updateHometown(payload).then(() => { showSuccess() }).catch(() => { toastError(t('common.saveFailed')) })
+function saveEnrollment(value) {
+  const year = value ? parseInt(String(value), 10) : null
+  return saveConfirmed('enrollment', () => updateEnrollment({ year }), { enrollment: value })
 }
 
 const openBirthdayPicker = () => {
@@ -369,11 +358,7 @@ const openBirthdayPicker = () => {
 
 const openFacultyPicker = () => {
   openListFallback('faculty', (option) => {
-    userInfo.value.faculty = ''
-    userInfo.value.facultyCode = option.code
-    userInfo.value.major = ''
-    userInfo.value.majorCode = ''
-    saveFaculty()
+    saveFaculty(option.code)
   })
 }
 
@@ -383,16 +368,13 @@ const openMajorPicker = () => {
     return
   }
   openListFallback('major', (option) => {
-    userInfo.value.major = ''
-    userInfo.value.majorCode = option.code
-    saveMajor()
+    saveMajor(option.code)
   })
 }
 
 const openEnrollmentPicker = () => {
   openListFallback('enrollment', (option) => {
-    userInfo.value.enrollment = option.code
-    saveEnrollment()
+    saveEnrollment(option.code)
   })
 }
 
@@ -420,19 +402,15 @@ const openHometownPicker = () => {
 const onLocationConfirm = ({ region, state, city }) => {
   const locationCatalog = getLocationCatalog(locale.value)
   const display = locationCatalog.locationLabel(region?.code, state?.code, city?.code)
-  if (locationPickerType.value === 'hometown') {
-    userInfo.value.hometownRegion = region?.code || ''
-    userInfo.value.hometownState = state?.code || ''
-    userInfo.value.hometownCity = city?.code || ''
-    userInfo.value.hometown = display
-    saveHometown()
-  } else {
-    userInfo.value.locationRegion = region?.code || ''
-    userInfo.value.locationState = state?.code || ''
-    userInfo.value.locationCity = city?.code || ''
-    userInfo.value.location = display
-    saveLocation()
+  const field = locationPickerType.value
+  const payload = { region: region?.code, state: state?.code || undefined, city: city?.code || undefined }
+  const patch = {
+    [field + 'Region']: region?.code || '',
+    [field + 'State']: state?.code || '',
+    [field + 'City']: city?.code || '',
+    [field]: display
   }
+  saveConfirmed(field, () => field === 'hometown' ? updateHometown(payload) : updateLocation(payload), patch)
   showLocationPicker.value = false
 }
 
@@ -455,7 +433,6 @@ const showDateFallback = ref(false)
 const tempDate = ref('')
 const confirmDateFallback = () => {
   if (tempDate.value) {
-    userInfo.value.birthday = tempDate.value
     const parts = tempDate.value.split('-')
     const y = parseInt(parts[0], 10)
     const m = parseInt(parts[1], 10)
@@ -474,32 +451,23 @@ const confirmNickname = () => {
     toastError(t('profile.nicknamePlaceholder'))
     return
   }
-  updateNickname({ nickname })
-    .then(() => {
-      userInfo.value.nickname = nickname
-      showSuccess()
-      showNicknameDialog.value = false
-    })
-    .catch(() => { toastError(t('common.saveFailed')) })
+  saveConfirmed('nickname', () => updateNickname({ nickname }), { nickname })
+  showNicknameDialog.value = false
 }
 
 const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
 const confirmIntro = () => {
   const introduction = (tempIntro.value || '').trim()
-  userInfo.value.introduction = introduction
-  updateIntroduction({ introduction: introduction || null })
-    .then(() => {
-      showSuccess()
-      showIntroDialog.value = false
-    })
-    .catch(() => { toastError(t('common.saveFailed')) })
+  saveConfirmed('introduction', () => updateIntroduction({ introduction: introduction || null }), { introduction })
+  showIntroDialog.value = false
 }
 
 async function fetchUserProfile() {
+  const generation = profileGeneration
   try {
     const res = await getCurrentUserProfile()
     const ok = res && (res.success === true || res.code === 200) && res.data
-    if (ok) {
+    if (ok && generation === profileGeneration) {
       Object.assign(userInfo.value, formatProfileViewModel(res.data, locale.value))
     }
   } catch (_) {

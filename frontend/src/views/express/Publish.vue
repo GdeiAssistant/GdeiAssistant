@@ -1,8 +1,10 @@
 <script setup>
+import { postExpress } from "../../api/expressEndpoints.js"
+
 import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { createCommunityGenderOptions } from '../community/communityContent'
@@ -56,7 +58,7 @@ function submit() {
   }
   submitting.value = true
   toastLoading(t('express.publish.publishing'))
-  request.post('/express', payload)
+  postExpress(payload)
     .then(() => {
       hideLoading()
       toastSuccess(t('express.publish.publishSuccess'))

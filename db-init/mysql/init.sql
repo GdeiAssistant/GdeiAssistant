@@ -636,6 +636,14 @@ DROP TABLE IF EXISTS `user_block`;
 DROP TABLE IF EXISTS `user_follow`;
 DROP TABLE IF EXISTS `app_user`;
 DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS stored_asset (
+  bucket varchar(128) NOT NULL, object_key varchar(256) NOT NULL,
+  owner_id varchar(64) DEFAULT NULL, status varchar(16) NOT NULL,
+  content_type varchar(100) DEFAULT NULL, byte_length bigint NOT NULL DEFAULT 0,
+  updated_at datetime NOT NULL, PRIMARY KEY(bucket,object_key),
+  KEY idx_stored_asset_cleanup(status,updated_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
 CREATE TABLE `app_user` (
   `id` bigint NOT NULL AUTO_INCREMENT COMMENT '应用账号内部主键',
   `public_id` char(36) NOT NULL COMMENT '公开 UUID',

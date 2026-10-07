@@ -27,7 +27,12 @@ public class I18nTranslationService {
     private static final Logger log = LoggerFactory.getLogger(I18nTranslationService.class);
 
     private final I18nConfig config;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate = cn.gdeiassistant.common.tools.springutils.OutboundHttpClients.create(3000, 6000);
+    @Autowired(required=false)
+    public void configureHttp(cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
+        restTemplate = cn.gdeiassistant.common.tools.springutils.OutboundHttpClients.create(settings.getConnectTimeoutMs(), settings.getReadTimeoutMs());
+    }
+
     private final ConcurrentHashMap<String, CompletableFuture<String>> inFlight = new ConcurrentHashMap<>();
 
     @Autowired
@@ -78,13 +83,13 @@ public class I18nTranslationService {
     }
 
     public void enqueueTranslation(String text, String targetLang) {
-        if (text == null || text.isBlank() || targetLang == null) return;
+        if (text == null || text.isBlank() || targetLang == null || i18nExecutor == null) return;
 
         String dedupKey = targetLang + ":" + normalizeText(text);
         CompletableFuture<String> existing = inFlight.putIfAbsent(dedupKey, new CompletableFuture<>());
         if (existing != null) return; // already in flight
 
-        if (i18nExecutor != null) {
+        try {
             i18nExecutor.execute(() -> {
                 try {
                     String result = callDeepL(text, targetLang);
@@ -97,6 +102,9 @@ public class I18nTranslationService {
                     inFlight.remove(dedupKey);
                 }
             });
+        } catch (java.util.concurrent.RejectedExecutionException e) {
+            inFlight.remove(dedupKey);
+            log.warn("i18n queue full; retaining original text");
         }
     }
 
@@ -117,6 +125,7 @@ public class I18nTranslationService {
 
         int maxRetries = 3;
         for (int attempt = 0; attempt < maxRetries; attempt++) {
+            if (Thread.currentThread().isInterrupted()) return null;
             try {
                 ResponseEntity<Map> response = restTemplate.exchange(
                         config.getDeeplApiUrl(), HttpMethod.POST, request, Map.class);
@@ -131,7 +140,7 @@ public class I18nTranslationService {
                 return null;
             } catch (Exception e) {
                 if (attempt < maxRetries - 1) {
-                    try { Thread.sleep((long) Math.pow(2, attempt) * 1000); } catch (InterruptedException ignored) {}
+                    try { Thread.sleep((long) Math.pow(2, attempt) * 1000); } catch (InterruptedException interrupted) { Thread.currentThread().interrupt(); return null; }
                 } else {
                     log.warn("DeepL API call failed after {} retries: {}", maxRetries, e.getMessage());
                 }

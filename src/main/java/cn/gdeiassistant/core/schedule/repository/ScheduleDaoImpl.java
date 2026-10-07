@@ -76,8 +76,10 @@ public class ScheduleDaoImpl implements ScheduleDao {
     @Override
     public CustomScheduleDocument queryCustomSchedule(String username) {
         if (mongoTemplate != null) {
-            return mongoTemplate.findOne(new Query(Criteria.where("username").is(username))
-                    , CustomScheduleDocument.class, "customSchedule");
+            var documents = mongoTemplate.find(new Query(Criteria.where("username").is(username)).limit(2),
+                    CustomScheduleDocument.class, "customSchedule");
+            if (documents.size() > 1) throw new IllegalStateException("自定义课表存在重复用户记录，需要核对后再更新");
+            return documents.isEmpty() ? null : documents.get(0);
         }
         return null;
     }
@@ -90,64 +92,69 @@ public class ScheduleDaoImpl implements ScheduleDao {
      * @throws CountOverLimitException
      * @throws GenerateScheduleException
      */
+    private static final int MAX_CUSTOM_COURSES_PER_POSITION = 5;
+    private static final int MAX_UPDATE_ATTEMPTS = 8;
+
     @Override
-    public synchronized void addCustomSchedule(String username, CustomSchedule customSchedule)
+    public void addCustomSchedule(String username, CustomSchedule customSchedule)
             throws CountOverLimitException, GenerateScheduleException {
-        if (mongoTemplate != null) {
-            //生成课程编号
-            Schedule schedule = ScheduleUtils.generateCustomSchedule(customSchedule);
-            //若数据库中已有自定义课表记录，则直接更新，否则进行添加
-            CustomScheduleDocument customScheduleDocument = queryCustomSchedule(username);
-            if (customScheduleDocument == null) {
-                Map<String, Schedule> scheduleMap = new LinkedHashMap<>();
-                scheduleMap.put(schedule.getId(), schedule);
-                customScheduleDocument = new CustomScheduleDocument();
-                customScheduleDocument.setUsername(username);
-                customScheduleDocument.setScheduleMap(scheduleMap);
-            } else {
-                Map<Integer, Integer> positionCounter = new HashMap<>();
-                Map<String, Schedule> scheduleMap = customScheduleDocument.getScheduleMap();
-                for (Schedule s : scheduleMap.values()) {
-                    positionCounter.put(s.getPosition(), positionCounter.getOrDefault(s.getPosition(), 0) + 1);
-                }
-                if (positionCounter.getOrDefault(schedule.getPosition(), 0) > 5) {
-                    throw new CountOverLimitException("最多可以保存五个自定义课表");
+        requireMongo();
+        Schedule schedule = ScheduleUtils.generateCustomSchedule(customSchedule);
+        for (int attempt = 0; attempt < MAX_UPDATE_ATTEMPTS; attempt++) {
+            CustomScheduleDocument document = queryCustomSchedule(username);
+            if (document == null) {
+                document = new CustomScheduleDocument();
+                document.setId(cn.gdeiassistant.common.tools.utils.StringEncryptUtils.sha256HexString("customSchedule:" + username));
+                document.setUsername(username);
+                document.setVersion(0L);
+                document.setScheduleMap(new LinkedHashMap<>(Map.of(schedule.getId(), schedule)));
+                try {
+                    mongoTemplate.insert(document, "customSchedule");
+                    return;
+                } catch (org.springframework.dao.DuplicateKeyException concurrentInsert) {
+                    continue;
                 }
             }
-            customScheduleDocument.getScheduleMap().put(schedule.getId(), schedule);
-            mongoTemplate.save(customScheduleDocument, "customSchedule");
+            Map<String, Schedule> courses = new LinkedHashMap<>(document.getScheduleMap() == null ? Map.of() : document.getScheduleMap());
+            long count = courses.values().stream().filter(course -> java.util.Objects.equals(course.getPosition(), schedule.getPosition())).count();
+            if (count >= MAX_CUSTOM_COURSES_PER_POSITION) throw new CountOverLimitException("最多可以保存五个自定义课表");
+            courses.put(schedule.getId(), schedule);
+            if (replaceCourses(document, courses)) return;
         }
+        throw new org.springframework.dao.ConcurrencyFailureException("课表正在更新，请重试");
     }
 
-    /**
-     * 删除自定义课程信息（按 position 定位，与 CustomSchedule 无 id 字段一致）。
-     * 仅当该 position 确属当前用户 custom_schedule 中的自定义课程时才执行删除。
-     *
-     * @param username 当前用户名校验归属
-     * @param position 自定义课程 position
-     * @return true 已删除，false 该 position 非当前用户自定义课程（不执行删除）
-     */
     @Override
     public boolean deleteCustomSchedule(String username, Integer position) {
-        if (mongoTemplate == null || position == null) {
-            return false;
+        return deleteCustomSchedule(username, position, null);
+    }
+
+    @Override
+    public boolean deleteCustomSchedule(String username, Integer position, String courseId) {
+        requireMongo();
+        for (int attempt = 0; attempt < MAX_UPDATE_ATTEMPTS; attempt++) {
+            CustomScheduleDocument document = queryCustomSchedule(username);
+            if (document == null || document.getScheduleMap() == null) return false;
+            Map<String, Schedule> courses = new LinkedHashMap<>(document.getScheduleMap());
+            var matches = courses.entrySet().stream().filter(entry ->
+                    java.util.Objects.equals(position, entry.getValue().getPosition())
+                    && (courseId == null || courseId.equals(entry.getKey()))).toList();
+            if (matches.isEmpty()) return false;
+            if (matches.size() != 1) throw new IllegalArgumentException("请选择需要删除的课程");
+            courses.remove(matches.get(0).getKey());
+            if (replaceCourses(document, courses)) return true;
         }
-        CustomScheduleDocument customScheduleDocument = queryCustomSchedule(username);
-        if (customScheduleDocument == null || customScheduleDocument.getScheduleMap() == null) {
-            return false;
-        }
-        String keyToRemove = null;
-        for (Map.Entry<String, Schedule> entry : customScheduleDocument.getScheduleMap().entrySet()) {
-            if (position.equals(entry.getValue().getPosition())) {
-                keyToRemove = entry.getKey();
-                break;
-            }
-        }
-        if (keyToRemove == null) {
-            return false;
-        }
-        customScheduleDocument.getScheduleMap().remove(keyToRemove);
-        mongoTemplate.save(customScheduleDocument, "customSchedule");
-        return true;
+        throw new org.springframework.dao.ConcurrencyFailureException("课表正在更新，请重试");
+    }
+
+    private boolean replaceCourses(CustomScheduleDocument document, Map<String, Schedule> courses) {
+        Query expected = new Query(Criteria.where("_id").is(document.getId()).and("version").is(document.getVersion()));
+        var update = new org.springframework.data.mongodb.core.query.Update().set("scheduleMap", courses)
+                .set("version", document.getVersion() == null ? 1L : document.getVersion() + 1);
+        return mongoTemplate.updateFirst(expected, update, CustomScheduleDocument.class, "customSchedule").getModifiedCount() == 1;
+    }
+
+    private void requireMongo() {
+        if (mongoTemplate == null) throw new cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException("课表存储未配置");
     }
 }

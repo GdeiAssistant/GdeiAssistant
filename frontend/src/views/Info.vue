@@ -93,10 +93,12 @@
 </template>
 
 <script setup>
+import { postInformationMessageByIdRead, postInformationMessageReadall, getInformationAnnouncementPage05, getInformationOverview, getInformationMessageInteractionPage020, getInformationMessageUnread, getInformationMessageInteractionPage } from "../api/informationEndpoints.js"
+
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../utils/request'
+
 import { fetchDmUnread } from '../api/social.js'
 import AppCard from '../components/ui/AppCard.vue'
 import NoticeBlock from '../components/info/NoticeBlock.vue'
@@ -254,7 +256,7 @@ function markInteractionItemRead(item) {
   }
   item.isRead = true
   interactionUnreadCount.value = Math.max(0, Number(interactionUnreadCount.value || 0) - 1)
-  request.post(`/information/message/id/${item.id}/read`).catch(() => {})
+  postInformationMessageByIdRead(item.id).catch(() => {})
 }
 
 function handleInteractionSelect(item) {
@@ -274,17 +276,17 @@ function handleMarkAllInteractionsRead() {
     ...item,
     isRead: true
   }))
-  request.post('/information/message/readall').catch(() => {
+  postInformationMessageReadall().catch(() => {
     loadInfoPage()
   })
 }
 
 async function loadInfoPage() {
   const [announcementRes, informationRes, interactionRes, unreadRes, dmUnreadRes] = await Promise.allSettled([
-    request.get('/information/announcement/start/0/size/5'),
-    request.get('/information/overview'),
-    request.get('/information/message/interaction/start/0/size/20'),
-    request.get('/information/message/unread'),
+    getInformationAnnouncementPage05(),
+    getInformationOverview(),
+    getInformationMessageInteractionPage020(),
+    getInformationMessageUnread(),
     fetchDmUnread()
   ])
 
@@ -311,7 +313,7 @@ async function loadMoreInteractions() {
   interactionLoadingMore.value = true
   try {
     const start = interactionItems.value.length
-    const res = await request.get(`/information/message/interaction/start/${start}/size/${INTERACTION_PAGE_SIZE}`)
+    const res = await getInformationMessageInteractionPage(start, INTERACTION_PAGE_SIZE)
     const items = normalizeInteractionItems(res?.data || [])
     interactionItems.value = [...interactionItems.value, ...items]
     interactionHasMore.value = items.length >= INTERACTION_PAGE_SIZE

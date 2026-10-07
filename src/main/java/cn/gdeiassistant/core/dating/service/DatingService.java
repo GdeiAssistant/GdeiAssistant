@@ -5,7 +5,7 @@ import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
 import cn.gdeiassistant.common.exception.datingexception.RepeatPickException;
 import cn.gdeiassistant.common.exception.datingexception.SelfPickException;
 import cn.gdeiassistant.common.pojo.entity.User;
-import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
@@ -44,6 +44,12 @@ public class DatingService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
     @Autowired
     private InteractionNotificationService interactionNotificationService;
@@ -116,7 +122,7 @@ public class DatingService {
 
     public void uploadPicture(int id, InputStream inputStream) {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "dating/" + id + ".jpg", inputStream);
+            storedAssets.uploadObject(null, "dating/" + id + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传室友信息图片失败，id={}", id, e);
             throw new RuntimeException("上传失败", e);
@@ -131,8 +137,8 @@ public class DatingService {
         }
     }
 
-    public void movePictureFromTempObject(int id, String objectKey) {
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "dating/" + id + ".jpg");
+    public void movePictureFromTempObject(int id, String objectKey, String sessionId) {
+        uploads.moveUpload(sessionId, objectKey, "dating/" + id + ".jpg");
     }
 
     public DatingPickVO queryRoommatePick(Integer profileId, String sessionId) {
@@ -268,7 +274,7 @@ public class DatingService {
 
     public void deleteDatingImage(int id) {
         try {
-            r2StorageService.deleteObject("gdeiassistant-userdata", "dating/" + id + ".jpg");
+            storedAssets.deleteObject(null, "dating/" + id + ".jpg");
         } catch (Exception e) {
             logger.warn("删除室友信息图片失败，id={}", id, e);
         }
@@ -279,7 +285,7 @@ public class DatingService {
     }
 
     public String getRoommateProfilePictureURL(int id) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl(null, "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     private void dtoToProfileEntity(DatingPublishDTO dto, DatingProfileEntity entity) {
@@ -325,4 +331,12 @@ public class DatingService {
     private String toStringValue(Integer value) {
         return value == null ? null : String.valueOf(value);
     }
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishProfile(String sessionId, DatingPublishDTO dto,
+            org.springframework.web.multipart.MultipartFile file, String objectKey) throws Exception {
+        int id = addRoommateProfile(sessionId, dto);
+        if (file != null && !file.isEmpty()) uploadPicture(id, file.getInputStream());
+        else if (objectKey != null && !objectKey.isBlank()) movePictureFromTempObject(id, objectKey, sessionId);
+    }
+
 }

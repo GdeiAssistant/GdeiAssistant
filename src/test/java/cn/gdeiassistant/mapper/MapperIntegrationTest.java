@@ -78,7 +78,7 @@ class MapperIntegrationTest {
     void marketplaceSelectByUsername() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             MarketplaceMapper mapper = session.getMapper(MarketplaceMapper.class);
-            List<MarketplaceItemEntity> items = mapper.selectItemsByUsername("testuser");
+            List<MarketplaceItemEntity> items = mapper.selectItemsByUsername("testuser", 0, 26);
             assertNotNull(items);
             assertFalse(items.isEmpty());
         }
@@ -108,7 +108,7 @@ class MapperIntegrationTest {
     void lostAndFoundSelectByUsername() {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             LostAndFoundMapper mapper = session.getMapper(LostAndFoundMapper.class);
-            List<LostAndFoundItemEntity> items = mapper.selectItemByUsername("testuser");
+            List<LostAndFoundItemEntity> items = mapper.selectItemByUsername("testuser", 0, 26);
             assertNotNull(items);
             assertFalse(items.isEmpty());
             assertEquals("测试物品", items.get(0).getName());

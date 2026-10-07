@@ -1,4 +1,6 @@
-package cn.gdeiassistant.common.tools.utils;
+package cn.gdeiassistant.core.user.service;
+
+import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
@@ -17,6 +19,19 @@ public class PublicAuthorResolver {
     private UserMapper userMapper;
     @Autowired(required = false)
     private ProfileMapper profileMapper;
+
+    @Autowired(required = false)
+    private cn.gdeiassistant.core.user.mapper.PublicAuthorMapper publicAuthorMapper;
+
+    public java.util.Map<String, AuthorPublic> resolveAll(java.util.Collection<String> usernames) {
+        var result = new java.util.HashMap<String, AuthorPublic>();
+        var active = usernames.stream().filter(java.util.Objects::nonNull).filter(name -> !name.isBlank() && !name.startsWith("del_")).distinct().toList();
+        if (!active.isEmpty() && publicAuthorMapper != null) {
+            for (var author : publicAuthorMapper.selectAuthors(active)) result.put(author.username(), new AuthorPublic(author.authorId(), author.displayName()));
+        }
+        for (String username : usernames) result.putIfAbsent(username, new AuthorPublic(null, username != null && username.startsWith("del_") ? AnonymizeUtils.sanitizeUsername(username) : "用户"));
+        return result;
+    }
 
     public record AuthorPublic(String authorId, String displayName) {}
 

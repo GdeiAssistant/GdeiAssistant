@@ -1,8 +1,10 @@
 <script setup>
+import { postPhotograph } from "../../api/photographEndpoints.js"
+
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -85,7 +87,7 @@ const submit = async () => {
     imageKeys.forEach((imageKey) => {
       fd.append('imageKeys', imageKey)
     })
-    await request.post('/photograph', fd)
+    await postPhotograph(fd)
     hideLoading()
     toastSuccess(copy.value.publishSuccess)
     setTimeout(() => router.push('/photograph/home'), 1500)

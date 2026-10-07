@@ -13,7 +13,9 @@
     "preview": "vite preview",
     "test:e2e": "playwright test --config=e2e/playwright.config.js",
     "test:unit": "vitest run --passWithNoTests",
-    "test:unit:watch": "vitest --passWithNoTests"
+    "test:unit:watch": "vitest --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "check:syntax": "node scripts/check-javascript-syntax.mjs"
   },
   "dependencies": {
     "axios": "^1.20.0",
@@ -32,6 +34,7 @@
     "@tailwindcss/postcss": "^4.3.3",
     "@tailwindcss/vite": "^4.3.3",
     "@vitejs/plugin-vue": "^6.0.9",
+    "@vitest/coverage-v8": "^4.1.11",
     "autoprefixer": "^10.6.1",
     "fast-xml-parser": "^5.11.2",
     "jsdom": "^29.1.1",

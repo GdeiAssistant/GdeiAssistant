@@ -37,7 +37,7 @@ public interface LostAndFoundMapper {
     })
     LostAndFoundDetailEntity selectInfoByID(Integer id);
 
-    @Select("select * from lostandfound where username=#{username} order by id desc limit 500")
+    @Select("select * from lostandfound where username=#{username} order by id desc limit #{start},#{size}")
     @Results(id = "LostAndFoundItem", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
@@ -52,7 +52,7 @@ public interface LostAndFoundMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    List<LostAndFoundItemEntity> selectItemByUsername(String username);
+    List<LostAndFoundItemEntity> selectItemByUsername(@Param("username") String username, @Param("start") int start, @Param("size") int size);
 
     @Select("select * from lostandfound where lost_type=#{lostType} and state='0' order by id desc limit #{start},#{size}")
     @ResultMap("LostAndFoundItem")
@@ -83,4 +83,8 @@ public interface LostAndFoundMapper {
 
     @Delete("delete from lostandfound where id=#{id}")
     void deleteItem(@Param("id") int id);
+    // Account closure requires every state, independently of the UI page.
+    @Select("SELECT id,state FROM lostandfound WHERE username=#{username} ORDER BY id")
+    @ResultMap("LostAndFoundItem")
+    List<LostAndFoundItemEntity> selectOwnerItemStates(@Param("username") String username);
 }

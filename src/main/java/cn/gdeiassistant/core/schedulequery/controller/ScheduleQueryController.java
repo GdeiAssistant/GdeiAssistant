@@ -64,9 +64,9 @@ public class ScheduleQueryController {
      * DELETE /api/schedule/custom?position=xxx
      */
     @RequestMapping(value = "/api/schedule/custom", method = RequestMethod.DELETE)
-    public JsonResult deleteCustomSchedule(HttpServletRequest request, @RequestParam("position") Integer position) throws DataNotExistException {
+    public JsonResult deleteCustomSchedule(HttpServletRequest request, @RequestParam("position") Integer position, @RequestParam(value = "courseId", required = false) String courseId) throws DataNotExistException {
         String sessionId = (String) request.getAttribute("sessionId");
-        scheduleService.deleteCustomSchedule(sessionId, position);
+        scheduleService.deleteCustomSchedule(sessionId, position, courseId);
         return new JsonResult(true);
     }
 }

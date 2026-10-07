@@ -81,7 +81,7 @@ class CommunitySummaryContractTest {
         soldItem.setState(2);
         soldItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/ershou/103_1.jpg"));
 
-        when(marketplaceService.queryPersonalItems("session-1"))
+        when(marketplaceService.queryPersonalItems("session-1", 0, 26))
                 .thenReturn(List.of(doingItem, soldItem, offItem));
 
         mockMvc.perform(get("/api/marketplace/profile")
@@ -137,7 +137,7 @@ class CommunitySummaryContractTest {
         didFoundItem.setState(1);
         didFoundItem.setPictureURL(List.of("https://cdn.gdeiassistant.cn/lostandfound/203_1.jpg"));
 
-        when(lostAndFoundService.queryPersonalLostAndFoundItems("session-1"))
+        when(lostAndFoundService.queryPersonalLostAndFoundItems("session-1", 0, 26))
                 .thenReturn(List.of(lostItem, foundItem, didFoundItem));
 
         mockMvc.perform(get("/api/lostandfound/profile")

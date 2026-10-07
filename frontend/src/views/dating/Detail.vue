@@ -1,8 +1,10 @@
 <script setup>
+import { postDatingPick, getDatingProfileById } from "../../api/datingEndpoints.js"
+
 import { computed, ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
@@ -72,7 +74,7 @@ function submitPick() {
   const params = new URLSearchParams()
   params.append('profileId', String(route.params.id))
   params.append('content', text)
-  request.post('/dating/pick', params)
+  postDatingPick(params)
     .then(() => {
       pickSuccessVisible.value = true
       pickContent.value = ''
@@ -84,7 +86,7 @@ function submitPick() {
 
 onMounted(async () => {
   try {
-    const res = await request.get(`/dating/profile/id/${route.params.id}`)
+    const res = await getDatingProfileById(route.params.id)
     const data = res?.data
     if (data && res.success !== false) {
       const profile = data.profile || {}

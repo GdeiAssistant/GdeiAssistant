@@ -27,7 +27,7 @@ public class SmtpEmailVerificationSender implements EmailVerificationSender {
         this.smtpHost = smtpHost;
     }
 
-    @Value("${email.smtp.username:}")
+    @Value("${email.from:${email.smtp.username:}}")
     public void setSenderEmail(String senderEmail) {
         this.senderEmail = senderEmail;
     }

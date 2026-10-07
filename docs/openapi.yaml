@@ -471,7 +471,7 @@
         },
         "type": "object"
       },
-      "common_pojo_entity_NewInfo": {
+      "common_pojo_entity_NewsItem": {
         "properties": {
           "content": {
             "type": "string"
@@ -702,14 +702,14 @@
         },
         "type": "object"
       },
-      "common_pojo_result_DataJsonResult_common_pojo_entity_NewInfo": {
+      "common_pojo_result_DataJsonResult_common_pojo_entity_NewsItem": {
         "properties": {
           "code": {
             "format": "int32",
             "type": "integer"
           },
           "data": {
-            "$ref": "#/components/schemas/common_pojo_entity_NewInfo"
+            "$ref": "#/components/schemas/common_pojo_entity_NewsItem"
           },
           "errorCode": {
             "type": "string"
@@ -1553,7 +1553,7 @@
         },
         "type": "object"
       },
-      "common_pojo_result_DataJsonResult_java_util_List_common_pojo_entity_NewInfo_": {
+      "common_pojo_result_DataJsonResult_java_util_List_common_pojo_entity_NewsItem_": {
         "properties": {
           "code": {
             "format": "int32",
@@ -1561,7 +1561,7 @@
           },
           "data": {
             "items": {
-              "$ref": "#/components/schemas/common_pojo_entity_NewInfo"
+              "$ref": "#/components/schemas/common_pojo_entity_NewsItem"
             },
             "type": "array"
           },
@@ -3024,6 +3024,13 @@
               "$ref": "#/components/schemas/core_marketplace_pojo_vo_MarketplaceItemResponse"
             },
             "type": "array"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextStart": {
+            "format": "int32",
+            "type": "integer"
           },
           "off": {
             "items": {
@@ -10375,7 +10382,7 @@
     },
     "/api/information/news/id/{id}": {
       "get": {
-        "operationId": "SchoolNewsController_queryNewInfoDetail_get__api_information_news_id__id_",
+        "operationId": "SchoolNewsController_queryNewsItemDetail_get__api_information_news_id__id_",
         "parameters": [
           {
             "in": "path",
@@ -10391,7 +10398,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_common_pojo_entity_NewInfo"
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_common_pojo_entity_NewsItem"
                 }
               }
             },
@@ -10453,7 +10460,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "queryNewInfoDetail",
+        "summary": "queryNewsItemDetail",
         "tags": [
           "SchoolNews"
         ]
@@ -10461,7 +10468,7 @@
     },
     "/api/information/news/type/{type}/start/{start}/size/{size}": {
       "get": {
-        "operationId": "SchoolNewsController_queryNewInfoList_get__api_information_news_type__type__start__start__size__size_",
+        "operationId": "SchoolNewsController_queryNewsItems_get__api_information_news_type__type__start__start__size__size_",
         "parameters": [
           {
             "in": "path",
@@ -10496,7 +10503,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_common_pojo_entity_NewInfo_"
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_common_pojo_entity_NewsItem_"
                 }
               }
             },
@@ -10558,7 +10565,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "queryNewInfoList",
+        "summary": "queryNewsItems",
         "tags": [
           "SchoolNews"
         ]
@@ -12273,6 +12280,17 @@
     "/api/lostandfound/profile": {
       "get": {
         "operationId": "LostAndFoundController_getMyLostAndFoundItems_get__api_lostandfound_profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -13197,6 +13215,17 @@
     "/api/marketplace/profile": {
       "get": {
         "operationId": "MarketplaceController_getMyMarketplaceItems_get__api_marketplace_profile",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "start",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -16278,6 +16307,14 @@
             "schema": {
               "format": "int32",
               "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "courseId",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],

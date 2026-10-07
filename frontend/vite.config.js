@@ -25,6 +25,14 @@ export default defineConfig({
     restoreMocks: true,
     setupFiles: ['./test/setup.js'],
     exclude: ['e2e/**', 'node_modules/**'],
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{js,vue}'],
+      reporter: ['text-summary', 'json-summary', 'html'],
+      thresholds: {
+        'src/composables/{useLatestRequest,useScrollLoad}.js': { perFile: true, lines: 75, branches: 60 }
+      }
+    },
   },
   server: {
     // /api 代理到 Java 后端（含 WebSocket）

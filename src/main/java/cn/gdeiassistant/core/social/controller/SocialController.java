@@ -92,7 +92,7 @@ public class SocialController {
         if (target.getUsername() == null) {
             return ResponseEntity.notFound().build();
         }
-        try (InputStream in = r2StorageService.downloadObject("gdeiassistant-userdata",
+        try (InputStream in = r2StorageService.downloadObject(null,
                 "avatar/" + target.getUsername() + ".jpg")) {
             if (in == null) {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -1,4 +1,5 @@
 <script setup>
+import { useLatestRequest } from '@/composables/useLatestRequest'
 import { ChevronLeft } from 'lucide-vue-next'
 import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -26,18 +27,22 @@ const yearTabs = computed(() => createGradeYearTabs(t))
 const tableHeaders = computed(() => createGradeTableHeaders(t))
 const actionSheetItems = computed(() => createGradeActionSheetItems(t))
 
+const latestRequest = useLatestRequest()
+
 async function fetchGrade() {
+  const task = latestRequest.begin()
   loading.value = true
   gradeResult.value = null
   try {
-    const res = await getGrade(activeYear.value)
+    const res = await getGrade(activeYear.value, { signal: task.signal })
+    if (!task.isCurrent()) return
     if (res && res.success && res.data != null) {
       gradeResult.value = res.data
     }
   } catch (e) {
     // 报错 Toast 由 request.js 全局拦截器处理
   } finally {
-    loading.value = false
+    if (task.isCurrent()) loading.value = false
   }
 }
 

@@ -104,8 +104,21 @@ public class SocialChatService {
         boolean hasMore = rows.size() > size;
         List<ConversationDTO> items = new ArrayList<>();
         int end = Math.min(rows.size(), size);
-        for (int i = 0; i < end; i++) {
-            items.add(toConversationDTO(me, rows.get(i)));
+        var page = rows.subList(0, end);
+        if (!page.isEmpty()) {
+            var ids = page.stream().map(ConversationEntity::getId).toList();
+            var peers = identityService.buildSocialUsers(me, page.stream().map(row -> peerIdOf(row, me.getId())).toList());
+            var members = chatMapper.selectMembers(me.getId(), ids).stream().collect(java.util.stream.Collectors.toMap(ConversationMemberEntity::getConversationId, member -> member));
+            var messages = chatMapper.selectLastMessages(ids).stream().collect(java.util.stream.Collectors.toMap(ChatMessageEntity::getConversationId, message -> message));
+            var unread = new HashMap<Long,Integer>();
+            for (var count : chatMapper.selectUnreadCounts(me.getId(), ids)) unread.put(((Number) count.get("conversationId")).longValue(), ((Number) count.get("unreadCount")).intValue());
+            for (var row : page) {
+                var peer = peers.getOrDefault(peerIdOf(row, me.getId()), identityService.buildClosedPeer(null));
+                var member = members.get(row.getId());
+                var last = messages.get(row.getId());
+                items.add(conversationDTO(row, peer, member, last == null ? null : toMessageDTO(last,
+                        last.getSenderId().equals(me.getId()) ? me.getPublicId() : peer.getId()), unread.getOrDefault(row.getId(), 0)));
+            }
         }
         String next = null;
         if (hasMore && end > 0) {
@@ -472,34 +485,42 @@ public class SocialChatService {
             reason = "CONTACT_UNAVAILABLE";
         } else {
             peerDto = identityService.buildSocialUser(me, peer);
-            SocialIdentityService.MessagePermission permission = identityService.evaluateMessagePermission(me, peer);
-            canSend = permission.allowed;
-            reason = permission.reason;
+            canSend = peerDto.isCanMessage();
+            reason = peerDto.getMessagePermissionReason();
         }
         ConversationMemberEntity member = chatMapper.selectMember(conversation.getId(), me.getId());
         long lastRead = member == null || member.getLastReadSeq() == null ? 0L : member.getLastReadSeq();
+        ChatMessageEntity last = chatMapper.selectLastMessage(conversation.getId());
+        return conversationDTO(conversation, peerDto, member, last == null ? null : toMessageDTO(last),
+                chatMapper.countUnreadFromPeer(conversation.getId(), peerId, lastRead));
+    }
+
+    private ConversationDTO conversationDTO(ConversationEntity conversation, SocialUserDTO peer,
+            ConversationMemberEntity member, ChatMessageDTO last, int unread) {
         ConversationDTO dto = new ConversationDTO();
         dto.setId(String.valueOf(conversation.getId()));
-        dto.setPeer(peerDto);
-        ChatMessageEntity last = chatMapper.selectLastMessage(conversation.getId());
-        dto.setLastMessage(last == null ? null : toMessageDTO(last));
-        Date updated = conversation.getLastMessageAt() != null ? conversation.getLastMessageAt() : conversation.getCreatedAt();
-        dto.setUpdatedAt(formatTime(updated));
-        dto.setUnreadCount(chatMapper.countUnreadFromPeer(conversation.getId(), peerId, lastRead));
-        dto.setLastReadSeq(String.valueOf(lastRead));
-        dto.setCanSend(canSend);
-        dto.setSendPermissionReason(reason);
+        dto.setPeer(peer);
+        dto.setLastMessage(last);
+        dto.setUpdatedAt(formatTime(conversation.getLastMessageAt() != null ? conversation.getLastMessageAt() : conversation.getCreatedAt()));
+        dto.setUnreadCount(unread);
+        dto.setLastReadSeq(String.valueOf(member == null || member.getLastReadSeq() == null ? 0 : member.getLastReadSeq()));
+        dto.setCanSend(peer.isCanMessage());
+        dto.setSendPermissionReason(peer.getMessagePermissionReason());
         dto.setImageMessagingEnabled(chatImageService.isImageMessagingEnabled());
         return dto;
     }
 
     private ChatMessageDTO toMessageDTO(ChatMessageEntity entity) {
+        CampusAccountView sender = identityService.findById(entity.getSenderId());
+        return toMessageDTO(entity, sender != null && sender.getPublicId() != null ? sender.getPublicId() : "");
+    }
+
+    private ChatMessageDTO toMessageDTO(ChatMessageEntity entity, String senderPublicId) {
         ChatMessageDTO dto = new ChatMessageDTO();
         dto.setId(String.valueOf(entity.getId()));
         dto.setConversationId(String.valueOf(entity.getConversationId()));
         dto.setSeq(String.valueOf(entity.getSeq()));
-        CampusAccountView sender = identityService.findById(entity.getSenderId());
-        dto.setSenderId(sender != null && sender.getPublicId() != null ? sender.getPublicId() : "");
+        dto.setSenderId(senderPublicId);
         dto.setClientMessageId(entity.getClientMessageId());
         String type = normalizeType(entity.getType());
         dto.setType(type);

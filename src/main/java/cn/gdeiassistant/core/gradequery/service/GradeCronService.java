@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
@@ -33,6 +32,11 @@ import java.util.concurrent.Semaphore;
 @Service
 @Profile("production")
 public class GradeCronService {
+
+    @Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("campusSyncExecutor")
+    private java.util.concurrent.Executor campusSyncExecutor;
+    private final java.util.concurrent.atomic.AtomicBoolean running = new java.util.concurrent.atomic.AtomicBoolean();
 
     private final Logger logger = LoggerFactory.getLogger(GradeCronService.class);
 
@@ -55,6 +59,7 @@ public class GradeCronService {
      * 同步教务系统实时成绩信息（可由 Scheduler 或 HTTP /cron/grade 触发）。
      */
     public void synchronizeGradeData() {
+        if (!running.compareAndSet(false, true)) return;
         logger.info(LocalDateTime.now().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")) + "启动了查询保存用户成绩信息的任务");
         List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
@@ -70,8 +75,7 @@ public class GradeCronService {
                 if (gradeDocument == null || Duration.between(gradeDocument.getUpdateDateTime()
                                 .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
                         , LocalDateTime.now()).toDays() >= 7) {
-                    CompletableFuture<GradeCacheResult> future = ((GradeCronService) AopContext.currentProxy())
-                            .asyncQueryGrade(semaphore, user);
+                    CompletableFuture<GradeCacheResult> future = CompletableFuture.supplyAsync(() -> asyncQueryGrade(semaphore, user).join(), campusSyncExecutor);
                     User finalUser = user;
                     CompletableFuture<Void> completion = future.handle((result, throwable) -> {
                         if (throwable != null) {
@@ -129,6 +133,10 @@ public class GradeCronService {
                         return null;
                     });
                     pendingTasks.add(completion);
+                    if (pendingTasks.size() == 5) {
+                        CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture[0])).join();
+                        pendingTasks.clear();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -138,6 +146,8 @@ public class GradeCronService {
                 CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture<?>[0])).join();
             } catch (Exception e) {
                 logger.error("等待定时查询保存成绩信息任务完成异常：", e);
+            } finally {
+                running.set(false);
             }
         }
     }
@@ -149,7 +159,6 @@ public class GradeCronService {
      * @param user
      * @return
      */
-    @Async
     public CompletableFuture<GradeCacheResult> asyncQueryGrade(Semaphore semaphore, User user) {
         boolean acquired = false;
         try {

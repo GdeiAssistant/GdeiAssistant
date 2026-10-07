@@ -1,4 +1,5 @@
 <script setup>
+import { useLatestRequest } from '@/composables/useLatestRequest'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -98,17 +99,23 @@ function getCourseStyle(course) {
   }
 }
 
+const latestRequest = useLatestRequest()
+
 async function fetchSchedule() {
+  const task = latestRequest.begin()
   loading.value = true
   scheduleResult.value = null
   try {
-    const res = await getSchedule(currentWeek.value)
+    const res = await getSchedule(currentWeek.value, { signal: task.signal })
+    if (!task.isCurrent()) return
     if (res && res.success && res.data) {
       scheduleResult.value = res.data
       currentWeek.value = res.data.week != null ? res.data.week : currentWeek.value
     }
+  } catch (error) {
+    // The request layer reports current failures; cancellation is silent.
   } finally {
-    loading.value = false
+    if (task.isCurrent()) loading.value = false
   }
 }
 
@@ -253,11 +260,12 @@ async function submitAddCustom() {
 async function handleDeleteCustomCourse() {
   if (!selectedCourse.value || !isCustomCourse(selectedCourse.value)) return
   const position = selectedCourse.value.position
+  const courseId = selectedCourse.value.id
   closeCourseDetail()
 
   if (window.confirm && window.confirm(scheduleMessages.value.deleteConfirm)) {
     try {
-      await deleteCustomSchedule(position)
+      await deleteCustomSchedule(position, courseId)
       toastSuccess(scheduleMessages.value.deleteSuccess)
       await fetchSchedule()
     } catch (e) {

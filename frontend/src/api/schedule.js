@@ -5,9 +5,9 @@ import request from '@/utils/request'
  * @param {number} [week] 可选，周次（1-20），不传则按后端默认当前周或全部周处理
  * @returns {Promise<{ success: boolean, data: { week: number, scheduleList: any[] } }>}
  */
-export function getSchedule(week) {
+export function getSchedule(week, options = {}) {
   const config = week != null ? { params: { week } } : {}
-  return request.get('/schedule', config)
+  return request.get('/schedule', { ...config, ...options })
 }
 
 /**
@@ -30,6 +30,6 @@ export function addCustomSchedule(data) {
  * 删除自定义课程 DELETE /schedule/custom?position=xxx
  * @param {number} position - 自定义课程 position（0-69，与后端实体一致）
  */
-export function deleteCustomSchedule(position) {
-  return request.delete('/schedule/custom', { params: { position } })
+export function deleteCustomSchedule(position, courseId) {
+  return request.delete('/schedule/custom', { params: { position, courseId } })
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Document(collection = "new")
-public class NewInfo implements Serializable, Entity {
+public class NewsItem implements Serializable, Entity {
 
     @Id
     private String id;

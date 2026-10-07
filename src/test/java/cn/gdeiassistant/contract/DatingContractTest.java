@@ -213,8 +213,6 @@ class DatingContractTest {
 
     @Test
     void publishProfileAcceptsValidPayloadAndImageKey() throws Exception {
-        when(datingService.addRoommateProfile(eq("test-session"), any(DatingPublishDTO.class)))
-                .thenReturn(7);
 
         mockMvc.perform(post("/api/dating/profile")
                         .requestAttr("sessionId", "test-session")
@@ -231,7 +229,7 @@ class DatingContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<DatingPublishDTO> captor = ArgumentCaptor.forClass(DatingPublishDTO.class);
-        verify(datingService).addRoommateProfile(eq("test-session"), captor.capture());
+        verify(datingService).publishProfile(eq("test-session"), captor.capture(), any(), any());
         DatingPublishDTO dto = captor.getValue();
         assertEquals("小明", dto.getNickname());
         assertEquals(3, dto.getGrade());
@@ -241,7 +239,6 @@ class DatingContractTest {
         assertEquals("123456", dto.getQq());
         assertEquals("wechat-id", dto.getWechat());
         assertEquals(1, dto.getArea());
-        verify(datingService).movePictureFromTempObject(7, "upload/dating/tmp.jpg");
     }
 
     @Test

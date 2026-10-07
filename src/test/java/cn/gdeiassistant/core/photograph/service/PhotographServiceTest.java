@@ -45,6 +45,9 @@ class PhotographServiceTest {
     private R2StorageService r2StorageService;
 
     @Mock
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Mock
     private InteractionNotificationService interactionNotificationService;
 
     @InjectMocks
@@ -110,7 +113,7 @@ class PhotographServiceTest {
     void uploadPhotographItemPicture_throwsRuntimeExceptionOnR2Failure() {
         InputStream stream = new ByteArrayInputStream("fake".getBytes());
         doThrow(new RuntimeException("R2 unavailable"))
-                .when(r2StorageService).uploadObject(anyString(), anyString(), any(InputStream.class));
+                .when(storedAssets).uploadObject(isNull(), anyString(), any(InputStream.class));
 
         assertThrows(RuntimeException.class,
                 () -> photographService.uploadPhotographItemPicture(1, 1, stream));

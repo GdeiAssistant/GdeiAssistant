@@ -1,4 +1,5 @@
 <script setup>
+import { useLatestRequest } from '@/composables/useLatestRequest'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -25,18 +26,26 @@ function openDetail(item) {
   router.push({ path: '/library/detail', query: { detailURL: item.detailURL } })
 }
 
+const latestRequest = useLatestRequest()
+const fetchError = ref(null)
+
 function fetchList() {
+  const task = latestRequest.begin()
+  fetchError.value = null
   loading.value = true
   showLoading(t('common.loading'))
   searchBooks(keyword.value, currentPage.value)
     .then((res) => {
+      if (!task.isCurrent()) return
       const result = res?.data
       list.value = Array.isArray(result?.collectionList) ? result.collectionList : []
     })
-    .catch(() => {
-      list.value = []
+    .catch((error) => {
+      if (!task.isCurrent()) return
+      fetchError.value = error
     })
     .finally(() => {
+      if (!task.isCurrent()) return
       loading.value = false
       hideLoading()
     })
@@ -54,7 +63,7 @@ function nextPage() {
   fetchList()
 }
 
-const showNoResult = computed(() => !loading.value && list.value.length === 0 && !!keyword.value)
+const showNoResult = computed(() => !loading.value && !fetchError.value && list.value.length === 0 && !!keyword.value)
 
 onMounted(() => {
   if (!keyword.value) {

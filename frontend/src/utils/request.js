@@ -94,7 +94,7 @@ function handleLogout(rawMessage, config) {
   const authorization = config?.headers?.get?.('Authorization') ?? config?.headers?.Authorization
   if (!token || authorization !== `Bearer ${token}`) return
   const safeMessage = sanitizeMessage(rawMessage || _t('common.loginExpiredDefault'))
-  showErrorTopTips(safeMessage)
+  if (!config?.skipErrorTip) showErrorTopTips(safeMessage)
   try {
     localStorage.removeItem('token')
     resetSocialRealtimeOnAuthChange()
@@ -179,6 +179,18 @@ service.interceptors.request.use(
   (error) => Promise.reject(error)
 )
 
+/** Stable error fields shared by HTTP and business failures. */
+function businessError(response, message) {
+  const error = new Error(sanitizeMessage(message))
+  error.status = response.status
+  error.businessCode = response.data?.code
+  error.errorCode = response.data?.errorCode
+  error.retryable = false
+  error.cancelled = false
+  error.response = response
+  return error
+}
+
 // 响应拦截器：统一处理错误并展示 WEUI Toast
 service.interceptors.response.use(
   (response) => {
@@ -193,13 +205,13 @@ service.interceptors.response.use(
         // 400302：无效令牌 -> 自动登出并回到登录页（文案由后端驱动）
         if (res.code === AUTH_EXPIRED_CODE) {
           handleLogout(res.message || _t('common.invalidToken'), response.config)
-          return Promise.reject(new Error(sanitizeMessage(res.message)))
+          return Promise.reject(businessError(response, res.message))
         }
         const safeMessage = sanitizeMessage(res.message)
         if (!response.config?.skipErrorTip) {
           showErrorTopTips(safeMessage)
         }
-        return Promise.reject(new Error(safeMessage))
+        return Promise.reject(businessError(response, safeMessage))
       }
       // 2) 通用业务失败
       if (res.success === false) {
@@ -207,15 +219,19 @@ service.interceptors.response.use(
         if (!response.config?.skipErrorTip) {
           showErrorTopTips(safeMessage)
         }
-        const err = new Error(safeMessage)
-        err.errorCode = res.errorCode
-        err.response = { data: res, status: response.status }
+        const err = businessError(response, safeMessage)
         return Promise.reject(err)
       }
     }
     return res
   },
   (error) => {
+    if (error.code === 'ERR_CANCELED' || error.name === 'CanceledError') { error.cancelled = true; error.retryable = false; return Promise.reject(error) }
+    error.cancelled = false
+    error.status = error.response?.status
+    error.errorCode = error.response?.data?.errorCode
+    error.businessCode = error.response?.data?.code
+    error.retryable = !error.response || error.status === 429 || error.status >= 500
     const status = error.response?.status
     const isLoginRequest = error.config?.url?.includes('/auth/login')
 
@@ -230,13 +246,13 @@ service.interceptors.response.use(
 
     // 404：接口不存在
     if (status === 404) {
-      showErrorTopTips(_t('common.apiNotFound'))
+      if (!error.config?.skipErrorTip) showErrorTopTips(_t('common.apiNotFound'))
       return Promise.reject(error)
     }
 
     // 500：服务器错误
     if (status === 500) {
-      showErrorTopTips(_t('common.serverError'))
+      if (!error.config?.skipErrorTip) showErrorTopTips(_t('common.serverError'))
       return Promise.reject(error)
     }
 
@@ -244,7 +260,7 @@ service.interceptors.response.use(
     const friendlyMessage = mapErrorToMessage(error, { isLoginRequest })
     const safeMessage = sanitizeMessage(friendlyMessage)
     try {
-      showErrorTopTips(safeMessage)
+      if (!error.config?.skipErrorTip) showErrorTopTips(safeMessage)
     } catch (_) {}
 
     return Promise.reject(error)

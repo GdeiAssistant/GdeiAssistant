@@ -27,7 +27,7 @@ vi.mock('../composables/useToast', () => ({ useToast: () => ({ success: vi.fn(),
 const messages = { 'zh-CN': zhCN, 'zh-HK': zhHK, 'zh-TW': zhTW, en, ja, ko }
 const codeTree = [{ code: 'CN', children: [{ code: '44', children: [{ code: '1' }, { code: '5' }] }] }]
 const mounted = []
-const flush = async () => { await Promise.resolve(); await nextTick(); await Promise.resolve(); await nextTick() }
+const flush = async () => { for (let i = 0; i < 8; i++) { await Promise.resolve(); await nextTick() } }
 async function mountPage(component) {
   const router = createRouter({ history: createMemoryHistory(), routes: [{ path: '/:pathMatch(.*)*', component }] })
   await router.push('/profile')

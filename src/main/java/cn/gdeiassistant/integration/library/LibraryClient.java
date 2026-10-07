@@ -11,7 +11,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -43,10 +43,14 @@ public class LibraryClient {
     private HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(LibraryClient.class);
-    private static final String OPAC_RENEW_BASE = "http://agentdockingopac.featurelib.libsou.com";
-    private static final String OPAC_SEARCH_BASE = "http://agentdockingopac.featurelib.libsou.com";
-    private static final String FIVEREAD_M = "http://m.5read.com";
-    private static final String FIVEREAD_MC = "http://mc.m.5read.com";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-opac-base-url:http://agentdockingopac.featurelib.libsou.com}")
+    private String OPAC_RENEW_BASE = "http://agentdockingopac.featurelib.libsou.com";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-opac-search-base-url:http://agentdockingopac.featurelib.libsou.com}")
+    private String OPAC_SEARCH_BASE = "http://agentdockingopac.featurelib.libsou.com";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-mobile-base-url:http://m.5read.com}")
+    private String FIVEREAD_M = "http://m.5read.com";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-mobile-account-base-url:http://mc.m.5read.com}")
+    private String FIVEREAD_MC = "http://mc.m.5read.com";
     private static final int LIBRARY_TIMEOUT_SEC = 15;
     private static final int OKHTTP_TIMEOUT_SEC = 10;
 
@@ -62,10 +66,11 @@ public class LibraryClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(OPAC_RENEW_BASE + "/showhome/searchrenew/opacSearchRenew?&check=1&sn="
                     + sn + "&code=" + code + "&schoolId=705");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("图书馆系统异常");
             }
@@ -75,6 +80,7 @@ public class LibraryClient {
             result.setMessage(jsonObject.getString("msg"));
             return result;
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -95,13 +101,15 @@ public class LibraryClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, LIBRARY_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(FIVEREAD_M + "/705");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("图书馆系统异常");
             }
             httpGet = new HttpGet(FIVEREAD_MC + "/user/login/showLogin.jspx?backurl=/user/uc/showUserCenter.jspx");
+            closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200 || !document.title().equals("移动图书馆服务登录")) {
@@ -115,11 +123,13 @@ public class LibraryClient {
             form.add(new BasicNameValuePair("username", number));
             form.add(new BasicNameValuePair("password", password));
             httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
+            closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 302) {
                 throw new ServerErrorException("图书馆系统异常");
             }
             httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
+            closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("移动图书馆服务登录")) {
@@ -129,12 +139,14 @@ public class LibraryClient {
                 throw new ServerErrorException("图书馆系统异常");
             }
             httpGet = new HttpGet(FIVEREAD_MC + "/cmpt/opac/opacLink.jspx?stype=1");
+            closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("图书馆系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -204,6 +216,15 @@ public class LibraryClient {
             throw new ServerErrorException("移动图书馆系统异常");
         }
         return Jsoup.parse(responseBody.string());
+    }
+
+    private static void closeResponse(CloseableHttpResponse response) {
+        if (response == null) return;
+        try {
+            response.close();
+        } catch (IOException e) {
+            logger.warn("关闭校园 HTTP 响应失败: {}", e.getClass().getSimpleName());
+        }
     }
 
     private static void closeHttpClient(CloseableHttpClient httpClient) {

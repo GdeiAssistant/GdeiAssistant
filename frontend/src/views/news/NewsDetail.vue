@@ -1,9 +1,11 @@
 <script setup>
+import { getInformationNewsById } from "../../api/informationEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { getNewsAttachmentTitle, getNewsSourceLabel } from './newsContent'
 
 const route = useRoute()
@@ -85,7 +87,7 @@ async function loadDetail() {
   loading.value = true
   error.value = ''
   try {
-    const res = await request.get(`/information/news/id/${route.params.id}`)
+    const res = await getInformationNewsById(route.params.id)
     detail.value = res?.data ?? null
     if (!detail.value) {
       error.value = t('news.detail.notFound')

@@ -7,13 +7,13 @@ export function resolveFileName(file, overrideFileName) {
   if (file?.name && String(file.name).trim()) {
     return String(file.name).trim()
   }
-  const contentType = file?.type || 'application/octet-stream'
+  const contentType = resolveContentType(file)
   const fallbackExt = contentType.includes('/') ? '.' + contentType.split('/')[1] : ''
   return 'upload' + fallbackExt
 }
 
 export function resolveContentType(file) {
-  return file?.type && String(file.type).includes('/') ? file.type : 'application/octet-stream'
+  return file?.type && String(file.type).includes('/') ? String(file.type).split(';')[0].trim().toLowerCase() : 'application/octet-stream'
 }
 
 export async function uploadFileByPresignedUrl(file, options = {}, deps = {}) {

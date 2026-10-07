@@ -27,7 +27,7 @@ public class IpWhoisProvider implements ServiceProvider<String, IPAddressRecord>
 
     @Override
     public int priority() {
-        return 1;
+        return 0;
     }
 
     @Override

@@ -26,8 +26,7 @@ public class CookieStoreDaoImpl implements CookieStoreDao {
     @Override
     public void saveCookieStore(String sessionId, CookieStore cookieStore) {
         String key = StringEncryptUtils.sha256HexString(PREFIX + sessionId);
-        redisDaoUtils.setSerializable(key, (Serializable) cookieStore);
-        redisDaoUtils.expire(key, 1, TimeUnit.HOURS);
+        redisDaoUtils.setSerializable(key, (Serializable) cookieStore, 1, TimeUnit.HOURS);
     }
 
     @Override

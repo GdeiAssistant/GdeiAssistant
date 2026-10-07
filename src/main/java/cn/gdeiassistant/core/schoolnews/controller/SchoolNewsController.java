@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.schoolnews.controller;
 
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
-import cn.gdeiassistant.common.pojo.entity.NewInfo;
+import cn.gdeiassistant.common.pojo.entity.NewsItem;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
@@ -31,11 +31,11 @@ public class SchoolNewsController {
      * type: 1学校要闻 2院部通知 3通知公告 4学术动态
      */
     @RequestMapping(value = "/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
-    public DataJsonResult<List<NewInfo>> queryNewInfoList(@PathVariable("type") Integer type
+    public DataJsonResult<List<NewsItem>> queryNewsItems(@PathVariable("type") Integer type
             , @PathVariable("start") Integer start, @PathVariable("size") Integer size) {
         try {
             size = PageUtils.normalizePageSize(start, size);
-            List<NewInfo> newInfoList = schoolNewsService.queryNewInfoList(type, start, size);
+            List<NewsItem> newInfoList = schoolNewsService.queryNewsItems(type, start, size);
             return new DataJsonResult<>(true, newInfoList);
         } catch (DataNotExistException e) {
             return new DataJsonResult<>(true, Collections.emptyList());
@@ -46,9 +46,9 @@ public class SchoolNewsController {
      * 获取新闻详情。GET /api/information/news/id/{id}
      */
     @RequestMapping(value = "/id/{id}", method = RequestMethod.GET)
-    public DataJsonResult<NewInfo> queryNewInfoDetail(@PathVariable("id") String id) {
+    public DataJsonResult<NewsItem> queryNewsItemDetail(@PathVariable("id") String id) {
         try {
-            return new DataJsonResult<>(true, schoolNewsService.queryNewDetailInfo(id));
+            return new DataJsonResult<>(true, schoolNewsService.queryNewsDetail(id));
         } catch (DataNotExistException e) {
             return new DataJsonResult<>(new JsonResult(false, e.getMessage()));
         }

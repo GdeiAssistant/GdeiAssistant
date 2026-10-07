@@ -23,8 +23,8 @@ public class ApplicationContextConfig {
      * @return
      */
     @Bean
-    public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplate();
+    public RestTemplate restTemplate(OutboundIntegrationProperties settings) {
+        RestTemplate restTemplate = cn.gdeiassistant.common.tools.springutils.OutboundHttpClients.create(settings.getConnectTimeoutMs(), settings.getReadTimeoutMs());
         restTemplate.setErrorHandler(new RestTemplateResponseErrorHandler());
         return restTemplate;
     }

@@ -27,7 +27,7 @@ public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
 
     @Override
     public int priority() {
-        return 0;
+        return 1;
     }
 
     @Override

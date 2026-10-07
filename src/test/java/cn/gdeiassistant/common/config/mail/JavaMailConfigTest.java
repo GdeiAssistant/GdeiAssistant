@@ -56,6 +56,33 @@ class JavaMailConfigTest {
         });
     }
 
+    @Test
+    void smtp587RequiresStartTlsAndFiniteConnectReadWriteTimeouts() {
+        contextRunner.withPropertyValues("email.smtp.host=smtp.example.com", "email.smtp.port=587",
+                "email.smtp.username=synthetic", "email.smtp.password=synthetic", "email.smtp.auth=true")
+                .run(context -> {
+                    var properties = context.getBean(JavaMailSenderImpl.class).getJavaMailProperties();
+                    assertThat(properties.getProperty("mail.smtp.ssl.enable")).isEqualTo("false");
+                    assertThat(properties.getProperty("mail.smtp.starttls.enable")).isEqualTo("true");
+                    assertThat(properties.getProperty("mail.smtp.starttls.required")).isEqualTo("true");
+                    assertThat(properties.getProperty("mail.smtp.ssl.checkserveridentity")).isEqualTo("true");
+                    for (var key : java.util.List.of("mail.smtp.timeout", "mail.smtp.connectiontimeout", "mail.smtp.writetimeout")) {
+                        assertThat(Integer.parseInt(properties.getProperty(key))).isBetween(1, 10000);
+                    }
+                });
+    }
+
+    @Test
+    void smtp465UsesImplicitTlsWithoutStartTls() {
+        contextRunner.withPropertyValues("email.smtp.host=smtp.example.com", "email.smtp.port=465",
+                "email.smtp.username=synthetic", "email.smtp.password=synthetic")
+                .run(context -> {
+                    var properties = context.getBean(JavaMailSenderImpl.class).getJavaMailProperties();
+                    assertThat(properties.getProperty("mail.smtp.ssl.enable")).isEqualTo("true");
+                    assertThat(properties.getProperty("mail.smtp.starttls.required")).isEqualTo("false");
+                });
+    }
+
     @TestConfiguration
     static class TestSupportConfig {
 

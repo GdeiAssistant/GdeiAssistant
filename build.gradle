@@ -144,7 +144,7 @@ jacocoTestCoverageVerification {
             limit {
                 counter = 'LINE'
                 value = 'COVEREDRATIO'
-                minimum = 0.40
+                minimum = 0.45
             }
         }
     }
@@ -170,7 +170,7 @@ springBoot {
 }
 
 // Enforce coverage of this upgrade's critical boundaries while reporting the full legacy codebase.
-// The original full-codebase 40% check remains available through `check`.
+// Full-codebase coverage is enforced separately by `check`.
 tasks.register('architectureCoverage', JacocoCoverageVerification) {
     dependsOn test
     executionData file("${buildDir}/jacoco/test.exec")
@@ -187,3 +187,24 @@ tasks.register('architectureCoverage', JacocoCoverageVerification) {
     violationRules { rule { limit { counter = 'LINE'; value = 'COVEREDRATIO'; minimum = 0.40 } } }
 }
 jacocoTestReport { reports { xml.required = true; html.required = true } }
+
+// Class-specific gates prevent aggregate coverage from hiding changed storage boundaries.
+tasks.register('engineeringCoverage', JacocoCoverageVerification) {
+    dependsOn test
+    executionData file("${buildDir}/jacoco/test.exec")
+    classDirectories.setFrom(sourceSets.main.output.classesDirs)
+    violationRules {
+        rule {
+            element = 'CLASS'
+            includes = [
+                'cn.gdeiassistant.core.objectstorage.service.StoredAssetService',
+                'cn.gdeiassistant.core.objectstorage.service.UploadService',
+                'cn.gdeiassistant.core.capability.ProviderChain',
+                'cn.gdeiassistant.common.tools.springutils.R2StorageService'
+            ]
+            limit { counter = 'LINE'; value = 'COVEREDRATIO'; minimum = 0.75 }
+            limit { counter = 'BRANCH'; value = 'COVEREDRATIO'; minimum = 0.50 }
+        }
+    }
+}
+check.dependsOn engineeringCoverage

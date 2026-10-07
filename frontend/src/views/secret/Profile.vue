@@ -1,8 +1,10 @@
 <script setup>
+import { getSecretProfilePage0, getSecretProfilePage } from "../../api/secretEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 
@@ -20,7 +22,7 @@ const loadMySecrets = async () => {
   try {
     loading.value = true
     start.value = 0
-    const res = await request.get(`/secret/profile/start/0/size/${PAGE_SIZE}`)
+    const res = await getSecretProfilePage0(PAGE_SIZE)
     secretList.value = res.data || []
     hasMore.value = (res.data || []).length >= PAGE_SIZE
     start.value = secretList.value.length
@@ -34,7 +36,7 @@ const loadMore = async () => {
   if (loadingMore.value || !hasMore.value) return
   try {
     loadingMore.value = true
-    const res = await request.get(`/secret/profile/start/${start.value}/size/${PAGE_SIZE}`)
+    const res = await getSecretProfilePage(start.value, PAGE_SIZE)
     const newItems = res.data || []
     secretList.value = [...secretList.value, ...newItems]
     hasMore.value = newItems.length >= PAGE_SIZE

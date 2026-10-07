@@ -13,7 +13,6 @@ import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +46,12 @@ public class SecretService {
     @Autowired
     private SecretCommentConverter secretCommentConverter;
 
+
     @Autowired
-    private R2StorageService r2StorageService;
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
     @Autowired
     private InteractionNotificationService interactionNotificationService;
@@ -95,12 +98,12 @@ public class SecretService {
         if (voiceObjectKey == null) {
             return "";
         }
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", voiceObjectKey, 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl(null, voiceObjectKey, 30, TimeUnit.MINUTES);
     }
 
     public void uploadVoiceSecret(int id, InputStream inputStream) throws RuntimeException {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "secret/voice/" + id + ".mp3", inputStream);
+            storedAssets.uploadObject(null, "secret/voice/" + id + ".mp3", inputStream);
         } catch (Exception e) {
             logger.error("上传树洞语音失败，id={}", id, e);
             throw new RuntimeException("语音上传失败", e);
@@ -115,9 +118,9 @@ public class SecretService {
         }
     }
 
-    public void moveVoiceSecretFromTempObject(int id, String objectKey) {
+    public void moveVoiceSecretFromTempObject(int id, String objectKey, String sessionId) {
         String extension = extractExtension(objectKey);
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "secret/voice/" + id + extension);
+        uploads.moveUpload(sessionId, objectKey, "secret/voice/" + id + extension);
     }
 
     public String findSecretVoiceObjectKey(int id) {
@@ -127,10 +130,13 @@ public class SecretService {
                 "secret/voice/" + id + ".ogg",
                 "secret/voice/" + id + ".wav",
                 "secret/voice/" + id + ".m4a",
-                "secret/voice/" + id + ".mp4"
+                "secret/voice/" + id + ".mp4",
+                "secret/voice/" + id + ".aac"
         };
+        String confirmedKey = storedAssets.firstReadyKey(candidates);
+        if (confirmedKey != null) return confirmedKey;
         for (String candidate : candidates) {
-            String url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", candidate, 1, TimeUnit.MINUTES);
+            String url = storedAssets.generatePresignedUrl(null, candidate, 1, TimeUnit.MINUTES);
             if (url != null && !url.isEmpty()) {
                 return candidate;
             }
@@ -166,10 +172,10 @@ public class SecretService {
     }
 
     public void deleteSecretVoice(int id) {
-        String[] extensions = new String[]{".mp3", ".webm", ".ogg", ".wav", ".m4a", ".mp4"};
+        String[] extensions = new String[]{".mp3", ".webm", ".ogg", ".wav", ".m4a", ".mp4", ".aac"};
         for (String ext : extensions) {
             try {
-                r2StorageService.deleteObject("gdeiassistant-userdata", "secret/voice/" + id + ext);
+                storedAssets.deleteObject(null, "secret/voice/" + id + ext);
             } catch (Exception e) {
                 logger.warn("删除树洞语音失败，id={}，extension={}", id, ext, e);
             }
@@ -316,4 +322,12 @@ public class SecretService {
         String extension = objectKey.substring(dotIndex).toLowerCase();
         return extension.matches("\\.[a-z0-9]{1,10}") ? extension : ".mp3";
     }
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishVoice(String sessionId, SecretPublishDTO dto,
+            org.springframework.web.multipart.MultipartFile file, String objectKey) throws Exception {
+        int id = addSecretInfo(sessionId, dto);
+        if (file != null && !file.isEmpty()) uploadVoiceSecret(id, file.getInputStream());
+        else if (objectKey != null && !objectKey.isBlank()) moveVoiceSecretFromTempObject(id, objectKey, sessionId);
+    }
+
 }

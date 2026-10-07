@@ -186,8 +186,6 @@ class MarketplaceContractTest {
     void publishEndpointAcceptsValidPayloadAndImageKeys() throws Exception {
         MarketplaceItemEntity saved = mockItemEntity();
         saved.setId(6);
-        when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
-                .thenReturn(saved);
 
         mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
@@ -203,7 +201,7 @@ class MarketplaceContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<MarketplacePublishDTO> captor = ArgumentCaptor.forClass(MarketplacePublishDTO.class);
-        verify(marketplaceService).publishItem(captor.capture(), eq("test-session"));
+        verify(marketplaceService).publishItem(captor.capture(), eq("test-session"), any(), any());
         MarketplacePublishDTO dto = captor.getValue();
         assertEquals("教材", dto.getName());
         assertEquals("九成新微积分教材", dto.getDescription());
@@ -212,8 +210,6 @@ class MarketplaceContractTest {
         assertEquals(8, dto.getType());
         assertEquals("123456", dto.getQq());
         assertEquals("13612340001", dto.getPhone());
-        verify(marketplaceService).moveItemPictureFromTempObject(6, 1, "upload/item-1.jpg");
-        verify(marketplaceService).moveItemPictureFromTempObject(6, 2, "upload/item-2.jpg");
     }
 
     @Test
@@ -222,8 +218,6 @@ class MarketplaceContractTest {
         minSaved.setId(7);
         MarketplaceItemEntity maxSaved = mockItemEntity();
         maxSaved.setId(8);
-        when(marketplaceService.publishItem(any(MarketplacePublishDTO.class), eq("test-session")))
-                .thenReturn(minSaved, maxSaved);
 
         mockMvc.perform(post("/api/marketplace/item")
                         .requestAttr("sessionId", "test-session")
@@ -246,9 +240,6 @@ class MarketplaceContractTest {
                         .param("imageKeys", "upload/max-price.jpg"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
-
-        verify(marketplaceService).moveItemPictureFromTempObject(7, 1, "upload/min-price.jpg");
-        verify(marketplaceService).moveItemPictureFromTempObject(8, 1, "upload/max-price.jpg");
     }
 
     @Test

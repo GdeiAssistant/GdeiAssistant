@@ -1,8 +1,10 @@
 <script setup>
+import { postCloseSubmit } from "../../api/closeEndpoints.js"
+
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useToast } from '@/composables/useToast'
 import AppDialog from '@/components/ui/AppDialog.vue'
 import { AlertTriangle, ChevronLeft } from 'lucide-vue-next'
@@ -29,7 +31,7 @@ async function handleConfirmDelete() {
   deleting.value = true
 
   try {
-    await request.post('/close/submit', { password: password.value })
+    await postCloseSubmit({ password: password.value })
     toastSuccess(t('deleteAccount.success'))
 
     // 清除登录态

@@ -107,21 +107,10 @@ public class TopicController {
         }
         String sessionId = (String) request.getAttribute("sessionId");
         dto.setCount(actualImageCount);
-        TopicVO vo = topicService.addTopic(dto, sessionId);
         try {
-            if (images != null && images.length > 0) {
-                for (int i = 1; i <= images.length; i++) {
-                    topicService.uploadTopicItemPicture(vo.getId(), i, images[i - 1].getInputStream());
-                }
-            } else if (imageKeys != null && imageKeys.length > 0) {
-                for (int i = 1; i <= imageKeys.length; i++) {
-                    topicService.moveTopicItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
-                }
-            }
-        } catch (Exception e) {
-            topicService.deleteTopicImages(vo.getId(), dto.getCount());
-            topicService.deleteTopic(vo.getId());
-            return failure(request, "话题图片上传失败");
+            topicService.publishTopic(dto, sessionId, images, imageKeys);
+        } catch (Exception failure) {
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("话题图片上传失败", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

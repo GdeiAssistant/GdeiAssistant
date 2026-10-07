@@ -121,16 +121,9 @@ public class DatingController {
                                          MultipartFile image,
                                          String imageKey) throws IOException {
         String sessionId = (String) request.getAttribute("sessionId");
-        Integer id = datingService.addRoommateProfile(sessionId, dto);
         try {
-            if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                datingService.uploadPicture(id, image.getInputStream());
-            } else if (StringUtils.isNotBlank(imageKey)) {
-                datingService.movePictureFromTempObject(id, imageKey);
-            }
-        } catch (Exception e) {
-            datingService.deleteDatingImage(id);
-            datingService.deleteDatingProfile(id);
+            datingService.publishProfile(sessionId, dto, image, imageKey);
+        } catch (Exception failure) {
             return failure(request, "上传失败");
         }
         return new JsonResult(true);

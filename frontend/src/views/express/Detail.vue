@@ -1,9 +1,11 @@
 <script setup>
+import { postExpressByIdLike, postExpressByIdGuess, postExpressByIdComment, getExpressById, getExpressByIdComment } from "../../api/expressEndpoints.js"
+
 import { Heart, Star, MessageCircle } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { useToast } from '@/composables/useToast'
 import { showErrorTopTips } from '@/utils/toast.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -31,7 +33,7 @@ function getGenderColor(gender) {
 
 function handleLike() {
   if (!item.value || item.value.isLiked) return
-  request.post(`/express/id/${item.value.id}/like`).then(() => {
+  postExpressByIdLike(item.value.id).then(() => {
     item.value.isLiked = true
     item.value.likeCount++
   })
@@ -55,7 +57,7 @@ function confirmGuess() {
     showErrorTopTips(t('express.guessRequired'))
     return
   }
-  request.post(`/express/id/${item.value.id}/guess`, null, { params: { name: guessName } })
+  postExpressByIdGuess(item.value.id, null, { params: { name: guessName } })
     .then((res) => {
       const correct = res?.data === true
       if (correct) {
@@ -90,7 +92,7 @@ function submitComment() {
     return
   }
   submitting.value = true
-  request.post(`/express/id/${route.params.id}/comment`, null, { params: { comment: commentInput.value.trim() } })
+  postExpressByIdComment(route.params.id, null, { params: { comment: commentInput.value.trim() } })
     .then(() => {
       comments.value.push({
         id: comments.value.length + 1,
@@ -107,7 +109,7 @@ function submitComment() {
 
 async function loadDetail() {
   try {
-    const res = await request.get(`/express/id/${route.params.id}`)
+    const res = await getExpressById(route.params.id)
     const e = res?.data
     if (e && res.success !== false) {
       item.value = {
@@ -135,7 +137,7 @@ async function loadDetail() {
 
 async function loadComments() {
   try {
-    const res = await request.get(`/express/id/${route.params.id}/comment`)
+    const res = await getExpressByIdComment(route.params.id)
     const raw = res?.data || []
     comments.value = Array.isArray(raw) ? raw.map((c) => ({
       id: c.id,

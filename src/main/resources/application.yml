@@ -94,7 +94,8 @@ email:
     auth: true
     timeout: 5000
   ssl:
-    encryption: true
+    encryption: ${EMAIL_SMTP_SSL:false}
+  from: ${EMAIL_FROM:${EMAIL_SMTP_USERNAME:}}
   feedback: ${EMAIL_FEEDBACK:}
   ticket: ${EMAIL_TICKET:}
 
@@ -107,13 +108,12 @@ encrypt:
 api:
   ai:
     ocr:
-      provider: ${AI_OCR_PROVIDER:deepseek}
       openai:
         api-key: ${OPENAI_API_KEY:}
         model: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
       gemini:
         api-key: ${GEMINI_API_KEY:}
-        model: ${GEMINI_OCR_MODEL:gemini-2.0-flash}
+        model: ${GEMINI_OCR_MODEL:gemini-3.8-flash}
       claude:
         api-key: ${CLAUDE_API_KEY:}
         model: ${CLAUDE_OCR_MODEL:claude-sonnet-4-20250514}
@@ -128,7 +128,6 @@ api:
         base-url: ${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}
 
 sms:
-  provider: ${SMS_PROVIDER:tencent}
   tencent:
     secret-id: ${TENCENT_SMS_SECRET_ID:}
     secret-key: ${TENCENT_SMS_SECRET_KEY:}
@@ -147,15 +146,6 @@ sms:
       templatecode: ${ALIYUN_SMS_CHINA_TEMPLATE:}
     global:
       templatecode: ${ALIYUN_SMS_GLOBAL_TEMPLATE:}
-  huawei:
-    app-key: ${HUAWEI_SMS_APP_KEY:}
-    app-secret: ${HUAWEI_SMS_APP_SECRET:}
-    endpoint: ${HUAWEI_SMS_ENDPOINT:https://smsapi.cn-north-4.myhuaweicloud.com:443}
-    sender: ${HUAWEI_SMS_SENDER:}
-    signature: ${HUAWEI_SMS_SIGNATURE:}
-    template:
-      china: ${HUAWEI_SMS_TEMPLATE_CHINA:}
-      global: ${HUAWEI_SMS_TEMPLATE_GLOBAL:}
 
 app:
   cron:
@@ -225,3 +215,10 @@ campus:
     card-login-url: ${CAMPUS_CARD_LOGIN_URL:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}
     payment-base-url: ${CAMPUS_PAYMENT_BASE_URL:https://epay.gdei.edu.cn:8443/synpay/web}
     alipay-gateway-url: ${CAMPUS_ALIPAY_GATEWAY_URL:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}
+
+# Optional API timeout units are milliseconds; the provider budget covers the complete chain.
+outbound:
+  http:
+    connect-timeout-ms: ${OUTBOUND_HTTP_CONNECT_TIMEOUT_MS:3000}
+    read-timeout-ms: ${OUTBOUND_HTTP_READ_TIMEOUT_MS:6000}
+    provider-budget-ms: ${OUTBOUND_PROVIDER_BUDGET_MS:15000}

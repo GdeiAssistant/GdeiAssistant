@@ -29,7 +29,7 @@ public class GeminiOcrProvider implements ServiceProvider<OcrRequest, String> {
         this.apiKey = apiKey;
     }
 
-    @Value("${api.ai.ocr.gemini.model:gemini-2.0-flash}")
+    @Value("${api.ai.ocr.gemini.model:gemini-3.8-flash}")
     public void setModel(String model) {
         this.model = model;
     }
@@ -49,6 +49,7 @@ public class GeminiOcrProvider implements ServiceProvider<OcrRequest, String> {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("x-goog-api-key", apiKey);
 
             JSONObject body = new JSONObject();
             JSONArray contents = new JSONArray();
@@ -68,7 +69,7 @@ public class GeminiOcrProvider implements ServiceProvider<OcrRequest, String> {
             body.put("contents", contents);
 
             String url = "https://generativelanguage.googleapis.com/v1beta/models/" + model
-                    + ":generateContent?key=" + apiKey;
+                    + ":generateContent";
             String res = restTemplate.postForObject(url, new HttpEntity<>(body, headers), String.class);
             if (StringUtils.isBlank(res)) {
                 return "";
@@ -80,10 +81,14 @@ public class GeminiOcrProvider implements ServiceProvider<OcrRequest, String> {
                 if (content != null) {
                     JSONArray partsRes = content.getJSONArray("parts");
                     if (partsRes != null && !partsRes.isEmpty()) {
-                        String text = partsRes.getJSONObject(0).getString("text");
-                        if (StringUtils.isNotBlank(text)) {
-                            return text;
+                        StringBuilder answer = new StringBuilder();
+                        for (int i = 0; i < partsRes.size(); i++) {
+                            JSONObject part = partsRes.getJSONObject(i);
+                            if (!Boolean.TRUE.equals(part.getBoolean("thought")) && StringUtils.isNotBlank(part.getString("text"))) {
+                                answer.append(part.getString("text"));
+                            }
                         }
+                        if (!answer.isEmpty()) return answer.toString();
                     }
                 }
             }

@@ -23,12 +23,14 @@ public class SmsService {
     public SmsService(TencentSmsProvider tencent,
                       AliyunSmsProvider aliyun,
                       MeterRegistry meterRegistry,
-                      CircuitBreakerRegistry circuitBreakerRegistry) {
+                      CircuitBreakerRegistry circuitBreakerRegistry,
+            @org.springframework.beans.factory.annotation.Qualifier("providerExecutor") java.util.concurrent.Executor executor,
+            cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
         this.chain = new ProviderChain<>(
                 "sms",
                 List.of(tencent, aliyun),
                 meterRegistry,
-                circuitBreakerRegistry
+                circuitBreakerRegistry, (request, result) -> true, executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs())
         );
     }
 

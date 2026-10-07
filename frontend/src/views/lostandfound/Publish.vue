@@ -1,8 +1,10 @@
 <script setup>
+import { getLostFoundItemById, postLostFoundItemById, postLostFoundItem } from "../../api/lostandfoundEndpoints.js"
+
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -121,13 +123,8 @@ async function loadEditItem() {
   if (!isEditMode.value) return
   pageLoading.value = true
   try {
-    const res = await request.get('/lostandfound/profile')
-    const data = res?.data || {}
-    const list = []
-      .concat(Array.isArray(data.lost) ? data.lost : [])
-      .concat(Array.isArray(data.found) ? data.found : [])
-      .concat(Array.isArray(data.didfound) ? data.didfound : [])
-    const item = list.find((entry) => Number(entry.id) === editItemId.value)
+    const res = await getLostFoundItemById(editItemId.value)
+    const item = res?.data?.item
     if (!item) {
       showDialog(t('lostandfound.publish.itemNotFound'))
       return
@@ -194,7 +191,7 @@ async function submit() {
   try {
     const payload = buildPayload()
     if (isEditMode.value) {
-      await request.post(`/lostandfound/item/id/${editItemId.value}`, payload)
+      await postLostFoundItemById(editItemId.value, payload)
       hideLoading()
       showDialog(t('common.saveSuccess'))
       setTimeout(() => {
@@ -204,7 +201,7 @@ async function submit() {
     }
     const imageKeys = await uploadFilesByPresignedUrl(formData.value.images.map(item => item.file).filter(Boolean))
     imageKeys.forEach((imageKey) => payload.append('imageKeys', imageKey))
-    await request.post('/lostandfound/item', payload)
+    await postLostFoundItem(payload)
     hideLoading()
     showDialog(t('lostandfound.publish.publishSuccess'))
     setTimeout(() => {

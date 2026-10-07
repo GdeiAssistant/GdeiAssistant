@@ -25,7 +25,7 @@ public class ObjectStorageController {
      */
     private static final Set<String> ALLOWED_MIME_TYPES = Set.of(
             "image/jpeg", "image/png", "image/gif", "image/webp", "image/bmp",
-            "audio/mpeg", "audio/wav", "audio/ogg", "audio/aac", "audio/mp4"
+            "audio/mpeg", "audio/wav", "audio/ogg", "audio/aac", "audio/mp4", "audio/webm"
     );
 
     /**
@@ -42,7 +42,9 @@ public class ObjectStorageController {
             Map.entry(".wav", Set.of("audio/wav")),
             Map.entry(".ogg", Set.of("audio/ogg")),
             Map.entry(".aac", Set.of("audio/aac")),
-            Map.entry(".m4a", Set.of("audio/mp4"))
+            Map.entry(".m4a", Set.of("audio/mp4")),
+            Map.entry(".mp4", Set.of("audio/mp4")),
+            Map.entry(".webm", Set.of("audio/webm"))
     );
 
     @Autowired
@@ -64,7 +66,7 @@ public class ObjectStorageController {
             return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("contentType 不合法", request.getHeader("Accept-Language"))));
         }
 
-        String normalizedType = contentType.trim().toLowerCase();
+        String normalizedType = contentType.split(";", 2)[0].trim().toLowerCase(java.util.Locale.ROOT);
         if (!ALLOWED_MIME_TYPES.contains(normalizedType)) {
             return new DataJsonResult<>(new JsonResult(false, BackendTextLocalizer.localizeMessage("不支持的文件类型: ", request.getHeader("Accept-Language")) + contentType));
         }
@@ -77,7 +79,7 @@ public class ObjectStorageController {
             }
         }
 
-        return new DataJsonResult<>(true, uploadService.createPresignedUpload(fileName, contentType));
+        return new DataJsonResult<>(true, uploadService.createPresignedUpload((String) request.getAttribute("sessionId"), fileName, normalizedType));
     }
 
     private static String extractExtension(String fileName) {

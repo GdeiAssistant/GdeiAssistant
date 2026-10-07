@@ -1,8 +1,10 @@
 <script setup>
+import { getPhotographTypePage, postPhotographByIdLike } from "../../api/photographEndpoints.js"
+
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -20,7 +22,7 @@ const PAGE_SIZE = 10
 const fetchPhotographList = async (page) => {
   const start = (page - 1) * PAGE_SIZE
   const type = activeType.value === 1 ? 1 : 0
-  const res = await request.get(`/photograph/type/${type}/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getPhotographTypePage(type, start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((p) => ({
     id: p.id,
@@ -60,7 +62,7 @@ const toggleLike = (item, e) => {
   if (item.isLiked) {
     return
   }
-  request.post(`/photograph/id/${item.id}/like`).then(() => {
+  postPhotographByIdLike(item.id).then(() => {
     item.isLiked = true
     item.likeCount++
   }).catch(() => {})

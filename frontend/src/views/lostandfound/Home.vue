@@ -2,7 +2,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+import { getLostFoundFeed } from '../../api/lostandfoundEndpoints.js'
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -27,10 +27,7 @@ function mapItemToCard(item) {
 
 const fetchLostData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const path = activeType.value === 0
-    ? `/lostandfound/lostitem/start/${start}`
-    : `/lostandfound/founditem/start/${start}`
-  const res = await request.get(path)
+  const res = await getLostFoundFeed(activeType.value, start)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map(mapItemToCard) : []
   return { list, hasMore: list.length >= PAGE_SIZE }

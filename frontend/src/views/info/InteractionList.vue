@@ -52,10 +52,12 @@
 </template>
 
 <script setup>
+import { getInformationMessageInteractionPage, getInformationMessageUnread, postInformationMessageReadall, postInformationMessageByIdRead } from "../../api/informationEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '@/utils/request'
+
 import {
   getInfoModuleLabel,
   getInteractionLoadMoreLabel,
@@ -93,7 +95,7 @@ function getModuleLabel(module) {
 }
 
 async function loadPage(start) {
-  const res = await request.get(`/information/message/interaction/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getInformationMessageInteractionPage(start, PAGE_SIZE)
   return normalize(res?.data || [])
 }
 
@@ -101,7 +103,7 @@ onMounted(async () => {
   try {
     const [pageRes, unreadRes] = await Promise.allSettled([
       loadPage(0),
-      request.get('/information/message/unread')
+      getInformationMessageUnread()
     ])
     if (pageRes.status === 'fulfilled') {
       items.value = pageRes.value
@@ -129,14 +131,14 @@ async function loadMore() {
 async function markAllRead() {
   unreadCount.value = 0
   items.value = items.value.map(i => ({ ...i, isRead: true }))
-  request.post('/information/message/readall').catch(() => {})
+  postInformationMessageReadall().catch(() => {})
 }
 
 function handleSelect(item) {
   if (!item.isRead) {
     item.isRead = true
     unreadCount.value = Math.max(0, unreadCount.value - 1)
-    request.post(`/information/message/id/${item.id}/read`).catch(() => {})
+    postInformationMessageByIdRead(item.id).catch(() => {})
   }
   // Navigate based on module (same logic as Info.vue)
   const { module, targetId } = item

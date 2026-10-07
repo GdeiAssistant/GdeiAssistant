@@ -35,7 +35,7 @@ public class FeedbackService {
     @Autowired
     private FeedbackMapper feedbackMapper;
 
-    @Value("${email.smtp.username:}")
+    @Value("${email.from:${email.smtp.username:}}")
     public void setSenderEmail(String senderEmail) {
         this.senderEmail = senderEmail;
     }

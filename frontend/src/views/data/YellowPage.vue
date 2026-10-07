@@ -1,10 +1,12 @@
 <script setup>
+import { getDataYellowpage } from "../../api/dataEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
-import request from '../../utils/request'
+
 
 const router = useRouter()
 const { t } = useI18n()
@@ -33,8 +35,7 @@ const groupedData = computed(() => {
 function loadYellowPage() {
   loading.value = true
   showLoading(t('common.loading'))
-  request
-    .get('/data/yellowpage')
+  getDataYellowpage()
     .then((res) => {
       loading.value = false
       hideLoading()

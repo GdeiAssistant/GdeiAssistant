@@ -1,9 +1,11 @@
 <script setup>
+import { getUserdataState, postUserdataExport, postUserdataDownload } from "../../api/userdataEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useToast } from '@/composables/useToast'
 import {
   EXPORT_STATUS,
@@ -37,7 +39,7 @@ function startPolling() {
 
 async function loadExportState() {
   try {
-    const res = await request.get('/userdata/state')
+    const res = await getUserdataState()
     const nextStatus = Number(res?.data ?? EXPORT_STATUS.NOT_EXPORT)
     exportStatus.value = nextStatus
     if (nextStatus === EXPORT_STATUS.EXPORTING) {
@@ -54,7 +56,7 @@ async function handleStartExport() {
   if (exporting.value || exportStatus.value === EXPORT_STATUS.EXPORTING) return
   exporting.value = true
   try {
-    await request.post('/userdata/export')
+    await postUserdataExport()
     exportStatus.value = EXPORT_STATUS.EXPORTING
     startPolling()
     toastSuccess(t('downloadPage.toast.exportStarted'))
@@ -69,7 +71,7 @@ async function handleDownload() {
   if (downloading.value) return
   downloading.value = true
   try {
-    const res = await request.post('/userdata/download')
+    const res = await postUserdataDownload()
     const url = typeof res?.data === 'string' ? res.data : ''
     if (!url) return
     const popup = window.open(url, '_blank', 'noopener')

@@ -1,9 +1,11 @@
 <script setup>
+import { postEvaluateSubmit } from "../../api/evaluateEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '@/utils/request'
+
 import { useToast } from '@/composables/useToast'
 
 const router = useRouter()
@@ -27,7 +29,7 @@ function confirmEvaluate() {
   isLoading.value = true
   showLoading(t('evaluatePage.loading'))
   const formData = { directSubmit: isDirectSubmit.value }
-  request.post('/evaluate/submit', formData)
+  postEvaluateSubmit(formData)
     .then(() => {
       isLoading.value = false
       hideLoading()

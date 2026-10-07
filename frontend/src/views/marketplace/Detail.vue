@@ -1,8 +1,10 @@
 <script setup>
+import { getMarketplaceItemById } from "../../api/marketplaceEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import AuthAvatar from '@/components/social/AuthAvatar.vue'
@@ -90,7 +92,7 @@ function mapMarketplaceDetail(info) {
 onMounted(async () => {
   loading.value = true
   try {
-    const res = await request.get(`/marketplace/item/id/${id}`)
+    const res = await getMarketplaceItemById(id)
     const info = res?.data
     if (info && res.success !== false) {
       detail.value = mapMarketplaceDetail(info)

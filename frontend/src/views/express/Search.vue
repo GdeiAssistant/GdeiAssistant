@@ -1,9 +1,11 @@
 <script setup>
+import { getExpressKeywordPage, postExpressByIdLike } from "../../api/expressEndpoints.js"
+
 import { Heart, Star, MessageCircle, Search as SearchIcon } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
@@ -31,7 +33,7 @@ const fetchSearchData = async (page) => {
     return { list: [], hasMore: false }
   }
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/express/keyword/${encodeURIComponent(k)}/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getExpressKeywordPage(k, start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((item) => ({
     id: item.id,
@@ -69,7 +71,7 @@ function doSearch() {
 
 function handleLike(item) {
   if (item.isLiked) return
-  request.post(`/express/id/${item.id}/like`).then(() => {
+  postExpressByIdLike(item.id).then(() => {
     item.isLiked = true
     item.likeCount = (item.likeCount || 0) + 1
   })

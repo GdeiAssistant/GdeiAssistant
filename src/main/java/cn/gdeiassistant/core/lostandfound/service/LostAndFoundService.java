@@ -14,7 +14,7 @@ import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundDetailEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundDetailVO;
 import cn.gdeiassistant.core.lostandfound.pojo.vo.LostAndFoundItemVO;
-import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
@@ -54,6 +54,12 @@ public class LostAndFoundService {
     private R2StorageService r2StorageService;
 
     @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Autowired
     private PublicAuthorResolver publicAuthorResolver;
 
     public LostAndFoundDetailVO queryLostAndFoundInfoByID(int id) throws Exception {
@@ -81,14 +87,14 @@ public class LostAndFoundService {
         return vo;
     }
 
-    public List<LostAndFoundItemVO> queryPersonalLostAndFoundItems(String sessionId) throws Exception {
+    public List<LostAndFoundItemVO> queryPersonalLostAndFoundItems(String sessionId, int start, int size) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<LostAndFoundItemEntity> list = lostAndFoundMapper.selectItemByUsername(user.getUsername());
+        List<LostAndFoundItemEntity> list = lostAndFoundMapper.selectItemByUsername(user.getUsername(), start, size);
         if (list == null || list.isEmpty()) return new ArrayList<>();
         List<LostAndFoundItemVO> voList = new ArrayList<>();
         for (LostAndFoundItemEntity e : list) {
             e.setUsername(user.getUsername());
-            e.setPictureURL(getLostAndFoundItemPictureURL(e.getId()));
+            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl(null, "lostandfound/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
             voList.add(lostAndFoundItemConverter.toVO(e));
         }
         return voList;
@@ -168,7 +174,7 @@ public class LostAndFoundService {
 
     public void uploadLostAndFoundItemPicture(int id, int index, InputStream inputStream) {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject(null, "lostandfound/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传失物招领图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("上传失败", e);
@@ -183,14 +189,14 @@ public class LostAndFoundService {
         }
     }
 
-    public void moveLostAndFoundItemPictureFromTempObject(int id, int index, String objectKey) {
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "lostandfound/" + id + "_" + index + ".jpg");
+    public void moveLostAndFoundItemPictureFromTempObject(int id, int index, String objectKey, String sessionId) {
+        uploads.moveUpload(sessionId, objectKey, "lostandfound/" + id + "_" + index + ".jpg");
     }
 
     public void deleteLostAndFoundItemImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                r2StorageService.deleteObject("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject(null, "lostandfound/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除失物招领图片失败，id={}，index={}", id, i, e);
             }
@@ -204,7 +210,7 @@ public class LostAndFoundService {
     public List<String> getLostAndFoundItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            String url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "lostandfound/" + id + "_" + i + ".jpg", 30, TimeUnit.MINUTES);
+            String url = storedAssets.generatePresignedUrl(null, "lostandfound/" + id + "_" + i + ".jpg", 30, TimeUnit.MINUTES);
             if (StringUtils.isNotBlank(url)) pictureURL.add(url);
             else break;
         }
@@ -236,4 +242,18 @@ public class LostAndFoundService {
         e.setPhone(dto.getPhone());
         return e;
     }
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishItem(LostAndFoundPublishDTO dto, String sessionId,
+            org.springframework.web.multipart.MultipartFile[] images, String[] imageKeys) throws Exception {
+        var created = addLostAndFoundItem(dto, sessionId);
+        if (imageKeys != null && imageKeys.length > 0) {
+            for (int i=0; i<imageKeys.length; i++) moveLostAndFoundItemPictureFromTempObject(created.getId(), i+1, imageKeys[i], sessionId);
+        } else if (images != null) {
+            int index = 1;
+            for (var image : images) {
+                if (image != null && !image.isEmpty()) uploadLostAndFoundItemPicture(created.getId(), index++, image.getInputStream());
+            }
+        }
+    }
+
 }

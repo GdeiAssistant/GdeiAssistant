@@ -63,11 +63,10 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     public void insertAccessToken(AccessToken token) {
         String key = StringEncryptUtils.sha256HexString(ACCESS_TOKEN_PREFIX + token.getSignature());
         try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(token));
+            redisDaoUtils.set(key, objectMapper.writeValueAsString(token), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("AccessToken 序列化失败", e);
         }
-        redisDaoUtils.expire(key, 7, TimeUnit.DAYS);
     }
 
     /**
@@ -76,8 +75,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     @Override
     public void insertRefreshToken(RefreshToken token) {
         String key = StringEncryptUtils.sha256HexString(REFRESH_TOKEN_PREFIX + token.getSignature());
-        redisDaoUtils.set(key, token.getAccessTokenSignature());
-        redisDaoUtils.expire(key, 30, TimeUnit.DAYS);
+        redisDaoUtils.set(key, token.getAccessTokenSignature(), 30, TimeUnit.DAYS);
     }
 
     /**
@@ -124,11 +122,10 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
     public void saveDeviceData(String signature, Device device) {
         String key = StringEncryptUtils.sha256HexString(DEVICE_DATA_PREFIX + signature);
         try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(device));
+            redisDaoUtils.set(key, objectMapper.writeValueAsString(device), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("Device 序列化失败", e);
         }
-        redisDaoUtils.expire(key, 7, TimeUnit.DAYS);
     }
 
 

@@ -29,7 +29,9 @@ public class OcrService {
             ClaudeOcrProvider claudeOcrProvider,
             LocalCaptchaOcrProvider localCaptchaOcrProvider,
             MeterRegistry meterRegistry,
-            CircuitBreakerRegistry circuitBreakerRegistry) {
+            CircuitBreakerRegistry circuitBreakerRegistry,
+            @org.springframework.beans.factory.annotation.Qualifier("providerExecutor") java.util.concurrent.Executor executor,
+            cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
         List<ServiceProvider<OcrRequest, String>> providers = Arrays.asList(
                 deepSeekOcrProvider,
                 doubaoOcrProvider,
@@ -38,7 +40,10 @@ public class OcrService {
                 claudeOcrProvider,
                 localCaptchaOcrProvider
         );
-        this.chain = new ProviderChain<>("ocr", providers, meterRegistry, circuitBreakerRegistry);
+        this.chain = new ProviderChain<>("ocr", providers, meterRegistry, circuitBreakerRegistry, (request, result) ->
+                result != null && !result.isBlank() && (request.getLength() > 0
+                        ? result.trim().matches("[A-Za-z0-9]{" + request.getLength() + "}")
+                        : result.trim().matches("[0-9]+")), executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs()));
     }
 
     public String recognizeCaptcha(String imageBase64, String typeHint, int length) {

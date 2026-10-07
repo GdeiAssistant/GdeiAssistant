@@ -20,6 +20,12 @@ public class CustomScheduleDocument {
      */
     private String username;
 
+    private Long version;
+
+    public Long getVersion() { return version; }
+
+    public void setVersion(Long version) { this.version = version; }
+
     private Map<String, Schedule> scheduleMap;
 
     public String getId() {

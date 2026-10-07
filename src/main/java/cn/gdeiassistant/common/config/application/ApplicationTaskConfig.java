@@ -32,6 +32,27 @@ public class ApplicationTaskConfig implements SchedulingConfigurer, AsyncConfigu
         return executor;
     }
 
+    @Bean("providerExecutor")
+    public ThreadPoolTaskExecutor providerExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setQueueCapacity(20);
+        executor.setThreadNamePrefix("provider-");
+        return executor;
+    }
+
+    @Bean("campusSyncExecutor")
+    public Executor campusSyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(5);
+        executor.setQueueCapacity(10);
+        executor.setThreadNamePrefix("campus-sync-");
+        executor.initialize();
+        return executor;
+    }
+
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.setScheduler(taskExecutor());

@@ -1,9 +1,11 @@
 <script setup>
+import { getExpressPage, postExpressByIdLike, postExpressByIdGuess } from "../../api/expressEndpoints.js"
+
 import { Heart, Star, MessageCircle, Mail } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import { useToast } from '@/composables/useToast'
 import { showErrorTopTips } from '@/utils/toast.js'
@@ -25,7 +27,7 @@ function mapGender(g) {
 }
 const fetchExpressData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/express/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getExpressPage(start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((e) => ({
     id: e.id,
@@ -55,7 +57,7 @@ function getGenderColor(gender) {
 
 function handleLike(item) {
   if (item.isLiked) return
-  request.post(`/express/id/${item.id}/like`).then(() => {
+  postExpressByIdLike(item.id).then(() => {
     item.isLiked = true
     item.likeCount = (item.likeCount || 0) + 1
   })
@@ -86,7 +88,7 @@ function confirmGuess() {
     guessDialogVisible.value = false
     return
   }
-  request.post(`/express/id/${currentItem.id}/guess`, null, { params: { name: guessName } })
+  postExpressByIdGuess(currentItem.id, null, { params: { name: guessName } })
     .then((res) => {
       const correct = res?.data === true
       if (correct) {

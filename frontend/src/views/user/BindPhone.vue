@@ -1,9 +1,11 @@
 <script setup>
+import { postPhoneVerificationcodephone, postPhoneAttachcodephonerandomCode, postPhoneUnattach, getPhoneStatus } from "../../api/phoneEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
 import {
@@ -83,7 +85,7 @@ async function handleSendCode() {
   sending.value = true
   try {
     const numericCode = parseInt((currentCountryCode.value || '+86').replace('+', ''), 10) || 86
-    await request.post(`/phone/verification?code=${encodeURIComponent(numericCode)}&phone=${encodeURIComponent(formPhone.value)}`)
+    await postPhoneVerificationcodephone(numericCode, formPhone.value)
     countdown.value = 60
     timerId = setInterval(() => {
       if (countdown.value > 0) {
@@ -115,7 +117,7 @@ async function handleSubmit() {
   isBinding.value = true
   try {
     const numericCode = parseInt((currentCountryCode.value || '+86').replace('+', ''), 10) || 86
-    await request.post(`/phone/attach?code=${encodeURIComponent(numericCode)}&phone=${encodeURIComponent(formPhone.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
+    await postPhoneAttachcodephonerandomCode(numericCode, formPhone.value, vcode.value)
     currentPhone.value = maskPhone(formPhone.value)
     boundCountryCode.value = currentCountryCode.value
     toastSuccess(t('bindPhonePage.bindSuccess'))
@@ -160,7 +162,7 @@ async function confirmUnbind() {
   if (isUnbinding.value) return
   isUnbinding.value = true
   try {
-    await request.post('/phone/unattach')
+    await postPhoneUnattach()
     currentPhone.value = ''
     boundCountryCode.value = '+86'
     formPhone.value = ''
@@ -176,7 +178,7 @@ async function confirmUnbind() {
 }
 
 async function loadPhoneStatus() {
-  const res = await request.get('/phone/status')
+  const res = await getPhoneStatus()
   const data = res && res.data
   if (data && typeof data === 'object') {
     if (data.phone) {

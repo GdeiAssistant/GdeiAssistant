@@ -58,13 +58,15 @@ public class JavaMailConfig {
         properties.setProperty("mail.smtp.auth",
                 Boolean.TRUE.equals(Boolean.valueOf(environment.getProperty("email.smtp.auth")))
                         ? Boolean.TRUE.toString() : Boolean.FALSE.toString());
-        properties.setProperty("mail.smtp.timeout",
-                StringUtil.isBlank(environment.getProperty("email.smtp.timeout"))
-                        ? "5000" : environment.getProperty("email.smtp.timeout"));
-        if (Boolean.TRUE.equals(Boolean.valueOf(environment.getProperty("email.ssl.encryption")))) {
-            properties.setProperty("mail.smtp.socketFactory.port", environment.getProperty("email.smtp.port"));
-            properties.setProperty("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        }
+        String timeout = environment.getProperty("email.smtp.timeout", "5000");
+        properties.setProperty("mail.smtp.timeout", timeout);
+        properties.setProperty("mail.smtp.connectiontimeout", timeout);
+        properties.setProperty("mail.smtp.writetimeout", timeout);
+        boolean ssl = resolveSmtpPort(port) == 465 || environment.getProperty("email.ssl.encryption", Boolean.class, false);
+        properties.setProperty("mail.smtp.ssl.enable", Boolean.toString(ssl));
+        properties.setProperty("mail.smtp.ssl.checkserveridentity", "true");
+        properties.setProperty("mail.smtp.starttls.enable", Boolean.toString(!ssl));
+        properties.setProperty("mail.smtp.starttls.required", Boolean.toString(!ssl));
         javaMailSender.setJavaMailProperties(properties);
         return javaMailSender;
     }

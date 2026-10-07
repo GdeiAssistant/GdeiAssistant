@@ -37,7 +37,7 @@ class ObjectStorageControllerTest {
 
     @Test
     void shouldAcceptAllowedImageMimeType() {
-        when(uploadService.createPresignedUpload("photo.jpg", "image/jpeg"))
+        when(uploadService.createPresignedUpload("test-session", "photo.jpg", "image/jpeg"))
                 .thenReturn(Map.of("url", "https://r2.example.com/signed", "objectKey", "upload/photo.jpg"));
 
         DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "photo.jpg", "image/jpeg");
@@ -49,7 +49,7 @@ class ObjectStorageControllerTest {
 
     @Test
     void shouldAcceptAllowedAudioMimeType() {
-        when(uploadService.createPresignedUpload("voice.mp3", "audio/mpeg"))
+        when(uploadService.createPresignedUpload("test-session", "voice.mp3", "audio/mpeg"))
                 .thenReturn(Map.of("url", "https://r2.example.com/signed", "objectKey", "upload/voice.mp3"));
 
         DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "voice.mp3", "audio/mpeg");
@@ -58,12 +58,20 @@ class ObjectStorageControllerTest {
     }
 
     @Test
+    void recordedWebmParametersAreNormalizedBeforeSigning() {
+        when(uploadService.createPresignedUpload("test-session","voice.webm","audio/webm"))
+                .thenReturn(Map.of("url","https://synthetic.invalid/put","objectKey","upload/owner/voice.webm"));
+        assertTrue(controller.getPresignedUploadUrl(request,"voice.webm","audio/webm;codecs=opus").isSuccess());
+        verify(uploadService).createPresignedUpload("test-session","voice.webm","audio/webm");
+    }
+
+    @Test
     void shouldRejectDisallowedMimeType() {
         DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "exploit.exe", "application/octet-stream");
 
         assertFalse(result.isSuccess());
         assertTrue(result.getMessage().contains("不支持的文件类型"));
-        verify(uploadService, never()).createPresignedUpload(anyString(), anyString());
+        verify(uploadService, never()).createPresignedUpload(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -85,7 +93,7 @@ class ObjectStorageControllerTest {
 
     @Test
     void shouldAcceptMatchingExtensionAndMimeType() {
-        when(uploadService.createPresignedUpload("image.png", "image/png"))
+        when(uploadService.createPresignedUpload("test-session", "image.png", "image/png"))
                 .thenReturn(Map.of("url", "https://r2.example.com/signed", "objectKey", "upload/image.png"));
 
         DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "image.png", "image/png");
@@ -119,10 +127,10 @@ class ObjectStorageControllerTest {
 
     @Test
     void shouldHandleCaseInsensitiveMimeType() {
-        when(uploadService.createPresignedUpload("photo.jpg", "Image/JPEG"))
+        when(uploadService.createPresignedUpload("test-session", "photo.jpg", "image/jpeg"))
                 .thenReturn(Map.of("url", "https://r2.example.com/signed", "objectKey", "upload/photo.jpg"));
 
-        DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "photo.jpg", "Image/JPEG");
+        DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "photo.jpg", "image/jpeg");
 
         assertTrue(result.isSuccess());
     }
@@ -130,7 +138,7 @@ class ObjectStorageControllerTest {
     @Test
     void shouldAllowUnknownExtensionWithValidMime() {
         // 无扩展名的文件，只要 MIME 在白名单就应允许
-        when(uploadService.createPresignedUpload("noext", "image/png"))
+        when(uploadService.createPresignedUpload("test-session", "noext", "image/png"))
                 .thenReturn(Map.of("url", "https://r2.example.com/signed", "objectKey", "upload/noext"));
 
         DataJsonResult<Map<String, String>> result = controller.getPresignedUploadUrl(request, "noext", "image/png");

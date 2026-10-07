@@ -35,6 +35,9 @@ class SecretServiceTest {
     private R2StorageService r2StorageService;
 
     @Mock
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Mock
     private InteractionNotificationService interactionNotificationService;
 
     @Mock
@@ -60,7 +63,7 @@ class SecretServiceTest {
     @Test
     void uploadVoiceSecretThrowsRuntimeExceptionOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
-                .when(r2StorageService).uploadObject(eq("gdeiassistant-userdata"), eq("secret/voice/1.mp3"), any(InputStream.class));
+                .when(storedAssets).uploadObject(eq((String) null), eq("secret/voice/1.mp3"), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1, 2, 3});
 

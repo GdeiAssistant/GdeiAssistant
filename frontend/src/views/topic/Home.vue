@@ -1,9 +1,11 @@
 <script setup>
+import { getTopicPage, postTopicByIdLike } from "../../api/topicEndpoints.js"
+
 import { Heart } from 'lucide-vue-next'
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
@@ -18,7 +20,7 @@ const pullMessages = computed(() => createCommunityPullMessages(t))
 const PAGE_SIZE = 10
 const fetchTopicData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/topic/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getTopicPage(start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((topicItem) => ({
     id: topicItem.id,
@@ -38,7 +40,7 @@ const { items: list, loading, finished, refreshing, pullY, loadData, handleTouch
 
 function handleLike(item) {
   if (item.isLiked) return
-  request.post(`/topic/id/${item.id}/like`).then(() => {
+  postTopicByIdLike(item.id).then(() => {
     item.isLiked = true
     item.likeCount++
   })

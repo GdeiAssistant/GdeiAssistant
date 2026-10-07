@@ -1,8 +1,10 @@
 <script setup>
+import { postTopic } from "../../api/topicEndpoints.js"
+
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -74,7 +76,7 @@ async function submit() {
     fd.append('content', contentVal)
     fd.append('count', String(imageKeys.length))
     imageKeys.forEach((imageKey) => fd.append('imageKeys', imageKey))
-    await request.post('/topic', fd)
+    await postTopic(fd)
     hideLoading()
     toastSuccess(t('topic.publish.publishSuccess'))
     setTimeout(() => router.push('/topic/home'), 1500)

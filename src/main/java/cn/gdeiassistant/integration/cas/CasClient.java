@@ -32,7 +32,8 @@ import java.util.Set;
 @Component
 public class CasClient {
 
-    private static final String CAS_LOGIN_URL = "https://security.gdei.edu.cn/cas/login";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
+    private String CAS_LOGIN_URL = "https://security.gdei.edu.cn/cas/login";
     private static final int TIMEOUT_MS = 10000;
 
     private static final Set<String> ALLOWED_REDIRECT_HOSTS = Set.of(

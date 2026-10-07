@@ -299,9 +299,9 @@ class AccountDeletionServiceTest {
             completedItem.setId(20);
             completedItem.setState(3);
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(activeItem, completedItem));
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -323,9 +323,9 @@ class AccountDeletionServiceTest {
             resolvedItem.setId(6);
             resolvedItem.setState(1);
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(activeItem, resolvedItem));
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -343,9 +343,9 @@ class AccountDeletionServiceTest {
             openOrder.setOrderId(100);
             openOrder.setState(0);
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(openOrder));
@@ -366,9 +366,9 @@ class AccountDeletionServiceTest {
             pendingTrade.setTradeId(300);
             pendingTrade.setState(0);
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(acceptedOrder));
@@ -387,9 +387,9 @@ class AccountDeletionServiceTest {
             acceptedOrder.setOrderId(200);
             acceptedOrder.setState(1);
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(acceptedOrder));
@@ -412,9 +412,9 @@ class AccountDeletionServiceTest {
             completedTrade.setTradeId(300);
             completedTrade.setState(1); // already completed
 
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(acceptedOrder));
@@ -429,9 +429,9 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("hides dating profiles via datingMapper")
         void hidesDatingProfiles() throws Exception {
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -444,9 +444,9 @@ class AccountDeletionServiceTest {
         @Test
         @DisplayName("handles empty lists gracefully with no mapper updates")
         void handlesEmptyListsGracefully() throws Exception {
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -504,9 +504,9 @@ class AccountDeletionServiceTest {
             userEntity.setPassword(PASSWORD);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -528,9 +528,9 @@ class AccountDeletionServiceTest {
             activeItem.setState(1);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(activeItem));
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -554,9 +554,9 @@ class AccountDeletionServiceTest {
             activeItem.setState(0);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(activeItem));
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(Collections.emptyList());
@@ -581,9 +581,9 @@ class AccountDeletionServiceTest {
             openOrder.setState(0);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(openOrder));
@@ -612,9 +612,9 @@ class AccountDeletionServiceTest {
             pendingTrade.setState(0);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(Collections.emptyList());
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(acceptedOrder));
@@ -647,9 +647,9 @@ class AccountDeletionServiceTest {
             openOrder.setState(0);
 
             when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectItemsByUsername(USERNAME))
+            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(marketplaceItem));
-            when(lostAndFoundMapper.selectItemByUsername(USERNAME))
+            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
                     .thenReturn(List.of(lostItem));
             when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
                     .thenReturn(List.of(openOrder));

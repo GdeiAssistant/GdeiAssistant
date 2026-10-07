@@ -24,12 +24,14 @@ public class IpLocationService {
                              IpApiProvider ipApiProvider,
                              IpWhoisProvider ipWhoisProvider,
                              MeterRegistry meterRegistry,
-                             CircuitBreakerRegistry circuitBreakerRegistry) {
+                             CircuitBreakerRegistry circuitBreakerRegistry,
+            @org.springframework.beans.factory.annotation.Qualifier("providerExecutor") java.util.concurrent.Executor executor,
+            cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
         this.chain = new ProviderChain<>(
                 "ip-location",
                 List.of(maxmindGeoIpProvider, ipApiProvider, ipWhoisProvider),
                 meterRegistry,
-                circuitBreakerRegistry
+                circuitBreakerRegistry, (request, result) -> true, executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs())
         );
     }
 

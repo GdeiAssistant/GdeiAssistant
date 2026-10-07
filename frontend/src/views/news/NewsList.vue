@@ -1,9 +1,11 @@
 <script setup>
+import { getInformationNewsTypePage } from "../../api/informationEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 
 const router = useRouter()
 const { t } = useI18n()
@@ -46,8 +48,7 @@ function loadNews() {
   loadError.value = false
   const start = (page.value - 1) * PAGE_SIZE
   const type = activeType.value
-  request
-    .get(`/information/news/type/${type}/start/${start}/size/${PAGE_SIZE}`)
+  getInformationNewsTypePage(type, start, PAGE_SIZE)
     .then((res) => {
       const list = res?.data ?? []
       const mapped = list.map((item) => ({

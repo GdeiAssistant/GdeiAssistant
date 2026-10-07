@@ -55,6 +55,29 @@ class SocialChatServiceTest {
         lenient().when(chatImageService.isImageMessagingEnabled()).thenReturn(false);
     }
 
+    @Test
+    void conversationPageUsesFixedBatchQueriesAndKeepsPerPeerPermission() {
+        when(identityService.requireActiveViewer("session")).thenReturn(me);
+        var second = new ConversationEntity(); second.setId(11L);second.setUserLowId(1L);second.setUserHighId(3L);second.setCreatedAt(new Date(1000));
+        conversation.setCreatedAt(new Date(1000));
+        var excluded = new ConversationEntity();excluded.setId(12L);
+        when(chatMapper.listConversations(1L,null,null,3)).thenReturn(java.util.List.of(conversation,second,excluded));
+        var allowed=new SocialUserDTO();allowed.setId(peer.getPublicId());allowed.setCanMessage(true);
+        var blocked=new SocialUserDTO();blocked.setId("33333333-3333-4333-8333-333333333333");blocked.setCanMessage(false);blocked.setMessagePermissionReason("BLOCKED");
+        when(identityService.buildSocialUsers(me,java.util.List.of(2L,3L))).thenReturn(java.util.Map.of(2L,allowed,3L,blocked));
+        when(chatMapper.selectMembers(1L,java.util.List.of(10L,11L))).thenReturn(java.util.List.of(member(10L,1L,1L)));
+        when(chatMapper.selectLastMessages(java.util.List.of(10L,11L))).thenReturn(java.util.List.of(message(100L,10L,3L,2L,"synthetic","last")));
+        when(chatMapper.selectUnreadCounts(1L,java.util.List.of(10L,11L))).thenReturn(java.util.List.of(java.util.Map.of("conversationId",10L,"unreadCount",2L)));
+        var result=chatService.listConversations("session",null,2);
+        assertEquals(2,result.getItems().size());assertTrue(result.isHasMore());assertNotNull(result.getNextCursor());
+        assertTrue(result.getItems().get(0).isCanSend());assertEquals(2,result.getItems().get(0).getUnreadCount());
+        assertEquals(peer.getPublicId(),result.getItems().get(0).getLastMessage().getSenderId());
+        assertFalse(result.getItems().get(1).isCanSend());assertEquals("BLOCKED",result.getItems().get(1).getSendPermissionReason());
+        verify(chatMapper).listConversations(1L,null,null,3);
+        verify(chatMapper).selectMembers(1L,java.util.List.of(10L,11L));verify(chatMapper).selectLastMessages(java.util.List.of(10L,11L));verify(chatMapper).selectUnreadCounts(1L,java.util.List.of(10L,11L));
+        verifyNoMoreInteractions(chatMapper);verify(identityService,never()).findById(anyLong());
+    }
+
     private void stubConversationLookup() {
         when(identityService.requireActiveViewer(anyString())).thenReturn(me);
         when(chatMapper.selectMember(10L, 1L)).thenReturn(member(10L, 1L, 1L));
@@ -130,6 +153,7 @@ class SocialChatServiceTest {
         when(identityService.findById(2L)).thenReturn(null);
         SocialUserDTO closed = new SocialUserDTO();
         closed.setNickname("已注销");
+        closed.setMessagePermissionReason("CONTACT_UNAVAILABLE");
         when(identityService.buildClosedPeer(null)).thenReturn(closed);
         when(chatMapper.selectLastMessage(10L)).thenReturn(null);
         when(chatMapper.countUnreadFromPeer(10L, 2L, 1L)).thenReturn(0);

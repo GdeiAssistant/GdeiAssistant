@@ -29,11 +29,7 @@ public class ExportDataDaoImpl implements ExportDataDao {
 
     @Override
     public void saveExportingDataToken(String username, String token) {
-        redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username)
-                , token);
-        //一小时后以任务超时处理
-        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username)
-                , 1, TimeUnit.HOURS);
+        redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORTING_PREFIX + username), token, 1, TimeUnit.HOURS);
     }
 
     @Override
@@ -43,8 +39,6 @@ public class ExportDataDaoImpl implements ExportDataDao {
 
     @Override
     public void saveExportDataToken(String username, String token) {
-        redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username), token);
-        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username)
-                , 24, TimeUnit.HOURS);
+        redisDaoUtils.set(StringEncryptUtils.sha256HexString(EXPORT_PREFIX + username), token, 24, TimeUnit.HOURS);
     }
 }

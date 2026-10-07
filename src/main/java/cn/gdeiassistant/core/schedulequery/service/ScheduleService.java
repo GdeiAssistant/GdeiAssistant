@@ -493,11 +493,7 @@ public class ScheduleService {
                                                         teacherSchedule.setScheduleClass(scheduleClass);
                                                         teacherSchedule.setScheduleLocation(scheduleLocation);
                                                         teacherSchedule.setRow(row - 2);
-                                                        if (row == 2 || row == 7 || row == 11) {
-                                                            teacherSchedule.setColumn(currentColumnIndexInThisRow - 2);
-                                                        } else {
-                                                            teacherSchedule.setColumn(currentColumnIndexInThisRow - 1);
-                                                        }
+                                                        teacherSchedule.setColumn(currentPosition % 7);
                                                         teacherSchedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
                                                         schedulesWithSpecialEmptySchedule[currentPosition] = teacherSchedule;
                                                         j = j + 5;

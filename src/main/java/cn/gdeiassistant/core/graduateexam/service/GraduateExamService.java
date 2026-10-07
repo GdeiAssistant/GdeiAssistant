@@ -38,10 +38,8 @@ public class GraduateExamService {
         try {
             Document document = chsiClient.fetchPostgraduateCjcxPage();
             Element cjcxForm = document.getElementsByAttributeValue("name", "cjcxForm").first();
-            boolean hasCheckCode = false;
             String checkcode = null;
             if (cjcxForm.getElementById("checkcode") != null) {
-                hasCheckCode = true;
                 String imageURL = "https://yz.chsi.com.cn" + cjcxForm.select("td[align='left']").get(5)
                         .select("img").first().attr("src");
                 byte[] imageBytes = chsiClient.fetchPostgraduateCaptchaImage(imageURL);
@@ -66,8 +64,8 @@ public class GraduateExamService {
             postgraduate.setTotalScore(data.get(4).select("td").get(1).text());
             postgraduate.setFirstScore(data.get(5).select("td").get(1).text().replace(" ", ""));
             postgraduate.setSecondScore(data.get(6).select("td").get(1).text().replace(" ", ""));
-            postgraduate.setThirdScore(data.get(6).select("td").get(1).text().replace(" ", ""));
-            postgraduate.setFourthScore(data.get(7).select("td").get(1).text().replace(" ", ""));
+            postgraduate.setThirdScore(data.get(7).select("td").get(1).text().replace(" ", ""));
+            postgraduate.setFourthScore(data.get(8).select("td").get(1).text().replace(" ", ""));
             return postgraduate;
         } catch (IOException e) {
             logger.error("查询考研成绩异常：", e);

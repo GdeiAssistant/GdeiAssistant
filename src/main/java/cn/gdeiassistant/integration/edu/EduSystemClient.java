@@ -158,7 +158,8 @@ public class EduSystemClient {
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
+                if (document.text().contains("您登陆的系统已经很长时间没有操作了")
+                        && document.text().contains("为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
@@ -271,7 +272,8 @@ public class EduSystemClient {
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
+                if (document.text().contains("您登陆的系统已经很长时间没有操作了")
+                        && document.text().contains("为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
@@ -353,7 +355,8 @@ public class EduSystemClient {
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
+                if (document.text().contains("您登陆的系统已经很长时间没有操作了")
+                        && document.text().contains("为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber());

@@ -204,4 +204,45 @@ class CampusHttpFixtureTest {
         reply("GET", "/cas/login", 503, "outage");
         assertThrows(ServerErrorException.class, () -> service.chargeRequest("session", 50));
     }
+    @Test void expiredStudentSessionsStopAllEntryFlowsBeforeOpeningHome() {
+        reply("GET","/cas_verify.aspx",200,"<html><body>您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！</body></html>");
+        assertThrows(TimeStampIncorrectException.class,()->edu.fetchScheduleDocument("session",credential()));
+        assertThrows(TimeStampIncorrectException.class,()->edu.fetchSpareRoomInitialDocument("session",credential()));
+        assertThrows(TimeStampIncorrectException.class,()->edu.fetchEduMainPage("session",credential()));
+        assertEquals(3,seen.size());assertTrue(seen.stream().allMatch(s->s.uri().contains("cas_verify")));
+    }
+    @Test void spareRoomAndGenericPageFlowsEncodeFormsAndReleaseEveryResponse() throws Exception {
+        reply("GET","/cas_verify.aspx",200,"verified");reply("GET","/xs_main.aspx",200,"<title>student</title>");reply("GET","/xxjsjy.aspx",200,"<form id='Form1'></form>");
+        assertNotNull(edu.fetchSpareRoomInitialDocument("session",credential()).getElementById("Form1"));
+        assertEquals("student",edu.fetchEduMainPage("session",credential()).title());
+        reply("POST","/xxjsjy.aspx",200,"<title>synthetic rooms</title>");
+        assertEquals("synthetic rooms",edu.submitSpareRoomForm("session",credential(),"xxjsjy.aspx",List.of(new org.apache.http.message.BasicNameValuePair("__VIEWSTATE","a & b"))).title());
+        assertTrue(seen.get(seen.size()-1).body().contains("__VIEWSTATE=a+%26+b"));
+        reply("GET","/xs_jxpj.aspx",200,"<title>synthetic evaluation</title>");
+        for(String path:List.of("xs_jxpj.aspx","/xs_jxpj.aspx"))assertEquals("synthetic evaluation",edu.fetchEduPage("session",credential(),path).title());
+        reply("GET","/xs_jxpj.aspx",503,"outage");assertThrows(ServerErrorException.class,()->edu.fetchEduPage("session",credential(),"xs_jxpj.aspx"));
+        reply("POST","/xxjsjy.aspx",503,"outage");assertThrows(ServerErrorException.class,()->edu.submitSpareRoomForm("session",credential(),"xxjsjy.aspx",List.of()));
+        var manager=(org.apache.http.impl.conn.PoolingHttpClientConnectionManager)ReflectionTestUtils.getField(pool,"connectionManager");assertEquals(0,manager.getTotalStats().getLeased());
+    }
+    @Test void studentEntryFailuresKeepRedirectAndServerErrorsTyped() throws Exception {
+        for(String method:List.of("schedule","rooms","main"))for(String location:List.of("/loginTs/loginTs_yzsb.html","/login")) {
+            redirect("GET","/cas_verify.aspx",location);
+            org.junit.jupiter.api.function.Executable call=()->{switch(method){case "schedule"->edu.fetchScheduleDocument("session",credential());case "rooms"->edu.fetchSpareRoomInitialDocument("session",credential());default->edu.fetchEduMainPage("session",credential());}};
+            if(location.contains("yzsb"))assertThrows(TimeStampIncorrectException.class,call);else assertThrows(PasswordIncorrectException.class,call);
+        }
+        reply("GET","/cas_verify.aspx",200,"verified");reply("GET","/xs_main.aspx",503,"outage");
+        assertThrows(ServerErrorException.class,()->edu.fetchScheduleDocument("session",credential()));assertThrows(ServerErrorException.class,()->edu.fetchSpareRoomInitialDocument("session",credential()));assertThrows(ServerErrorException.class,()->edu.fetchEduMainPage("session",credential()));
+        reply("GET","/cas_verify.aspx",503,"outage");assertThrows(ServerErrorException.class,()->edu.fetchSpareRoomInitialDocument("session",credential()));assertThrows(ServerErrorException.class,()->edu.fetchEduMainPage("session",credential()));
+    }
+    @Test void teacherScheduleUsesFormStateAndNeverContinuesAnInvalidHome() throws Exception {
+        reply("GET","/js_main.aspx",200,"<title>正方教务管理系统</title>");reply("GET","/jstjkbcx.aspx",200,"<input name='__VIEWSTATE' value='synthetic state'><table id='Table6'></table>");
+        assertNotNull(edu.fetchTeacherScheduleDocument("session","synthetic-teacher",null,null,null).getElementById("Table6"));
+        reply("POST","/jstjkbcx.aspx",200,"<title>synthetic timetable</title>");
+        assertEquals("synthetic timetable",edu.fetchTeacherScheduleDocument("session","synthetic-teacher"," 合成教师 ","2026-2027","1").title());
+        String body=seen.get(seen.size()-1).body();assertTrue(body.contains("__VIEWSTATE=synthetic+state"));assertTrue(body.contains("xn=2026-2027"));assertTrue(body.contains("xq=1"));
+        reply("GET","/jstjkbcx.aspx",200,"<div>missing state</div>");assertThrows(ServerErrorException.class,()->edu.fetchTeacherScheduleDocument("session","synthetic-teacher","合成",null,null));
+        reply("GET","/jstjkbcx.aspx",503,"outage");assertThrows(ServerErrorException.class,()->edu.fetchTeacherScheduleDocument("session","synthetic-teacher",null,null,null));
+        for(String html:List.of("<title>欢迎使用正方教务管理系统！请登录</title>","<title>unexpected</title>")){reply("GET","/js_main.aspx",200,html);assertThrows(ServerErrorException.class,()->edu.fetchTeacherScheduleDocument("session","synthetic-teacher",null,null,null));}
+        reply("GET","/js_main.aspx",503,"outage");assertThrows(ServerErrorException.class,()->edu.fetchTeacherScheduleDocument("session","synthetic-teacher",null,null,null));
+    }
 }

@@ -309,4 +309,25 @@ class SecretServiceTest {
         verify(secretMapper).selectSecretByUsernameLight("testuser", 20, 10);
         verify(secretMapper, never()).selectSecretByUsername(anyString());
     }
+    @Test void voiceKeysUseCommittedObjectsThenBoundedFallbackAndDeleteAllFormats() {
+        when(storedAssets.firstReadyKey(any(String[].class))).thenReturn("secret/voice/8.ogg");
+        when(storedAssets.generatePresignedUrl("secret/voice/8.ogg",30,java.util.concurrent.TimeUnit.MINUTES)).thenReturn("https://assets.example.invalid/signed");
+        assertEquals("https://assets.example.invalid/signed",secretService.getSecretVoiceURL(8));
+        when(storedAssets.firstReadyKey(any(String[].class))).thenReturn(null);
+        when(storedAssets.generatePresignedUrl(anyString(),anyLong(),any())).thenAnswer(inv->"secret/voice/8.webm".equals(inv.getArgument(0)) ? "https://assets.example.invalid/probe" : null);
+        assertEquals("secret/voice/8.webm",secretService.findSecretVoiceObjectKey(8));
+        assertEquals("",secretService.getSecretVoiceURL(9));
+        doThrow(new IllegalStateException("synthetic storage outage")).when(storedAssets).deleteObject("secret/voice/8.mp3");
+        secretService.deleteSecretVoice(8);verify(storedAssets,times(7)).deleteObject(anyString());
+    }
+    @Test void publishesVoiceWithGeneratedIdAndExpiresOnlyOldTimedContent() throws Exception {
+        when(userCertificateService.getUserLoginCertificate("sid")).thenReturn(new User("synthetic-owner"));
+        doAnswer(inv->{SecretContentEntity e=inv.getArgument(0);e.setId(8);assertEquals("synthetic-owner",e.getUsername());assertEquals(2,e.getTheme());assertEquals("synthetic",e.getContent());return 1;}).when(secretMapper).insertSecret(any());
+        var dto=new cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO();dto.setTheme(2);dto.setContent("synthetic");dto.setType(1);dto.setTimer(1);
+        secretService.publishVoice("sid",dto,new org.springframework.mock.web.MockMultipartFile("voice","synthetic.mp3","audio/mpeg",new byte[]{1,2,3}),null);
+        verify(storedAssets).uploadObject(eq("secret/voice/8.mp3"),any());
+        var old=new SecretContentEntity();old.setId(10);old.setPublishTime(new Date(System.currentTimeMillis()-25*3600000L));var fresh=new SecretContentEntity();fresh.setId(11);fresh.setPublishTime(new Date());
+        when(secretMapper.selectNotRemovedSecrets()).thenReturn(List.of(old,fresh));secretService.deleteTimerSecretInfos();verify(secretMapper).deleteSecret(10);verify(secretMapper,never()).deleteSecret(11);
+    }
+
 }

@@ -89,8 +89,8 @@ public class DoubaoOcrProvider implements ServiceProvider<OcrRequest, String> {
             if (choices != null && !choices.isEmpty()) {
                 JSONObject message = choices.getJSONObject(0).getJSONObject("message");
                 if (message != null) {
-                    String text = message.getString("content");
-                    if (StringUtils.isNotBlank(text)) {
+                    Object responseContent = message.get("content");
+                    if (responseContent instanceof String text && StringUtils.isNotBlank(text)) {
                         return text;
                     }
                     JSONArray contentRes = message.getJSONArray("content");

@@ -31,7 +31,9 @@ export default defineConfig({
       reporter: ['text-summary', 'json-summary', 'html'],
       thresholds: {
         'src/composables/{useLatestRequest,useScrollLoad}.js': { perFile: true, lines: 75, branches: 60 },
-        'src/views/{grade/Grade,schedule/Schedule}.vue': { perFile: true, lines: 75, branches: 60 }
+        'src/views/{Profile,grade/Grade,schedule/Schedule}.vue': { perFile: true, lines: 75, branches: 60 },
+        'src/composables/useSocialRealtime.js': { perFile: true, lines: 85, branches: 75 },
+        'src/utils/request.js': { perFile: true, lines: 75, branches: 60 }
       }
     },
   },

@@ -56,8 +56,8 @@ public class PrivacyController {
             privacyService.updateIntroduction(introduction, sessionId);
             privacyService.updateEnrollment(enrollment, sessionId);
             privacyService.updateAge(age, sessionId);
-            privacyService.updateCache(cache, sessionId);
             privacyService.updateRobotsIndex(robots, sessionId);
+            privacyService.updateCache(cache, sessionId);
             return new JsonResult(true);
         } catch (CacheClearException e) {
             JsonResult result = new JsonResult(true, BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language")));

@@ -31,6 +31,13 @@ public class RedisDaoUtils {
         }
     }
 
+    /** Write value and expiration atomically so an interrupted write cannot leave a permanent credential. */
+    public void set(String key, String value, long timeout, TimeUnit unit) {
+        if (redisTemplate != null) {
+            redisTemplate.opsForValue().set(key, value, timeout, unit);
+        }
+    }
+
     public boolean setIfAbsent(String key, String value, long timeout, TimeUnit unit) {
         if (redisTemplate == null) {
             throw new IllegalStateException("Redis is not configured");

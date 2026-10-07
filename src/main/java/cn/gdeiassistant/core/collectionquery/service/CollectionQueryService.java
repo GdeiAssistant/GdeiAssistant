@@ -40,14 +40,14 @@ public class CollectionQueryService {
         CollectionQueryResult collectionQueryResult = new CollectionQueryResult();
         try {
             Document document = libraryClient.fetchCollectionListPage(page, keyword);
-            Integer currentPage = 1;
+            Integer currentPage = page == null ? 1 : page;
             Integer sumPage = null;
             Element pagenum = document.getElementById("pagenum");
             if (pagenum == null) {
                 return null;
             }
             sumPage = Integer.valueOf(pagenum.select("option").first().text().split("/")[1]);
-            if (currentPage > sumPage) {
+            if (currentPage < 1 || currentPage > sumPage) {
                 throw new ErrorQueryConditionException("查询页数超过总页数");
             }
             collectionQueryResult.setSumPage(sumPage);
@@ -75,6 +75,8 @@ public class CollectionQueryService {
         } catch (ErrorQueryConditionException e) {
             logger.error("查询馆藏图书异常：", e);
             throw e;
+        } catch (java.io.IOException e) {
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             logger.error("查询馆藏图书异常：", e);
             throw new ServerErrorException("图书馆系统异常");
@@ -164,6 +166,8 @@ public class CollectionQueryService {
             }
             collectionDetail.setCollectionDistributionList(collectionDistributionList);
             return collectionDetail;
+        } catch (java.io.IOException e) {
+            throw new NetWorkTimeoutException("网络连接超时");
         } catch (Exception e) {
             logger.error("查询馆藏图书详细信息异常：", e);
             throw new ServerErrorException("图书馆系统异常");

@@ -79,11 +79,10 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         map.put("password", encryptPassword(password));
         String key = StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId);
         try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(map));
+            redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("登录凭证序列化失败", e);
         }
-        redisDaoUtils.expire(key, 7, TimeUnit.DAYS);
     }
 
     @Override
@@ -144,11 +143,10 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         map.put("password", encryptPassword(password));
         String finalKey = StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId);
         try {
-            redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map));
+            redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map), 1, TimeUnit.HOURS);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("登录凭证序列化失败", e);
         }
-        redisTemplate.expire(finalKey, 1, TimeUnit.HOURS);
     }
 
     @Override
@@ -182,11 +180,10 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         map.put("timestamp", String.valueOf(userCertificate.getTimestamp()));
         String key = StringEncryptUtils.sha256HexString(SESSION_PREFIX + sessionId);
         try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(map));
+            redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 10, TimeUnit.MINUTES);
         } catch (JsonProcessingException e) {
             throw new RuntimeException("会话凭证序列化失败", e);
         }
-        redisDaoUtils.expire(key, 10, TimeUnit.MINUTES);
     }
 
     private void deleteCredentialEntriesByUsername(String username, boolean requireSessionShape) {
@@ -215,23 +212,20 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (json == null || json.isEmpty()) {
             return;
         }
+        Map<String, String> map;
         try {
-            Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
-            if (!username.equals(map.get("username"))) {
-                return;
-            }
-            boolean looksLikeSessionCredential = map.containsKey("keycode")
-                    && map.containsKey("number")
-                    && map.containsKey("timestamp");
-            boolean looksLikeReusableLoginCredential = map.containsKey("password");
-            if (!looksLikeReusableLoginCredential) {
-                return;
-            }
-            if (requireSessionShape == looksLikeSessionCredential) {
-                redisTemplate.delete(key);
-            }
-        } catch (Exception ignored) {
-            // Ignore non-credential Redis values during credential cleanup scan.
+            map = objectMapper.readValue(json, MAP_STRING_STRING);
+        } catch (JsonProcessingException ignored) {
+            // Ignore unrelated or malformed values, but never swallow a Redis deletion failure.
+            return;
+        }
+        if (!username.equals(map.get("username")) || !map.containsKey("password")) {
+            return;
+        }
+        boolean looksLikeSessionCredential = map.containsKey("keycode")
+                && map.containsKey("number") && map.containsKey("timestamp");
+        if (requireSessionShape == looksLikeSessionCredential) {
+            redisTemplate.delete(key);
         }
     }
 

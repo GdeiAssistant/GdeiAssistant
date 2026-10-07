@@ -30,6 +30,28 @@ jobs:
           --health-timeout=5s
           --health-retries=10
 
+      mongodb:
+        image: mongo:8.0
+        env:
+          MONGO_INITDB_ROOT_USERNAME: synthetic_admin
+          MONGO_INITDB_ROOT_PASSWORD: synthetic_ci_only
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --quiet --eval 'db.adminCommand({ping:1})'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:8.2-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -57,11 +79,13 @@ jobs:
         run: docker exec -i "${{ job.services.mysql.id }}" sh -c 'MYSQL_PWD="$MYSQL_ROOT_PASSWORD" mysql -uroot' < src/test/resources/db/architecture-before.sql
 
       - name: Run tests
-        run: ./gradlew test checkOpenApi architectureCoverage jacocoTestReport
+        run: ./gradlew check architectureCoverage jacocoTestReport
         env:
           # Non-dev: no verbose SQL logging by default in CI
           GDEI_UPGRADE_TEST_JDBC_BASE: jdbc:mysql://127.0.0.1:3306/
           GDEI_UPGRADE_TEST_PASSWORD: gdei_synthetic_ci
+          GDEI_MONGO_TEST_PORT: '27017'
+          GDEI_REDIS_TEST_PORT: '6379'
           MYBATIS_LOG_IMPL: ""
           LOG_LEVEL_SQL: "WARN"
           LOG_LEVEL_IBATIS: "WARN"

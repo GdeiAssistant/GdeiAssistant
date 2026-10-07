@@ -60,3 +60,11 @@ GdeiAssistant 统一使用以下三套环境语义：
 - 本地根目录 `.env` 继续服务 `development`，建议保持 `SPRING_PROFILES_ACTIVE=development` 且默认指向 `localhost`。
 - 演示 / 生产建议改用各自独立的环境变量配置，不要和本地开发共用同一份真实凭据，也不要直接把本地 `.env` 上传到部署平台。
 - 当前 MySQL 仍按三套 schema（`DB_NAME` / `DB_NAME_LOG` / `DB_NAME_DATA`）组织；外部数据库也需要准备对应 schema，或者自行调整初始化策略。
+
+## 当前演示环境核验（2026-10-07）
+
+当前 Azure 演示后端使用外置 TiDB Cloud、MongoDB Atlas 和 Redis Cloud；本地开发与 CI 使用隔离 Docker 服务（MySQL 8.4、MongoDB 8.0、Redis 8.2）。测试端口由 `GDEI_UPGRADE_TEST_JDBC_BASE`、`GDEI_MONGO_TEST_PORT`、`GDEI_REDIS_TEST_PORT` 显式提供，合成 fixture 不与演示数据共用。
+
+MySQL 演示连接要求 TLS 和服务器身份校验，Atlas 使用 TLS。Redis Cloud 经用户确认是免费 Essentials 30 MB，按[供应商文档](https://redis.io/docs/latest/operate/rc/security/database-security/tls-ssl/)不支持 TLS，因此现有演示实例的 `REDIS_SSL_ENABLED=false` 仍是明确未满足的传输安全目标。不能直接切为 true 造成连接故障，也不自动新增费用。正式生产须采用支持 TLS 的服务并验证证书；这项演示限制不改变上文生产配置要求。
+
+客户端正式渠道上传本轮暂缓；后端/Web 部署与合成测试继续，不使用真实校园登录、充值、挂失或注销作为测试数据。

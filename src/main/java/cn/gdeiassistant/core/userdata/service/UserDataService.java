@@ -430,7 +430,7 @@ public class UserDataService {
         String token = exportDataDao.queryExportDataToken(user.getUsername());
         String url = null;
         if (StringUtils.isNotBlank(token)) {
-            url = storedAssets.generatePresignedUrl(null, "export/" + token + ".zip"
+            url = storedAssets.generatePresignedUrl("export/" + token + ".zip"
                     , 90, TimeUnit.MINUTES);
         }
         return url;

@@ -22,6 +22,13 @@ public class PageUtils {
         return normalizePageSize(start.intValue(), size.intValue());
     }
 
+    public static int nextStart(int start, int size) {
+        requireNonNegativeStart(start);
+        if (size <= 0) throw new IllegalArgumentException("请求参数不合法");
+        try { return Math.addExact(start, size); }
+        catch (ArithmeticException overflow) { throw new IllegalArgumentException("请求参数不合法", overflow); }
+    }
+
     public static int requireNonNegativeStart(int start) {
         if (start < 0) {
             throw new IllegalArgumentException("请求参数不合法");

@@ -89,10 +89,8 @@ class MarketplaceServiceTest {
         vo.setMarketplaceItem(item);
         vo.setProfile(new ProfileVO());
         when(marketplaceMapper.selectInfoByID(1)).thenReturn(vo);
-        when(storedAssets.generatePresignedUrl(isNull(),
-                eq("ershou/1_1.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("https://pic1.jpg");
-        when(storedAssets.generatePresignedUrl(isNull(),
-                eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
+        when(storedAssets.generatePresignedUrl(eq("ershou/1_1.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("https://pic1.jpg");
+        when(storedAssets.generatePresignedUrl(eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
         String publicId = "11111111-1111-4111-8111-111111111111";
         when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
 
@@ -131,7 +129,7 @@ class MarketplaceServiceTest {
     @Test
     void uploadItemPictureThrowsOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
-                .when(storedAssets).uploadObject(eq((String) null), anyString(), any(InputStream.class));
+                .when(storedAssets).uploadObject(anyString(), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1, 2, 3});
 
@@ -147,8 +145,8 @@ class MarketplaceServiceTest {
     @Test
     void deleteItemImages_callsR2DeleteForEachIndex() {
         marketplaceService.deleteItemImages(99, 3);
-        verify(storedAssets).deleteObject(eq((String) null), eq("ershou/99_1.jpg"));
-        verify(storedAssets).deleteObject(eq((String) null), eq("ershou/99_2.jpg"));
-        verify(storedAssets).deleteObject(eq((String) null), eq("ershou/99_3.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_1.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_2.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_3.jpg"));
     }
 }

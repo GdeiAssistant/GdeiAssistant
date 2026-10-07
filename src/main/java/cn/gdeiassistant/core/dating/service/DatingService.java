@@ -122,7 +122,7 @@ public class DatingService {
 
     public void uploadPicture(int id, InputStream inputStream) {
         try {
-            storedAssets.uploadObject(null, "dating/" + id + ".jpg", inputStream);
+            storedAssets.uploadObject("dating/" + id + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传室友信息图片失败，id={}", id, e);
             throw new RuntimeException("上传失败", e);
@@ -274,7 +274,7 @@ public class DatingService {
 
     public void deleteDatingImage(int id) {
         try {
-            storedAssets.deleteObject(null, "dating/" + id + ".jpg");
+            storedAssets.deleteObject("dating/" + id + ".jpg");
         } catch (Exception e) {
             logger.warn("删除室友信息图片失败，id={}", id, e);
         }
@@ -285,7 +285,7 @@ public class DatingService {
     }
 
     public String getRoommateProfilePictureURL(int id) {
-        return storedAssets.generatePresignedUrl(null, "dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl("dating/" + id + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     private void dtoToProfileEntity(DatingPublishDTO dto, DatingProfileEntity entity) {

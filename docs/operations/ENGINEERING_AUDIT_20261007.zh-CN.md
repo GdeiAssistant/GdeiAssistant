@@ -37,3 +37,6 @@ Web 163 项单测、25 项浏览器 E2E、语法检查和构建通过；完整�
 Android 本地单测/debug 构建及 PR 模拟器 CI 通过；微信 PR 的 226 项测试/lint/格式/34 页 smoke 通过。iOS 本机无完整 Xcode，style/localization/语法及 PR build smoke 通过，完整单元/UI 测试以实际 CI 为准。正式客户端上传暂缓。
 
 所有数据库测试只使用本轮隔离 Docker 内的合成记录，校园网络 fixture 只连接 loopback。未调用真实校园帐号或执行真实充值、挂失、注销、短信/邮件。
+
+PR 后续验证：删除新对象服务未使用的 bucket 参数（统一配置桶），复用 SecureRandom，并以 Math.addExact 防止个人列表游标溢出，新增边界断言。CodeQL 的 GET 写入告警经调用链核对为 lazy stored_asset 元数据缓存的误报：不会发布/删除业务对象或把待上传资源变为 READY；认证使用明确 Bearer header。只按具体告警记录 false positive，未关闭规则、认证、生命周期保护或分支保护。
+修后完整本地检查 679 测试、0 失败/0 跳过；行覆盖 48.93%，分支 37.99%。Android/微信/iOS 的最终 PR CI 均通过并合并；正式渠道上传仍暂缓。

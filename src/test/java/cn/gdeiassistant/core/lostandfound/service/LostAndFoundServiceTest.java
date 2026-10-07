@@ -37,7 +37,7 @@ class LostAndFoundServiceTest {
     @Test
     void uploadPicture_throwsOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
-                .when(storedAssets).uploadObject(eq((String) null), anyString(), any(InputStream.class));
+                .when(storedAssets).uploadObject(anyString(), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1});
         assertThrows(RuntimeException.class,
@@ -53,7 +53,7 @@ class LostAndFoundServiceTest {
     @Test
     void deleteLostAndFoundItemImages_callsR2DeleteForEachIndex() {
         lostAndFoundService.deleteLostAndFoundItemImages(77, 2);
-        verify(storedAssets).deleteObject(eq((String) null), eq("lostandfound/77_1.jpg"));
-        verify(storedAssets).deleteObject(eq((String) null), eq("lostandfound/77_2.jpg"));
+        verify(storedAssets).deleteObject(eq("lostandfound/77_1.jpg"));
+        verify(storedAssets).deleteObject(eq("lostandfound/77_2.jpg"));
     }
 }

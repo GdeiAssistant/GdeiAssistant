@@ -179,7 +179,7 @@ public class PhotographService {
 
     public void uploadPhotographItemPicture(int id, int index, InputStream inputStream) {
         try {
-            storedAssets.uploadObject(null, "photograph/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("photograph/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传拍好校园图片失败，id={}, index={}", id, index, e);
             throw new RuntimeException("拍好校园图片上传失败", e);
@@ -205,7 +205,7 @@ public class PhotographService {
     public void deletePhotographImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                storedAssets.deleteObject(null, "photograph/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("photograph/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除拍好校园图片失败，id={}，index={}", id, i, e);
             }
@@ -213,7 +213,7 @@ public class PhotographService {
     }
 
     public String getPhotographItemPictureURL(int id, int index) {
-        return storedAssets.generatePresignedUrl(null, "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl("photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     @Transactional("appTransactionManager")

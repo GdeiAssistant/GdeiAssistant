@@ -84,7 +84,7 @@ class DatingServiceTest {
     void uploadPicture_throwsRuntimeExceptionOnR2Failure() {
         InputStream stream = new ByteArrayInputStream("fake".getBytes());
         doThrow(new RuntimeException("R2 unavailable"))
-                .when(storedAssets).uploadObject(isNull(), anyString(), any(InputStream.class));
+                .when(storedAssets).uploadObject(anyString(), any(InputStream.class));
 
         assertThrows(RuntimeException.class, () -> datingService.uploadPicture(1, stream));
     }
@@ -159,7 +159,7 @@ class DatingServiceTest {
     @Test
     void deleteDatingImage_callsR2DeleteObject() {
         datingService.deleteDatingImage(42);
-        verify(storedAssets).deleteObject(eq((String) null), eq("dating/42.jpg"));
+        verify(storedAssets).deleteObject(eq("dating/42.jpg"));
     }
 
     @Test

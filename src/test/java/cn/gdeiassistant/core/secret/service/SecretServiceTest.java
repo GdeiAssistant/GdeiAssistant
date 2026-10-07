@@ -63,7 +63,7 @@ class SecretServiceTest {
     @Test
     void uploadVoiceSecretThrowsRuntimeExceptionOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
-                .when(storedAssets).uploadObject(eq((String) null), eq("secret/voice/1.mp3"), any(InputStream.class));
+                .when(storedAssets).uploadObject(eq("secret/voice/1.mp3"), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1, 2, 3});
 

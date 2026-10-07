@@ -76,8 +76,8 @@ class UserProfileServiceTest {
     void allAvatarOperationsUseOwnerKeysAndBoundedUrls() throws Exception {
         login();
         when(storedAssets.generatePresignedUrl(
-                        eq((String) null), anyString(), eq(30L), eq(TimeUnit.MINUTES)))
-                .thenAnswer(i -> "https://synthetic.invalid/" + i.getArgument(1));
+                        anyString(), eq(30L), eq(TimeUnit.MINUTES)))
+                .thenAnswer(i -> "https://synthetic.invalid/" + i.getArgument(0));
         assertTrue(service.getSelfUserAvatar("session").endsWith("avatar/owner.jpg"));
         assertTrue(
                 service.getSelfUserHighDefinitionAvatar("session").endsWith("avatar/owner_hd.jpg"));
@@ -86,8 +86,8 @@ class UserProfileServiceTest {
         verify(uploadService).moveUpload("session", "uploads/image", "avatar/owner.jpg");
         verify(uploadService).moveUpload("session", "uploads/hd", "avatar/owner_hd.jpg");
         service.deleteAvatar("session");
-        verify(storedAssets).deleteObject((String) null, "avatar/owner.jpg");
-        verify(storedAssets).deleteObject((String) null, "avatar/owner_hd.jpg");
+        verify(storedAssets).deleteObject("avatar/owner.jpg");
+        verify(storedAssets).deleteObject("avatar/owner_hd.jpg");
         assertThrows(IllegalArgumentException.class, () -> service.deleteAvatarForUsername(" "));
     }
 
@@ -97,8 +97,8 @@ class UserProfileServiceTest {
         InputStream normal = mock(InputStream.class), hd = mock(InputStream.class);
         service.updateAvatar("session", normal);
         service.updateHighDefinitionAvatar("session", hd);
-        verify(storedAssets).uploadObject((String) null, "avatar/owner.jpg", normal);
-        verify(storedAssets).uploadObject((String) null, "avatar/owner_hd.jpg", hd);
+        verify(storedAssets).uploadObject("avatar/owner.jpg", normal);
+        verify(storedAssets).uploadObject("avatar/owner_hd.jpg", hd);
         verify(normal).close();
         verify(hd).close();
     }

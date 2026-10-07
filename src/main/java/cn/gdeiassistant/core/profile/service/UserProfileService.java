@@ -146,7 +146,7 @@ public class UserProfileService {
      * @return
      */
     public String getOtherUserAvatar(String username) {
-        return storedAssets.generatePresignedUrl(null, "avatar/"
+        return storedAssets.generatePresignedUrl("avatar/"
                 + username + ".jpg", 30, TimeUnit.MINUTES);
     }
 
@@ -171,7 +171,7 @@ public class UserProfileService {
      * @return
      */
     public String getOtherUserHighDefinitionAvatar(String username) {
-        return storedAssets.generatePresignedUrl(null, "avatar/"
+        return storedAssets.generatePresignedUrl("avatar/"
                 + username + "_hd.jpg", 30, TimeUnit.MINUTES);
     }
 
@@ -187,7 +187,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        storedAssets.uploadObject(null, "avatar/"
+        storedAssets.uploadObject("avatar/"
                 + user.getUsername() + ".jpg", inputStream);
         try {
             if (inputStream != null) {
@@ -211,7 +211,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        storedAssets.uploadObject(null, "avatar/"
+        storedAssets.uploadObject("avatar/"
                         + user.getUsername() + "_hd.jpg"
                 , inputStream);
         try {
@@ -256,8 +256,8 @@ public class UserProfileService {
     /** Internal cleanup entry; its argument is an identity, not a session ID. */
     public void deleteAvatarForUsername(String username) {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Missing avatar owner");
-        storedAssets.deleteObject(null, "avatar/" + username + ".jpg");
-        storedAssets.deleteObject(null, "avatar/" + username + "_hd.jpg");
+        storedAssets.deleteObject("avatar/" + username + ".jpg");
+        storedAssets.deleteObject("avatar/" + username + "_hd.jpg");
     }
 
     /**

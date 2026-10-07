@@ -94,7 +94,7 @@ public class LostAndFoundService {
         List<LostAndFoundItemVO> voList = new ArrayList<>();
         for (LostAndFoundItemEntity e : list) {
             e.setUsername(user.getUsername());
-            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl(null, "lostandfound/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
+            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl("lostandfound/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
             voList.add(lostAndFoundItemConverter.toVO(e));
         }
         return voList;
@@ -174,7 +174,7 @@ public class LostAndFoundService {
 
     public void uploadLostAndFoundItemPicture(int id, int index, InputStream inputStream) {
         try {
-            storedAssets.uploadObject(null, "lostandfound/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("lostandfound/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传失物招领图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("上传失败", e);
@@ -196,7 +196,7 @@ public class LostAndFoundService {
     public void deleteLostAndFoundItemImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                storedAssets.deleteObject(null, "lostandfound/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("lostandfound/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除失物招领图片失败，id={}，index={}", id, i, e);
             }
@@ -210,7 +210,7 @@ public class LostAndFoundService {
     public List<String> getLostAndFoundItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            String url = storedAssets.generatePresignedUrl(null, "lostandfound/" + id + "_" + i + ".jpg", 30, TimeUnit.MINUTES);
+            String url = storedAssets.generatePresignedUrl("lostandfound/" + id + "_" + i + ".jpg", 30, TimeUnit.MINUTES);
             if (StringUtils.isNotBlank(url)) pictureURL.add(url);
             else break;
         }

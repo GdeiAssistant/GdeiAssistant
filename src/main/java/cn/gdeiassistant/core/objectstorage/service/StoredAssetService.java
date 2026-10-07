@@ -39,7 +39,7 @@ public class StoredAssetService {
         }
     }
 
-    public void uploadObject(String bucket, String key, InputStream input) {
+    public void uploadObject(String key, InputStream input) {
         if (input == null) throw new IllegalArgumentException("Missing upload");
         try {
             boolean voice = key.startsWith("secret/voice/");
@@ -54,7 +54,7 @@ public class StoredAssetService {
         } catch (IOException e) { throw new IllegalStateException("Upload could not be read", e); }
     }
 
-    public void deleteObject(String bucket, String key) {
+    public void deleteObject(String key) {
         independent.executeWithoutResult(status -> assets.deleting(storage.getBucketName(), key));
         independent.executeWithoutResult(status -> {
             var current = assets.lock(storage.getBucketName(), key);
@@ -64,7 +64,7 @@ public class StoredAssetService {
         });
     }
 
-    public String generatePresignedUrl(String bucket, String key, long expire, TimeUnit unit) {
+    public String generatePresignedUrl(String key, long expire, TimeUnit unit) {
         if (!storage.isEnabled()) return "";
         var record = assets.find(storage.getBucketName(), key);
         if (record != null && "READY".equals(record.get("status"))) return storage.generateKnownObjectUrl(null, key, expire, unit);

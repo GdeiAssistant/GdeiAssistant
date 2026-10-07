@@ -64,22 +64,22 @@ class StoredAssetMySqlTest {
     }
     @Test void sqlFailureAfterObjectUploadKeepsPendingAndDoesNotAdvertiseUrl() throws Exception {
         var business=new TransactionTemplate(transactions);
-        assertThrows(IllegalStateException.class,()->business.executeWithoutResult(status->{assets.uploadObject(null,"topic/2_1.jpg",new java.io.ByteArrayInputStream(uncheckedPng()));throw new IllegalStateException("synthetic SQL failure");}));
+        assertThrows(IllegalStateException.class,()->business.executeWithoutResult(status->{assets.uploadObject("topic/2_1.jpg",new java.io.ByteArrayInputStream(uncheckedPng()));throw new IllegalStateException("synthetic SQL failure");}));
         assertEquals("PENDING",mapper.find("synthetic","topic/2_1.jpg").get("status"));
-        assertEquals("",assets.generatePresignedUrl(null,"topic/2_1.jpg",30,TimeUnit.MINUTES));
+        assertEquals("",assets.generatePresignedUrl("topic/2_1.jpg",30,TimeUnit.MINUTES));
         verify(storage,never()).generateKnownObjectUrl(any(),any(),anyLong(),any());
     }
     byte[] uncheckedPng(){try{return png();}catch(Exception e){throw new RuntimeException(e);}}
     @Test void failedDeleteRetainsRetryAndSuccessfulRetryRemovesMetadata() {
         assets.pending("old",null,"image/png",50);assets.ready("old");
         doThrow(new IllegalStateException("synthetic outage")).doNothing().when(storage).deleteObjectStrict(null,"old");
-        assertThrows(IllegalStateException.class,()->assets.deleteObject(null,"old"));assertEquals("DELETING",mapper.find("synthetic","old").get("status"));
-        assets.deleteObject(null,"old");assertNull(mapper.find("synthetic","old"));verify(storage,times(2)).deleteObjectStrict(null,"old");
+        assertThrows(IllegalStateException.class,()->assets.deleteObject("old"));assertEquals("DELETING",mapper.find("synthetic","old").get("status"));
+        assets.deleteObject("old");assertNull(mapper.find("synthetic","old"));verify(storage,times(2)).deleteObjectStrict(null,"old");
     }
     @Test void readyUrlsHaveNoHeadAndCleanupRechecksConcurrentRenewal() {
         assets.pending("ready",null,"image/png",40);assets.ready("ready");
         when(storage.generateKnownObjectUrl(null,"ready",30,TimeUnit.MINUTES)).thenReturn("https://synthetic.invalid/signed");
-        assertEquals("https://synthetic.invalid/signed",assets.generatePresignedUrl(null,"ready",30,TimeUnit.MINUTES));verify(storage,never()).headObjectMetadata(any());
+        assertEquals("https://synthetic.invalid/signed",assets.generatePresignedUrl("ready",30,TimeUnit.MINUTES));verify(storage,never()).headObjectMetadata(any());
         assets.pending("renewed",null,"image/png",50);sql.update("UPDATE stored_asset SET updated_at=DATE_SUB(NOW(),INTERVAL 21 MINUTE) WHERE object_key='renewed'");
         assertEquals(1,mapper.cleanupCandidates().size());assets.pending("renewed",null,"image/png",60);assets.cleanAbandonedUploads();
         verify(storage,never()).deleteObjectStrict(any(),any());assertEquals(60L,((Number)mapper.find("synthetic","renewed").get("byte_length")).longValue());
@@ -92,9 +92,9 @@ class StoredAssetMySqlTest {
     }
     @Test void invalidImageCannotPublishAndMissingObjectsAreNegativeCached() {
         byte[] fake=new byte[20];fake[0]=(byte)137;fake[1]='P';fake[2]='N';fake[3]='G';
-        assertThrows(IllegalArgumentException.class,()->assets.uploadObject(null,"topic/invalid.jpg",new java.io.ByteArrayInputStream(fake)));
+        assertThrows(IllegalArgumentException.class,()->assets.uploadObject("topic/invalid.jpg",new java.io.ByteArrayInputStream(fake)));
         assertEquals(0,sql.queryForObject("SELECT COUNT(*) FROM stored_asset",Integer.class));
-        assertEquals("",assets.generatePresignedUrl(null,"absent",30,TimeUnit.MINUTES));assertEquals("",assets.generatePresignedUrl(null,"absent",30,TimeUnit.MINUTES));
+        assertEquals("",assets.generatePresignedUrl("absent",30,TimeUnit.MINUTES));assertEquals("",assets.generatePresignedUrl("absent",30,TimeUnit.MINUTES));
         verify(storage,times(1)).headObjectMetadata("absent");
     }
     @Test void socialBatchProjectionPreservesPrivacyBlocksAndClosedAccountSemantics() {

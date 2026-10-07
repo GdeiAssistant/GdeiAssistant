@@ -101,7 +101,7 @@ public class MarketplaceService {
         applyPublicAuthors(list);
         for (MarketplaceItemEntity e : list) {
             e.setUsername(user.getUsername());
-            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl(null, "ershou/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
+            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl("ershou/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
         }
         return list;
     }
@@ -203,7 +203,7 @@ public class MarketplaceService {
 
     public void uploadItemPicture(int id, int index, InputStream inputStream) {
         try {
-            storedAssets.uploadObject(null, "ershou/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("ershou/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传二手交易图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("图片上传失败", e);
@@ -225,7 +225,7 @@ public class MarketplaceService {
     public void deleteItemImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                storedAssets.deleteObject(null, "ershou/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("ershou/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除二手交易图片失败，id={}，index={}", id, i, e);
             }
@@ -239,7 +239,7 @@ public class MarketplaceService {
     public List<String> getItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            String url = storedAssets.generatePresignedUrl(null, "ershou/" + id + "_" + i + ".jpg"
+            String url = storedAssets.generatePresignedUrl("ershou/" + id + "_" + i + ".jpg"
                     , 30, TimeUnit.MINUTES);
             if (StringUtils.isNotBlank(url)) {
                 pictureURL.add(url);

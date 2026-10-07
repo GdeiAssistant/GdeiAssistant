@@ -106,7 +106,7 @@ public class MarketplaceController {
         }
         return new DataJsonResult<>(true, new MarketplaceMineResponse(
                 doing.stream().map(this::response).toList(), sold.stream().map(this::response).toList(),
-                off.stream().map(this::response).toList(), hasMore, hasMore ? start + 25 : null));
+                off.stream().map(this::response).toList(), hasMore, hasMore ? PageUtils.nextStart(start, 25) : null));
     }
 
     @RateLimit(maxRequests = 5, windowSeconds = 60)

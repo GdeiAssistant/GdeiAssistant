@@ -220,7 +220,6 @@ class UserDataExportTest {
         when(exports.queryExportDataToken("owner")).thenReturn("synthetic-export");
         when(exports.queryExportingDataToken("owner")).thenReturn("running");
         when(storedAssets.generatePresignedUrl(
-                        (String) null,
                         "export/synthetic-export.zip",
                         90,
                         TimeUnit.MINUTES))

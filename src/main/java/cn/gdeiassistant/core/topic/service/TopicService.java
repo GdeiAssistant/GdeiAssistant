@@ -159,12 +159,12 @@ public class TopicService {
     }
 
     public String downloadTopicItemPicture(int id, int index) {
-        return storedAssets.generatePresignedUrl(null, "topic/" + id + "_" + index + ".jpg", 90, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl("topic/" + id + "_" + index + ".jpg", 90, TimeUnit.MINUTES);
     }
 
     public void uploadTopicItemPicture(int id, int index, InputStream inputStream) {
         try {
-            storedAssets.uploadObject(null, "topic/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("topic/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传话题图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("话题图片上传失败", e);
@@ -211,7 +211,7 @@ public class TopicService {
     public void deleteTopicImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                storedAssets.deleteObject(null, "topic/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("topic/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除话题图片失败，id={}，index={}", id, i, e);
             }

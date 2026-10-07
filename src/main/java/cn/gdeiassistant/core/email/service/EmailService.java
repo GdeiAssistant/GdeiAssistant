@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
+    private static final java.security.SecureRandom VERIFICATION_CODE_RANDOM = new java.security.SecureRandom();
+
     @Autowired
     private EmailMapper emailMapper;
 
@@ -46,7 +48,7 @@ public class EmailService {
      */
     public void getEmailVerificationCode(String email) throws SendEmailException {
         //生成随机数
-        int randomCode = 100000 + new java.security.SecureRandom().nextInt(900000);
+        int randomCode = 100000 + VERIFICATION_CODE_RANDOM.nextInt(900000);
         //写入Redis缓存记录
         verificationCodeDao.saveEmailVerificationCode(email, randomCode);
         //发送电子邮件验证码

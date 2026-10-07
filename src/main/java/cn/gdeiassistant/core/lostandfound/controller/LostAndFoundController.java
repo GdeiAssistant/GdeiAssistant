@@ -68,7 +68,7 @@ public class LostAndFoundController {
         data.put("found", found);
         data.put("didfound", didfound);
         data.put("hasMore", hasMore);
-        data.put("nextStart", hasMore ? start + 25 : null);
+        data.put("nextStart", hasMore ? PageUtils.nextStart(start, 25) : null);
         return new DataJsonResult<>(true, data);
     }
 

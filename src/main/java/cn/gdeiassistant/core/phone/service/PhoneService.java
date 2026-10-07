@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PhoneService {
 
+    private static final java.security.SecureRandom VERIFICATION_CODE_RANDOM = new java.security.SecureRandom();
+
     @Autowired
     private PhoneMapper phoneMapper;
 
@@ -54,7 +56,7 @@ public class PhoneService {
      */
     public void getPhoneVerificationCode(int code, String phone) throws SendSMSException {
         //生成随机数
-        int randomCode = 100000 + new java.security.SecureRandom().nextInt(900000);
+        int randomCode = 100000 + VERIFICATION_CODE_RANDOM.nextInt(900000);
         //写入Redis缓存记录
         verificationCodeDao.savePhoneVerificationCode(code, phone, randomCode);
         try {

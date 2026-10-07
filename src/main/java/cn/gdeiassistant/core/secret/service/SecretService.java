@@ -98,12 +98,12 @@ public class SecretService {
         if (voiceObjectKey == null) {
             return "";
         }
-        return storedAssets.generatePresignedUrl(null, voiceObjectKey, 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl(voiceObjectKey, 30, TimeUnit.MINUTES);
     }
 
     public void uploadVoiceSecret(int id, InputStream inputStream) throws RuntimeException {
         try {
-            storedAssets.uploadObject(null, "secret/voice/" + id + ".mp3", inputStream);
+            storedAssets.uploadObject("secret/voice/" + id + ".mp3", inputStream);
         } catch (Exception e) {
             logger.error("上传树洞语音失败，id={}", id, e);
             throw new RuntimeException("语音上传失败", e);
@@ -136,7 +136,7 @@ public class SecretService {
         String confirmedKey = storedAssets.firstReadyKey(candidates);
         if (confirmedKey != null) return confirmedKey;
         for (String candidate : candidates) {
-            String url = storedAssets.generatePresignedUrl(null, candidate, 1, TimeUnit.MINUTES);
+            String url = storedAssets.generatePresignedUrl(candidate, 1, TimeUnit.MINUTES);
             if (url != null && !url.isEmpty()) {
                 return candidate;
             }
@@ -175,7 +175,7 @@ public class SecretService {
         String[] extensions = new String[]{".mp3", ".webm", ".ogg", ".wav", ".m4a", ".mp4", ".aac"};
         for (String ext : extensions) {
             try {
-                storedAssets.deleteObject(null, "secret/voice/" + id + ext);
+                storedAssets.deleteObject("secret/voice/" + id + ext);
             } catch (Exception e) {
                 logger.warn("删除树洞语音失败，id={}，extension={}", id, ext, e);
             }

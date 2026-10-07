@@ -1,8 +1,6 @@
 package cn.gdeiassistant.common.tools.springutils;
 
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
-import cn.gdeiassistant.core.feedback.service.FeedbackService;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import org.springframework.stereotype.Component;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -23,7 +19,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 public class EmailUtils {
 
-    private final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
+    private final Logger logger = LoggerFactory.getLogger(EmailUtils.class);
 
     @Autowired(required = false)
     private JavaMailSender javaMailSender;
@@ -35,12 +31,11 @@ public class EmailUtils {
      * @param recipient
      * @param subject
      * @param text
-     * @param inputStreams
+     * @param attachments
      * @throws MessagingException
-     * @throws IOException
      */
     public void sendEmail(String sender, String recipient, String subject, String text
-            , InputStream[] inputStreams) throws MessagingException, IOException {
+            , byte[][] attachments) throws MessagingException {
         if (javaMailSender != null) {
             MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMailMessage, true
@@ -49,9 +44,9 @@ public class EmailUtils {
             mimeMessageHelper.setTo(recipient);
             mimeMessageHelper.setSubject(subject);
             mimeMessageHelper.setText(text);
-            for (int i = 1; i <= inputStreams.length; i++) {
+            for (int i = 1; i <= attachments.length; i++) {
                 mimeMessageHelper.addAttachment("attachment-image-" + i + ".jpg"
-                        , new ByteArrayResource(IOUtils.toByteArray(inputStreams[i - 1])));
+                        , new ByteArrayResource(attachments[i - 1]));
             }
             javaMailSender.send(mimeMailMessage);
             return;

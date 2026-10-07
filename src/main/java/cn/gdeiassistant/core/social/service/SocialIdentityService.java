@@ -89,6 +89,17 @@ public class SocialIdentityService {
     @Autowired
     private cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper summaries;
 
+    public java.util.Map<Long, String> findPublicIds(java.util.Collection<Long> ids) {
+        var result = new java.util.HashMap<Long, String>();
+        if (ids.isEmpty()) return result;
+        for (var row : summaries.selectPublicIds(ids.stream().distinct().toList())) {
+            if (row.get("publicId") instanceof String publicId) {
+                result.put(((Number) row.get("userId")).longValue(), publicId);
+            }
+        }
+        return result;
+    }
+
     public java.util.Map<Long,SocialUserDTO> buildSocialUsers(CampusAccountView viewer, java.util.Collection<Long> ids) {
         var result = new java.util.HashMap<Long,SocialUserDTO>();
         if (ids.isEmpty()) return result;

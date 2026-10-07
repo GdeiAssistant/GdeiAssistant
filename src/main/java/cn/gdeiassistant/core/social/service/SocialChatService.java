@@ -150,9 +150,11 @@ public class SocialChatService {
         if (after == null) {
             Collections.reverse(page);
         }
+        Map<Long, String> senderPublicIds = page.isEmpty() ? Collections.emptyMap()
+                : identityService.findPublicIds(page.stream().map(ChatMessageEntity::getSenderId).distinct().toList());
         List<ChatMessageDTO> items = new ArrayList<>();
         for (ChatMessageEntity row : page) {
-            items.add(toMessageDTO(row));
+            items.add(toMessageDTO(row, senderPublicIds.getOrDefault(row.getSenderId(), "")));
         }
         String nextCursor = null;
         if (hasMore && !page.isEmpty()) {

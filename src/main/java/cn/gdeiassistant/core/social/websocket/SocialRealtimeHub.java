@@ -23,17 +23,20 @@ public class SocialRealtimeHub {
     private final ConcurrentHashMap<Long, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
 
     public void register(long userId, WebSocketSession session) {
-        userSessions.computeIfAbsent(userId, id -> new CopyOnWriteArraySet<>()).add(session);
+        userSessions.compute(userId, (id, sessions) -> {
+            if (sessions == null) {
+                sessions = new CopyOnWriteArraySet<>();
+            }
+            sessions.add(session);
+            return sessions;
+        });
     }
 
     public void unregister(long userId, WebSocketSession session) {
-        Set<WebSocketSession> sessions = userSessions.get(userId);
-        if (sessions != null) {
+        userSessions.computeIfPresent(userId, (id, sessions) -> {
             sessions.remove(session);
-            if (sessions.isEmpty()) {
-                userSessions.remove(userId);
-            }
-        }
+            return sessions.isEmpty() ? null : sessions;
+        });
     }
 
     public void disconnectUser(long userId) {

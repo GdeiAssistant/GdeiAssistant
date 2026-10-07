@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.mail.MessagingException;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class FeedbackController {
@@ -51,22 +49,13 @@ public class FeedbackController {
      * @return
      */
     @RequestMapping(value = "/api/feedback/function", method = RequestMethod.POST)
-    public JsonResult postFunctionalFeedback(HttpServletRequest request, @Validated Feedback feedback, MultipartFile[] images) throws IOException, MessagingException {
-        List<InputStream> inputStreamList = new ArrayList<>();
-        if (images != null) {
-            if (images.length > 9) {
-                return new JsonResult(false, "不合法的图片文件");
-            }
-            for (MultipartFile file : images) {
-                if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    return new JsonResult(false, "不合法的图片文件");
-                }
-                InputStream inputStream = file.getInputStream();
-                inputStreamList.add(inputStream);
-            }
+    public JsonResult postFunctionalFeedback(HttpServletRequest request, @Validated Feedback feedback, MultipartFile[] images) throws IOException, SendEmailException {
+        byte[][] attachments = readAttachments(images);
+        if (attachments == null) {
+            return new JsonResult(false, "不合法的图片文件");
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        feedbackService.sendFeedbackEmail(sessionId, feedback.getContent(), inputStreamList.toArray(new InputStream[0]));
+        feedbackService.sendFeedbackEmail(sessionId, feedback.getContent(), attachments);
         return new JsonResult(true);
     }
 
@@ -78,26 +67,41 @@ public class FeedbackController {
      * @param images
      * @return
      * @throws IOException
-     * @throws MessagingException
+     * @throws SendEmailException
      */
     @RequestMapping(value = "/api/feedback/ticket", method = RequestMethod.POST)
-    public JsonResult postTicketFeedback(HttpServletRequest request, @Validated ClassifiedFeedback feedback, MultipartFile[] images) throws IOException, MessagingException {
-        List<InputStream> inputStreamList = new ArrayList<>();
-        if (images != null) {
-            if (images.length > 9) {
-                return new JsonResult(false, "不合法的图片文件");
-            }
-            for (MultipartFile file : images) {
-                if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
-                    return new JsonResult(false, "不合法的图片文件");
-                }
-                InputStream inputStream = file.getInputStream();
-                inputStreamList.add(inputStream);
-            }
+    public JsonResult postTicketFeedback(HttpServletRequest request, @Validated ClassifiedFeedback feedback, MultipartFile[] images) throws IOException, SendEmailException {
+        byte[][] attachments = readAttachments(images);
+        if (attachments == null) {
+            return new JsonResult(false, "不合法的图片文件");
         }
         String sessionId = (String) request.getAttribute("sessionId");
         feedbackService.sendTicketEmail(sessionId, feedback.getContent(), feedback.getType()
-                , inputStreamList.toArray(new InputStream[0]));
+                , attachments);
         return new JsonResult(true);
+    }
+    /** Validate all files before opening streams; no request-owned resource leaves this method. */
+    private byte[][] readAttachments(MultipartFile[] images) throws IOException {
+        if (images == null) {
+            return new byte[0][];
+        }
+        if (images.length > 9) {
+            return null;
+        }
+        for (MultipartFile file : images) {
+            if (file == null || file.isEmpty() || file.getSize() >= ValueConstantUtils.MAX_IMAGE_SIZE) {
+                return null;
+            }
+        }
+        byte[][] attachments = new byte[images.length][];
+        for (int i = 0; i < images.length; i++) {
+            try (InputStream stream = images[i].getInputStream()) {
+                attachments[i] = stream.readNBytes(ValueConstantUtils.MAX_IMAGE_SIZE);
+            }
+            if (attachments[i].length == 0 || attachments[i].length >= ValueConstantUtils.MAX_IMAGE_SIZE) {
+                return null;
+            }
+        }
+        return attachments;
     }
 }

@@ -27,7 +27,6 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.utils.LocationUtils;
-import cn.gdeiassistant.common.tools.utils.ReflectionUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
@@ -155,12 +154,12 @@ public class UserDataService {
                     }
                 }
                 phone.setPhone(stringBuilder.toString());
-                data.put("phone", phone);
+                data.put("phone", UserDataExportProjection.phone(phone));
             }
             //获取个人资料信息
             ProfileEntity profile = appDataMapper.selectUserProfile(user.getUsername());
             if (profile != null) {
-                data.put("profile", profile);
+                data.put("profile", UserDataExportProjection.profile(profile));
             }
             //获取个人简介信息
             Introduction introduction = appDataMapper.selectUserIntroduction(user.getUsername());
@@ -170,22 +169,22 @@ public class UserDataService {
             //获取用户隐私设置
             PrivacyEntity privacy = appDataMapper.selectUserPrivacy(user.getUsername());
             if (privacy != null) {
-                data.put("privacy", privacy);
+                data.put("privacy", UserDataExportProjection.privacy(privacy));
             }
             //获取保存的四六级准考证号
             CetNumberEntity cetNumber = appDataMapper.selectUserCetNumber(user.getUsername());
             if (cetNumber != null && cetNumber.getNumber() != null) {
-                data.put("cet", cetNumber);
+                data.put("cet", UserDataExportProjection.cet(cetNumber));
             }
             //获取全民快递订单信息
             List<DeliveryOrderEntity> deliveryOrderList = appDataMapper.selectUserDeliveryOrderList(user.getUsername());
             if (deliveryOrderList != null && !deliveryOrderList.isEmpty()) {
-                data.put("deliveryOrders", deliveryOrderList);
+                data.put("deliveryOrders", deliveryOrderList.stream().map(UserDataExportProjection::deliveryOrder).toList());
             }
             //获取全名快递交易信息
             List<DeliveryTradeEntity> deliveryTradeList = appDataMapper.selectUserDeliveryTradeList(user.getUsername());
             if (deliveryTradeList != null && !deliveryTradeList.isEmpty()) {
-                data.put("deliveryTrades", deliveryTradeList);
+                data.put("deliveryTrades", deliveryTradeList.stream().map(UserDataExportProjection::deliveryTrade).toList());
             }
             //获取二手交易信息
             List<MarketplaceItemEntity> secondhandItemList = appDataMapper.selectUserErshouItemList(user.getUsername());
@@ -202,7 +201,7 @@ public class UserDataService {
                         }
                     }
                 }
-                data.put("ershouItems", secondhandItemList);
+                data.put("ershouItems", secondhandItemList.stream().map(UserDataExportProjection::marketplaceItem).toList());
             }
             //获取失物招领信息
             List<LostAndFoundItemEntity> lostAndFoundItemList = appDataMapper.selectUserLostAndFoundItemList(user.getUsername());
@@ -219,7 +218,7 @@ public class UserDataService {
                         }
                     }
                 }
-                data.put("lostandfoundItems", lostAndFoundItemList);
+                data.put("lostandfoundItems", lostAndFoundItemList.stream().map(UserDataExportProjection::lostAndFoundItem).toList());
             }
             //获取校园树洞信息
             List<SecretContentEntity> secretList = appDataMapper.selectUserSecretItemList(user.getUsername());
@@ -250,7 +249,7 @@ public class UserDataService {
                         }
                     }
                 }
-                data.put("secretItems", secretList);
+                data.put("secretItems", secretList.stream().map(UserDataExportProjection::secretContent).toList());
             }
             //获取拍好校园信息
             List<PhotographEntity> photographList = appDataMapper.selectUserPhotographItemList(user.getUsername());
@@ -267,35 +266,19 @@ public class UserDataService {
                         }
                     }
                 }
-                data.put("photographItems", photographList);
+                data.put("photographItems", photographList.stream().map(UserDataExportProjection::photograph).toList());
             }
             //获取表白墙信息
             List<ExpressEntity> expressList = appDataMapper.selectUserExpressItemList(user.getUsername());
             if (expressList != null && !expressList.isEmpty()) {
-                data.put("expressItems", expressList);
+                data.put("expressItems", expressList.stream().map(UserDataExportProjection::express).toList());
             }
             //获取校园卡充值日志记录
             List<ChargeLog> chargeLogList = logDataMapper.selectChargeLogList(user.getUsername());
             if (chargeLogList != null && !chargeLogList.isEmpty()) {
-                data.put("chargeLogs", chargeLogList);
+                data.put("chargeLogs", chargeLogList.stream().map(UserDataExportProjection::chargeLog).toList());
             }
-            //移除Map中属性值为空的属性
-            Map<String, Object> map = new HashMap<>();
-            for (Map.Entry<String, Object> entry : data.entrySet()) {
-                if (!(entry.getValue() instanceof String) && !(entry.getValue() instanceof List)) {
-                    Map<String, Object> temp = ReflectionUtils.getAllNotNullObjectFields(entry.getValue(), entry.getValue().getClass());
-                    map.put(entry.getKey(), temp);
-                } else if (List.class.isAssignableFrom(entry.getValue().getClass())) {
-                    List<Map<String, Object>> list = new ArrayList<>();
-                    for (Object object : (List) entry.getValue()) {
-                        Map<String, Object> temp = ReflectionUtils.getAllNotNullObjectFields(object, object.getClass());
-                        list.add(temp);
-                    }
-                    map.put(entry.getKey(), list);
-                } else {
-                    map.put(entry.getKey(), entry.getValue());
-                }
-            }
+            Map<String, Object> map = data;
             //使用字符串描述值替换部分参数值
             if (map.containsKey("deliveryOrders")) {
                 for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryOrders")) {

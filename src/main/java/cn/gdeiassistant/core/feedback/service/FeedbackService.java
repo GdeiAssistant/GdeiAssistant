@@ -10,12 +10,11 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.EmailUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
-import java.io.IOException;
-import java.io.InputStream;
+import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
+import org.springframework.mail.MailException;
 
 @Service
 public class FeedbackService {
@@ -55,30 +54,27 @@ public class FeedbackService {
                 && StringUtils.isNotBlank(feedbackEmail) && StringUtils.isNotBlank(ticketEmail);
     }
 
-    /**
-     * 发送意见建议反馈邮件
-     */
-    @Async
-    public void sendFeedbackEmail(String sessionId, String content, InputStream[] inputStreams) throws MessagingException, IOException {
-        if (!isEmailEnabled()) {
-            throw new FeatureNotEnabledException("邮件服务未启用，无法提交工单/反馈");
-        }
-        User user = userCertificateService.getUserLoginCertificate(sessionId);
-        emailUtils.sendEmail(senderEmail, feedbackEmail, "用户" + user.getUsername() + "提交的意见建议反馈"
-                , content, inputStreams);
+    /** SMTP acceptance is required before the HTTP endpoint reports success. */
+    public void sendFeedbackEmail(String sessionId, String content, byte[][] attachments) throws SendEmailException {
+        sendEmail(sessionId, content, feedbackEmail, "提交的意见建议反馈", attachments);
     }
 
-    /**
-     * 发送故障工单反馈邮件
-     */
-    @Async
-    public void sendTicketEmail(String sessionId, String content, String type, InputStream[] inputStreams) throws MessagingException, IOException {
+    public void sendTicketEmail(String sessionId, String content, String type, byte[][] attachments) throws SendEmailException {
+        sendEmail(sessionId, content, ticketEmail, "提交的" + type + "分类故障工单", attachments);
+    }
+
+    private void sendEmail(String sessionId, String content, String recipient, String subject,
+                           byte[][] attachments) throws SendEmailException {
         if (!isEmailEnabled()) {
             throw new FeatureNotEnabledException("邮件服务未启用，无法提交工单/反馈");
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        emailUtils.sendEmail(senderEmail, ticketEmail, "用户" + user.getUsername() + "提交的"
-                + type + "分类故障工单", content, inputStreams);
+        try {
+            emailUtils.sendEmail(senderEmail, recipient, "用户" + user.getUsername() + subject, content, attachments);
+        } catch (MessagingException | MailException e) {
+            // No automatic resend: SMTP errors can have an unknown remote delivery outcome.
+            throw new SendEmailException("反馈邮件提交失败，请稍后重试");
+        }
     }
 
     /**

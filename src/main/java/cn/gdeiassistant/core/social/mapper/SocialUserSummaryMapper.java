@@ -5,6 +5,11 @@ import java.util.*;
 
 /** Request-scoped public projection, without campus credentials. */
 public interface SocialUserSummaryMapper {
+    /** Message rendering needs public IDs only, including retained IDs of closed users. */
+    @Select("<script>SELECT id AS userId, public_id AS publicId FROM app_user WHERE id IN " +
+            "<foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+    List<Map<String, Object>> selectPublicIds(@Param("ids") List<Long> ids);
+
     @Select("<script>" +
             "SELECT au.id AS userId, au.public_id AS publicId, au.status, COALESCE(NULLIF(p.nickname,''),'用户') AS nickname, " +
             "CASE WHEN (au.id=#{viewerId} OR pr.is_introduction_open=1) THEN intro.introduction ELSE NULL END AS introduction, " +

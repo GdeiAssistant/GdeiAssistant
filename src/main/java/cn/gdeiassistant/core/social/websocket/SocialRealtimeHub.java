@@ -19,6 +19,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Component
 public class SocialRealtimeHub {
 
+    private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(SocialRealtimeHub.class);
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final ConcurrentHashMap<Long, Set<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
 
@@ -86,15 +88,26 @@ public class SocialRealtimeHub {
         }
         TextMessage message = new TextMessage(payload);
         for (WebSocketSession session : sessions) {
-            if (session.isOpen() && Boolean.TRUE.equals(session.getAttributes().get("authenticated"))) {
-                try {
-                    synchronized (session) {
-                        session.sendMessage(message);
-                    }
-                } catch (IOException ignored) {
+            if (!sendToSession(session, message)) unregister(userId, session);
+        }
+    }
+
+    /** All application frames, including ready/pong, use the same session monitor. */
+    public boolean sendToSession(WebSocketSession session, TextMessage message) {
+        synchronized (session) {
+            try {
+                if (!session.isOpen() || !Boolean.TRUE.equals(session.getAttributes().get("authenticated"))) {
+                    return false;
                 }
+                session.sendMessage(message);
+                return true;
+            } catch (IOException | IllegalStateException failure) {
+                LOGGER.warn("Realtime send failed: {}", failure.getClass().getSimpleName());
             }
         }
+        // A transport failure affects this peer only, never the committed business result.
+        disconnectSession(session);
+        return false;
     }
 
     private void closeQuietly(WebSocketSession session) {
@@ -102,7 +115,8 @@ public class SocialRealtimeHub {
             if (session.isOpen()) {
                 session.close();
             }
-        } catch (IOException ignored) {
+        } catch (IOException | IllegalStateException failure) {
+            LOGGER.warn("Realtime close failed: {}", failure.getClass().getSimpleName());
         }
     }
 }

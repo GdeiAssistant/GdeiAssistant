@@ -37,10 +37,12 @@ class SocialRealtimeHubAfterCommitTest {
         doThrow(new IOException("synthetic disconnected transport")).when(broken).sendMessage(any());
         doThrow(new IOException("synthetic close failure")).when(broken).close();
         hub.register(1L,broken);hub.register(1L,working);
-        hub.pushToUserAfterCommit(1L,Map.of("type","social.changed"));verify(working).sendMessage(any());
+        hub.pushToUserAfterCommit(1L,Map.of("type","social.changed"));
+        hub.pushToUserAfterCommit(1L,Map.of("type","social.changed"));
+        verify(working,times(2)).sendMessage(any());verify(broken,times(1)).sendMessage(any());
         hub.disconnectSession(working);verify(working).close();
         hub.disconnectUser(1L);verify(broken).close();
-        hub.pushToUser(1L,Map.of("type","social.changed"));verify(working,times(1)).sendMessage(any());
+        hub.pushToUser(1L,Map.of("type","social.changed"));verify(working,times(2)).sendMessage(any());
         hub.unregister(999L,working);hub.disconnectUser(999L);
     }
 }

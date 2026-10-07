@@ -50,7 +50,7 @@ public class UserCertificateService {
     @org.springframework.beans.factory.annotation.Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}")
     private String portalLoginUrl = "http://portal.gdei.edu.cn:8001/Login";
 
-    /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize deletion. */
+    /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize sensitive actions. */
     public void verifyCurrentPassword(String username, String password) throws Exception {
         if (username == null || password == null || password.isBlank()) throw new PasswordIncorrectException("请输入当前校园密码");
         HttpClientSession isolated = httpClientUtils.getHttpClient(null, false, 15);

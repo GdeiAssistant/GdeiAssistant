@@ -16,6 +16,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
@@ -53,13 +56,23 @@ class FeedbackSpringFlowTest {
     }
     @AfterEach void close(){context.close();}
     @Test void smtpFailureCannotReturnSuccessOrAutomaticallyResend() throws Exception {
-        doThrow(new MailSendException("synthetic failure")).when(transport).send(any(MimeMessage.class));
-        for(String route:new String[]{"function","ticket"}) {
-            http.perform(multipart("/api/feedback/"+route).requestAttr("sessionId","synthetic-session").param("content","synthetic").param("type","network"))
-                    .andExpect(jsonPath("$.success").value(false));
-        }
-        verify(transport,times(2)).send(any(MimeMessage.class));
+        var logger=(Logger)org.slf4j.LoggerFactory.getLogger(FeedbackService.class);
+        var logs=new ListAppender<ILoggingEvent>();logs.start();logger.addAppender(logs);
+        try {
+            doThrow(new MailSendException("synthetic-private-smtp-body")).when(transport).send(any(MimeMessage.class));
+            for(String route:new String[]{"function","ticket"}) {
+                http.perform(multipart("/api/feedback/"+route).requestAttr("sessionId","synthetic-session").param("content","synthetic").param("type","network"))
+                        .andExpect(jsonPath("$.success").value(false));
+            }
+            verify(transport,times(2)).send(any(MimeMessage.class));
+            assertEquals(2,logs.list.size());
+            String text=logs.list.stream().map(ILoggingEvent::getFormattedMessage).reduce("",(a,b)->a+b);
+            assertTrue(text.contains("exceptionType=MailSendException"));
+            assertFalse(text.contains("synthetic-private-smtp-body"));
+            assertTrue(logs.list.stream().allMatch(event->event.getThrowableProxy()==null));
+        } finally {logger.detachAppender(logs);logs.stop();}
     }
+
     @Test void disabledMailIsReportedBeforeReturningEvenWithAsyncEnabled() throws Exception {
         context.getBean(FeedbackService.class).setTicketEmail("");
         http.perform(multipart("/api/feedback/ticket").requestAttr("sessionId","synthetic-session").param("content","synthetic").param("type","network"))

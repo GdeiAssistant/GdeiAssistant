@@ -15,9 +15,13 @@ import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 import cn.gdeiassistant.common.exception.verificationexception.SendEmailException;
 import org.springframework.mail.MailException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class FeedbackService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
     private String senderEmail;
 
@@ -72,6 +76,8 @@ public class FeedbackService {
         try {
             emailUtils.sendEmail(senderEmail, recipient, "用户" + user.getUsername() + subject, content, attachments);
         } catch (MessagingException | MailException e) {
+            logger.warn("FeedbackMailFailure - exceptionType={} causeType={}", e.getClass().getSimpleName(),
+                    e.getCause() != null ? e.getCause().getClass().getSimpleName() : "-");
             // No automatic resend: SMTP errors can have an unknown remote delivery outcome.
             throw new SendEmailException("反馈邮件提交失败，请稍后重试");
         }

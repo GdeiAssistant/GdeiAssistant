@@ -106,35 +106,35 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(DataNotExistException.class)
     public ResponseEntity<JsonResult> handleDataNotExistException(DataNotExistException e, HttpServletRequest request) {
-        logger.error("数据不存在：", e);
+        logException("数据不存在：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.DATA_NOT_EXIST, false,
                 BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(NetWorkTimeoutException.class)
     public ResponseEntity<JsonResult> handleNetWorkTimeoutException(NetWorkTimeoutException e, HttpServletRequest request) {
-        logger.error("网络超时：", e);
+        logException("网络超时：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.NETWORK_TIMEOUT, false,
                 BackendTextLocalizer.localizeMessage("网络连接超时，请重试", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(ErrorQueryConditionException.class)
     public ResponseEntity<JsonResult> handleErrorQueryConditionException(ErrorQueryConditionException e, HttpServletRequest request) {
-        logger.error("查询条件错误：", e);
+        logException("查询条件错误：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.ERROR_QUERY_CONDITION, false,
                 BackendTextLocalizer.localizeMessage("查询条件不合法，请重新填写", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(TimeStampIncorrectException.class)
     public ResponseEntity<JsonResult> handleTimeStampIncorrectException(TimeStampIncorrectException e, HttpServletRequest request) {
-        logger.error("时间戳校验失败：", e);
+        logException("时间戳校验失败：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.TIMESTAMP_INVALIDATED, false,
                 BackendTextLocalizer.localizeMessage("时间戳校验失败，请尝试重新登录", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(PasswordIncorrectException.class)
     public ResponseEntity<JsonResult> handlePasswordIncorrectException(PasswordIncorrectException e, HttpServletRequest request) {
-        logger.error("密码错误：", e);
+        logException("密码错误：", e);
         String message = e.getMessage() != null ? e.getMessage() : "用户账号密码错误，请检查重试或重新登录";
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.PASSWORD_INCORRECT, false,
                 BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
@@ -142,14 +142,14 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(UserNotExistException.class)
     public ResponseEntity<JsonResult> handleUserNotExistException(UserNotExistException e, HttpServletRequest request) {
-        logger.error("用户不存在：", e);
+        logException("用户不存在：", e);
         return ResponseEntity.ok(new JsonResult(ErrorConstantUtils.USER_NOT_EXIST, false,
                 BackendTextLocalizer.localizeMessage("当前用户不存在，请尝试重新登录", request.getHeader("Accept-Language"))));
     }
 
     @ExceptionHandler(FeatureNotEnabledException.class)
     public ResponseEntity<JsonResult> handleFeatureNotEnabledException(FeatureNotEnabledException e, HttpServletRequest request) {
-        logger.warn("功能未启用: {}", e.getMessage());
+        logger.warn("功能未启用: exceptionType={}", e.getClass().getSimpleName());
         String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "该功能未启用";
         return ResponseEntity.ok(new JsonResult(false,
                 BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
@@ -157,7 +157,7 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(RecognitionException.class)
     public ResponseEntity<JsonResult> handleRecognitionException(RecognitionException e, HttpServletRequest request) {
-        logger.warn("图像识别异常：{}", e.getMessage());
+        logger.warn("图像识别异常: exceptionType={}", e.getClass().getSimpleName());
         String message = (e.getMessage() != null && !e.getMessage().isEmpty()) ? e.getMessage() : "图像识别服务异常，请稍后重试";
         return ResponseEntity.ok(new JsonResult(false,
                 BackendTextLocalizer.localizeMessage(message, request.getHeader("Accept-Language"))));
@@ -240,15 +240,22 @@ public class GlobalRestExceptionHandler {
             DayFrequencyLimitException.class, IllegalPhoneNumberException.class,
             VerificationCodeInvalidException.class, SendSMSException.class, SendEmailException.class})
     public ResponseEntity<JsonResult> handleVerificationException(Exception e, HttpServletRequest request) {
+        logger.warn("VerificationFailure - exceptionType={}", e.getClass().getSimpleName());
         return ResponseEntity.ok(new JsonResult(false,
                 BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
+    }
+
+    // Preserve diagnostic locations, but never exception messages or provider response bodies.
+    private void logException(String event, Exception exception) {
+        logger.error("{} exceptionType={} stack={}", event, exception.getClass().getSimpleName(),
+                java.util.Arrays.toString(exception.getStackTrace()));
     }
 
     // ========== 兜底 ==========
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<JsonResult> handleException(Exception e, HttpServletRequest request) {
-        logger.error("系统内部异常", e);
+        logException("系统内部异常", e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new JsonResult(ErrorConstantUtils.INTERNAL_SERVER_ERROR, false,

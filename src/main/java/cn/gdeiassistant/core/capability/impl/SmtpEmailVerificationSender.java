@@ -45,7 +45,7 @@ public class SmtpEmailVerificationSender implements EmailVerificationSender {
         }
         try {
             emailUtils.sendEmail(senderEmail, recipientEmail, "广东二师助手邮箱验证码", text, new InputStream[0]);
-        } catch (MessagingException | IOException e) {
+        } catch (MessagingException | IOException | org.springframework.mail.MailException e) {
             throw new SendEmailException("SMTP 邮件发送失败，请检查 SMTP 配置或服务状态");
         }
     }

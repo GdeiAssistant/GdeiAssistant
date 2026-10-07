@@ -58,5 +58,6 @@ public class EmailUtils {
         }
         logger.error("发送至" + AnonymizeUtils.maskEmail(recipient) + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
+        throw new MessagingException("邮件发送器未配置");
     }
 }

@@ -99,4 +99,109 @@ class CampusHttpFixtureTest {
         reply("GET","/cas/login",200,"<title>unexpected page</title>");assertThrows(ServerErrorException.class,()->cas.login("synthetic","synthetic",base+"/service"));
         assertTrue(seen.stream().allMatch(s->s.uri().startsWith("/cas/login")));
     }
+    @Test void chsiUsesSessionCookiesEncodesFormsAndRejectsErrorResponses() throws Exception {
+        var chsi = new cn.gdeiassistant.integration.chsi.ChsiClient();
+        ReflectionTestUtils.setField(chsi, "httpClientUtils", pool);
+        ReflectionTestUtils.setField(chsi, "CET_BASE", base + "/cet");
+        ReflectionTestUtils.setField(chsi, "KAOYAN_CJCX", base + "/graduate");
+        replies.put("GET /cet/", new Reply(200, "index", Map.of("Set-Cookie", "synthetic=1; Path=/")));
+        reply("GET", "/cet/ValidatorIMG.JPG", 200, "synthetic-image");
+        assertEquals(Base64.getEncoder().encodeToString("synthetic-image".getBytes(StandardCharsets.UTF_8)), chsi.fetchCetCaptchaImageBase64("session"));
+        assertTrue(seen.get(seen.size() - 1).cookie().contains("synthetic=1"));
+        reply("GET", "/cet/query", 200, "<title>score</title>");
+        assertEquals("score", chsi.fetchCetQueryPage("session", "123", "synthetic", null).title());
+        assertTrue(seen.get(seen.size() - 1).uri().endsWith("yzm="));
+        reply("GET", "/graduate/", 200, "<form name='cjcxForm'></form>");
+        assertNotNull(chsi.fetchPostgraduateCjcxPage().selectFirst("form"));
+        reply("GET", "/captcha", 200, "image");
+        assertArrayEquals("image".getBytes(StandardCharsets.UTF_8), chsi.fetchPostgraduateCaptchaImage(base + "/captcha"));
+        reply("POST", "/graduate/cjcxAction.do", 200, "<title>result</title>");
+        assertEquals("result", chsi.submitPostgraduateQuery("a & b", "exam", "synthetic-id", "1234").title());
+        assertTrue(seen.get(seen.size()-1).body().contains("xm=a%20%26%20b"));
+        assertTrue(seen.get(seen.size()-1).body().contains("checkcode=1234"));
+        chsi.submitPostgraduateQuery("synthetic", "exam", "synthetic-id", "");
+        assertFalse(seen.get(seen.size()-1).body().contains("checkcode="));
+        for (String path : List.of("/cet/query", "/graduate/", "/captcha")) reply("GET", path, 503, "outage");
+        reply("POST", "/graduate/cjcxAction.do", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> chsi.fetchCetQueryPage("session", "123", "synthetic", "1234"));
+        assertThrows(ServerErrorException.class, chsi::fetchPostgraduateCjcxPage);
+        assertThrows(ServerErrorException.class, () -> chsi.fetchPostgraduateCaptchaImage(base + "/captcha"));
+        assertThrows(ServerErrorException.class, () -> chsi.submitPostgraduateQuery("synthetic", "exam", "synthetic-id", null));
+        reply("GET", "/cet/ValidatorIMG.JPG", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> chsi.fetchCetCaptchaImageBase64("session"));
+        reply("GET", "/cet/", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> chsi.fetchCetCaptchaImageBase64("session"));
+        var manager = (org.apache.http.impl.conn.PoolingHttpClientConnectionManager) ReflectionTestUtils.getField(pool, "connectionManager");
+        assertEquals(0, manager.getTotalStats().getLeased());
+    }
+    @Test void teacherLoginPreservesFormRoleClassifiesFailuresAndClosesClients() throws Exception {
+        var teacher = new cn.gdeiassistant.core.userlogin.service.TeacherLoginService();
+        var ocr = mock(cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService.class);
+        ReflectionTestUtils.setField(teacher, "httpClientUtils", pool);
+        ReflectionTestUtils.setField(teacher, "eduBaseUrl", base);
+        ReflectionTestUtils.setField(teacher, "imageRecognitionService", ocr);
+        when(ocr.checkCodeRecognize(anyString(), any(), eq(4))).thenReturn("ab12");
+        String login = "<title>欢迎使用正方教务管理系统！请登录</title><input name='__VIEWSTATE' value='state'>";
+        reply("GET", "/", 200, login); reply("GET", "/CheckCode.aspx", 200, "image");
+        redirect("POST", "/default2.aspx", base + "/js_main.aspx");
+        reply("GET", "/js_main.aspx", 200, "<title>正方教务管理系统</title>");
+        teacher.teacherLogin("session", "synthetic", "synthetic-password");
+        Seen posted = seen.stream().filter(s -> s.method().equals("POST")).findFirst().orElseThrow();
+        assertTrue(posted.body().contains("txtSecretCode=ab12"));
+        assertTrue(posted.body().contains("RadioButtonList1=%E6%95%99%E5%B8%88"));
+        reply("POST", "/default2.aspx", 200, login);
+        assertThrows(PasswordIncorrectException.class, () -> teacher.teacherLogin("session", "synthetic", "synthetic"));
+        reply("GET", "/CheckCode.aspx", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> teacher.teacherLogin("session", "synthetic", "synthetic"));
+        reply("GET", "/", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> teacher.teacherLogin("session", "synthetic", "synthetic"));
+        verify(cookies, times(4)).saveCookieStore(eq("session"), any());
+        reply("GET", "/", 200, login); reply("GET", "/CheckCode.aspx", 200, "image");
+        when(ocr.checkCodeRecognize(anyString(), any(), eq(4))).thenThrow(new cn.gdeiassistant.common.exception.recognitionexception.RecognitionException("synthetic"));
+        assertThrows(cn.gdeiassistant.common.exception.recognitionexception.RecognitionException.class,
+                () -> teacher.teacherLogin("session", "synthetic", "synthetic"));
+    }
+    @Test void chargeConfirmationChecksIdentityAmountAndStopsBeforePaymentOnMismatch() throws Exception {
+        var service = new cn.gdeiassistant.core.charge.service.ChargeService();
+        var certificates = mock(cn.gdeiassistant.core.userlogin.service.UserCertificateService.class);
+        ReflectionTestUtils.setField(service, "httpClientUtils", pool);
+        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
+        ReflectionTestUtils.setField(service, "casLoginUrl", base + "/cas/login");
+        ReflectionTestUtils.setField(service, "cardLoginUrl", base + "/card-login");
+        ReflectionTestUtils.setField(service, "cardBaseUrl", base);
+        ReflectionTestUtils.setField(service, "paymentBaseUrl", base + "/payment");
+        ReflectionTestUtils.setField(service, "alipayGatewayUrl", base + "/gateway");
+        var certificate = new cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity();
+        certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic", "synthetic-password"));
+        when(certificates.getUserSessionCertificate("session")).thenReturn(certificate);
+        reply("GET", "/cas/login", 200, "<div class='pcclient'></div><input id='tokens' value='t'><input id='stamp' value='s'>");
+        reply("POST", "/cas/login", 200, "<a href='" + base + "/card-login'>next</a>");
+        redirect("GET", "/card-login", base + "/redirect-one"); redirect("GET", "/redirect-one", base + "/card-home");
+        reply("GET", "/card-home", 200, "<div class='clear main'>home</div>");
+        redirect("POST", "/CardManage/CardInfo/DoPay", base + "/SynPay/Pay");
+        reply("GET", "/SynPay/Pay", 200, "<input name='ticket' value='synthetic'><input value='ignored'>");
+        reply("POST", "/payment/doPay", 200, "<div class='bd'><h3>synthetic-owner</h3></div>");
+        reply("GET", "/payment/disOrderInfo", 200, "<div class='main_hd'><span>number</span><span>synthetic-owner</span></div><div class='pri smallnum'>￥50</div><input name='order' value='synthetic-order'>");
+        reply("POST", "/payment/forwardPayTool", 200, "<input name='ticket' value='synthetic-ticket'>");
+        redirect("POST", "/gateway", base + "/pay-redirect"); redirect("GET", "/pay-redirect", base + "/pay-result");
+        replies.put("GET /pay-result", new Reply(200, "result", Map.of("Set-Cookie", "synthetic-payment=1; Path=/")));
+        var result = service.chargeRequest("session", 50);
+        assertEquals(base + "/pay-result", result.getAlipayURL());
+        assertTrue(result.getCookieList().stream().anyMatch(c -> c.getName().equals("synthetic-payment")));
+        assertTrue(seen.stream().anyMatch(s -> s.body().contains("Amount=50")));
+        assertTrue(seen.stream().anyMatch(s -> s.body().contains("order=synthetic-order")));
+        for (String confirmation : List.of(
+                "<div class='main_hd'><span>number</span><span>different-owner</span></div><div class='pri smallnum'>￥50</div>",
+                "<div class='main_hd'><span>number</span><span>synthetic-owner</span></div><div class='pri smallnum'>￥49</div>",
+                "<div class='main_hd'><span>number</span><span>synthetic-owner</span></div><div class='pri smallnum'>￥invalid</div>",
+                "<div>missing confirmation</div>")) {
+            seen.clear(); reply("GET", "/payment/disOrderInfo", 200, confirmation);
+            assertThrows(ServerErrorException.class, () -> service.chargeRequest("session", 50));
+            assertTrue(seen.stream().noneMatch(s -> s.uri().contains("forwardPayTool") || s.uri().contains("gateway")));
+        }
+        seen.clear(); reply("GET", "/payment/disOrderInfo", 200, "<div class='main_hd'><span>number</span><span>synthetic-owner</span></div><div class='pri'>￥200</div><input name='order' value='large'>");
+        assertEquals(base + "/pay-result", service.chargeRequest("session", 200).getAlipayURL());
+        reply("GET", "/cas/login", 503, "outage");
+        assertThrows(ServerErrorException.class, () -> service.chargeRequest("session", 50));
+    }
 }

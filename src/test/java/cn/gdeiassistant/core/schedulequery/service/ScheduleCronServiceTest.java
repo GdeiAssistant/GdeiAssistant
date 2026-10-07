@@ -63,4 +63,37 @@ class ScheduleCronServiceTest {
         verify(scheduleDao).querySchedule("active-user");
         verifyNoMoreInteractions(scheduleDao);
     }
+
+    @Test void staleCacheRefreshRetainsIdentityAndNewCachesAreCreated() throws Exception {
+        org.springframework.test.util.ReflectionTestUtils.setField(scheduleCronService, "campusSyncExecutor", (java.util.concurrent.Executor) Runnable::run);
+        var users = java.util.stream.IntStream.range(0, 6).mapToObj(i -> new User("synthetic-" + i, "synthetic-password")).toList();
+        when(cronMapper.selectCacheAllowUsers()).thenReturn(users);
+        when(campusCredentialService.filterUsersWithEffectiveQuickAuth(users)).thenReturn(users);
+        ScheduleDocument old = new ScheduleDocument(); old.setId("existing-id");
+        old.setUpdateDateTime(new Date(System.currentTimeMillis() - java.time.Duration.ofDays(4).toMillis()));
+        when(scheduleDao.querySchedule("synthetic-0")).thenReturn(old);
+        var item = new cn.gdeiassistant.common.pojo.entity.Schedule(); item.setScheduleName("合成课程");
+        var result = new cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult(List.of(item), 2);
+        when(scheduleService.querySchedule(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.eq(0))).thenReturn(result);
+        scheduleCronService.synchronizeScheduleData();
+        var saved = org.mockito.ArgumentCaptor.forClass(ScheduleDocument.class);
+        org.mockito.Mockito.verify(scheduleDao, org.mockito.Mockito.times(6)).saveSchedule(saved.capture());
+        var first = saved.getAllValues().get(0);
+        org.junit.jupiter.api.Assertions.assertEquals("existing-id", first.getId());
+        org.junit.jupiter.api.Assertions.assertEquals("synthetic-0", first.getUsername());
+        org.junit.jupiter.api.Assertions.assertEquals("合成课程", first.getScheduleList().get(0).getScheduleName());
+        org.junit.jupiter.api.Assertions.assertNotNull(first.getUpdateDateTime());
+    }
+    @Test void failedLoginAndInterruptedAcquireCannotSaveOrLeakPermits() throws Exception {
+        var semaphore = new java.util.concurrent.Semaphore(1);
+        org.mockito.Mockito.doThrow(new cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException("synthetic"))
+                .when(userLoginService).userLogin(org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString(), org.mockito.ArgumentMatchers.anyString());
+        org.junit.jupiter.api.Assertions.assertNull(scheduleCronService.asyncQuerySchedule(semaphore, new User("owner", "synthetic")).join());
+        org.junit.jupiter.api.Assertions.assertEquals(1, semaphore.availablePermits());
+        Thread.currentThread().interrupt();
+        try { org.junit.jupiter.api.Assertions.assertNull(scheduleCronService.asyncQuerySchedule(semaphore, new User("owner")).join()); }
+        finally { Thread.interrupted(); }
+        org.junit.jupiter.api.Assertions.assertEquals(1, semaphore.availablePermits());
+        org.mockito.Mockito.verifyNoInteractions(scheduleDao);
+    }
 }

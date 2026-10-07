@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import okhttp3.*;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -53,18 +52,20 @@ public class ChsiClient {
             HttpGet httpGet = new HttpGet(CET_BASE + "/");
             httpGet.setHeader("Referer", CET_BASE + "/");
             httpGet.setHeader("User-Agent", USER_AGENT);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("访问学信网异常");
+            try (var response = httpClient.execute(httpGet)) {
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    throw new ServerErrorException("访问学信网异常");
+                }
             }
             httpGet = new HttpGet(CET_BASE + "/ValidatorIMG.JPG");
             httpGet.setHeader("Referer", CET_BASE + "/");
             httpGet.setHeader("User-Agent", USER_AGENT);
-            httpResponse = httpClient.execute(httpGet);
-            if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("访问学信网异常");
+            try (var response = httpClient.execute(httpGet)) {
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    throw new ServerErrorException("访问学信网异常");
+                }
+                return ImageEncodeUtils.convertToBase64(response.getEntity().getContent());
             }
-            return ImageEncodeUtils.convertToBase64(httpResponse.getEntity().getContent());
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {
@@ -92,11 +93,12 @@ public class ChsiClient {
             HttpGet httpGet = new HttpGet(CET_BASE + "/query?zkzh=" + number + "&xm=" + name + "&yzm=" + yzm);
             httpGet.setHeader("Referer", CET_BASE + "/");
             httpGet.setHeader("User-Agent", USER_AGENT);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
-            if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("学信网系统异常");
+            try (var response = httpClient.execute(httpGet)) {
+                if (response.getStatusLine().getStatusCode() != 200) {
+                    throw new ServerErrorException("学信网系统异常");
+                }
+                return Jsoup.parse(EntityUtils.toString(response.getEntity()));
             }
-            return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
             closeHttpClient(httpClient);
             if (cookieStore != null) {

@@ -280,6 +280,7 @@ public class UserCertificateService {
                         if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                             //已经通过了认证
                             loginCasSystem(sessionId, httpClient, username, password);
+                            return;
                         } else {
                             httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
                             httpResponse = httpClient.execute(httpGet);
@@ -287,6 +288,7 @@ public class UserCertificateService {
                             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("我的门户")) {
                                 //登录我的门户成功
                                 loginCasSystem(sessionId, httpClient, username, password);
+                                return;
                             }
                         }
                     }
@@ -295,6 +297,7 @@ public class UserCertificateService {
                     if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                         //已经通过了认证
                         loginCasSystem(sessionId, httpClient, username, password);
+                        return;
                     }
                 }
                 throw new ServerErrorException("教务系统异常");
@@ -392,6 +395,7 @@ public class UserCertificateService {
                     .attr("action").split("&")[2].split("=")[1]);
             //进行教务系统身份校验
             casVerify(sessionId, httpClient, username, password, keycode, number, timestamp);
+            return;
         }
         throw new ServerErrorException("教务系统异常");
     }
@@ -442,6 +446,7 @@ public class UserCertificateService {
                     entity.setNumber(number);
                     entity.setTimestamp(timestamp);
                     userCertificateDao.saveUserSessionCertificate(sessionId, entity);
+                    return;
                 }
                 throw new ServerErrorException("教务系统异常");
             }

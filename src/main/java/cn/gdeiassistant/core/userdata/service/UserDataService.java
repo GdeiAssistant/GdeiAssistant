@@ -279,7 +279,7 @@ public class UserDataService {
             //移除Map中属性值为空的属性
             Map<String, Object> map = new HashMap<>();
             for (Map.Entry<String, Object> entry : data.entrySet()) {
-                if (Entity.class.isAssignableFrom(entry.getValue().getClass())) {
+                if (!(entry.getValue() instanceof String) && !(entry.getValue() instanceof List)) {
                     Map<String, Object> temp = ReflectionUtils.getAllNotNullObjectFields(entry.getValue(), entry.getValue().getClass());
                     map.put(entry.getKey(), temp);
                 } else if (List.class.isAssignableFrom(entry.getValue().getClass())) {

@@ -231,7 +231,7 @@ public class GradeService {
             if (secondCreditSum != 0) {
                 secondTermGPA = secondTermIGP / secondCreditSum;
             }
-            DecimalFormat decimalFormat = new DecimalFormat("#.00");
+            DecimalFormat decimalFormat = new DecimalFormat("#.00", java.text.DecimalFormatSymbols.getInstance(java.util.Locale.ROOT));
             firstTermIGP = Double.parseDouble(decimalFormat.format(firstTermIGP));
             secondTermIGP = Double.parseDouble(decimalFormat.format(secondTermIGP));
             firstTermGPA = Double.parseDouble(decimalFormat.format(firstTermGPA));

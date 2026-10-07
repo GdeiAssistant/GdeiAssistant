@@ -77,7 +77,7 @@ public class LoginTokenService {
         loginTokenDao.deleteAccessToken(token.getAccessTokenSignature());
         loginTokenDao.deleteRefreshToken(refreshTokenSignature);
         //生成新的权限令牌和刷新令牌
-        AccessToken accessToken = getAccessToken(username, sessionId);
+        AccessToken accessToken = getAccessToken(sessionId, username);
         RefreshToken refreshToken = getRefreshToken(accessToken);
         //刷新令牌成功
         result.setAccessToken(accessToken);
@@ -172,9 +172,9 @@ public class LoginTokenService {
                 //若IP地址相同，则不需要重复校验
                 return;
             }
-            //检测IP地址是否为同一省份（外部 IP 属地服务异常时采用保守放行，避免误踢登录）
+            // 与已保存设备的 IP 属地比较；服务不可用时拒绝设备不匹配的请求
             IPAddressRecord currentLocation = ipAddressService.getInfoByIPAddress(ip);
-            IPAddressRecord tokenLocation = ipAddressService.getInfoByIPAddress(device.getIP());
+            IPAddressRecord tokenLocation = ipAddressService.getInfoByIPAddress(data.getIP());
             boolean locationAvailable = currentLocation != null && tokenLocation != null
                     && currentLocation.getCountry() != null && tokenLocation.getCountry() != null
                     && currentLocation.getProvince() != null && tokenLocation.getProvince() != null;

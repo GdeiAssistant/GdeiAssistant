@@ -324,7 +324,7 @@ public class ScheduleService {
                 cachedList = new ArrayList<>();
                 scheduleDocument.setScheduleList(cachedList);
             }
-            ScheduleQueryResult.setScheduleList(cachedList);
+            ScheduleQueryResult.setScheduleList(new ArrayList<>(cachedList));
         }
         // 获取自定义课表信息（空指针防御）
         // 合并前对自定义课打标 isCustom=true，教务/缓存课程不设置，前端仅认此标记控制删除按钮

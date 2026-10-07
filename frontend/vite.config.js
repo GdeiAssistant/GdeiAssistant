@@ -30,7 +30,8 @@ export default defineConfig({
       include: ['src/**/*.{js,vue}'],
       reporter: ['text-summary', 'json-summary', 'html'],
       thresholds: {
-        'src/composables/{useLatestRequest,useScrollLoad}.js': { perFile: true, lines: 75, branches: 60 }
+        'src/composables/{useLatestRequest,useScrollLoad}.js': { perFile: true, lines: 75, branches: 60 },
+        'src/views/{grade/Grade,schedule/Schedule}.vue': { perFile: true, lines: 75, branches: 60 }
       }
     },
   },

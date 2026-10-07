@@ -128,8 +128,8 @@ public class PhotographService {
     private PhotographVO toPublicPhotographVO(PhotographEntity e) {
         String campusUsername = e.getUsername();
         PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
-        e.setUsername(author.displayName());
         PhotographVO vo = photographConverter.toVO(e);
+        vo.setUsername(author.displayName());
         vo.setAuthorId(author.authorId());
         return vo;
     }

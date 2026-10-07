@@ -45,4 +45,31 @@ class ProviderChainTest {
         assertThrows(ProviderChainExhaustedException.class,()->rejected.execute("input"));verify(p,never()).execute("input");
         Thread.currentThread().interrupt();try{assertThrows(ProviderChainExhaustedException.class,()->chain(List.of(p),Duration.ofSeconds(1)).execute("input"));assertTrue(Thread.currentThread().isInterrupted());}finally{Thread.interrupted();}
     }
+    @Test void openBreakerFallsBackThenProbesAndRecoversWithoutRestart() throws Exception {
+        var primary=provider("primary",0,"1234");var fallback=provider("fallback",1,"5678");
+        var registry=io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry.ofDefaults();
+        var time=new java.util.concurrent.atomic.AtomicReference<>(java.time.Instant.parse("2026-01-01T00:00:00Z"));
+        var clock=new java.time.Clock() {
+            @Override public java.time.ZoneId getZone(){return java.time.ZoneOffset.UTC;}
+            @Override public java.time.Clock withZone(java.time.ZoneId zone){return this;}
+            @Override public java.time.Instant instant(){return time.get();}
+        };
+        var config=io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.custom().clock(clock)
+                .slidingWindowSize(2).minimumNumberOfCalls(2).failureRateThreshold(50)
+                .waitDurationInOpenState(Duration.ofSeconds(30)).permittedNumberOfCallsInHalfOpenState(1)
+                .automaticTransitionFromOpenToHalfOpenEnabled(false).build();
+        var breaker=registry.circuitBreaker("synthetic.primary",config);
+        when(primary.execute("input")).thenThrow(new ProviderException("synthetic outage"));
+        var chain=new ProviderChain<String,String>("synthetic",List.of(primary,fallback),null,registry,
+                (input,output)->output!=null,executor,Duration.ofSeconds(2));
+        assertEquals("5678",chain.execute("input"));assertEquals("5678",chain.execute("input"));
+        assertEquals(io.github.resilience4j.circuitbreaker.CircuitBreaker.State.OPEN,breaker.getState());
+        doReturn("1234").when(primary).execute("input");
+        assertEquals("5678",chain.execute("input"));verify(primary,times(2)).execute("input");
+        time.updateAndGet(instant->instant.plusSeconds(31));
+        assertEquals("1234",chain.execute("input"));
+        assertEquals(io.github.resilience4j.circuitbreaker.CircuitBreaker.State.CLOSED,breaker.getState());
+        assertFalse(chain.isCompletelyDown());verify(primary,times(3)).execute("input");
+    }
+
 }

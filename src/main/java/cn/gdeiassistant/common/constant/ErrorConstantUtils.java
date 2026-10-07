@@ -95,6 +95,9 @@ public class ErrorConstantUtils {
     //查询的用户不存在
     public static final int USER_NOT_EXIST = 40402;
 
+    //旧账号注销清理未完成，暂不可复用校园用户名
+    public static final int ACCOUNT_CLEANUP_PENDING = 40901;
+
     //服务器内部异常
     public static final int INTERNAL_SERVER_ERROR = 50001;
 

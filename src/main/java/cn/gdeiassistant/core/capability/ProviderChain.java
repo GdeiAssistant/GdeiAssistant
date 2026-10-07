@@ -87,7 +87,7 @@ public class ProviderChain<T, R> {
     /**
      * 按优先级依次尝试 provider：
      * 1. 跳过未配置的 provider
-     * 2. 跳过已熔断的 provider
+     * 2. 由断路器许可控制熔断与等待期后的恢复探测
      * 3. 跳过不健康的 provider
      * 4. 成功 → 返回结果，记录 Metrics
      * 5. 失败 → 计入断路器，尝试下一个
@@ -101,12 +101,6 @@ public class ProviderChain<T, R> {
             if (Thread.currentThread().isInterrupted() || System.nanoTime() >= deadline) break;
             String name = provider.providerName();
             CircuitBreaker cb = breakers.get(name);
-
-            if (cb != null && cb.getState() == CircuitBreaker.State.OPEN) {
-                attempted.add(name + "(熔断)");
-                log.warn("[{}] provider {} 已熔断，跳过", chainName, name);
-                continue;
-            }
 
             if (!provider.isHealthy()) {
                 attempted.add(name + "(不健康)");

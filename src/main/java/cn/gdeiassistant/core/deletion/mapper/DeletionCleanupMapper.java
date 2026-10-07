@@ -21,6 +21,13 @@ public interface DeletionCleanupMapper {
     @Select("select id,username,resetname,user_id as userId from account_deletion_cleanup where id=#{id}")
     CleanupTask find(String id);
 
+    @Select("select id from account_deletion_cleanup where username=#{username} and status in ('PENDING','PROCESSING') order by id")
+    List<String> unfinishedIdsForUsername(String username);
+
+    // Lock by primary key so one username's slow cleanup cannot lock the whole queue.
+    @Select("select id from account_deletion_cleanup where id=#{id} and status in ('PENDING','PROCESSING') for update")
+    String lockUnfinished(String id);
+
     @Update("update account_deletion_cleanup set status='DONE',username=null,locked_until=null,error_code=null " +
             "where id=#{id}")
     void complete(String id);

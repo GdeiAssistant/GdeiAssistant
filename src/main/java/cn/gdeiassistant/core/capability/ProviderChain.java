@@ -36,6 +36,28 @@ public class ProviderChain<T, R> {
      */
     public ProviderChain(String chainName, List<ServiceProvider<T, R>> providers,
                          MeterRegistry meterRegistry, CircuitBreakerRegistry cbRegistry) {
+        this(chainName, providers, meterRegistry, cbRegistry, (request, result) -> true);
+    }
+
+    private final java.util.function.BiPredicate<T, R> validResult;
+
+    public ProviderChain(String chainName, List<ServiceProvider<T, R>> providers,
+                         MeterRegistry meterRegistry, CircuitBreakerRegistry cbRegistry,
+                         java.util.function.BiPredicate<T, R> validResult) {
+        this(chainName, providers, meterRegistry, cbRegistry, validResult, Runnable::run, Duration.ofSeconds(15));
+    }
+
+    private final java.util.concurrent.Executor executor;
+    private final Duration budget;
+    private final Map<String,String> outcomes = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public ProviderChain(String chainName, List<ServiceProvider<T,R>> providers, MeterRegistry meterRegistry,
+            CircuitBreakerRegistry cbRegistry, java.util.function.BiPredicate<T,R> validResult,
+            java.util.concurrent.Executor executor, Duration budget) {
+        if (budget.isZero() || budget.isNegative()) throw new IllegalArgumentException("Provider budget must be positive");
+        this.executor = executor;
+        this.budget = budget;
+        this.validResult = validResult;
         this.chainName = chainName;
         this.meterRegistry = meterRegistry;
 
@@ -74,7 +96,9 @@ public class ProviderChain<T, R> {
     public R execute(T request) throws ProviderChainExhaustedException {
         List<String> attempted = new ArrayList<>();
 
+        long deadline = System.nanoTime() + budget.toNanos();
         for (ServiceProvider<T, R> provider : providers) {
+            if (Thread.currentThread().isInterrupted() || System.nanoTime() >= deadline) break;
             String name = provider.providerName();
             CircuitBreaker cb = breakers.get(name);
 
@@ -92,27 +116,49 @@ public class ProviderChain<T, R> {
 
             long start = System.currentTimeMillis();
             try {
+                var task = new java.util.concurrent.FutureTask<R>(() -> {
                 R result;
                 if (cb != null) {
                     result = cb.executeSupplier(() -> {
                         try {
-                            return provider.execute(request);
+                            R value = provider.execute(request);
+                            if (!validResult.test(request, value)) throw new ProviderException("Provider returned unusable output");
+                            return value;
                         } catch (ProviderException e) {
                             throw new RuntimeException(e);
                         }
                     });
                 } else {
                     result = provider.execute(request);
+                    if (!validResult.test(request, result)) throw new ProviderException("Provider returned unusable output");
                 }
+                return result;
+                });
+                R result;
+                try {
+                    executor.execute(task);
+                    long remaining = deadline - System.nanoTime();
+                    if (remaining <= 0) throw new java.util.concurrent.TimeoutException();
+                    result = task.get(remaining, java.util.concurrent.TimeUnit.NANOSECONDS);
+                } catch (InterruptedException interrupted) {
+                    task.cancel(true);
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (Exception failed) {
+                    task.cancel(true);
+                    throw failed;
+                }
+                outcomes.put(name, "success");
                 long elapsed = System.currentTimeMillis() - start;
                 recordMetric("success", name);
                 log.info("[{}] provider {} 成功 ({}ms)", chainName, name, elapsed);
                 return result;
             } catch (Exception e) {
                 long elapsed = System.currentTimeMillis() - start;
+                outcomes.put(name, "failure");
                 recordMetric("failure", name);
                 log.warn("[{}] provider {} 失败 ({}ms): {}", chainName, name, elapsed,
-                        e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName());
+                        e.getClass().getSimpleName() != null ? e.getClass().getSimpleName() : e.getClass().getSimpleName());
                 attempted.add(name);
             }
         }
@@ -128,7 +174,8 @@ public class ProviderChain<T, R> {
             s.put("name", p.providerName());
             s.put("priority", p.priority());
             s.put("configured", p.isConfigured());
-            s.put("healthy", p.isHealthy());
+            s.put("eligible", p.isHealthy());
+            s.put("lastOutcome", outcomes.getOrDefault(p.providerName(), "not_verified"));
             CircuitBreaker cb = breakers.get(p.providerName());
             s.put("circuitBreaker", cb != null ? cb.getState().name() : "NONE");
             statuses.add(s);

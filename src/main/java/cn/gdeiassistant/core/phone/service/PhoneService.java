@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class PhoneService {
 
+    private static final java.security.SecureRandom VERIFICATION_CODE_RANDOM = new java.security.SecureRandom();
+
     @Autowired
     private PhoneMapper phoneMapper;
 
@@ -54,15 +56,20 @@ public class PhoneService {
      */
     public void getPhoneVerificationCode(int code, String phone) throws SendSMSException {
         //生成随机数
-        int randomCode = (int) ((Math.random() * 9 + 1) * 100000);
+        int randomCode = 100000 + VERIFICATION_CODE_RANDOM.nextInt(900000);
         //写入Redis缓存记录
         verificationCodeDao.savePhoneVerificationCode(code, phone, randomCode);
+        try {
         if (code == 86) {
             //国内手机号
             verificationCodeService.sendChinaPhoneVerificationCodeSms(randomCode, phone);
         } else {
             //国际/港澳台手机号
             verificationCodeService.sendGlobalPhoneVerificationCodeSms(randomCode, code, phone);
+        }
+        } catch (SendSMSException e) {
+            verificationCodeDao.consumePhoneVerificationCode(code, phone, randomCode);
+            throw e;
         }
     }
 
@@ -74,15 +81,7 @@ public class PhoneService {
      * @param randomCode
      */
     public void checkVerificationCode(int code, String phone, int randomCode) throws VerificationCodeInvalidException {
-        Integer verificationCode = verificationCodeDao.queryPhoneVerificationCode(code, phone);
-        if (verificationCode != null) {
-            if (verificationCode.equals(randomCode)) {
-                //移除手机验证码记录
-                verificationCodeDao.deletePhoneVerificationCode(code, phone);
-                //校验通过
-                return;
-            }
-        }
+        if (verificationCodeDao.consumePhoneVerificationCode(code, phone, randomCode)) return;
         throw new VerificationCodeInvalidException();
     }
 

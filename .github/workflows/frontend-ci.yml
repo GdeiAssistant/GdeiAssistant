@@ -50,8 +50,19 @@ jobs:
       - name: Check generated location names
         run: npm run check:location-names
 
-      - name: Run unit tests
-        run: npm run test:unit
+      - name: Check JavaScript syntax
+        run: npm run check:syntax
+
+      - name: Run unit tests and report coverage
+        run: npm run test:coverage
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/
+          retention-days: 7
 
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium

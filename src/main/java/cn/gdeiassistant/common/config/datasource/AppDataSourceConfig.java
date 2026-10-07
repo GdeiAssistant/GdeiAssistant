@@ -33,6 +33,7 @@ import java.io.IOException;
         "cn.gdeiassistant.core.feedback.mapper",
         "cn.gdeiassistant.core.lostandfound.mapper",
         "cn.gdeiassistant.core.phone.mapper",
+        "cn.gdeiassistant.core.objectstorage.mapper",
         "cn.gdeiassistant.core.photograph.mapper",
         "cn.gdeiassistant.core.privacy.mapper",
         "cn.gdeiassistant.core.profile.mapper",
@@ -56,7 +57,6 @@ public class AppDataSourceConfig {
     public SqlSessionFactoryBean appSqlSessionFactory(@Qualifier("appDataSource") DataSource appDataSource) throws IOException {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-        bean.setTypeAliasesPackage("cn.gdeiassistant.pojo,cn.gdeiassistant.core");
         bean.setTypeHandlersPackage("cn.gdeiassistant.common.typehandler");
         bean.setDataSource(appDataSource);
         return bean;

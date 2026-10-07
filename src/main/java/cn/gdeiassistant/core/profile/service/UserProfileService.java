@@ -68,6 +68,12 @@ public class UserProfileService {
     @Autowired
     private R2StorageService r2StorageService;
 
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
     /**
      * 获取当前用户个人资料
      */
@@ -140,7 +146,7 @@ public class UserProfileService {
      * @return
      */
     public String getOtherUserAvatar(String username) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "avatar/"
+        return storedAssets.generatePresignedUrl("avatar/"
                 + username + ".jpg", 30, TimeUnit.MINUTES);
     }
 
@@ -165,7 +171,7 @@ public class UserProfileService {
      * @return
      */
     public String getOtherUserHighDefinitionAvatar(String username) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "avatar/"
+        return storedAssets.generatePresignedUrl("avatar/"
                 + username + "_hd.jpg", 30, TimeUnit.MINUTES);
     }
 
@@ -181,7 +187,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        r2StorageService.uploadObject("gdeiassistant-userdata", "avatar/"
+        storedAssets.uploadObject("avatar/"
                 + user.getUsername() + ".jpg", inputStream);
         try {
             if (inputStream != null) {
@@ -205,7 +211,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        r2StorageService.uploadObject("gdeiassistant-userdata", "avatar/"
+        storedAssets.uploadObject("avatar/"
                         + user.getUsername() + "_hd.jpg"
                 , inputStream);
         try {
@@ -223,7 +229,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + ".jpg");
+        uploads.moveUpload(sessionId, objectKey, "avatar/" + user.getUsername() + ".jpg");
     }
 
     public void updateHighDefinitionAvatarByObjectKey(String sessionId, String objectKey) throws TokenExpiredException {
@@ -231,7 +237,7 @@ public class UserProfileService {
         if (user == null) {
             throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
         }
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "avatar/" + user.getUsername() + "_hd.jpg");
+        uploads.moveUpload(sessionId, objectKey, "avatar/" + user.getUsername() + "_hd.jpg");
     }
 
     /**
@@ -250,8 +256,8 @@ public class UserProfileService {
     /** Internal cleanup entry; its argument is an identity, not a session ID. */
     public void deleteAvatarForUsername(String username) {
         if (username == null || username.isBlank()) throw new IllegalArgumentException("Missing avatar owner");
-        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + username + ".jpg");
-        r2StorageService.deleteObject("gdeiassistant-userdata", "avatar/" + username + "_hd.jpg");
+        storedAssets.deleteObject("avatar/" + username + ".jpg");
+        storedAssets.deleteObject("avatar/" + username + "_hd.jpg");
     }
 
     /**

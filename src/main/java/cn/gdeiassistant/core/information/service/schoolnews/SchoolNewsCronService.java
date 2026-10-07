@@ -1,8 +1,8 @@
 package cn.gdeiassistant.core.information.service.schoolnews;
 
 import cn.gdeiassistant.common.constant.ResourcesConstantUtils;
-import cn.gdeiassistant.common.pojo.entity.NewInfo;
-import cn.gdeiassistant.core.news.repository.NewDao;
+import cn.gdeiassistant.common.pojo.entity.NewsItem;
+import cn.gdeiassistant.core.news.repository.NewsRepository;
 import cn.gdeiassistant.integration.news.NewsClient;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.jsoup.nodes.Document;
@@ -41,7 +41,7 @@ public class SchoolNewsCronService {
     private final Logger logger = LoggerFactory.getLogger(SchoolNewsCronService.class);
 
     @Autowired
-    private NewDao newDao;
+    private NewsRepository newsRepository;
 
     @Autowired
     private NewsClient newsClient;
@@ -52,14 +52,14 @@ public class SchoolNewsCronService {
     public void collectNews() {
         logger.info("{}启动了收集新闻通知信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
-        Map<String, NewInfo> newInfoMap = new LinkedHashMap<>();
+        Map<String, NewsItem> newInfoMap = new LinkedHashMap<>();
         try {
             for (int i = 0; i < ResourcesConstantUtils.SCHOOL_NEWS_CATEGORY_URL_LIST.length; i++) {
                 int type = i + 1;
                 collectCategoryNews(type, ResourcesConstantUtils.SCHOOL_NEWS_CATEGORY_URL_LIST[i], newInfoMap);
             }
             if (!newInfoMap.isEmpty()) {
-                newDao.saveNewInfoList(new ArrayList<>(newInfoMap.values()));
+                newsRepository.saveNewsItems(new ArrayList<>(newInfoMap.values()));
             }
             logger.info("校园新闻抓取完成，本次同步 {} 条记录", newInfoMap.size());
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class SchoolNewsCronService {
         }
     }
 
-    private void collectCategoryNews(int type, String listUrl, Map<String, NewInfo> resultMap) {
+    private void collectCategoryNews(int type, String listUrl, Map<String, NewsItem> resultMap) {
         String currentPageUrl = listUrl;
         int pageCount = 0;
         int categorySavedCount = 0;
@@ -105,16 +105,16 @@ public class SchoolNewsCronService {
                     continue;
                 }
                 String id = DigestUtils.sha1Hex(detailUrl);
-                NewInfo existing = resultMap.get(id);
+                NewsItem existing = resultMap.get(id);
                 if (existing == null) {
-                    existing = newDao.queryNewInfo(id);
+                    existing = newsRepository.queryNewsItem(id);
                 }
                 if (resultMap.containsKey(id) && existing != null) {
                     continue;
                 }
 
                 try {
-                    NewInfo newInfo = buildNewsItem(type, item, linkElement, detailUrl, id, existing);
+                    NewsItem newInfo = buildNewsItem(type, item, linkElement, detailUrl, id, existing);
                     if (newInfo != null && shouldSaveNews(existing, newInfo)) {
                         resultMap.put(id, newInfo);
                         pageChangedCount++;
@@ -133,8 +133,8 @@ public class SchoolNewsCronService {
         }
     }
 
-    private NewInfo buildNewsItem(int type, Element listItem, Element linkElement, String detailUrl, String id,
-            NewInfo existing)
+    private NewsItem buildNewsItem(int type, Element listItem, Element linkElement, String detailUrl, String id,
+            NewsItem existing)
             throws Exception {
         String fallbackTitle = firstNonBlank(linkElement.attr("title"), linkElement.text(), "新闻通知");
         String content = "暂无详细内容";
@@ -154,7 +154,7 @@ public class SchoolNewsCronService {
         }
         Date publishDate = resolvePublishDate(extractPublishDateText(listItem), detailPage, existing);
 
-        NewInfo newInfo = new NewInfo();
+        NewsItem newInfo = new NewsItem();
         newInfo.setId(id);
         newInfo.setType(type);
         newInfo.setTitle(title);
@@ -164,7 +164,7 @@ public class SchoolNewsCronService {
         return newInfo;
     }
 
-    private boolean shouldSaveNews(NewInfo existing, NewInfo next) {
+    private boolean shouldSaveNews(NewsItem existing, NewsItem next) {
         if (existing == null) {
             return true;
         }
@@ -207,7 +207,7 @@ public class SchoolNewsCronService {
         );
     }
 
-    private Date resolvePublishDate(String listDateText, Document detailPage, NewInfo existing) {
+    private Date resolvePublishDate(String listDateText, Document detailPage, NewsItem existing) {
         LocalDate publishDate = parsePublishDate(listDateText);
         if (publishDate == null && detailPage != null) {
             publishDate = parsePublishDate(extractDetailPublishDateText(detailPage));

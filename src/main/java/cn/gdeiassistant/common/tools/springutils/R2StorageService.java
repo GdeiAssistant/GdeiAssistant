@@ -106,14 +106,7 @@ public class R2StorageService {
     }
 
     public void deleteObject(String bucket, String key) {
-        if (!isEnabled()) {
-            return;
-        }
-        try {
-            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build());
-        } catch (Exception ignored) {
-            // 忽略不存在等情况
-        }
+        deleteObjectStrict(bucket, key);
     }
 
     /**
@@ -149,10 +142,11 @@ public class R2StorageService {
         if (key == null || key.isBlank()) {
             throw new IllegalArgumentException("key 不能为空");
         }
-        s3Client.deleteObject(DeleteObjectRequest.builder()
-                .bucket(resolveBucket(bucket))
-                .key(key)
-                .build());
+        try {
+            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build());
+        } catch (NoSuchKeyException ignored) {
+            // Already removed; service/permission failures still propagate to the retry worker.
+        }
     }
 
     /**
@@ -211,30 +205,8 @@ public class R2StorageService {
     /**
      * 复制对象并删除源对象，适用于前端先上传临时对象、后端再归档到业务路径。
      */
-    public void moveObject(String sourceKey, String targetKey) {
-        moveObject(null, sourceKey, targetKey);
-    }
-
-    public void moveObject(String bucket, String sourceKey, String targetKey) {
-        if (!isEnabled()) {
-            throw new FeatureNotEnabledException("对象存储未开启，无法归档上传文件");
-        }
-        validateSourceKey(sourceKey);
-        String resolvedBucket = resolveBucket(bucket);
-        s3Client.copyObject(CopyObjectRequest.builder()
-                .sourceBucket(resolvedBucket)
-                .sourceKey(sourceKey)
-                .destinationBucket(resolvedBucket)
-                .destinationKey(targetKey)
-                .build());
-        s3Client.deleteObject(DeleteObjectRequest.builder()
-                .bucket(resolvedBucket)
-                .key(sourceKey)
-                .build());
-    }
-
     /**
-     * 生成预签名 GET URL；若配置了 customDomain 则替换 host 为自定义域名。
+     * 生成私有对象 GET URL；保留签名中的 S3 host，不替换自定义域名。
      * 对象不存在时返回空字符串（与原有 OSS 行为一致）。
      */
     public String generatePresignedUrl(String key, long expire, TimeUnit unit) {
@@ -253,26 +225,30 @@ public class R2StorageService {
         } catch (Exception e) {
             return "";
         }
-        Duration duration = Duration.ofMillis(unit.toMillis(expire));
-        GetObjectRequest getRequest = GetObjectRequest.builder().bucket(resolvedBucket).key(key).build();
-        PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
-                GetObjectPresignRequest.builder().signatureDuration(duration).getObjectRequest(getRequest).build());
-        String url = normalizePresignedUrl(presigned.url().toString());
-        if (r2Config.getCustomDomain() != null && !r2Config.getCustomDomain().isEmpty()) {
-            try {
-                URL original = presigned.url();
-                String path = original.getPath();
-                if (original.getQuery() != null) {
-                    path += "?" + original.getQuery();
-                }
-                String customDomain = r2Config.getCustomDomain();
-                String scheme = customDomain.startsWith("http://") ? "http://" : "https://";
-                String domain = customDomain.replaceFirst("^https?://", "").split("/")[0];
-                url = scheme + domain + path;
-            } catch (Exception ignored) {
-            }
-        }
-        return url;
+        return generateKnownObjectUrl(bucket, key, expire, unit);
+    }
+
+    /** Sign confirmed metadata locally, without a remote existence probe. */
+    public String generateKnownObjectUrl(String bucket, String key, long expire, TimeUnit unit) {
+        if (!isEnabled()) return "";
+        var request = GetObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build();
+        return s3Presigner.presignGetObject(GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofMillis(unit.toMillis(expire))).getObjectRequest(request).build()).url().toString();
+    }
+
+    public HeadObjectResponse headObjectMetadata(String key) {
+        if (!isEnabled()) throw new FeatureNotEnabledException("对象存储未开启");
+        try { return s3Client.headObject(HeadObjectRequest.builder().bucket(resolveBucket(null)).key(key).build()); }
+        catch (NoSuchKeyException missing) { return null; }
+    }
+
+    public void moveVerifiedObject(String sourceKey, String targetKey, String etag) {
+        validateSourceKey(sourceKey);
+        if (etag == null || etag.isBlank()) throw new IllegalArgumentException("Missing upload version");
+        if (!isEnabled()) throw new FeatureNotEnabledException("对象存储未开启");
+        s3Client.copyObject(CopyObjectRequest.builder().sourceBucket(resolveBucket(null)).sourceKey(sourceKey)
+                .destinationBucket(resolveBucket(null)).destinationKey(targetKey).copySourceIfMatch(etag).build());
+        deleteObjectStrict(null, sourceKey);
     }
 
     /**

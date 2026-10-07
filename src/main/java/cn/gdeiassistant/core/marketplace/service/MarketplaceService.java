@@ -12,7 +12,7 @@ import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
-import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,12 @@ public class MarketplaceService {
     private R2StorageService r2StorageService;
 
     @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Autowired
     private PublicAuthorResolver publicAuthorResolver;
 
     public boolean ownedByCurrentUser(String sessionId, MarketplaceItemEntity item) throws Exception {
@@ -62,6 +68,7 @@ public class MarketplaceService {
         int itemId = vo.getMarketplaceItem().getId();
         List<String> pictureURL = getItemPictureURL(itemId);
         vo.getMarketplaceItem().setAuthorId(author.authorId());
+        vo.getMarketplaceItem().setDisplayName(author.displayName());
         vo.getMarketplaceItem().setPictureURL(pictureURL);
         vo.getProfile().setUsername(author.displayName());
         vo.getProfile().setAvatarURL(author.authorId() != null
@@ -85,15 +92,16 @@ public class MarketplaceService {
         throw new DataNotExistException("二手交易商品不存在");
     }
 
-    public List<MarketplaceItemEntity> queryPersonalItems(String sessionId) throws Exception {
+    public List<MarketplaceItemEntity> queryPersonalItems(String sessionId, int start, int size) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        List<MarketplaceItemEntity> list = marketplaceMapper.selectItemsByUsername(user.getUsername());
+        List<MarketplaceItemEntity> list = marketplaceMapper.selectItemsByUsername(user.getUsername(), start, size);
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
+        applyPublicAuthors(list);
         for (MarketplaceItemEntity e : list) {
             e.setUsername(user.getUsername());
-            e.setPictureURL(getItemPictureURL(e.getId()));
+            e.setPictureURL(java.util.List.of(storedAssets.generatePresignedUrl("ershou/" + e.getId() + "_1.jpg", 30, TimeUnit.MINUTES)));
         }
         return list;
     }
@@ -103,7 +111,7 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        list.forEach(this::applyPublicAuthor);
+        applyPublicAuthors(list);
         return list;
     }
 
@@ -112,7 +120,7 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        list.forEach(this::applyPublicAuthor);
+        applyPublicAuthors(list);
         return list;
     }
 
@@ -121,13 +129,17 @@ public class MarketplaceService {
         if (list == null || list.isEmpty()) {
             return new ArrayList<>();
         }
-        list.forEach(this::applyPublicAuthor);
+        applyPublicAuthors(list);
         return list;
     }
 
-    private void applyPublicAuthor(MarketplaceItemEntity e) {
-        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(e.getUsername());
-        e.setAuthorId(author.authorId());
+    private void applyPublicAuthors(List<MarketplaceItemEntity> list) {
+        var authors = publicAuthorResolver.resolveAll(list.stream().map(MarketplaceItemEntity::getUsername).toList());
+        for (var item : list) {
+            var author = authors.getOrDefault(item.getUsername(), new PublicAuthorResolver.AuthorPublic(null, "用户"));
+            item.setAuthorId(author.authorId());
+            item.setDisplayName(author.displayName());
+        }
     }
 
     /** 发布：DTO -> Entity -> 持久化，返回带 id 的 Entity 供上传图片使用 */
@@ -191,7 +203,7 @@ public class MarketplaceService {
 
     public void uploadItemPicture(int id, int index, InputStream inputStream) {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "ershou/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("ershou/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传二手交易图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("图片上传失败", e);
@@ -206,14 +218,14 @@ public class MarketplaceService {
         }
     }
 
-    public void moveItemPictureFromTempObject(int id, int index, String objectKey) {
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "ershou/" + id + "_" + index + ".jpg");
+    public void moveItemPictureFromTempObject(int id, int index, String objectKey, String sessionId) {
+        uploads.moveUpload(sessionId, objectKey, "ershou/" + id + "_" + index + ".jpg");
     }
 
     public void deleteItemImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                r2StorageService.deleteObject("gdeiassistant-userdata", "ershou/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("ershou/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除二手交易图片失败，id={}，index={}", id, i, e);
             }
@@ -227,7 +239,7 @@ public class MarketplaceService {
     public List<String> getItemPictureURL(int id) {
         List<String> pictureURL = new ArrayList<>();
         for (int i = 1; i <= 4; i++) {
-            String url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "ershou/" + id + "_" + i + ".jpg"
+            String url = storedAssets.generatePresignedUrl("ershou/" + id + "_" + i + ".jpg"
                     , 30, TimeUnit.MINUTES);
             if (StringUtils.isNotBlank(url)) {
                 pictureURL.add(url);
@@ -237,4 +249,19 @@ public class MarketplaceService {
         }
         return pictureURL;
     }
+
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishItem(MarketplacePublishDTO dto, String sessionId,
+            org.springframework.web.multipart.MultipartFile[] images, String[] imageKeys) throws Exception {
+        var created = publishItem(dto, sessionId);
+        if (imageKeys != null && imageKeys.length > 0) {
+            for (int i=0; i<imageKeys.length; i++) moveItemPictureFromTempObject(created.getId(), i+1, imageKeys[i], sessionId);
+        } else if (images != null) {
+            int index = 1;
+            for (var image : images) {
+                if (image != null && !image.isEmpty()) uploadItemPicture(created.getId(), index++, image.getInputStream());
+            }
+        }
+    }
+
 }

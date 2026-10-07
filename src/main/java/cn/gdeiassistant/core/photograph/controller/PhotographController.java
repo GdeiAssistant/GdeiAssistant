@@ -156,24 +156,10 @@ public class PhotographController {
         actual.setContent(dto.getContent());
         actual.setCount(count);
         actual.setType(dto.getType());
-        int id = photographService.addPhotograph(actual, sessionId);
         try {
-            if (uploadedFileCount > 0) {
-                int imageIndex = 1;
-                for (MultipartFile image : images) {
-                    if (image != null && !image.isEmpty() && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                        photographService.uploadPhotographItemPicture(id, imageIndex++, image.getInputStream());
-                    }
-                }
-            } else if (uploadedKeyCount > 0) {
-                for (int i = 1; i <= imageKeys.length; i++) {
-                    photographService.movePhotographItemPictureFromTempObject(id, i, imageKeys[i - 1]);
-                }
-            }
-        } catch (Exception e) {
-            photographService.deletePhotographImages(id, count);
-            photographService.deletePhotograph(id);
-            return failure(request, "拍好校园图片上传失败");
+            photographService.publishPhotograph(actual, sessionId, images, imageKeys);
+        } catch (Exception failure) {
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("拍好校园图片上传失败", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

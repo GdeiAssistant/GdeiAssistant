@@ -5,9 +5,9 @@ import request from '@/utils/request'
  * @param {number} [year] 可选，学年索引 0~3（大一~大四），不传则默认最近学年
  * @returns {Promise<{ success: boolean, data: { year, firstTermGPA, secondTermGPA, firstTermGradeList, secondTermGradeList } }>}
  */
-export function getGrade(year) {
+export function getGrade(year, options = {}) {
   const config = year != null ? { params: { year } } : {}
-  return request.get('/grade', config)
+  return request.get('/grade', { ...config, ...options })
 }
 
 /**

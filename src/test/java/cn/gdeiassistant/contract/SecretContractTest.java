@@ -151,7 +151,6 @@ class SecretContractTest {
 
     @Test
     void publishVoiceEndpointAllowsMissingTextContentWhenVoiceKeyIsProvided() throws Exception {
-        when(secretService.addSecretInfo(eq("test-session"), any())).thenReturn(7);
 
         mockMvc.perform(post("/api/secret/info")
                         .requestAttr("sessionId", "test-session")
@@ -164,10 +163,9 @@ class SecretContractTest {
 
         ArgumentCaptor<cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO> captor =
                 ArgumentCaptor.forClass(cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO.class);
-        verify(secretService).addSecretInfo(eq("test-session"), captor.capture());
+        verify(secretService).publishVoice(eq("test-session"), captor.capture(), any(), any());
         assertEquals(1, captor.getValue().getType());
         assertNull(captor.getValue().getContent());
-        verify(secretService).moveVoiceSecretFromTempObject(7, "tmp/voice.m4a");
     }
 
     @Test

@@ -33,7 +33,7 @@ public interface MarketplaceMapper {
     MarketplaceItemVO selectInfoByID(int id);
 
     @Select("select id,username,name,description,price,location,type,qq,phone,state,publish_time" +
-            " from ershou where username=#{username} order by id desc limit 500")
+            " from ershou where username=#{username} order by id desc limit #{start},#{size}")
     @Results(id = "MarketplaceItemEntity", value = {
             @Result(property = "id", column = "id"),
             @Result(property = "username", column = "username"),
@@ -47,7 +47,7 @@ public interface MarketplaceMapper {
             @Result(property = "state", column = "state"),
             @Result(property = "publishTime", column = "publish_time", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
     })
-    List<MarketplaceItemEntity> selectItemsByUsername(String username);
+    List<MarketplaceItemEntity> selectItemsByUsername(@Param("username") String username, @Param("start") int start, @Param("size") int size);
 
     @Select("select id,username,name,description,price,location,type,qq,phone,state,publish_time" +
             " from ershou where state='1' order by id desc limit #{start},#{size}")
@@ -83,4 +83,8 @@ public interface MarketplaceMapper {
 
     @Delete("delete from ershou where id=#{id}")
     void deleteItem(@Param("id") int id);
+    // Account closure requires every state, independently of the UI page.
+    @Select("SELECT id,state FROM ershou WHERE username=#{username} ORDER BY id")
+    @ResultMap("MarketplaceItemEntity")
+    List<MarketplaceItemEntity> selectOwnerItemStates(@Param("username") String username);
 }

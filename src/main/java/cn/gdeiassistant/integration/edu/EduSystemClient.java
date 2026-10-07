@@ -7,7 +7,7 @@ import cn.gdeiassistant.common.tools.utils.WeekUtils;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -56,10 +56,11 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/cas_verify.aspx?i=" + credential.getUsername()
                     + "&k=" + credential.getKeycode() + "&timestamp=" + credential.getTimestamp());
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.toString().contains("您登陆的系统已经很长时间没有操作了")
@@ -67,11 +68,13 @@ public class EduSystemClient {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xscj_gc.aspx?xh=" + credential.getNumber());
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
@@ -88,6 +91,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -111,6 +115,7 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             List<BasicNameValuePair> form = new ArrayList<>();
             form.add(new BasicNameValuePair("__VIEWSTATE", viewState));
@@ -119,12 +124,13 @@ public class EduSystemClient {
             form.add(new BasicNameValuePair("ddlXQ", ""));
             HttpPost httpPost = new HttpPost(JWGL_BASE + "/xscj_gc.aspx?xh=" + credential.getNumber());
             httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("教务系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -145,21 +151,24 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/cas_verify.aspx?i=" + credential.getUsername()
                     + "&k=" + credential.getKeycode() + "&timestamp=" + credential.getTimestamp());
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xskbcx.aspx?xh=" + credential.getNumber());
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
@@ -219,6 +228,7 @@ public class EduSystemClient {
                     form.add(new BasicNameValuePair("xnd", xndFirstOption.attr("value")));
                     form.add(new BasicNameValuePair("xqd", xqdFormOptions.get(termIndex).attr("value")));
                     httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
+                    closeResponse(httpResponse);
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                     if (httpResponse.getStatusLine().getStatusCode() != 200) {
@@ -237,6 +247,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -253,21 +264,24 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/cas_verify.aspx?i=" + credential.getUsername()
                     + "&k=" + credential.getKeycode() + "&timestamp=" + credential.getTimestamp());
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xxjsjy.aspx?xh=" + credential.getNumber());
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
@@ -284,6 +298,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -304,15 +319,17 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpPost httpPost = new HttpPost(JWGL_BASE + "/" + formAction);
             httpPost.setEntity(new UrlEncodedFormEntity(formParams, StandardCharsets.UTF_8));
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("教务系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -329,16 +346,18 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/cas_verify.aspx?i=" + credential.getUsername()
                     + "&k=" + credential.getKeycode() + "&timestamp=" + credential.getTimestamp());
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.toString().equals("您登陆的系统已经很长时间没有操作了，为安全起见请重新登录后再进行操作！")) {
                     throw new TimeStampIncorrectException("时间戳校验失败");
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber());
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
                     throw new ServerErrorException("教务系统异常");
@@ -355,6 +374,7 @@ public class EduSystemClient {
             }
             throw new ServerErrorException("教务系统异常");
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -374,14 +394,16 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, false, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/" + path);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("教务系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
@@ -406,9 +428,10 @@ public class EduSystemClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, EDU_REQUEST_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/js_main.aspx?xh=" + teacherUsername);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("教务系统异常");
@@ -422,6 +445,7 @@ public class EduSystemClient {
             httpGet = new HttpGet(JWGL_BASE + "/jstjkbcx.aspx?zgh=" + teacherUsername);
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36");
             httpGet.setHeader("Referer", JWGL_BASE + "/js_main.aspx?xh=" + teacherUsername);
+            closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
@@ -448,6 +472,7 @@ public class EduSystemClient {
                 form.add(new BasicNameValuePair("Button2", "查询教师"));
                 form.add(new BasicNameValuePair("js", teacherUsername));
                 httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
+                closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpPost);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
@@ -456,10 +481,20 @@ public class EduSystemClient {
             }
             return document;
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
+        }
+    }
+
+    private static void closeResponse(CloseableHttpResponse response) {
+        if (response == null) return;
+        try {
+            response.close();
+        } catch (IOException e) {
+            logger.warn("关闭校园 HTTP 响应失败: {}", e.getClass().getSimpleName());
         }
     }
 

@@ -14,7 +14,7 @@ import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.utils.PublicAuthorResolver;
+import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +46,12 @@ public class PhotographService {
 
     @Autowired
     private R2StorageService r2StorageService;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
     @Autowired
     private InteractionNotificationService interactionNotificationService;
@@ -173,7 +179,7 @@ public class PhotographService {
 
     public void uploadPhotographItemPicture(int id, int index, InputStream inputStream) {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("photograph/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传拍好校园图片失败，id={}, index={}", id, index, e);
             throw new RuntimeException("拍好校园图片上传失败", e);
@@ -188,8 +194,8 @@ public class PhotographService {
         }
     }
 
-    public void movePhotographItemPictureFromTempObject(int id, int index, String objectKey) {
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "photograph/" + id + "_" + index + ".jpg");
+    public void movePhotographItemPictureFromTempObject(int id, int index, String objectKey, String sessionId) {
+        uploads.moveUpload(sessionId, objectKey, "photograph/" + id + "_" + index + ".jpg");
     }
 
     public void deletePhotograph(int id) {
@@ -199,7 +205,7 @@ public class PhotographService {
     public void deletePhotographImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                r2StorageService.deleteObject("gdeiassistant-userdata", "photograph/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("photograph/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除拍好校园图片失败，id={}，index={}", id, i, e);
             }
@@ -207,7 +213,7 @@ public class PhotographService {
     }
 
     public String getPhotographItemPictureURL(int id, int index) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl("photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
     @Transactional("appTransactionManager")
@@ -251,4 +257,18 @@ public class PhotographService {
         List<PhotographEntity> list = photographMapper.selectPhotographByIdAndUsername(id, username);
         return list == null || list.isEmpty() ? null : list.get(0);
     }
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishPhotograph(PhotographPublishDTO dto, String sessionId,
+            org.springframework.web.multipart.MultipartFile[] images, String[] imageKeys) throws Exception {
+        var created = addPhotograph(dto, sessionId);
+        if (imageKeys != null && imageKeys.length > 0) {
+            for (int i=0; i<imageKeys.length; i++) movePhotographItemPictureFromTempObject(created, i+1, imageKeys[i], sessionId);
+        } else if (images != null) {
+            int index = 1;
+            for (var image : images) {
+                if (image != null && !image.isEmpty()) uploadPhotographItemPicture(created, index++, image.getInputStream());
+            }
+        }
+    }
+
 }

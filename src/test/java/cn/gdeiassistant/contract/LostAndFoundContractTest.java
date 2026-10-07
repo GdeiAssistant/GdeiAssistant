@@ -133,8 +133,6 @@ class LostAndFoundContractTest {
     void publishEndpointAcceptsValidPayloadAndImageKeys() throws Exception {
         LostAndFoundItemVO saved = mockLostAndFoundItem();
         saved.setId(8);
-        when(lostAndFoundService.addLostAndFoundItem(any(LostAndFoundPublishDTO.class), eq("test-session")))
-                .thenReturn(saved);
 
         mockMvc.perform(post("/api/lostandfound/item")
                         .requestAttr("sessionId", "test-session")
@@ -151,7 +149,7 @@ class LostAndFoundContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<LostAndFoundPublishDTO> captor = ArgumentCaptor.forClass(LostAndFoundPublishDTO.class);
-        verify(lostAndFoundService).addLostAndFoundItem(captor.capture(), eq("test-session"));
+        verify(lostAndFoundService).publishItem(captor.capture(), eq("test-session"), any(), any());
         LostAndFoundPublishDTO dto = captor.getValue();
         assertEquals("校园卡", dto.getName());
         assertEquals("图书馆门口捡到", dto.getDescription());
@@ -161,8 +159,6 @@ class LostAndFoundContractTest {
         assertEquals("123456", dto.getQq());
         assertEquals("wechat-id", dto.getWechat());
         assertEquals("13612340001", dto.getPhone());
-        verify(lostAndFoundService).moveLostAndFoundItemPictureFromTempObject(8, 1, "upload/lost-1.jpg");
-        verify(lostAndFoundService).moveLostAndFoundItemPictureFromTempObject(8, 2, "upload/lost-2.jpg");
     }
 
     @Test

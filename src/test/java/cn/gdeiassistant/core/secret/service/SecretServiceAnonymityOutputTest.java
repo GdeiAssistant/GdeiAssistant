@@ -14,7 +14,7 @@ import cn.gdeiassistant.core.secret.pojo.entity.SecretContentEntity;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.springutils.R2StorageService;
+import cn.gdeiassistant.core.objectstorage.service.StoredAssetService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +39,7 @@ class SecretServiceAnonymityOutputTest {
     @Mock
     private UserCertificateService userCertificateService;
     @Mock
-    private R2StorageService r2StorageService;
+    private StoredAssetService storedAssets;
     @Mock
     private InteractionNotificationService interactionNotificationService;
 
@@ -53,7 +53,7 @@ class SecretServiceAnonymityOutputTest {
         secretService = new SecretService();
         ReflectionTestUtils.setField(secretService, "secretMapper", secretMapper);
         ReflectionTestUtils.setField(secretService, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(secretService, "r2StorageService", r2StorageService);
+        ReflectionTestUtils.setField(secretService, "storedAssets", storedAssets);
         ReflectionTestUtils.setField(secretService, "interactionNotificationService", interactionNotificationService);
         ReflectionTestUtils.setField(secretService, "secretConverter", converter);
         ReflectionTestUtils.setField(secretService, "secretCommentConverter", commentConverter);

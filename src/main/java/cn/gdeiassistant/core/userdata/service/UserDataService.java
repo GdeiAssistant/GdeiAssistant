@@ -80,6 +80,9 @@ public class UserDataService {
     private R2StorageService r2StorageService;
 
     @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Autowired
     private SecretService secretService;
 
     /**
@@ -128,13 +131,13 @@ public class UserDataService {
             Map<String, Object> data = new HashMap<>();
             data.put("username", user.getUsername());
             //下载用户头像
-            InputStream avatar = r2StorageService.downloadObject("gdeiassistant-userdata"
+            InputStream avatar = r2StorageService.downloadObject(null
                     , "avatar/" + user.getUsername() + ".jpg");
             if (avatar != null) {
                 userDataMap.put("avatar.jpg", avatar);
             }
             //下载用户高清头像
-            InputStream avatarHD = r2StorageService.downloadObject("gdeiassistant-userdata"
+            InputStream avatarHD = r2StorageService.downloadObject(null
                     , "avatar/" + user.getUsername() + "_hd.jpg");
             if (avatarHD != null) {
                 userDataMap.put("avatar_hd.jpg", avatarHD);
@@ -190,7 +193,7 @@ public class UserDataService {
                 for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
                     //下载二手交易图片
                     for (int i = 0; i <= 3; i++) {
-                        InputStream image = r2StorageService.downloadObject("gdeiassistant-userdata", "ershou/"
+                        InputStream image = r2StorageService.downloadObject(null, "ershou/"
                                 + secondhandItem.getId() + "_" + i + ".jpg");
                         if (image != null) {
                             userDataMap.put("ershou_" + secondhandItem.getId() + "_" + i + ".jpg", image);
@@ -207,7 +210,7 @@ public class UserDataService {
                 for (LostAndFoundItemEntity lostAndFoundItem : lostAndFoundItemList) {
                     //下载失物招领图片
                     for (int i = 0; i <= 3; i++) {
-                        InputStream image = r2StorageService.downloadObject("gdeiassistant-userdata", "lostandfound/"
+                        InputStream image = r2StorageService.downloadObject(null, "lostandfound/"
                                 + lostAndFoundItem.getId() + "_" + i + ".jpg");
                         if (image != null) {
                             userDataMap.put("lostandfound_" + lostAndFoundItem.getId() + "_" + i + ".jpg", image);
@@ -236,7 +239,7 @@ public class UserDataService {
                     if (secret.getType() != null && secret.getType().equals(1)) {
                         //下载语音信息
                         String voiceObjectKey = secretService.findSecretVoiceObjectKey(secret.getId());
-                        InputStream voice = voiceObjectKey == null ? null : r2StorageService.downloadObject("gdeiassistant-userdata", voiceObjectKey);
+                        InputStream voice = voiceObjectKey == null ? null : r2StorageService.downloadObject(null, voiceObjectKey);
                         if (voice != null) {
                             String extension = ".mp3";
                             int dotIndex = voiceObjectKey.lastIndexOf('.');
@@ -255,7 +258,7 @@ public class UserDataService {
                 for (PhotographEntity photograph : photographList) {
                     //下载拍好校园图片
                     for (int i = 1; i <= photograph.getCount(); i++) {
-                        InputStream image = r2StorageService.downloadObject("gdeiassistant-userdata", "photograph/"
+                        InputStream image = r2StorageService.downloadObject(null, "photograph/"
                                 + photograph.getId() + "_" + i + ".jpg");
                         if (image != null) {
                             userDataMap.put("photograph_" + photograph.getId() + "_" + i + ".jpg", image);
@@ -380,7 +383,7 @@ public class UserDataService {
 
             //上传文件
             byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-            r2StorageService.uploadObject("gdeiassistant-userdata", "export/" + uuid + ".zip"
+            r2StorageService.uploadObject(null, "export/" + uuid + ".zip"
                     , byteArrayInputStream);
 
             //导出用户数据成功，写入Redis记录
@@ -427,7 +430,7 @@ public class UserDataService {
         String token = exportDataDao.queryExportDataToken(user.getUsername());
         String url = null;
         if (StringUtils.isNotBlank(token)) {
-            url = r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "export/" + token + ".zip"
+            url = storedAssets.generatePresignedUrl("export/" + token + ".zip"
                     , 90, TimeUnit.MINUTES);
         }
         return url;

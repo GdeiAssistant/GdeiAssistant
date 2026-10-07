@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 校园新闻 MongoDB 集合 new 的持久化映射（与 NewInfo 字段一致）。
+ * 校园新闻 MongoDB 集合 new 的持久化映射（与 NewsItem 字段一致）。
  */
 public class SchoolNewsEntity implements Serializable {
 

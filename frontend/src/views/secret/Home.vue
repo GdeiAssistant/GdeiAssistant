@@ -1,8 +1,10 @@
 <script setup>
+import { getSecretInfoPage, postSecretByIdLike } from "../../api/secretEndpoints.js"
+
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -28,7 +30,7 @@ function mapSecretItem(s) {
 
 const fetchSecretData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/secret/info/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getSecretInfoPage(start, PAGE_SIZE)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map(mapSecretItem) : []
   return { list, hasMore: list.length >= PAGE_SIZE }
@@ -42,12 +44,12 @@ function goDetail(id) {
 
 function toggleLike(item) {
   if (item.liked) {
-    request.post(`/secret/id/${item.id}/like`, null, { params: { like: 0 } }).then(() => {
+    postSecretByIdLike(item.id, null, { params: { like: 0 } }).then(() => {
       item.liked = false
       item.likeCount--
     }).catch(() => {})
   } else {
-    request.post(`/secret/id/${item.id}/like`, null, { params: { like: 1 } }).then(() => {
+    postSecretByIdLike(item.id, null, { params: { like: 1 } }).then(() => {
       item.liked = true
       item.likeCount++
     }).catch(() => {})

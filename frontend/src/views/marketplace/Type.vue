@@ -1,8 +1,10 @@
 <script setup>
+import { getMarketplaceItemTypePage } from "../../api/marketplaceEndpoints.js"
+
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { createCommunityPullMessages, createMarketplaceCategoryNames } from '../community/communityContent'
@@ -27,7 +29,7 @@ const typeName = computed(() => {
   return typeNames.value[typeId.value] ?? t('marketplace.categoryTitle')
 })
 
-function mapErshouItemToCard(item) {
+function mapMarketplaceItemToCard(item) {
   return {
     id: item.id,
     title: item.name,
@@ -42,9 +44,9 @@ const fetchTypeData = async (page) => {
     return { list: [], hasMore: false }
   }
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/marketplace/item/type/${typeId.value}/start/${start}`)
+  const res = await getMarketplaceItemTypePage(typeId.value, start)
   const rawList = res?.data || []
-  const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
+  const list = Array.isArray(rawList) ? rawList.map(mapMarketplaceItemToCard) : []
   return {
     list,
     hasMore: list.length >= PAGE_SIZE

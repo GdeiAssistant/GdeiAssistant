@@ -38,10 +38,13 @@ class MarketplaceServiceTest {
     private R2StorageService r2StorageService;
 
     @Mock
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Mock
     private UserProfileService userProfileService;
 
     @Mock
-    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
+    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
 
     @InjectMocks
     private MarketplaceService marketplaceService;
@@ -52,7 +55,6 @@ class MarketplaceServiceTest {
         item.setId(1);
         item.setName("Textbook");
         when(marketplaceMapper.selectAvailableItems(0, 10)).thenReturn(List.of(item));
-        when(publicAuthorResolver.resolve(null)).thenReturn(new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户"));
 
         List<MarketplaceItemEntity> result = marketplaceService.queryItems(0);
 
@@ -87,12 +89,10 @@ class MarketplaceServiceTest {
         vo.setMarketplaceItem(item);
         vo.setProfile(new ProfileVO());
         when(marketplaceMapper.selectInfoByID(1)).thenReturn(vo);
-        when(r2StorageService.generatePresignedUrl(eq("gdeiassistant-userdata"),
-                eq("ershou/1_1.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("https://pic1.jpg");
-        when(r2StorageService.generatePresignedUrl(eq("gdeiassistant-userdata"),
-                eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
+        when(storedAssets.generatePresignedUrl(eq("ershou/1_1.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("https://pic1.jpg");
+        when(storedAssets.generatePresignedUrl(eq("ershou/1_2.jpg"), eq(30L), eq(TimeUnit.MINUTES))).thenReturn("");
         String publicId = "11111111-1111-4111-8111-111111111111";
-        when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
+        when(publicAuthorResolver.resolve("testuser")).thenReturn(new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(publicId, "同学"));
 
         MarketplaceItemVO result = marketplaceService.queryDetailById(1);
 
@@ -129,7 +129,7 @@ class MarketplaceServiceTest {
     @Test
     void uploadItemPictureThrowsOnR2Failure() {
         doThrow(new RuntimeException("R2 down"))
-                .when(r2StorageService).uploadObject(eq("gdeiassistant-userdata"), anyString(), any(InputStream.class));
+                .when(storedAssets).uploadObject(anyString(), any(InputStream.class));
 
         InputStream stream = new ByteArrayInputStream(new byte[]{1, 2, 3});
 
@@ -145,8 +145,8 @@ class MarketplaceServiceTest {
     @Test
     void deleteItemImages_callsR2DeleteForEachIndex() {
         marketplaceService.deleteItemImages(99, 3);
-        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_1.jpg"));
-        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_2.jpg"));
-        verify(r2StorageService).deleteObject(eq("gdeiassistant-userdata"), eq("ershou/99_3.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_1.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_2.jpg"));
+        verify(storedAssets).deleteObject(eq("ershou/99_3.jpg"));
     }
 }

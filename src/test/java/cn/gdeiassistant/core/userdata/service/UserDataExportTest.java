@@ -52,6 +52,9 @@ class UserDataExportTest {
     @Mock LogDataMapper logs;
     @Mock ExportDataDao exports;
     @Mock R2StorageService storage;
+
+    @Mock
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
     @Mock SecretService secrets;
     @InjectMocks UserDataService service;
 
@@ -129,7 +132,7 @@ class UserDataExportTest {
         express.setPersonGender(1);
         when(app.selectUserExpressItemList("owner")).thenReturn(List.of(express));
         when(logs.selectChargeLogList("owner")).thenReturn(List.of(new ChargeLog()));
-        when(storage.downloadObject(eq("gdeiassistant-userdata"), anyString()))
+        when(storage.downloadObject(eq((String) null), anyString()))
                 .thenAnswer(
                         i -> {
                             String k = i.getArgument(1);
@@ -150,7 +153,7 @@ class UserDataExportTest {
                         })
                 .when(storage)
                 .uploadObject(
-                        eq("gdeiassistant-userdata"),
+                        eq((String) null),
                         startsWith("export/"),
                         any(InputStream.class));
         service.exportUserData("session");
@@ -190,7 +193,7 @@ class UserDataExportTest {
                             return null;
                         })
                 .when(storage)
-                .uploadObject(anyString(), anyString(), any(InputStream.class));
+                .uploadObject(isNull(), anyString(), any(InputStream.class));
         service.exportUserData("session");
         try (ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(archive[0]))) {
             assertEquals("data.json", zip.getNextEntry().getName());
@@ -206,7 +209,7 @@ class UserDataExportTest {
     void failedUploadClearsTaskWithoutAdvertisingDownload() throws Exception {
         doThrow(new IllegalStateException("synthetic storage failure"))
                 .when(storage)
-                .uploadObject(anyString(), anyString(), any(InputStream.class));
+                .uploadObject(isNull(), anyString(), any(InputStream.class));
         service.exportUserData("session");
         verify(exports).removeExportingDataToken("owner");
         verify(exports, never()).saveExportDataToken(anyString(), anyString());
@@ -216,8 +219,7 @@ class UserDataExportTest {
     void exportStatusAndDownloadAreScopedToOwnerAndBounded() {
         when(exports.queryExportDataToken("owner")).thenReturn("synthetic-export");
         when(exports.queryExportingDataToken("owner")).thenReturn("running");
-        when(storage.generatePresignedUrl(
-                        "gdeiassistant-userdata",
+        when(storedAssets.generatePresignedUrl(
                         "export/synthetic-export.zip",
                         90,
                         TimeUnit.MINUTES))

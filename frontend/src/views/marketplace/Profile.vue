@@ -1,8 +1,10 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { getMarketplaceProfile, postMarketplaceItemStateById } from "../../api/marketplaceEndpoints.js"
+
+import { computed, onMounted, onUnmounted, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { getCurrentUserProfile } from '../../api/user.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -88,13 +90,40 @@ async function loadUserInfo() {
   introduction.value = data.introduction || defaultIntroduction.value
 }
 
-async function loadItems() {
-  const res = await request.get('/marketplace/profile')
-  const data = res?.data || {}
-  doingList.value = Array.isArray(data.doing) ? data.doing.map(mapProfileItem) : []
-  soldList.value = Array.isArray(data.sold) ? data.sold.map(mapProfileItem) : []
-  offList.value = Array.isArray(data.off) ? data.off.map(mapProfileItem) : []
+let nextStart = 0
+let hasMore = true
+let pageGeneration = 0
+let loadingMore = false
+const loadError = ref(null)
+async function loadItems(append = false) {
+  if (append && (loadingMore || !hasMore)) return
+  if (!append) { pageGeneration++; nextStart = 0; hasMore = true }
+  const generation = pageGeneration
+  loadingMore = true
+  loadError.value = null
+  try {
+    const res = await getMarketplaceProfile({ params: { start: append ? nextStart : 0 } })
+    if (generation !== pageGeneration) return
+    const data = res?.data || {}
+    if (data.hasMore === true && (!Number.isInteger(data.nextStart) || data.nextStart <= (append ? nextStart : 0))) throw new Error("Invalid pagination cursor")
+    const doing = Array.isArray(data.doing) ? data.doing.map(mapProfileItem) : []
+    doingList.value = append ? [...doingList.value, ...doing] : doing
+    const sold = Array.isArray(data.sold) ? data.sold.map(mapProfileItem) : []
+    soldList.value = append ? [...soldList.value, ...sold] : sold
+    const off = Array.isArray(data.off) ? data.off.map(mapProfileItem) : []
+    offList.value = append ? [...offList.value, ...off] : off
+    hasMore = data.hasMore === true
+    nextStart = data.nextStart
+  } catch (error) { if (generation === pageGeneration) loadError.value = error }
+  finally { if (generation === pageGeneration) loadingMore = false }
+  await nextTick()
+  if (generation === pageGeneration && !loadError.value && hasMore && ({ doing: doingList, sold: soldList, off: offList }[activeStat.value])?.value.length === 0) await loadItems(true)
 }
+function loadNearBottom() {
+  if (document.documentElement.scrollHeight - window.innerHeight - window.scrollY < 200) loadItems(true)
+}
+onMounted(() => window.addEventListener('scroll', loadNearBottom, { passive: true }))
+onUnmounted(() => { pageGeneration++; window.removeEventListener('scroll', loadNearBottom) })
 
 async function loadPage() {
   loading.value = true
@@ -115,7 +144,7 @@ async function updateItemState(id, state, confirmText, successText) {
   if (confirmText && !window.confirm(confirmText)) return
   actionLoading.value = true
   try {
-    await request.post(`/marketplace/item/state/id/${id}`, null, { params: { state } })
+    await postMarketplaceItemStateById(id, null, { params: { state } })
     await loadItems()
     showDialog(successText)
   } finally {
@@ -130,6 +159,7 @@ onMounted(() => {
 
 watch(() => route.fullPath, () => {
   applyRouteState()
+  if (hasMore) loadItems(true)
 })
 </script>
 
@@ -198,12 +228,12 @@ watch(() => route.fullPath, () => {
           </div>
 <div v-if="doingList.length === 0" class="community-marketplace-empty-shell">
             <AppEmpty
-              :title="emptyText"
+              :title="loadError ? t('common.networkError') : emptyText"
               :description="t('feature.ershou.description')"
-              :action-text="t('marketplace.publish.title')"
+              :action-text="loadError ? t('common.retry') : t('marketplace.publish.title')"
               accent="var(--c-ershou)"
               action-variant="primary"
-              @action="router.push('/marketplace/publish')"
+              @action="loadError ? loadItems() : router.push('/marketplace/publish')"
             >
               <template #icon>
                 <span class="community-marketplace-empty-icon" aria-hidden="true">▣</span>
@@ -233,7 +263,7 @@ watch(() => route.fullPath, () => {
           </div>
           <div v-if="soldList.length === 0" class="community-marketplace-empty-shell">
             <AppEmpty
-              :title="emptyText"
+              :title="loadError ? t('common.networkError') : emptyText"
               :description="t('feature.ershou.description')"
               :action-text="t('marketplace.profile.tab.doing')"
               accent="var(--c-ershou)"
@@ -268,7 +298,7 @@ watch(() => route.fullPath, () => {
           </div>
           <div v-if="offList.length === 0" class="community-marketplace-empty-shell">
             <AppEmpty
-              :title="emptyText"
+              :title="loadError ? t('common.networkError') : emptyText"
               :description="t('feature.ershou.description')"
               :action-text="t('marketplace.profile.tab.doing')"
               accent="var(--c-ershou)"

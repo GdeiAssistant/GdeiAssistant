@@ -11,7 +11,6 @@ import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
@@ -31,6 +30,11 @@ import java.util.concurrent.Semaphore;
 @Service
 @Profile("production")
 public class ScheduleCronService {
+
+    @Autowired
+    @org.springframework.beans.factory.annotation.Qualifier("campusSyncExecutor")
+    private java.util.concurrent.Executor campusSyncExecutor;
+    private final java.util.concurrent.atomic.AtomicBoolean running = new java.util.concurrent.atomic.AtomicBoolean();
 
     private final Logger logger = LoggerFactory.getLogger(ScheduleCronService.class);
 
@@ -53,6 +57,7 @@ public class ScheduleCronService {
      * 同步教务系统实时课表信息（可由 Scheduler 或 HTTP /cron/schedule 触发）。
      */
     public void synchronizeScheduleData() {
+        if (!running.compareAndSet(false, true)) return;
         logger.info("{}启动了查询保存用户课表信息的任务", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
         List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
@@ -67,8 +72,7 @@ public class ScheduleCronService {
                 //如果最后更新日期距今已超过3天，则进行更新
                 if (scheduleDocument == null || Duration.between(scheduleDocument.getUpdateDateTime()
                         .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), LocalDateTime.now()).toDays() >= 3) {
-                    CompletableFuture<ScheduleQueryVO> future = ((ScheduleCronService) AopContext.currentProxy())
-                            .asyncQuerySchedule(semaphore, user);
+                    CompletableFuture<ScheduleQueryVO> future = CompletableFuture.supplyAsync(() -> asyncQuerySchedule(semaphore, user).join(), campusSyncExecutor);
                     User finalUser = user;
                     CompletableFuture<Void> completion = future.handle((result, throwable) -> {
                         if (throwable != null) {
@@ -92,6 +96,10 @@ public class ScheduleCronService {
                         return null;
                     });
                     pendingTasks.add(completion);
+                    if (pendingTasks.size() == 5) {
+                        CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture[0])).join();
+                        pendingTasks.clear();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -101,6 +109,8 @@ public class ScheduleCronService {
                 CompletableFuture.allOf(pendingTasks.toArray(new CompletableFuture<?>[0])).join();
             } catch (Exception e) {
                 logger.error("等待定时查询保存课表信息任务完成异常：", e);
+            } finally {
+                running.set(false);
             }
         }
     }
@@ -111,7 +121,6 @@ public class ScheduleCronService {
      * @param semaphore
      * @param user
      */
-    @Async
     public CompletableFuture<ScheduleQueryVO> asyncQuerySchedule(Semaphore semaphore, User user) {
         boolean acquired = false;
         try {

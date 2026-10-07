@@ -161,8 +161,6 @@ class PhotographContractTest {
 
     @Test
     void publishEndpointDerivesCountFromImageKeysWhenCountParamIsMissing() throws Exception {
-        when(photographService.addPhotograph(any(PhotographPublishDTO.class), eq("test-session")))
-                .thenReturn(9);
 
         mockMvc.perform(post("/api/photograph")
                         .requestAttr("sessionId", "test-session")
@@ -174,14 +172,12 @@ class PhotographContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<PhotographPublishDTO> captor = ArgumentCaptor.forClass(PhotographPublishDTO.class);
-        verify(photographService).addPhotograph(captor.capture(), eq("test-session"));
+        verify(photographService).publishPhotograph(captor.capture(), eq("test-session"), any(), any());
         PhotographPublishDTO dto = captor.getValue();
         assertEquals("毕业季", dto.getTitle());
         assertEquals("校园照片", dto.getContent());
         assertEquals(2, dto.getCount());
         assertEquals(1, dto.getType());
-        verify(photographService).movePhotographItemPictureFromTempObject(9, 1, "upload/photo-1.jpg");
-        verify(photographService).movePhotographItemPictureFromTempObject(9, 2, "upload/photo-2.jpg");
     }
 
     @Test

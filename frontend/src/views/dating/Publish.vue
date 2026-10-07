@@ -1,8 +1,10 @@
 <script setup>
+import { postDatingProfile } from "../../api/datingEndpoints.js"
+
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -141,7 +143,7 @@ async function submit() {
     if (hasQq) payload.append('qq', formData.value.qq.trim())
     if (hasWechat) payload.append('wechat', formData.value.wechat.trim())
 
-    await request.post('/dating/profile', payload)
+    await postDatingProfile(payload)
     hideLoading()
     toastSuccess(copy.value.publishSuccess)
     setTimeout(() => router.push('/dating/home'), 1500)

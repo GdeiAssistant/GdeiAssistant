@@ -1,8 +1,10 @@
 <script setup>
+import { getTopicById, postTopicByIdLike } from "../../api/topicEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
@@ -15,7 +17,7 @@ const loading = ref(true)
 async function loadDetail() {
   try {
     loading.value = true
-    const res = await request.get(`/topic/id/${route.params.id}`)
+    const res = await getTopicById(route.params.id)
     const data = res?.data
     if (data && res.success !== false) {
       topic.value = {
@@ -43,7 +45,7 @@ function handleLike() {
   if (!topic.value || topic.value.liked) {
     return
   }
-  request.post(`/topic/id/${topic.value.id}/like`).then(() => {
+  postTopicByIdLike(topic.value.id).then(() => {
     topic.value.liked = true
     topic.value.likeCount++
   }).catch(() => {})

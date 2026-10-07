@@ -58,7 +58,7 @@ class InformationCenterContractTest {
 
     @Test
     void newsListReturnsEmptyPayloadWhenSourceHasNoData() throws Exception {
-        when(schoolNewsService.queryNewInfoList(1, 0, 10))
+        when(schoolNewsService.queryNewsItems(1, 0, 10))
                 .thenThrow(new DataNotExistException("no data"));
 
         mockMvc.perform(get("/api/information/news/type/1/start/0/size/10"))
@@ -70,14 +70,14 @@ class InformationCenterContractTest {
 
     @Test
     void newsListCapsPageSizeAtFifty() throws Exception {
-        when(schoolNewsService.queryNewInfoList(1, 0, 50))
+        when(schoolNewsService.queryNewsItems(1, 0, 50))
                 .thenThrow(new DataNotExistException("no data"));
 
         mockMvc.perform(get("/api/information/news/type/1/start/0/size/100"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        verify(schoolNewsService).queryNewInfoList(1, 0, 50);
+        verify(schoolNewsService).queryNewsItems(1, 0, 50);
     }
 
     @Test
@@ -174,7 +174,7 @@ class InformationCenterContractTest {
 
     @Test
     void newsDetailReturnsStableNotFoundPayload() throws Exception {
-        when(schoolNewsService.queryNewDetailInfo("news-missing"))
+        when(schoolNewsService.queryNewsDetail("news-missing"))
                 .thenThrow(new DataNotExistException("没有对应的新闻通知信息"));
 
         mockMvc.perform(get("/api/information/news/id/news-missing"))

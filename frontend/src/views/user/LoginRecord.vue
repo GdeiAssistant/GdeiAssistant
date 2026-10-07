@@ -43,11 +43,13 @@
 </template>
 
 <script setup>
+import { getIpPage020 } from "../../api/ipEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { getLocationCatalog } from '../../catalog/locationCatalog'
 
 const router = useRouter()
@@ -88,7 +90,7 @@ function formatTime(time) {
 const loadRecords = async () => {
   isLoading.value = true
   try {
-    const res = await request.get('/ip/start/0/size/20')
+    const res = await getIpPage020()
     const list = (res && res.data) || []
     rawRecords.value = list
   } catch (e) {

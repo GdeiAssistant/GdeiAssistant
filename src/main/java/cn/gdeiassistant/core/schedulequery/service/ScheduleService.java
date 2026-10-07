@@ -112,8 +112,13 @@ public class ScheduleService {
      * @throws cn.gdeiassistant.common.exception.databaseexception.DataNotExistException 当该 position 非当前用户自定义课程时
      */
     public void deleteCustomSchedule(String sessionId, Integer position) throws DataNotExistException {
+        deleteCustomSchedule(sessionId, position, null);
+    }
+
+    public void deleteCustomSchedule(String sessionId, Integer position, String courseId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        boolean removed = scheduleDao.deleteCustomSchedule(user.getUsername(), position);
+        boolean removed = courseId == null ? scheduleDao.deleteCustomSchedule(user.getUsername(), position)
+                : scheduleDao.deleteCustomSchedule(user.getUsername(), position, courseId);
         if (!removed) {
             throw new DataNotExistException("非法操作");
         }

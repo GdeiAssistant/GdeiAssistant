@@ -1,8 +1,10 @@
 <script setup>
+import { getMarketplaceItemPage } from "../../api/marketplaceEndpoints.js"
+
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -20,7 +22,7 @@ const { toast } = useToast()
 
 const PAGE_SIZE = 10
 
-function mapErshouItemToCard(item) {
+function mapMarketplaceItemToCard(item) {
   return {
     id: item.id,
     title: item.name,
@@ -32,9 +34,9 @@ function mapErshouItemToCard(item) {
 
 const fetchHomeData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/marketplace/item/start/${start}`)
+  const res = await getMarketplaceItemPage(start)
   const rawList = res?.data || []
-  const list = Array.isArray(rawList) ? rawList.map(mapErshouItemToCard) : []
+  const list = Array.isArray(rawList) ? rawList.map(mapMarketplaceItemToCard) : []
   return {
     list,
     hasMore: list.length >= PAGE_SIZE

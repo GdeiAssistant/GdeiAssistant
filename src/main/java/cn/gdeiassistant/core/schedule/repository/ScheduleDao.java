@@ -26,4 +26,6 @@ public interface ScheduleDao {
      * @return true 表示已删除，false 表示该 position 不属于当前用户的自定义课程（越权或非自定义）
      */
     boolean deleteCustomSchedule(String username, Integer position);
+
+    boolean deleteCustomSchedule(String username, Integer position, String courseId);
 }

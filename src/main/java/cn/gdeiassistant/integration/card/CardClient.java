@@ -3,7 +3,7 @@ package cn.gdeiassistant.integration.card;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
-import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
@@ -48,14 +48,16 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(ECARD_BASE + "/CardManage/CardInfo/BasicInfo");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -72,16 +74,18 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             String url = ECARD_BASE + "/CardManage/CardInfo/TrjnList?type=" + type;
             if (pageIndex > 1) url = url + "&pageindex=" + pageIndex;
             HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -95,17 +99,19 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             String d = year + "-" + month + "-" + date;
             String url = ECARD_BASE + "/CardManage/CardInfo/TrjnList?beginTime=" + d + "&endTime=" + d + "&type=1";
             if (pageIndex > 1) url = url + "&pageindex=" + pageIndex;
             HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -119,17 +125,19 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpPost httpPost = new HttpPost(ECARD_BASE + "/CardManage/CardInfo/LossCard");
             List<BasicNameValuePair> form = new ArrayList<>();
             form.add(new BasicNameValuePair("needHeader", "false"));
             httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -143,14 +151,16 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpGet httpGet = new HttpGet(ECARD_BASE + "/Account/GetNumKeyPadImg");
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -164,15 +174,17 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             String url = relativePath.startsWith("http") ? relativePath : ECARD_BASE + relativePath;
             HttpGet httpGet = new HttpGet(url);
-            HttpResponse httpResponse = httpClient.execute(httpGet);
+            httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }
@@ -186,6 +198,15 @@ public class CardClient {
                 buf.write(b, 0, n);
             }
             return buf.toByteArray();
+        }
+    }
+
+    private static void closeResponse(CloseableHttpResponse response) {
+        if (response == null) return;
+        try {
+            response.close();
+        } catch (IOException e) {
+            logger.warn("关闭校园 HTTP 响应失败: {}", e.getClass().getSimpleName());
         }
     }
 
@@ -209,6 +230,7 @@ public class CardClient {
         HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, CARD_TIMEOUT_SEC);
         CloseableHttpClient httpClient = httpClientSession.getCloseableHttpClient();
         CookieStore cookieStore = httpClientSession.getCookieStore();
+        CloseableHttpResponse httpResponse = null;
         try {
             HttpPost httpPost = new HttpPost(ECARD_BASE + "/CardManage/CardInfo/SetCardLost");
             List<BasicNameValuePair> form = new ArrayList<>();
@@ -218,12 +240,13 @@ public class CardClient {
             httpPost.setHeader("X-Requested-With", "XMLHttpRequest");
             httpPost.setHeader("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
             httpPost.setHeader("Referer", ECARD_BASE + "/");
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
                 throw new ServerErrorException("支付管理平台系统异常");
             }
             return EntityUtils.toString(httpResponse.getEntity());
         } finally {
+            closeResponse(httpResponse);
             closeHttpClient(httpClient);
             if (cookieStore != null) httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
         }

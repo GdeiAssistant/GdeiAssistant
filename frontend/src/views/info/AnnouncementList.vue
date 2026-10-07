@@ -34,10 +34,12 @@
 </template>
 
 <script setup>
+import { getInformationAnnouncementPage } from "../../api/informationEndpoints.js"
+
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import request from '@/utils/request'
+
 
 const router = useRouter()
 const { t } = useI18n()
@@ -48,7 +50,7 @@ const hasMore = ref(false)
 const PAGE_SIZE = 10
 
 async function loadPage(start) {
-  const res = await request.get(`/information/announcement/start/${start}/size/${PAGE_SIZE}`)
+  const res = await getInformationAnnouncementPage(start, PAGE_SIZE)
   if (res?.success && Array.isArray(res.data)) {
     return res.data
   }

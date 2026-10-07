@@ -1,8 +1,10 @@
 <script setup>
+import { postSecretInfo } from "../../api/secretEndpoints.js"
+
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -320,7 +322,7 @@ const submit = async () => {
     try {
       submitting.value = true
       toastLoading(t('secret.publish.publishing'))
-      await request.post('/secret/info', {
+      await postSecretInfo({
         content: formData.value.content,
         theme: formData.value.theme,
         type: 0,
@@ -349,7 +351,7 @@ const submit = async () => {
       payload.append('type', '1')
       payload.append('timer', String(formData.value.timer))
       payload.append('voiceKey', voiceKey)
-      await request.post('/secret/info', payload)
+      await postSecretInfo(payload)
       router.push('/secret/home')
     } catch (err) {
       showDialog(err?.message || t('secret.publish.submitFailed'))

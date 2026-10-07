@@ -1,9 +1,11 @@
 <script setup>
+import { getDatingPickMyReceived, getDatingPickMySent, getDatingProfileMy, postDatingPickById, postDatingProfileByIdState } from "../../api/datingEndpoints.js"
+
 import { computed, ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Sparkles } from 'lucide-vue-next'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import { getDatingCenterCopy } from './datingContent'
 
@@ -89,7 +91,7 @@ async function loadData() {
   loading.value = true
   try {
     if (activeTab.value === 0) {
-      const res = await request.get('/dating/pick/my/received')
+      const res = await getDatingPickMyReceived()
       const raw = res?.data || []
       receivedList.value = Array.isArray(raw) ? raw.map((p) => {
         const profile = getProfile(p)
@@ -103,7 +105,7 @@ async function loadData() {
         }
       }) : []
     } else if (activeTab.value === 1) {
-      const res = await request.get('/dating/pick/my/sent')
+      const res = await getDatingPickMySent()
       const raw = res?.data || []
       sentList.value = Array.isArray(raw) ? raw.map((p) => {
         const profile = getProfile(p)
@@ -118,7 +120,7 @@ async function loadData() {
         }
       }) : []
     } else {
-      const res = await request.get('/dating/profile/my')
+      const res = await getDatingProfileMy()
       const raw = res?.data || []
       postsList.value = Array.isArray(raw) ? raw.map((p) => ({
         id: normalizeId(p.profileId),
@@ -133,7 +135,7 @@ async function loadData() {
 }
 
 function handleAccept(item) {
-  request.post(`/dating/pick/id/${item.id}`, null, { params: { state: 1 } })
+  postDatingPickById(item.id, null, { params: { state: 1 } })
     .then(() => {
       item.status = 1
       showDialog(copy.value.acceptSuccess)
@@ -142,7 +144,7 @@ function handleAccept(item) {
 }
 
 function handleReject(item) {
-  request.post(`/dating/pick/id/${item.id}`, null, { params: { state: -1 } })
+  postDatingPickById(item.id, null, { params: { state: -1 } })
     .then(() => {
       item.status = -1
       showDialog(copy.value.rejectSuccess)
@@ -152,7 +154,7 @@ function handleReject(item) {
 
 function confirmDelete() {
   if (!deleteTargetId.value) return
-  request.post(`/dating/profile/id/${deleteTargetId.value}/state`, null, { params: { state: 0 } })
+  postDatingProfileByIdState(deleteTargetId.value, null, { params: { state: 0 } })
     .then(() => {
       postsList.value = postsList.value.filter((item) => item.id !== deleteTargetId.value)
       deleteDialogVisible.value = false

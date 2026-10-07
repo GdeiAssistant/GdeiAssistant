@@ -1,8 +1,10 @@
 <script setup>
+import { getDatingProfileAreaPage } from "../../api/datingEndpoints.js"
+
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { useScrollLoad } from '../../composables/useScrollLoad'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -19,7 +21,7 @@ const pullMessages = computed(() => createCommunityPullMessages(t))
 const PAGE_SIZE = 10
 const fetchDatingData = async (page) => {
   const start = (page - 1) * PAGE_SIZE
-  const res = await request.get(`/dating/profile/area/${activeArea.value}/start/${start}`)
+  const res = await getDatingProfileAreaPage(activeArea.value, start)
   const rawList = res?.data || []
   const list = Array.isArray(rawList) ? rawList.map((p) => ({
     id: p.profileId,

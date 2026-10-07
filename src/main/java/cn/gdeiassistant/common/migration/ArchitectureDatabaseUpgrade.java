@@ -56,6 +56,10 @@ public final class ArchitectureDatabaseUpgrade {
                     "next_attempt_at datetime NOT NULL,locked_until datetime DEFAULT NULL,error_code varchar(100) DEFAULT NULL," +
                     "PRIMARY KEY(id),UNIQUE KEY uk_cleanup_resetname(resetname),KEY idx_cleanup_retry(status,next_attempt_at)) " +
                     "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin");
+            execute(a, "CREATE TABLE IF NOT EXISTS stored_asset (bucket varchar(128) NOT NULL,object_key varchar(256) NOT NULL," +
+                    "owner_id varchar(64) DEFAULT NULL,status varchar(16) NOT NULL,content_type varchar(100) DEFAULT NULL," +
+                    "byte_length bigint NOT NULL DEFAULT 0,updated_at datetime NOT NULL," +
+                    "PRIMARY KEY(bucket,object_key),KEY idx_stored_asset_cleanup(status,updated_at)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin");
             if (!before.equals(counts(a,"app_user","campus_credential","delivery_order","delivery_trade","ershou"))) {
                 throw new SQLException("Unexpected row-count change during architecture migration");
             }

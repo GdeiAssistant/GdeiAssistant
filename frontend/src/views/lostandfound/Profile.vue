@@ -1,8 +1,10 @@
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue'
+import { getLostFoundProfile, postLostFoundItemByIdDidfound } from "../../api/lostandfoundEndpoints.js"
+
+import { computed, onMounted, onUnmounted, nextTick, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { getCurrentUserProfile } from '../../api/user.js'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
@@ -80,13 +82,40 @@ async function loadUserInfo() {
   introduction.value = data.introduction || defaultIntroduction.value
 }
 
-async function loadItems() {
-  const res = await request.get('/lostandfound/profile')
-  const data = res?.data || {}
-  lostList.value = Array.isArray(data.lost) ? data.lost.map(mapItem) : []
-  foundList.value = Array.isArray(data.found) ? data.found.map(mapItem) : []
-  didFoundList.value = Array.isArray(data.didfound) ? data.didfound.map(mapItem) : []
+let nextStart = 0
+let hasMore = true
+let pageGeneration = 0
+let loadingMore = false
+const loadError = ref(null)
+async function loadItems(append = false) {
+  if (append && (loadingMore || !hasMore)) return
+  if (!append) { pageGeneration++; nextStart = 0; hasMore = true }
+  const generation = pageGeneration
+  loadingMore = true
+  loadError.value = null
+  try {
+    const res = await getLostFoundProfile({ params: { start: append ? nextStart : 0 } })
+    if (generation !== pageGeneration) return
+    const data = res?.data || {}
+    if (data.hasMore === true && (!Number.isInteger(data.nextStart) || data.nextStart <= (append ? nextStart : 0))) throw new Error("Invalid pagination cursor")
+    const lost = Array.isArray(data.lost) ? data.lost.map(mapItem) : []
+    lostList.value = append ? [...lostList.value, ...lost] : lost
+    const found = Array.isArray(data.found) ? data.found.map(mapItem) : []
+    foundList.value = append ? [...foundList.value, ...found] : found
+    const didfound = Array.isArray(data.didfound) ? data.didfound.map(mapItem) : []
+    didFoundList.value = append ? [...didFoundList.value, ...didfound] : didfound
+    hasMore = data.hasMore === true
+    nextStart = data.nextStart
+  } catch (error) { if (generation === pageGeneration) loadError.value = error }
+  finally { if (generation === pageGeneration) loadingMore = false }
+  await nextTick()
+  if (generation === pageGeneration && !loadError.value && hasMore && ({ lost: lostList, found: foundList, didfound: didFoundList }[activeStat.value])?.value.length === 0) await loadItems(true)
 }
+function loadNearBottom() {
+  if (document.documentElement.scrollHeight - window.innerHeight - window.scrollY < 200) loadItems(true)
+}
+onMounted(() => window.addEventListener('scroll', loadNearBottom, { passive: true }))
+onUnmounted(() => { pageGeneration++; window.removeEventListener('scroll', loadNearBottom) })
 
 async function loadPage() {
   loading.value = true
@@ -107,7 +136,7 @@ async function confirmDidFound(id) {
   if (!window.confirm(t('lostandfound.profile.confirm.didFound'))) return
   actionLoading.value = true
   try {
-    await request.post(`/lostandfound/item/id/${id}/didfound`)
+    await postLostFoundItemByIdDidfound(id)
     await loadItems()
     showDialog(t('lostandfound.profile.success.didFound'))
   } finally {
@@ -122,6 +151,7 @@ onMounted(() => {
 
 watch(() => route.fullPath, () => {
   applyRouteState()
+  if (hasMore) loadItems(true)
 })
 </script>
 
@@ -180,10 +210,10 @@ watch(() => route.fullPath, () => {
               <AppEmpty
                 :title="t('lostandfound.profile.empty.lost')"
                 :description="t('feature.lostandfound.description')"
-                :action-text="t('lostandfound.publish.title')"
+                :action-text="loadError ? t('common.retry') : t('lostandfound.publish.title')"
                 accent="var(--c-lostandfound)"
                 action-variant="primary"
-                @action="router.push('/lostandfound/publish')"
+                @action="loadError ? loadItems() : router.push('/lostandfound/publish')"
               >
                 <template #icon>
                   <span class="community-lostandfound-profile-empty-icon" aria-hidden="true">⌕</span>
@@ -216,10 +246,10 @@ watch(() => route.fullPath, () => {
               <AppEmpty
                 :title="t('lostandfound.profile.empty.found')"
                 :description="t('feature.lostandfound.description')"
-                :action-text="t('lostandfound.publish.title')"
+                :action-text="loadError ? t('common.retry') : t('lostandfound.publish.title')"
                 accent="var(--c-lostandfound)"
                 action-variant="primary"
-                @action="router.push('/lostandfound/publish')"
+                @action="loadError ? loadItems() : router.push('/lostandfound/publish')"
               >
                 <template #icon>
                   <span class="community-lostandfound-profile-empty-icon" aria-hidden="true">◎</span>

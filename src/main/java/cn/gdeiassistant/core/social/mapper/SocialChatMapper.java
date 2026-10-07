@@ -163,4 +163,14 @@ public interface SocialChatMapper {
             "where m.user_id = #{userId} and msg.sender_id != #{userId} and msg.seq > m.last_read_seq " +
             "group by c.id) t")
     int countTotalUnread(@Param("userId") long userId);
+    @Select("<script>SELECT * FROM conversation_member WHERE user_id=#{userId} AND conversation_id IN <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+    @ResultMap("Member")
+    List<ConversationMemberEntity> selectMembers(@Param("userId") long userId, @Param("ids") List<Long> ids);
+
+    @Select("<script>SELECT msg.* FROM chat_message msg INNER JOIN conversation c ON c.id=msg.conversation_id AND c.last_seq=msg.seq WHERE c.id IN <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach></script>")
+    @ResultMap("ChatMessage")
+    List<ChatMessageEntity> selectLastMessages(@Param("ids") List<Long> ids);
+
+    @Select("<script>SELECT m.conversation_id AS conversationId, COUNT(msg.id) AS unreadCount FROM conversation_member m LEFT JOIN chat_message msg ON msg.conversation_id=m.conversation_id AND msg.sender_id != #{userId} AND msg.seq > m.last_read_seq WHERE m.user_id=#{userId} AND m.conversation_id IN <foreach collection='ids' item='id' open='(' separator=',' close=')'>#{id}</foreach> GROUP BY m.conversation_id</script>")
+    List<java.util.Map<String,Object>> selectUnreadCounts(@Param("userId") long userId, @Param("ids") List<Long> ids);
 }

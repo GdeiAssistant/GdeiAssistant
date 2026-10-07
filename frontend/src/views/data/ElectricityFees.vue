@@ -1,10 +1,12 @@
 <script setup>
+import { postDataElectricfees } from "../../api/dataEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
-import request from '../../utils/request'
+
 import { createElectricityResultFields } from './dataContent'
 
 const router = useRouter()
@@ -69,8 +71,7 @@ const submitQuery = () => {
   isLoading.value = true
   showLoading(t('electricityFees.loading'))
 
-  request
-    .post('/data/electricfees', {
+  postDataElectricfees({
       name: name,
       number: number,
       year: year

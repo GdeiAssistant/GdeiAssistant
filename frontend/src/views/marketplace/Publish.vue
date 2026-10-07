@@ -1,8 +1,10 @@
 <script setup>
+import { getMarketplaceItemById, postMarketplaceItemById, postMarketplaceItem } from "../../api/marketplaceEndpoints.js"
+
 import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
-import request from '../../utils/request'
+
 import { uploadFilesByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '../../composables/useToast'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
@@ -152,13 +154,8 @@ async function loadEditItem() {
   if (!isEditMode.value) return
   pageLoading.value = true
   try {
-    const res = await request.get('/marketplace/profile')
-    const data = res?.data || {}
-    const list = []
-      .concat(Array.isArray(data.doing) ? data.doing : [])
-      .concat(Array.isArray(data.sold) ? data.sold : [])
-      .concat(Array.isArray(data.off) ? data.off : [])
-    const item = list.find((entry) => Number(entry.id) === editItemId.value)
+    const res = await getMarketplaceItemById(editItemId.value)
+    const item = res?.data?.item
     if (!item) {
       showDialog(t('marketplace.publish.itemNotFound'))
       return
@@ -208,7 +205,7 @@ async function submit() {
   try {
     const formData = buildPayload()
     if (isEditMode.value) {
-      await request.post(`/marketplace/item/id/${editItemId.value}`, formData)
+      await postMarketplaceItemById(editItemId.value, formData)
       hideLoading()
       showDialog(t('common.saveSuccess'))
       setTimeout(() => router.push('/marketplace/profile'), 1200)
@@ -216,7 +213,7 @@ async function submit() {
     }
     const imageKeys = await uploadFilesByPresignedUrl(images.value.map(item => item.file).filter(Boolean))
     imageKeys.forEach((imageKey) => formData.append('imageKeys', imageKey))
-    await request.post('/marketplace/item', formData)
+    await postMarketplaceItem(formData)
     hideLoading()
     showDialog(t('marketplace.publish.publishSuccess'))
     setTimeout(() => router.push('/marketplace/home'), 1500)

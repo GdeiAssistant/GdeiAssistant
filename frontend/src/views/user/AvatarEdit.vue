@@ -61,12 +61,14 @@
 </template>
 
 <script setup>
+import { postProfileAvatar, deleteProfileAvatar, getProfileAvatar } from "../../api/profileEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import Cropper from 'cropperjs'
-import request from '@/utils/request'
+
 import { uploadFileByPresignedUrl } from '@/utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
 
@@ -150,7 +152,7 @@ const confirmCrop = async () => {
     formData.append('avatarKey', avatarKey)
     formData.append('avatarHdKey', avatarHdKey)
 
-    await request.post('/profile/avatar', formData)
+    await postProfileAvatar(formData)
 
     toastSuccess(t('avatarEdit.updateSuccess'))
     router.back()
@@ -182,7 +184,7 @@ const handleDelete = async () => {
   if (!confirm(t('avatarEdit.deleteConfirm'))) return
   toastLoading(t('avatarEdit.deleting'))
   try {
-    await request.delete('/profile/avatar')
+    await deleteProfileAvatar()
     currentAvatar.value = defaultAvatar
     toastSuccess(t('avatarEdit.deleteSuccess'))
     router.back()
@@ -195,7 +197,7 @@ const handleDelete = async () => {
 
 onMounted(async () => {
   try {
-    const res = await request.get('/profile/avatar')
+    const res = await getProfileAvatar()
     if (res && res.success && typeof res.data === 'string' && res.data) {
       currentAvatar.value = res.data
     } else {

@@ -16,6 +16,16 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
     @Autowired
     private RedisDaoUtils redisDaoUtils;
 
+    @Override
+    public boolean consumePhoneVerificationCode(int code, String phone, int expectedCode) {
+        return redisDaoUtils.compareAndDelete(StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone), String.valueOf(expectedCode));
+    }
+
+    @Override
+    public boolean consumeEmailVerificationCode(String email, int expectedCode) {
+        return redisDaoUtils.compareAndDelete(StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email), String.valueOf(expectedCode));
+    }
+
     /**
      * 查询手机验证码记录
      *
@@ -50,8 +60,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
     @Override
     public void savePhoneVerificationCode(int code, String phone, int randomCode) {
         String key = StringEncryptUtils.sha256HexString(PHONE_PREFIX + code + phone);
-        redisDaoUtils.set(key, String.valueOf(randomCode));
-        redisDaoUtils.expire(key, 5, TimeUnit.MINUTES);
+        redisDaoUtils.set(key, String.valueOf(randomCode), 5, TimeUnit.MINUTES);
     }
 
     /**
@@ -68,8 +77,7 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
     @Override
     public void saveEmailVerificationCode(String email, int randomCode){
         String key = StringEncryptUtils.sha256HexString(EMAIL_PREFIX + email);
-        redisDaoUtils.set(key, String.valueOf(randomCode));
-        redisDaoUtils.expire(key, 5, TimeUnit.MINUTES);
+        redisDaoUtils.set(key, String.valueOf(randomCode), 5, TimeUnit.MINUTES);
     }
 
     /**

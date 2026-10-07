@@ -41,12 +41,12 @@ public class DeliveryService {
     private InteractionNotificationService interactionNotificationService;
 
     @Autowired
-    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
+    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
 
     private DeliveryOrderVO publicOrder(DeliveryOrderEntity entity) {
         DeliveryOrderVO view = deliveryConverter.toOrderVO(entity);
         var author = publicAuthorResolver == null
-                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                ? new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户")
                 : publicAuthorResolver.resolve(entity.getUsername());
         view.setAuthorId(author.authorId());
         view.setDisplayName(author.displayName());
@@ -140,7 +140,7 @@ public class DeliveryService {
         if (entity == null) throw new DataNotExistException("该快递代收订单不存在");
         DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
         var author = publicAuthorResolver == null
-                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                ? new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户")
                 : publicAuthorResolver.resolve(entity.getUsername());
         view.setAuthorId(author.authorId());
         view.setDisplayName(author.displayName());
@@ -159,7 +159,7 @@ public class DeliveryService {
         if (entity == null) throw new DataNotExistException("该快递代收交易不存在");
         DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
         var author = publicAuthorResolver == null
-                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
+                ? new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户")
                 : publicAuthorResolver.resolve(entity.getUsername());
         view.setAuthorId(author.authorId());
         view.setDisplayName(author.displayName());

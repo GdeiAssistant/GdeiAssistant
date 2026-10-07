@@ -46,6 +46,15 @@ public class RedisDaoUtils {
         return Boolean.TRUE.equals(result);
     }
 
+    /** Consume only the matching value; failed guesses leave the valid code available. */
+    public boolean compareAndDelete(String key, String expectedValue) {
+        if (redisTemplate == null) return false;
+        var script = new org.springframework.data.redis.core.script.DefaultRedisScript<Long>(
+                "if redis.call('GET', KEYS[1]) == ARGV[1] then return redis.call('DEL', KEYS[1]) else return 0 end", Long.class);
+        Long result = redisTemplate.execute(script, java.util.List.of(key), expectedValue);
+        return Long.valueOf(1).equals(result);
+    }
+
     public void delete(String key) {
         if (redisTemplate != null) {
             redisTemplate.delete(key);
@@ -60,13 +69,19 @@ public class RedisDaoUtils {
 
     /** 存 Java 序列化后 Base64 字符串，用于 CookieStore 等非 JSON 友好对象，与 StringRedisSerializer 一致 */
     public void setSerializable(String key, java.io.Serializable value) {
+        setSerializable(key, value, 0, TimeUnit.SECONDS);
+    }
+
+    public void setSerializable(String key, java.io.Serializable value, long timeout, TimeUnit unit) {
         if (redisTemplate == null || value == null) return;
         try {
             java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
             try (java.io.ObjectOutputStream oos = new java.io.ObjectOutputStream(baos)) {
                 oos.writeObject(value);
             }
-            set(key, java.util.Base64.getEncoder().encodeToString(baos.toByteArray()));
+            String encoded = java.util.Base64.getEncoder().encodeToString(baos.toByteArray());
+            if (timeout > 0) set(key, encoded, timeout, unit);
+            else set(key, encoded);
         } catch (java.io.IOException e) {
             throw new RuntimeException("Redis 序列化失败", e);
         }

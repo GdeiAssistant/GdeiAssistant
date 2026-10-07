@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, getCurrentScope, onScopeDispose } from 'vue'
 
 export function useScrollLoad(fetchDataCallback) {
   const items = ref([])
@@ -8,23 +8,32 @@ export function useScrollLoad(fetchDataCallback) {
   const refreshing = ref(false)
   const pullY = ref(0)
   let startY = 0
+  let generation = 0
+  let disposed = false
+  const error = ref(null)
+  if (getCurrentScope()) onScopeDispose(() => { disposed = true; generation++ })
 
   const loadData = async (isRefresh = false) => {
+    if (disposed) return
     if (isRefresh) {
+      generation++
+      loading.value = false
       page.value = 1
       refreshing.value = true
       finished.value = false
     } else {
-      if (finished.value || loading.value) return
+      if (finished.value || loading.value || refreshing.value) return
       loading.value = true
     }
 
+    const requestGeneration = generation
+    error.value = null
     try {
       const currentPage = page.value
       const res = await fetchDataCallback(currentPage)
-      const data = res?.data || res
-      const list = data?.list || data?.data || []
-      const hasMore = data?.hasMore !== undefined ? data.hasMore : (list.length > 0 && list.length >= 10)
+      if (disposed || requestGeneration !== generation) return
+      if (!Array.isArray(res?.list) || typeof res.hasMore !== 'boolean') throw new TypeError('Page loader must return { list, hasMore }')
+      const { list, hasMore } = res
 
       if (isRefresh) {
         items.value = list
@@ -46,6 +55,8 @@ export function useScrollLoad(fetchDataCallback) {
         }
       }
     } catch (e) {
+      if (disposed || requestGeneration !== generation) return
+      error.value = e
       if (isRefresh) {
         refreshing.value = false
         pullY.value = 0
@@ -87,6 +98,7 @@ export function useScrollLoad(fetchDataCallback) {
 
   return {
     items,
+    error,
     loading,
     finished,
     refreshing,

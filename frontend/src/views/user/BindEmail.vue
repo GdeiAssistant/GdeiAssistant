@@ -1,9 +1,11 @@
 <script setup>
+import { postEmailVerificationemail, postEmailBindemailrandomCode, postEmailUnbind, getEmailStatus } from "../../api/emailEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import { showErrorTopTips } from '@/utils/toast.js'
 import { useToast } from '@/composables/useToast'
 import { maskEmail } from '@/utils/mask'
@@ -47,7 +49,7 @@ async function handleSendCode() {
 
   sending.value = true
   try {
-    await request.post(`/email/verification?email=${encodeURIComponent(formEmail.value)}`)
+    await postEmailVerificationemail(formEmail.value)
     countdown.value = 60
     timerId = setInterval(() => {
       if (countdown.value > 0) {
@@ -78,7 +80,7 @@ async function handleSubmit() {
 
   isBinding.value = true
   try {
-    await request.post(`/email/bind?email=${encodeURIComponent(formEmail.value)}&randomCode=${encodeURIComponent(vcode.value)}`)
+    await postEmailBindemailrandomCode(formEmail.value, vcode.value)
     currentEmail.value = maskEmail(formEmail.value)
     toastSuccess(t('bindEmail.bindSuccess'))
     isEditing.value = false
@@ -120,7 +122,7 @@ async function confirmUnbind() {
   if (isUnbinding.value) return
   isUnbinding.value = true
   try {
-    await request.post('/email/unbind')
+    await postEmailUnbind()
     currentEmail.value = ''
     formEmail.value = ''
     vcode.value = ''
@@ -136,7 +138,7 @@ async function confirmUnbind() {
 
 onMounted(async () => {
   try {
-    const res = await request.get('/email/status')
+    const res = await getEmailStatus()
     const data = res && res.data
     if (typeof data === 'string') {
       currentEmail.value = maskEmail(data)

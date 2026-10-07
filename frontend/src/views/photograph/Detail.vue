@@ -1,8 +1,10 @@
 <script setup>
+import { getPhotographById, postPhotographByIdComment, postPhotographByIdLike } from "../../api/photographEndpoints.js"
+
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import request from '../../utils/request'
+
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AuthAvatar from '../../components/social/AuthAvatar.vue'
 import { getPhotographCopy } from './photographContent'
@@ -28,7 +30,7 @@ const showDialog = (msg) => {
 const loadDetail = async () => {
   try {
     loading.value = true
-    const res = await request.get(`/photograph/id/${route.params.id}`)
+    const res = await getPhotographById(route.params.id)
     const data = res?.data
     if (data && res.success !== false) {
       work.value = {
@@ -85,7 +87,7 @@ const submitComment = () => {
     showDialog(copy.value.commentTooLong)
     return
   }
-  request.post(`/photograph/id/${route.params.id}/comment`, null, { params: { comment: newComment.value.trim() } }).then(() => {
+  postPhotographByIdComment(route.params.id, null, { params: { comment: newComment.value.trim() } }).then(() => {
     if (!work.value.comments) work.value.comments = []
     work.value.comments.unshift({
       id: Date.now(),
@@ -101,7 +103,7 @@ const submitComment = () => {
 
 const toggleLike = () => {
   if (!work.value || work.value.isLiked) return
-  request.post(`/photograph/id/${work.value.id}/like`).then(() => {
+  postPhotographByIdLike(work.value.id).then(() => {
     work.value.isLiked = true
     work.value.likeCount++
   })

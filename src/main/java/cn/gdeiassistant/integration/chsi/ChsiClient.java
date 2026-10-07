@@ -30,8 +30,10 @@ public class ChsiClient {
     private HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(ChsiClient.class);
-    private static final String CET_BASE = "http://www.chsi.com.cn/cet";
-    private static final String KAOYAN_CJCX = "https://yz.chsi.com.cn/apply/cjcx";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cet-base-url:http://www.chsi.com.cn/cet}")
+    private String CET_BASE = "http://www.chsi.com.cn/cet";
+    @org.springframework.beans.factory.annotation.Value("${campus.upstream.graduate-query-url:https://yz.chsi.com.cn/apply/cjcx}")
+    private String KAOYAN_CJCX = "https://yz.chsi.com.cn/apply/cjcx";
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
     private static final String USER_AGENT_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36";
     private static final int CHSI_TIMEOUT_SEC = 15;

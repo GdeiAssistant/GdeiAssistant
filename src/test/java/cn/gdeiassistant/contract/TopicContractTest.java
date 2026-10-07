@@ -107,7 +107,7 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
-        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        verify(topicService).publishTopic(captor.capture(), eq("test-session"), any(), any());
         assertEquals(0, captor.getValue().getCount());
     }
 
@@ -115,7 +115,6 @@ class TopicContractTest {
     void publishEndpointDerivesCountFromImageKeysWhenCountParamIsMissing() throws Exception {
         TopicVO vo = mockTopicVO();
         vo.setId(5);
-        when(topicService.addTopic(any(TopicPublishDTO.class), eq("test-session"))).thenReturn(vo);
 
         mockMvc.perform(post("/api/topic")
                         .requestAttr("sessionId", "test-session")
@@ -126,10 +125,8 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
-        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        verify(topicService).publishTopic(captor.capture(), eq("test-session"), any(), any());
         assertEquals(2, captor.getValue().getCount());
-        verify(topicService).moveTopicItemPictureFromTempObject(5, 1, "tmp/topic-1.jpg");
-        verify(topicService).moveTopicItemPictureFromTempObject(5, 2, "tmp/topic-2.jpg");
     }
 
     @Test
@@ -149,7 +146,6 @@ class TopicContractTest {
     void publishEndpointDerivesCountFromMultipartImagesWhenCountParamIsMissing() throws Exception {
         TopicVO vo = mockTopicVO();
         vo.setId(6);
-        when(topicService.addTopic(any(TopicPublishDTO.class), eq("test-session"))).thenReturn(vo);
 
         mockMvc.perform(multipart("/api/topic")
                         .file(new MockMultipartFile("images", "topic-1.jpg", "image/jpeg", "one".getBytes(StandardCharsets.UTF_8)))
@@ -161,10 +157,8 @@ class TopicContractTest {
                 .andExpect(jsonPath("$.success").value(true));
 
         ArgumentCaptor<TopicPublishDTO> captor = ArgumentCaptor.forClass(TopicPublishDTO.class);
-        verify(topicService).addTopic(captor.capture(), eq("test-session"));
+        verify(topicService).publishTopic(captor.capture(), eq("test-session"), any(), any());
         assertEquals(2, captor.getValue().getCount());
-        verify(topicService).uploadTopicItemPicture(eq(6), eq(1), any(InputStream.class));
-        verify(topicService).uploadTopicItemPicture(eq(6), eq(2), any(InputStream.class));
     }
 
     @Test

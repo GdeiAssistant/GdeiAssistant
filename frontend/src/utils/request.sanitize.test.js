@@ -63,4 +63,23 @@ describe('sanitizeMessage', () => {
     expect(localStorage.getItem('token')).toBe('new-session')
   })
 
+  it.each([404, 500, 429])('honors skipErrorTip for HTTP %s and retains business codes', async (status) => {
+    const { default: service } = await import('./request.js')
+    const { showErrorTopTips } = await import('./toast.js'); vi.mocked(showErrorTopTips).mockClear()
+    const error = await service.get('/synthetic', { skipErrorTip: true, adapter: async config => {
+      const failure = new Error('synthetic'); failure.config = config
+      failure.response = { status, data: { errorCode: 'SYNTHETIC', code: 123 }, config }; throw failure
+    } }).catch(value => value)
+    expect(showErrorTopTips).not.toHaveBeenCalled(); expect(error.status).toBe(status)
+    expect(error.errorCode).toBe('SYNTHETIC'); expect(error.businessCode).toBe(123)
+  })
+  it('does not show cancellation as a network failure', async () => {
+    const { default: service } = await import('./request.js')
+    const { showErrorTopTips } = await import('./toast.js'); vi.mocked(showErrorTopTips).mockClear()
+    await service.get('/synthetic', { adapter: async config => {
+      const error = new Error('cancelled'); error.code = 'ERR_CANCELED'; error.config = config; throw error
+    } }).catch(() => {})
+    expect(showErrorTopTips).not.toHaveBeenCalled()
+  })
+
 })

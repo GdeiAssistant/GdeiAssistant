@@ -128,3 +128,5 @@ CLAUDE.md
 .codex/
 .cursor/
 .cursorrules
+# Frontend test coverage artifacts
+frontend/coverage/

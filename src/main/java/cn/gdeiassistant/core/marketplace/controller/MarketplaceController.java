@@ -48,19 +48,17 @@ public class MarketplaceController {
     private MarketplaceService marketplaceService;
 
     @Autowired
-    private cn.gdeiassistant.common.tools.utils.PublicAuthorResolver publicAuthorResolver;
+    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
 
     private MarketplaceItemResponse response(MarketplaceItemEntity item) {
-        var author = publicAuthorResolver == null
-                ? new cn.gdeiassistant.common.tools.utils.PublicAuthorResolver.AuthorPublic(null, "用户")
-                : publicAuthorResolver.resolve(item.getUsername());
-        return new MarketplaceItemResponse(item.getId(), author.authorId(), author.displayName(),
+        return new MarketplaceItemResponse(item.getId(), item.getAuthorId(),
+                item.getDisplayName() == null ? "用户" : item.getDisplayName(),
                 item.getName(), item.getDescription(), item.getPrice(), item.getLocation(), item.getType(),
                 item.getQq(), item.getPhone(), item.getState(), item.getPublishTime(), item.getPictureURL());
     }
 
     public record MarketplaceMineResponse(List<MarketplaceItemResponse> doing,
-            List<MarketplaceItemResponse> sold, List<MarketplaceItemResponse> off) {}
+            List<MarketplaceItemResponse> sold, List<MarketplaceItemResponse> off, boolean hasMore, Integer nextStart) {}
     public record MarketplaceAuthorResponse(String authorId, String displayName, String avatarURL) {}
     public record MarketplaceDetailResponse(MarketplaceItemResponse item, MarketplaceAuthorResponse profile, boolean ownedByCurrentUser) {}
 
@@ -88,9 +86,12 @@ public class MarketplaceController {
     }
 
     @RequestMapping(value = "/api/marketplace/profile", method = RequestMethod.GET)
-    public DataJsonResult<MarketplaceMineResponse> getMyMarketplaceItems(HttpServletRequest request) throws Exception {
+    public DataJsonResult<MarketplaceMineResponse> getMyMarketplaceItems(HttpServletRequest request, @RequestParam(value="start", defaultValue="0") int start) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        List<MarketplaceItemEntity> list = marketplaceService.queryPersonalItems(sessionId);
+        start = PageUtils.requireNonNegativeStart(start);
+        var rows = marketplaceService.queryPersonalItems(sessionId, start, 26);
+        boolean hasMore = rows.size() > 25;
+        var list = rows.subList(0, Math.min(25, rows.size()));
         List<MarketplaceItemEntity> doing = new ArrayList<>();
         List<MarketplaceItemEntity> sold = new ArrayList<>();
         List<MarketplaceItemEntity> off = new ArrayList<>();
@@ -105,7 +106,7 @@ public class MarketplaceController {
         }
         return new DataJsonResult<>(true, new MarketplaceMineResponse(
                 doing.stream().map(this::response).toList(), sold.stream().map(this::response).toList(),
-                off.stream().map(this::response).toList()));
+                off.stream().map(this::response).toList(), hasMore, hasMore ? PageUtils.nextStart(start, 25) : null));
     }
 
     @RateLimit(maxRequests = 5, windowSeconds = 60)
@@ -144,24 +145,10 @@ public class MarketplaceController {
             return failure(request, "不支持混合上传图片参数");
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        MarketplaceItemEntity entity = marketplaceService.publishItem(dto, sessionId);
         try {
-            if (uploadedFileCount > 0) {
-                int imageIndex = 1;
-                for (MultipartFile image : images) {
-                    if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                        marketplaceService.uploadItemPicture(entity.getId(), imageIndex++, image.getInputStream());
-                    }
-                }
-            } else if (imageKeys != null) {
-                for (int i = 1; i <= imageKeys.length; i++) {
-                    marketplaceService.moveItemPictureFromTempObject(entity.getId(), i, imageKeys[i - 1]);
-                }
-            }
-        } catch (Exception e) {
-            marketplaceService.deleteItemImages(entity.getId(), 4);
-            marketplaceService.deleteItem(entity.getId());
-            return failure(request, "上传失败");
+            marketplaceService.publishItem(dto, sessionId, images, imageKeys);
+        } catch (Exception failure) {
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("上传失败", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

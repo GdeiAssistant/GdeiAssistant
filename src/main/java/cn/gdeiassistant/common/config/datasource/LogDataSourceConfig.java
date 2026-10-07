@@ -32,7 +32,6 @@ public class LogDataSourceConfig {
     public SqlSessionFactoryBean logSqlSessionFactory(@Qualifier("logDataSource") DataSource logDataSource) {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-        bean.setTypeAliasesPackage("cn.gdeiassistant.pojo,cn.gdeiassistant.core");
         bean.setTypeHandlersPackage("cn.gdeiassistant.common.typehandler");
         bean.setDataSource(logDataSource);
         return bean;

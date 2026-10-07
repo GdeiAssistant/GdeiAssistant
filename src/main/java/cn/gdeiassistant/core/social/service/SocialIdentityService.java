@@ -86,6 +86,49 @@ public class SocialIdentityService {
         }
     }
 
+    @Autowired
+    private cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper summaries;
+
+    public java.util.Map<Long,SocialUserDTO> buildSocialUsers(CampusAccountView viewer, java.util.Collection<Long> ids) {
+        var result = new java.util.HashMap<Long,SocialUserDTO>();
+        if (ids.isEmpty()) return result;
+        for (var row : summaries.selectUsers(viewer.getId(), ids.stream().distinct().toList())) {
+            long id = ((Number) row.get("userId")).longValue();
+            if (!"ACTIVE".equals(row.get("status"))) {
+                CampusAccountView closed = new CampusAccountView();
+                closed.setPublicId((String) row.get("publicId"));
+                result.put(id, buildClosedPeer(closed));
+                continue;
+            }
+            boolean following = flag(row.get("following")), followedBy = flag(row.get("followedBy"));
+            boolean self = viewer.getId() == id, blocked = flag(row.get("anyBlock"));
+            String policy = String.valueOf(row.get("policy"));
+            if (!java.util.Set.of("ALL","FOLLOWING","MUTUAL","NONE").contains(policy)) policy = "MUTUAL";
+            boolean allowed = !self && viewer.isActive() && !blocked && switch (policy) {
+                case "ALL" -> true;
+                case "FOLLOWING" -> followedBy;
+                case "MUTUAL" -> following && followedBy;
+                default -> false;
+            };
+            SocialUserDTO dto = new SocialUserDTO();
+            dto.setId((String) row.get("publicId"));
+            dto.setNickname((String) row.get("nickname"));
+            dto.setIntroduction((String) row.get("introduction"));
+            dto.setAvatarUrl("/api/social/users/" + dto.getId() + "/avatar");
+            dto.setFollowingCount(((Number) row.get("followingCount")).intValue());
+            dto.setFollowerCount(((Number) row.get("followerCount")).intValue());
+            dto.setFriendCount(((Number) row.get("friendCount")).intValue());
+            dto.setRelationship(self ? REL_SELF : following && followedBy ? REL_MUTUAL : following ? REL_FOLLOWING : followedBy ? REL_FOLLOWED_BY : REL_NONE);
+            dto.setBlockedByMe(flag(row.get("blockedByMe")));
+            dto.setCanMessage(allowed);
+            dto.setMessagePermissionReason(allowed ? null : self ? "SELF" : blocked || !viewer.isActive() ? "CONTACT_UNAVAILABLE" : "PRIVACY_RESTRICTED");
+            result.put(id, dto);
+        }
+        return result;
+    }
+
+    private static boolean flag(Object value) { return Boolean.TRUE.equals(value) || value instanceof Number n && n.intValue() != 0; }
+
     public SocialUserDTO buildSocialUser(CampusAccountView viewer, CampusAccountView target) {
         SocialUserDTO dto = new SocialUserDTO();
         dto.setId(target.getPublicId());

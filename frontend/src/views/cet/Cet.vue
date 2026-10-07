@@ -1,11 +1,13 @@
 <script setup>
+import { getCetCheckcode } from "../../api/cetEndpoints.js"
+
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCetNumber, queryCetScore } from '@/api/cet'
 import { useToast } from '@/composables/useToast'
-import request from '@/utils/request'
+
 
 const router = useRouter()
 const { t } = useI18n()
@@ -26,7 +28,7 @@ function onExamNumberInput(e) {
 
 function refreshVcode() {
   vcode.value = ''
-  request.get('/cet/checkcode').then((res) => {
+  getCetCheckcode().then((res) => {
     const payload = res && res.data
     const base64 = typeof payload === 'string' ? payload : (payload && payload.data)
     vcodeUrl.value = base64 ? 'data:image/jpg;base64,' + base64 : ''

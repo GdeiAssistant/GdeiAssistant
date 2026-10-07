@@ -46,6 +46,12 @@ public class TopicService {
     private R2StorageService r2StorageService;
 
     @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+
+    @Autowired
+    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    @Autowired
     private InteractionNotificationService interactionNotificationService;
 
     @Autowired(required = false)
@@ -54,16 +60,20 @@ public class TopicService {
     @Autowired(required = false)
     private ProfileMapper profileMapper;
 
+    @Autowired
+    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthors;
+
     public List<TopicVO> queryTopic(String sessionId, int start, int size) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<TopicEntity> list = topicMapper.selectTopicPage(start, size, user.getUsername());
         if (list == null || list.isEmpty()) return new ArrayList<>();
+        var authors = publicAuthors.resolveAll(list.stream().map(TopicEntity::getUsername).toList());
         List<TopicVO> voList = new ArrayList<>();
         for (TopicEntity e : list) {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            voList.add(toPublicTopicVO(e));
+            voList.add(toPublicTopicVO(e, authors.get(e.getUsername())));
         }
         return voList;
     }
@@ -72,12 +82,13 @@ public class TopicService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<TopicEntity> list = topicMapper.selectTopicPageByKeyword(start, size, user.getUsername(), keyword);
         if (list == null || list.isEmpty()) return new ArrayList<>();
+        var authors = publicAuthors.resolveAll(list.stream().map(TopicEntity::getUsername).toList());
         List<TopicVO> voList = new ArrayList<>();
         for (TopicEntity e : list) {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            voList.add(toPublicTopicVO(e));
+            voList.add(toPublicTopicVO(e, authors.get(e.getUsername())));
         }
         return voList;
     }
@@ -86,12 +97,13 @@ public class TopicService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<TopicEntity> list = topicMapper.selectTopicByUsername(start, size, user.getUsername(), user.getUsername());
         if (list == null || list.isEmpty()) return new ArrayList<>();
+        var authors = publicAuthors.resolveAll(list.stream().map(TopicEntity::getUsername).toList());
         List<TopicVO> voList = new ArrayList<>();
         for (TopicEntity e : list) {
             if (e.getCount() != null && e.getCount() >= 1) {
                 e.setFirstImageUrl(downloadTopicItemPicture(e.getId(), 1));
             }
-            voList.add(toPublicTopicVO(e));
+            voList.add(toPublicTopicVO(e, authors.get(e.getUsername())));
         }
         return voList;
     }
@@ -147,12 +159,12 @@ public class TopicService {
     }
 
     public String downloadTopicItemPicture(int id, int index) {
-        return r2StorageService.generatePresignedUrl("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", 90, TimeUnit.MINUTES);
+        return storedAssets.generatePresignedUrl("topic/" + id + "_" + index + ".jpg", 90, TimeUnit.MINUTES);
     }
 
     public void uploadTopicItemPicture(int id, int index, InputStream inputStream) {
         try {
-            r2StorageService.uploadObject("gdeiassistant-userdata", "topic/" + id + "_" + index + ".jpg", inputStream);
+            storedAssets.uploadObject("topic/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传话题图片失败，id={}，index={}", id, index, e);
             throw new RuntimeException("话题图片上传失败", e);
@@ -167,39 +179,23 @@ public class TopicService {
         }
     }
 
-    public void moveTopicItemPictureFromTempObject(int id, int index, String objectKey) {
-        r2StorageService.moveObject("gdeiassistant-userdata", objectKey, "topic/" + id + "_" + index + ".jpg");
+    public void moveTopicItemPictureFromTempObject(int id, int index, String objectKey, String sessionId) {
+        uploads.moveUpload(sessionId, objectKey, "topic/" + id + "_" + index + ".jpg");
     }
 
     public void deleteTopic(int id) {
         topicMapper.deleteTopic(id);
     }
 
-    private TopicVO toPublicTopicVO(TopicEntity e) {
-        TopicVO vo = topicConverter.toVO(e);
-        String campusUsername = e.getUsername();
-        if (campusUsername != null && campusUsername.startsWith("del_")) {
-            vo.setUsername(AnonymizeUtils.sanitizeUsername(campusUsername));
-            vo.setAuthorId(null);
-            return vo;
-        }
-        String authorId = null;
-        String displayName = campusUsername;
-        if (userMapper != null && campusUsername != null) {
-            CampusAccountView author = userMapper.selectUser(campusUsername);
-            if (author != null && author.isActive()) {
-                authorId = author.getPublicId();
-            }
-        }
-        if (profileMapper != null && campusUsername != null) {
-            ProfileEntity profile = profileMapper.selectUserProfile(campusUsername);
-            if (profile != null && profile.getNickname() != null && !profile.getNickname().isBlank()) {
-                displayName = profile.getNickname();
-            }
-        }
-        vo.setUsername(displayName);
-        vo.setAuthorId(authorId);
-        return vo;
+    private TopicVO toPublicTopicVO(TopicEntity entity) {
+        return toPublicTopicVO(entity, publicAuthors.resolve(entity.getUsername()));
+    }
+
+    private TopicVO toPublicTopicVO(TopicEntity entity, cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic author) {
+        TopicVO view = topicConverter.toVO(entity);
+        view.setUsername(author == null ? "用户" : author.displayName());
+        view.setAuthorId(author == null ? null : author.authorId());
+        return view;
     }
 
     private String resolveDisplayName(String campusUsername) {
@@ -215,10 +211,25 @@ public class TopicService {
     public void deleteTopicImages(int id, int count) {
         for (int i = 1; i <= count; i++) {
             try {
-                r2StorageService.deleteObject("gdeiassistant-userdata", "topic/" + id + "_" + i + ".jpg");
+                storedAssets.deleteObject("topic/" + id + "_" + i + ".jpg");
             } catch (Exception e) {
                 logger.warn("删除话题图片失败，id={}，index={}", id, i, e);
             }
         }
     }
+
+    @org.springframework.transaction.annotation.Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    public void publishTopic(TopicPublishDTO dto, String sessionId,
+            org.springframework.web.multipart.MultipartFile[] images, String[] imageKeys) throws Exception {
+        var created = addTopic(dto, sessionId);
+        if (imageKeys != null && imageKeys.length > 0) {
+            for (int i=0; i<imageKeys.length; i++) moveTopicItemPictureFromTempObject(created.getId(), i+1, imageKeys[i], sessionId);
+        } else if (images != null) {
+            int index = 1;
+            for (var image : images) {
+                if (image != null && !image.isEmpty()) uploadTopicItemPicture(created.getId(), index++, image.getInputStream());
+            }
+        }
+    }
+
 }

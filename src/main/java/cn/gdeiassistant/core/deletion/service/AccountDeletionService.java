@@ -100,14 +100,14 @@ public class AccountDeletionService {
     @Transactional(value="appTransactionManager", rollbackFor=Exception.class)
     public void closeSocialDataState(String username) throws Exception {
         List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
-                .selectItemsByUsername(username);
+                .selectOwnerItemStates(username);
         for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
             if (secondhandItem.getState().equals(1)) {
                 marketplaceMapper.updateItemState(secondhandItem.getId(), 3);
             }
         }
         List<LostAndFoundItemEntity> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(username);
+                .selectOwnerItemStates(username);
         for (LostAndFoundItemEntity lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
                 lostAndFoundMapper.updateItemState(lostAndFoundItem.getId(), 2);
@@ -155,14 +155,14 @@ public class AccountDeletionService {
         userCertificateService.verifyCurrentPassword(user.getUsername(), password);
         //检查有无待处理的社区功能信息
         List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
-                .selectItemsByUsername(user.getUsername());
+                .selectOwnerItemStates(user.getUsername());
         for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
             if (secondhandItem.getState().equals(1)) {
                 map.put("二手交易平台存在未交易完成的物品", "请下架或确认出售账号下的所有二手交易物品");
             }
         }
         List<LostAndFoundItemEntity> lostAndFoundItemList = lostAndFoundMapper
-                .selectItemByUsername(user.getUsername());
+                .selectOwnerItemStates(user.getUsername());
         for (LostAndFoundItemEntity lostAndFoundItem : lostAndFoundItemList) {
             if (lostAndFoundItem.getState().equals(0)) {
                 map.put("失物招领平台存在未确认状态的物品", "请确认寻回账号下的所有失物招领物品");

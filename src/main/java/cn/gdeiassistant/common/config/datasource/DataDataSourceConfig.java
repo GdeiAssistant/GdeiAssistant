@@ -31,7 +31,6 @@ public class DataDataSourceConfig {
     public SqlSessionFactoryBean dataSqlSessionFactory(@Qualifier("dataDataSource") DataSource dataDataSource) {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setConfigLocation(new ClassPathResource("mybatis-config.xml"));
-        bean.setTypeAliasesPackage("cn.gdeiassistant.pojo,cn.gdeiassistant.core");
         bean.setTypeHandlersPackage("cn.gdeiassistant.common.typehandler");
         bean.setDataSource(dataDataSource);
         return bean;

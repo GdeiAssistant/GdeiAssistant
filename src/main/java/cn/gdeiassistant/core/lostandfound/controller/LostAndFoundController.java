@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.lostandfound.controller;
 
+import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
@@ -43,9 +45,12 @@ public class LostAndFoundController {
     }
 
     @RequestMapping(value = "/api/lostandfound/profile", method = RequestMethod.GET)
-    public DataJsonResult<Map<String, Object>> getMyLostAndFoundItems(HttpServletRequest request) throws Exception {
+    public DataJsonResult<Map<String, Object>> getMyLostAndFoundItems(HttpServletRequest request, @RequestParam(value="start", defaultValue="0") int start) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
-        List<LostAndFoundItemVO> list = lostAndFoundService.queryPersonalLostAndFoundItems(sessionId);
+        start = PageUtils.requireNonNegativeStart(start);
+        var rows = lostAndFoundService.queryPersonalLostAndFoundItems(sessionId, start, 26);
+        boolean hasMore = rows.size() > 25;
+        var list = rows.subList(0, Math.min(25, rows.size()));
         List<LostAndFoundItemVO> lost = new ArrayList<>();
         List<LostAndFoundItemVO> found = new ArrayList<>();
         List<LostAndFoundItemVO> didfound = new ArrayList<>();
@@ -62,6 +67,8 @@ public class LostAndFoundController {
         data.put("lost", lost);
         data.put("found", found);
         data.put("didfound", didfound);
+        data.put("hasMore", hasMore);
+        data.put("nextStart", hasMore ? PageUtils.nextStart(start, 25) : null);
         return new DataJsonResult<>(true, data);
     }
 
@@ -162,24 +169,10 @@ public class LostAndFoundController {
             return new JsonResult(false, "不支持混合上传图片参数");
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        LostAndFoundItemVO vo = lostAndFoundService.addLostAndFoundItem(dto, sessionId);
         try {
-            if (uploadedFileCount > 0) {
-                int imageIndex = 1;
-                for (MultipartFile image : images) {
-                    if (image != null && image.getSize() > 0 && image.getSize() < ValueConstantUtils.MAX_IMAGE_SIZE) {
-                        lostAndFoundService.uploadLostAndFoundItemPicture(vo.getId(), imageIndex++, image.getInputStream());
-                    }
-                }
-            } else if (imageKeys != null) {
-                for (int i = 1; i <= imageKeys.length; i++) {
-                    lostAndFoundService.moveLostAndFoundItemPictureFromTempObject(vo.getId(), i, imageKeys[i - 1]);
-                }
-            }
-        } catch (Exception e) {
-            lostAndFoundService.deleteLostAndFoundItemImages(vo.getId(), 4);
-            lostAndFoundService.deleteLostAndFoundItem(vo.getId());
-            return new JsonResult(false, "上传失败");
+            lostAndFoundService.publishItem(dto, sessionId, images, imageKeys);
+        } catch (Exception failure) {
+            return new JsonResult(false, BackendTextLocalizer.localizeMessage("上传失败", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

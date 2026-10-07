@@ -34,7 +34,7 @@ public class RedisDaoUtils {
     /** Write value and expiration atomically so an interrupted write cannot leave a permanent credential. */
     public void set(String key, String value, long timeout, TimeUnit unit) {
         if (redisTemplate != null) {
-            redisTemplate.opsForValue().set(key, value, timeout, unit);
+            redisTemplate.opsForValue().set(key, value, java.time.Duration.of(timeout, unit.toChronoUnit()));
         }
     }
 

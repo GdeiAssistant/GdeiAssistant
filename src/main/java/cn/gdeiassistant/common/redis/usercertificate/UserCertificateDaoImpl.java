@@ -143,7 +143,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         map.put("password", encryptPassword(password));
         String finalKey = StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId);
         try {
-            redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map), 1, TimeUnit.HOURS);
+            redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map), java.time.Duration.ofHours(1));
         } catch (JsonProcessingException e) {
             throw new RuntimeException("登录凭证序列化失败", e);
         }

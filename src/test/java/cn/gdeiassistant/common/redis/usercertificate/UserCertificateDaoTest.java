@@ -29,7 +29,7 @@ class UserCertificateDaoTest {
             ReflectionTestUtils.setField(dao, "redisTemplate", redis);
             ReflectionTestUtils.setField(dao, "objectMapper", new ObjectMapper());
             dao.saveUserLoginCertificate("session", "owner", "synthetic-password");
-            verify(values).set(anyString(), anyString(), eq(1L), eq(TimeUnit.HOURS));
+            verify(values).set(anyString(), anyString(), eq(java.time.Duration.ofHours(1)));
             verify(redis, never()).expire(anyString(), anyLong(), any(TimeUnit.class));
         } finally {
             new StringEncryptUtils().setEncryptConfig(null);

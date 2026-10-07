@@ -40,7 +40,7 @@ public class CollectionQueryService {
         CollectionQueryResult collectionQueryResult = new CollectionQueryResult();
         try {
             Document document = libraryClient.fetchCollectionListPage(page, keyword);
-            Integer currentPage = page == null ? 1 : page;
+            int currentPage = page == null ? 1 : page;
             Integer sumPage = null;
             Element pagenum = document.getElementById("pagenum");
             if (pagenum == null) {

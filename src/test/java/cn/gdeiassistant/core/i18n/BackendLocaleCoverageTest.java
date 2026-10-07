@@ -58,6 +58,48 @@ class BackendLocaleCoverageTest {
 
     @ParameterizedTest
     @CsvSource(delimiter = '|', value = {
+            "secret|树洞|en|林同学 commented on your confession",
+            "secret|树洞|ja|林同学 さんがあなたのツリーホールにコメントしました",
+            "secret|树洞|ko|林同学님이 당신의 트리홀에 댓글을 남겼습니다",
+            "express|表白|en|林同学 commented on your confession wall post",
+            "express|表白|ja|林同学 さんがあなたの告白にコメントしました",
+            "express|表白|ko|林同学님이 당신의 고백 글에 댓글을 남겼습니다",
+            "photograph|作品|en|林同学 commented on your post",
+            "photograph|作品|ja|林同学 さんがあなたの作品にコメントしました",
+            "photograph|作品|ko|林同学님이 당신의 작품에 댓글을 남겼습니다",
+            "secret|树洞|zh-HK|林同学 留言回應咗你嘅樹洞",
+            "secret|树洞|zh-TW|林同学 評論了你的樹洞"
+    })
+    void translatesCommentsWithoutDetails(String module, String target, String locale, String expected) {
+        InteractionMessageVO message = new InteractionMessageVO();
+        message.setModule(module);
+        message.setType("comment");
+        String original = "林同学 评论了你的" + target;
+        message.setContent(original);
+        assertEquals(expected, BackendTextLocalizer.localizeInteractionMessage(message, locale).getContent());
+        assertEquals(original, message.getContent());
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+            "secret|林同学 评论了你的树洞|林同学 commented on your confession",
+            "express|有人评论了你的表白|有人 commented on your confession wall post",
+            "photograph|林同学 评论了你的作品|林同学 commented on your post"
+    })
+    void translatesMultilineCommentsAndPreservesUserText(String module, String prefix, String expectedPrefix) {
+        String detail = "  第一行：内容\n第二行 {0} '原文'  ";
+        InteractionMessageVO message = new InteractionMessageVO();
+        message.setModule(module);
+        message.setType("comment");
+        String original = prefix + "：" + detail;
+        message.setContent(original);
+        assertEquals(expectedPrefix + ": " + detail,
+                BackendTextLocalizer.localizeInteractionMessage(message, "en-US").getContent());
+        assertEquals(original, message.getContent());
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
             "en|Invalid beforeSeq", "ja|beforeSeq が無効です", "ko|beforeSeq 값이 올바르지 않습니다",
             "zh-HK|beforeSeq 唔啱", "zh-TW|beforeSeq 無效", "zh-CN|beforeSeq 无效"
     })

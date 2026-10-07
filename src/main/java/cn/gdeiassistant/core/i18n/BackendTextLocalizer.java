@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 
 public final class BackendTextLocalizer {
 
-    private static final Pattern COMMENT_WITH_DETAIL = Pattern.compile("^(.+?) 评论了你的.+?[：:](.+)$");
+    private static final Pattern COMMENT_WITH_DETAIL = Pattern.compile("^(.+?) ?评论了你的.+?[：:](.+)$", Pattern.DOTALL);
+    private static final Pattern SIMPLE_COMMENT = Pattern.compile("^(.+?) ?评论了你的(?:树洞|表白|作品)$");
     private static final Pattern DELIVERY_ACCEPTED = Pattern.compile("^(.+?) 接取了你发布的 (.+) 订单$");
     private static final Pattern DELIVERY_FINISHED = Pattern.compile("^(.+?) 已确认你接取的 (.+) 订单完成$");
     private static final Pattern DATING_ACCEPTED = Pattern.compile("^(.+?) 通过了你的请求$");
@@ -612,9 +613,9 @@ public final class BackendTextLocalizer {
     private static String formatComment(String content, String language, String baseKey, String detailKey) {
         Matcher matcher = COMMENT_WITH_DETAIL.matcher(content);
         if (matcher.matches()) {
-            return template(detailKey, language, matcher.group(1), matcher.group(2).trim());
+            return template(detailKey, language, matcher.group(1), matcher.group(2));
         }
-        return localizeMessage(content, language);
+        return formatActorOnly(content, SIMPLE_COMMENT, language, baseKey);
     }
 
     private static String formatActorOnly(String content, Pattern pattern, String language, String key) {
@@ -719,6 +720,14 @@ public final class BackendTextLocalizer {
                 "ja", "ツリーホールに新しいいいねがありました",
                 "ko", "트리홀에 새 좋아요가 생겼습니다"
         ));
+        MESSAGE_TRANSLATIONS.put("interaction.secret.comment.content", Map.of(
+                "zh-CN", "{0} 评论了你的树洞",
+                "zh-HK", "{0} 留言回應咗你嘅樹洞",
+                "zh-TW", "{0} 評論了你的樹洞",
+                "en", "{0} commented on your confession",
+                "ja", "{0} さんがあなたのツリーホールにコメントしました",
+                "ko", "{0}님이 당신의 트리홀에 댓글을 남겼습니다"
+        ));
         MESSAGE_TRANSLATIONS.put("interaction.secret.comment.contentWithDetail", Map.of(
                 "zh-CN", "{0} 评论了你的树洞：{1}",
                 "zh-HK", "{0} 留言回應咗你嘅樹洞：{1}",
@@ -758,6 +767,14 @@ public final class BackendTextLocalizer {
                 "en", "Someone joined your guess-the-name interaction",
                 "ja", "告白ウォールの名前当てに参加した人がいます",
                 "ko", "누군가 이름 맞히기 활동에 참여했습니다"
+        ));
+        MESSAGE_TRANSLATIONS.put("interaction.express.comment.content", Map.of(
+                "zh-CN", "{0} 评论了你的表白",
+                "zh-HK", "{0} 留言回應咗你嘅表白",
+                "zh-TW", "{0} 評論了你的表白",
+                "en", "{0} commented on your confession wall post",
+                "ja", "{0} さんがあなたの告白にコメントしました",
+                "ko", "{0}님이 당신의 고백 글에 댓글을 남겼습니다"
         ));
         MESSAGE_TRANSLATIONS.put("interaction.express.comment.contentWithDetail", Map.of(
                 "zh-CN", "{0} 评论了你的表白：{1}",
@@ -822,6 +839,14 @@ public final class BackendTextLocalizer {
                 "en", "Your post received a new like",
                 "ja", "作品に新しいいいねがありました",
                 "ko", "작품에 새 좋아요가 생겼습니다"
+        ));
+        MESSAGE_TRANSLATIONS.put("interaction.photograph.comment.content", Map.of(
+                "zh-CN", "{0} 评论了你的作品",
+                "zh-HK", "{0} 留言回應咗你嘅作品",
+                "zh-TW", "{0} 評論了你的作品",
+                "en", "{0} commented on your post",
+                "ja", "{0} さんがあなたの作品にコメントしました",
+                "ko", "{0}님이 당신의 작품에 댓글을 남겼습니다"
         ));
         MESSAGE_TRANSLATIONS.put("interaction.photograph.comment.contentWithDetail", Map.of(
                 "zh-CN", "{0} 评论了你的作品：{1}",

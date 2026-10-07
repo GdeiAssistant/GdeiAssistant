@@ -22,6 +22,11 @@ class DeletionCleanupWorkerTest {
     @Mock UserProfileService profileService;
     @Mock UserCertificateService certificateService;
     @Mock CloseMapper closeMapper;
+    @Mock cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
+    @Mock org.springframework.transaction.PlatformTransactionManager transactions;
+    @org.junit.jupiter.api.BeforeEach void transaction() {
+        when(transactions.getTransaction(any())).thenReturn(new org.springframework.transaction.support.SimpleTransactionStatus());
+    }
 
     private void claimed() {
         var task = new DeletionCleanupMapper.CleanupTask();

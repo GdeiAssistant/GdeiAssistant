@@ -20,6 +20,8 @@ import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
+import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
+import cn.gdeiassistant.common.exception.AccountCleanupPendingException;
 import cn.gdeiassistant.core.logdata.mapper.LogDataMapper;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.secret.service.SecretService;
@@ -35,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Isolation;
 
 import jakarta.annotation.Resource;
 import java.io.ByteArrayInputStream;
@@ -53,6 +56,9 @@ public class UserDataService {
     private static final Logger logger = LoggerFactory.getLogger(UserDataService.class);
     @Autowired
     private UserCertificateService userCertificateService;
+
+    @Autowired
+    private DeletionCleanupMapper deletionCleanupMapper;
 
     @Resource(name = "userMapper")
     private UserMapper userMapper;
@@ -425,7 +431,7 @@ public class UserDataService {
      * @param user
      * @return
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value="appTransactionManager", isolation=Isolation.READ_COMMITTED)
     public void syncUserData(User user) throws Exception {
         syncUserData(user, true);
     }
@@ -436,14 +442,24 @@ public class UserDataService {
      * @param user
      * @param persistCredential true 表示允许更新 MySQL 中保存的校园凭证；false 表示仅初始化账号相关资料
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value="appTransactionManager", isolation=Isolation.READ_COMMITTED)
     public void syncUserData(User user, boolean persistCredential) throws Exception {
         cn.gdeiassistant.core.user.pojo.entity.CampusAccountView queryUser = userMapper.selectUser(user.getUsername());
+        if (queryUser != null) {
+            // Match deletion's app_user lock order and re-read after a concurrent rename/close.
+            queryUser = userMapper.selectUserByIdForUpdate(queryUser.getId());
+            if (queryUser != null && !user.getUsername().equals(queryUser.getUsername())) queryUser = null;
+        }
         if (queryUser != null && !queryUser.isActive()) {
             // 已注销账号的校园用户名已被改名，正常不会命中；若命中则拒绝复用
             throw new IllegalStateException("账号已注销");
         }
         if (queryUser == null) {
+            for (String id : deletionCleanupMapper.unfinishedIdsForUsername(user.getUsername())) {
+                if (deletionCleanupMapper.lockUnfinished(id) != null) {
+                    throw new AccountCleanupPendingException();
+                }
+            }
             cn.gdeiassistant.core.user.pojo.entity.CampusAccountView entity = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
             entity.setPublicId(java.util.UUID.randomUUID().toString());
             entity.setStatus("ACTIVE");

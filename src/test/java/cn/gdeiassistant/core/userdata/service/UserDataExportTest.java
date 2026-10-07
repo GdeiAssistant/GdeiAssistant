@@ -45,6 +45,7 @@ import java.util.zip.*;
 class UserDataExportTest {
     @Mock UserCertificateService certificates;
     @Mock UserMapper users;
+    @Mock cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper deletionCleanupMapper;
     @Mock PhoneMapper phones;
     @Mock ProfileMapper profiles;
     @Mock PrivacyMapper privacy;
@@ -255,8 +256,9 @@ class UserDataExportTest {
     @Test
     void existingActiveLoginCanRefreshCredentialButClosedUserIsRejected() throws Exception {
         CampusAccountView account = new CampusAccountView();
-        account.setStatus("ACTIVE");
+        account.setId(1L);account.setUsername("owner");account.setStatus("ACTIVE");
         when(users.selectUser("owner")).thenReturn(account);
+        when(users.selectUserByIdForUpdate(1L)).thenReturn(account);
         when(profiles.selectUserProfile("owner")).thenReturn(new ProfileEntity());
         when(profiles.selectUserIntroduction("owner")).thenReturn(new Introduction());
         when(privacy.selectPrivacy("owner")).thenReturn(new PrivacyEntity());

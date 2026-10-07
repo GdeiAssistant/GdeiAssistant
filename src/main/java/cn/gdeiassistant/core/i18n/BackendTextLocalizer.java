@@ -26,6 +26,11 @@ public final class BackendTextLocalizer {
     private static final Map<String, Map<String, String>> MESSAGE_TRANSLATIONS = new HashMap<>();
 
     static {
+        registerMessage("账号注销清理尚未完成，请稍后重新登录", "auth.accountCleanupPending",
+                "Account deletion cleanup is still in progress. Please sign in again later.",
+                "帳號註銷清理仲未完成，請等陣再登入", "帳號註銷清理尚未完成，請稍後重新登入",
+                "アカウント削除の処理中です。しばらくしてから再度ログインしてください。",
+                "계정 삭제 정리가 진행 중입니다. 잠시 후 다시 로그인해 주세요.");
         registerMessage("{0} 无效", "request.invalidField",
                 "Invalid {0}", "{0} 唔啱", "{0} 無效",
                 "{0} が無効です", "{0} 값이 올바르지 않습니다");

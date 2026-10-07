@@ -98,6 +98,21 @@ class AuthContractTest {
     }
 
     @Test
+    void cleanupPendingReturnsConflictWithoutIssuingTokenOrPersistingConsent() throws Exception {
+        doThrow(new cn.gdeiassistant.common.exception.AccountCleanupPendingException())
+                .when(userLoginService).userLogin(anyString(), anyString(), anyString(), anyBoolean());
+        mockMvc.perform(post("/api/auth/login").header("Accept-Language", "en-US")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"testuser\",\"password\":\"testpass\",\"campusCredentialConsent\":true}"))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.code").value(40901))
+                .andExpect(jsonPath("$.data").isEmpty())
+                .andExpect(jsonPath("$.message").value("Account deletion cleanup is still in progress. Please sign in again later."));
+        verifyNoInteractions(jwtUtil, campusCredentialService, userDataService);
+    }
+
+    @Test
     void loginMissingUsernameReturnsBadRequest() throws Exception {
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)

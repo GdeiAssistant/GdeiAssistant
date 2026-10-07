@@ -4204,6 +4204,16 @@
             },
             "description": "Request, authentication, authorization, rate-limit or server failure"
           },
+          "409": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_Map_java_lang_String__java_lang_String_"
+                }
+              }
+            },
+            "description": "Previous account deletion cleanup is in progress (code 40901); no sign-in token is issued"
+          },
           "429": {
             "content": {
               "application/json": {

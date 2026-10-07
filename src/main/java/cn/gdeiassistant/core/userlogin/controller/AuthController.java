@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.userlogin.controller;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.AccountCleanupPendingException;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
@@ -77,6 +78,12 @@ public class AuthController {
         boolean consentPersisted = !persistCredential;
         try {
             userLoginService.userLogin(sessionId, username, password, false);
+        } catch (AccountCleanupPendingException e) {
+            response.setStatus(HttpStatus.CONFLICT.value());
+            DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
+            err.setCode(ErrorConstantUtils.ACCOUNT_CLEANUP_PENDING);
+            err.setMessage(BackendTextLocalizer.localizeMessage(e.getMessage(), language));
+            return err;
         } catch (PasswordIncorrectException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);

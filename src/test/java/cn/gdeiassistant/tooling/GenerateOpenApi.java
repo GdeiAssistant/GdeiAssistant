@@ -111,6 +111,10 @@ public final class GenerateOpenApi {
         String media=mapping.produces().length>0?mapping.produces()[0]:"application/json";
         Map<String,Object> responses=new TreeMap<>();responses.put("200",Map.of("description","Successful HTTP response; inspect success/errorCode in the envelope","content",Map.of(media,Map.of("schema",responseSchema))));
         for(String status:List.of("400","401","403","429","500"))responses.put(status,Map.of("description","Request, authentication, authorization, rate-limit or server failure","content",Map.of("application/json",Map.of("schema",schema(cn.gdeiassistant.common.pojo.result.JsonResult.class,Map.of())))));
+        if(method.getDeclaringClass()==cn.gdeiassistant.core.userlogin.controller.AuthController.class && method.getName().equals("login")) {
+            responses.put("409",Map.of("description","Previous account deletion cleanup is in progress (code "+cn.gdeiassistant.common.constant.ErrorConstantUtils.ACCOUNT_CLEANUP_PENDING+"); no sign-in token is issued",
+                    "content",Map.of("application/json",Map.of("schema",responseSchema))));
+        }
         result.put("responses",responses);
         result.put("security",List.of(Map.of("bearerAuth",List.of())));
         return result;

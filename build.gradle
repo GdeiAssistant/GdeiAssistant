@@ -3,7 +3,7 @@ plugins {
     id 'org.springframework.boot' version '4.1.1'
     id 'io.spring.dependency-management' version '1.1.7'
     // GraalVM Native Image：nativeCompile 需 JDK 17+
-    id 'org.graalvm.buildtools.native' version '1.1.11'
+    id 'org.graalvm.buildtools.native' version '1.1.14'
     id 'jacoco'
 }
 
@@ -26,13 +26,13 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
-    implementation platform('software.amazon.awssdk:bom:2.54.12')
+    implementation platform('software.amazon.awssdk:bom:2.55.11')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:auth'
 
-    implementation 'com.auth0:java-jwt:4.6.0'
+    implementation 'com.auth0:java-jwt:4.6.1'
 
-    implementation 'org.apache.commons:commons-lang3:3.20.0'
+    implementation 'org.apache.commons:commons-lang3:3.21.0'
     implementation 'commons-logging:commons-logging:1.4.0'
     implementation 'com.github.houbb:opencc4j:1.14.0'
     implementation 'commons-io:commons-io:2.22.0'
@@ -50,7 +50,7 @@ dependencies {
     implementation 'org.apache.pdfbox:pdfbox:2.0.31'
     implementation 'org.apache.poi:poi:5.5.1'
     implementation 'org.apache.poi:poi-ooxml:5.5.1'
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.85.2'
+    implementation 'org.bouncycastle:bcprov-jdk18on:1.86'
     implementation 'com.aliyun:aliyun-java-sdk-core:4.7.10'
     implementation 'com.tencentcloudapi:tencentcloud-sdk-java:4.0.11'
 
@@ -59,8 +59,8 @@ dependencies {
 
     // Jackson 2.x（Jackson 2.18 兼容层，与 Spring Boot 4 自带的 Jackson 3.x 共存，
     // 用于业务代码中已有的 com.fasterxml.jackson 包引用，后续可逐步迁移到 tools.jackson）
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.2'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.22.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.3'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.22.3'
 
     // MapStruct 映射框架
     implementation 'org.mapstruct:mapstruct:1.6.3'

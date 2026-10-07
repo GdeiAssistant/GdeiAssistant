@@ -308,6 +308,60 @@ class SocialChatServiceTest {
         verify(chatMapper, never()).selectByClientMessageId(anyLong(), anyLong(), anyString());
     }
 
+    @Test
+    void messagePagesPreserveCursorDirectionAndHideUnknownSenderIdentity() {
+        stubConversationLookup();
+        var older = message(101L,10L,1L,2L,"first","older");
+        var newer = message(102L,10L,2L,2L,"second","newer");
+        var excluded = message(103L,10L,3L,2L,"third","excluded");
+        when(chatMapper.selectMessages(10L,null,null,3)).thenReturn(java.util.List.of(newer,older,excluded));
+        var initial=chatService.listMessages("sid","10",null,null,2);
+        assertEquals(java.util.List.of("1","2"),initial.getItems().stream().map(ChatMessageDTO::getSeq).toList());
+        assertEquals("1",initial.getNextCursor());assertTrue(initial.isHasMore());assertEquals("",initial.getItems().get(0).getSenderId());
+        when(chatMapper.selectMessages(10L,4L,null,3)).thenReturn(java.util.List.of(newer,older,excluded));
+        assertEquals("1",chatService.listMessages("sid","10","4",null,2).getNextCursor());
+        when(chatMapper.selectMessages(10L,null,0L,3)).thenReturn(java.util.List.of(older,newer,excluded));
+        assertEquals("2",chatService.listMessages("sid","10",null,"0",2).getNextCursor());
+        assertThrows(SocialException.class,()->chatService.listMessages("sid","10","1","2",2));
+        assertThrows(SocialException.class,()->chatService.listMessages("sid","10","bad",null,2));
+        when(chatMapper.selectMessages(10L,null,null,21)).thenReturn(java.util.List.of());
+        assertFalse(chatService.listMessages("sid","10"," ",null,0).isHasMore());
+        when(chatMapper.selectMessages(10L,null,null,51)).thenReturn(java.util.List.of());
+        assertNull(chatService.listMessages("sid","10",null,null,100).getNextCursor());
+    }
+
+    @Test
+    void conversationCreationLocksOwnersAndInitializesBothMembers() {
+        when(identityService.requireActiveViewer("sid")).thenReturn(me);
+        when(identityService.requireActiveByPublicId(peer.getPublicId())).thenReturn(peer);
+        when(identityService.requireActiveById(1L)).thenReturn(me);when(identityService.requireActiveById(2L)).thenReturn(peer);
+        when(identityService.evaluateMessagePermission(me,peer)).thenReturn(SocialIdentityService.MessagePermission.allowed());
+        doAnswer(inv->{ConversationEntity c=inv.getArgument(0);c.setId(10L);return 1;}).when(chatMapper).insertConversation(any());
+        when(identityService.findById(2L)).thenReturn(peer);
+        var peerDto=new SocialUserDTO();peerDto.setId(peer.getPublicId());peerDto.setCanMessage(true);
+        when(identityService.buildSocialUser(me,peer)).thenReturn(peerDto);
+        var dto=chatService.createOrGetConversation("sid",peer.getPublicId());
+        assertEquals("10",dto.getId());assertTrue(dto.isCanSend());assertEquals("0",dto.getLastReadSeq());
+        verify(identityService).lockUsersInOrder(1L,2L);verify(chatMapper).insertMember(10L,1L);verify(chatMapper).insertMember(10L,2L);
+        when(chatMapper.selectConversationByPair(1L,2L)).thenReturn(conversation);
+        assertEquals("10",chatService.createOrGetConversation("sid",peer.getPublicId()).getId());
+        verify(chatMapper,times(1)).insertConversation(any());
+    }
+
+    @Test
+    void unreadAndConversationCursorAreBoundedAndMalformedIdsNeverQuery() {
+        when(identityService.requireActiveViewer("sid")).thenReturn(me);
+        when(chatMapper.countTotalUnread(1L)).thenReturn(7);
+        assertEquals(7,chatService.unreadTotal("sid").get("total"));
+        String cursor=java.util.Base64.getUrlEncoder().withoutPadding().encodeToString("1000:10".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        when(chatMapper.listConversations(1L,new Date(1000),10L,51)).thenReturn(java.util.List.of());
+        assertFalse(chatService.listConversations("sid",cursor,999).isHasMore());
+        verify(chatMapper).listConversations(1L,new Date(1000),10L,51);
+        assertThrows(SocialException.class,()->chatService.listConversations("sid","broken",20));
+        assertThrows(SocialException.class,()->chatService.getConversation("sid","not-an-id"));
+        verify(chatMapper,never()).selectConversationById(anyLong());
+    }
+
     private static byte[] tinyPng() {
         return java.util.Base64.getDecoder().decode(
                 "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==");

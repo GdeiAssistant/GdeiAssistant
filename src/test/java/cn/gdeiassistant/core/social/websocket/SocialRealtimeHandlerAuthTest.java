@@ -129,4 +129,35 @@ class SocialRealtimeHandlerAuthTest {
         verify(session).close(CloseStatus.POLICY_VIOLATION);
         verify(realtimeHub, never()).register(anyLong(), any());
     }
+    @Test void authenticatedPingRechecksAccountAndStopsWhenCacheOrDatabaseFails() throws Exception {
+        when(session.getId()).thenReturn("synthetic-socket");
+        attrs.put("authenticated",true);attrs.put("userId",1L);attrs.put("username","alice");attrs.put("sessionId","sid");attrs.put("expiresAt",java.time.Instant.now().getEpochSecond()+60);
+        when(userCertificateDao.queryUserLoginCertificate("sid")).thenReturn(new User("alice"));
+        var active=new CampusAccountView();active.setId(1L);active.setStatus("ACTIVE");when(userMapper.selectUserById(1L)).thenReturn(active);
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));
+        verify(session).sendMessage(argThat(m->m.getPayload().toString().contains("pong")));
+        when(session.isOpen()).thenReturn(true);when(userMapper.selectUserById(1L)).thenThrow(new RuntimeException("synthetic db outage"));
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));verify(realtimeHub).unregister(1L,session);
+        attrs.put("authenticated",true);when(userCertificateDao.queryUserLoginCertificate("sid")).thenThrow(new RuntimeException("synthetic cache outage"));
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));verify(realtimeHub,times(2)).unregister(1L,session);
+        org.junit.jupiter.api.Assertions.assertEquals(false,attrs.get("authenticated"));
+    }
+    @Test void malformedAndUnauthenticatedFramesNeverProducePongAndCloseCancelsTimers() throws Exception {
+        handler.handleTextMessage(session,new TextMessage("{broken"));verify(session).close(CloseStatus.BAD_DATA);
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));verify(session).close(CloseStatus.POLICY_VIOLATION);
+        when(session.getId()).thenReturn("synthetic-socket");handler.afterConnectionEstablished(session);
+        attrs.put("userId",Integer.valueOf(1));handler.afterConnectionClosed(session,CloseStatus.NORMAL);verify(realtimeHub).unregister(1L,session);
+        verify(session,never()).sendMessage(any());
+    }
+    @Test void missingIdentityClaimsAndMissingExpiryFailAuthenticationBeforeRegistration() throws Exception {
+        when(jwtUtil.verifyAndParse("empty")).thenReturn(Map.of());
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"auth\",\"token\":\"empty\"}"));
+        var sid=mock(Claim.class);var username=mock(Claim.class);when(sid.asString()).thenReturn("sid");when(username.asString()).thenReturn("alice");
+        when(jwtUtil.verifyAndParse("no-expiry")).thenReturn(Map.of("sessionId",sid,"username",username));
+        when(userCertificateDao.queryUserLoginCertificate("sid")).thenReturn(new User("alice"));
+        var active=new CampusAccountView();active.setId(1L);active.setStatus("ACTIVE");when(userMapper.selectUser("alice")).thenReturn(active);
+        handler.handleTextMessage(session,new TextMessage("{\"type\":\"auth\",\"token\":\"no-expiry\"}"));
+        verify(realtimeHub,never()).register(anyLong(),any());verify(session,times(2)).close(CloseStatus.POLICY_VIOLATION);
+    }
+
 }

@@ -295,7 +295,7 @@ public class ReflectionUtils {
     public static Map<String, Object> getAllNotNullObjectFields(Object object, Class clazz) {
         Map<String, Object> map = new HashMap<>();
         if (clazz.getSuperclass() != null && !clazz.getSuperclass().equals(Object.class)) {
-            Map<String, Object> temp = getAllNotNullObjectFields(object, object.getClass().getSuperclass());
+            Map<String, Object> temp = getAllNotNullObjectFields(object, clazz.getSuperclass());
             for (Map.Entry<String, Object> entry : temp.entrySet()) {
                 map.put(entry.getKey(), entry.getValue());
             }
@@ -305,7 +305,7 @@ public class ReflectionUtils {
             field.setAccessible(true);
             if (getFieldValue(object, field.getName()) != null) {
                 if (Entity.class.isAssignableFrom(field.getType())) {
-                    map.put(field.getName(), getAllNotNullObjectFields(getFieldValue(object, field.getName()), clazz));
+                    map.put(field.getName(), getAllNotNullObjectFields(getFieldValue(object, field.getName()), field.getType()));
                 } else {
                     map.put(field.getName(), getFieldValue(object, field.getName()));
                 }

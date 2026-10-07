@@ -173,6 +173,7 @@ public class ExportExcel {
     private void initialize(String title, List<String> headerList) {
         this.workbook = new SXSSFWorkbook(500);
         this.sheet = workbook.createSheet("Export");
+        ((org.apache.poi.xssf.streaming.SXSSFSheet) this.sheet).trackAllColumnsForAutoSizing();
         this.styles = createStyles(workbook);
         // Create title
         if (StringUtils.isNotBlank(title)) {

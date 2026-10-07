@@ -169,3 +169,99 @@ describe('system dictionaries remain live when locale changes', () => {
     }
   })
 })
+
+
+describe('profile loading and confirmed edits', () => {
+  const deferred = () => {
+    let resolve, reject
+    const promise = new Promise((yes, no) => { resolve = yes; reject = no })
+    return { promise, resolve, reject }
+  }
+  async function editNickname(host, value) {
+    ;[...host.querySelectorAll('button')].find(button => button.textContent.includes(zhCN.profile.nickname)).click()
+    await flush()
+    const input = document.querySelector('input[type="text"]')
+    input.value = value
+    input.dispatchEvent(new Event('input', { bubbles: true }))
+    buttonWith(zhCN.common.confirm).click()
+    await flush()
+  }
+  it('keeps confirmed values when saving fails and serializes edits of the same field', async () => {
+    const first = deferred(), second = deferred()
+    api.updateNickname.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise)
+    const { host } = await mountPage(Profile)
+    await editNickname(host, 'first pending')
+    await editNickname(host, 'second confirmed')
+    expect(api.updateNickname).toHaveBeenCalledTimes(1)
+    expect(host.textContent).toContain('用户写的中国广东')
+    first.reject(new Error('synthetic outage'))
+    await flush()
+    expect(api.updateNickname).toHaveBeenCalledTimes(2)
+    expect(host.textContent).not.toContain('first pending')
+    second.resolve({ success: true })
+    await flush()
+    expect(host.textContent).toContain('second confirmed')
+  })
+  it('does not let a late initial read overwrite an edit and tolerates optional endpoint failures', async () => {
+    const initial = deferred()
+    api.getCurrentUserProfile.mockReturnValue(initial.promise)
+    api.getProfileOptions.mockRejectedValue(new Error('synthetic dictionary outage'))
+    api.getLocationList.mockRejectedValue(new Error('synthetic region outage'))
+    social.fetchSocialMe.mockRejectedValue(new Error('synthetic social outage'))
+    api.updateNickname.mockResolvedValue({ success: true })
+    const { host } = await mountPage(Profile)
+    await editNickname(host, 'confirmed while loading')
+    initial.resolve({ success: true, data: { nickname: 'stale read', username: 'synthetic' } })
+    await flush()
+    expect(host.textContent).toContain('confirmed while loading')
+    expect(host.textContent).not.toContain('stale read')
+    expect(host.querySelector('.profile-stat-link').getAttribute('aria-disabled')).toBe('true')
+    expect(api.updateLocation).not.toHaveBeenCalled()
+  })
+  it('does not submit an empty nickname and survives a failed main read', async () => {
+    api.getCurrentUserProfile.mockRejectedValue(new Error('synthetic profile outage'))
+    const { host } = await mountPage(Profile)
+    await editNickname(host, '   ')
+    expect(api.updateNickname).not.toHaveBeenCalled()
+    expect(host.querySelector('.profile-stat-link').getAttribute('href')).toContain('demo')
+  })
+})
+
+describe('profile field commits', () => {
+  it('saves birthday codes and clears introduction without blocking an unrelated pending edit', async () => {
+    let completeNickname
+    api.updateNickname.mockReturnValue(new Promise(resolve => { completeNickname = resolve }))
+    api.updateBirthday.mockResolvedValue({ success: true })
+    api.updateIntroduction.mockResolvedValue({ success: true })
+    const { host } = await mountPage(Profile)
+    const open = async key => {
+      ;[...host.querySelectorAll('button')].find(button => button.textContent.includes(zhCN.profile[key])).click()
+      await flush()
+    }
+    await open('nickname')
+    const name = document.querySelector('input[type="text"]')
+    name.value = 'pending nickname'
+    name.dispatchEvent(new Event('input', { bubbles: true }))
+    buttonWith(zhCN.common.confirm).click()
+    await flush()
+    await open('birthday')
+    const date = document.querySelector('input[type="date"]')
+    date.value = '2000-01-02'
+    date.dispatchEvent(new Event('input', { bubbles: true }))
+    buttonWith(zhCN.common.confirm).click()
+    await flush()
+    expect(api.updateBirthday).toHaveBeenCalledExactlyOnceWith({ year: 2000, month: 1, date: 2 })
+    expect(host.textContent).toContain('2000-01-02')
+    await open('introduction')
+    const intro = document.querySelector('textarea')
+    intro.value = '   '
+    intro.dispatchEvent(new Event('input', { bubbles: true }))
+    buttonWith(zhCN.common.confirm).click()
+    await flush()
+    expect(api.updateIntroduction).toHaveBeenCalledExactlyOnceWith({ introduction: null })
+    expect(host.textContent).not.toContain('pending nickname')
+    completeNickname({ success: true })
+    await flush()
+    expect(host.textContent).toContain('pending nickname')
+  })
+})

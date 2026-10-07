@@ -86,3 +86,20 @@ WebSocket 连接新增和移除改为按用户原子更新，避免旧连接退�
 完整 `check architectureCoverage jacocoTestReport bootJar` 通过：852 项测试，0 失败/0 错误/0 跳过；全库行 12,642/16,707 = 75.67%，分支 4,420/7,076 = 62.46%，原覆盖率门槛和排除项未改。首次完整检查因未导入 CI 迁移基线而失败 4 项；按既有 architecture-before.sql 初始化隔离数据库后，完整检查通过，没有修改迁移逻辑。新增 15 项测试检查真实 Spring 异步基础设施下的反馈返回、附件资源/字节限制、确定性连接竞态、批量公开身份查询、导出白名单和实际 ZIP 内容。
 
 本轮未修改 Web/客户端源码或样式。认证和邮件传输用合成替身，已有邮箱隔离 E2E 使用 loopback SMTP 和 Docker 数据库；这些结果不表示真实账户绑定或新增真实邮件投递已验收。未调用 Gemini 生成、真实校园业务、付费服务或扩大权限。
+
+
+## 请求日志与演示环境留存收尾
+
+本轮只修改后端日志和相关测试，不修改 Web/客户端产品代码、样式、排版或数据库结构。请求事件保留 requestId、HTTP 方法、Spring 路由模板、代码处理方法、控制器结果、异常类型和耗时。原始路径、查询/表单/JSON 正文、上传内容、IP 和客户端 headers 不进入请求事件；不再依赖参数名称黑名单猜测正文是否敏感。
+
+直接及 ResponseEntity 包装的 JsonResult(false)、HTTP 错误响应、抛出异常均记录 FAIL，业务返回及异常传播保持原行为。SlowRequest 使用单调时钟，指标仍只用有界 method/handler 标签，阈值保持 800ms；QueryLog 的 1500ms 是业务查询耗时阈值，并非逐条 SQL 执行计划。请求编号仅复用 1–64 位 ASCII 字母、数字、点、横线和下划线，其他值生成完整 UUID；正常或异常退出均恢复原 MDC。async/provider/campusSync 三个线程池只传播 requestId，并在任务退出时恢复工作线程上下文；定时任务不制造 HTTP 请求编号。
+
+全局异常日志保留类型和堆栈位置，不输出异常 message、cause message 或原始 Throwable；反馈 SMTP 单独记录异常和直接 cause 类型，不记录邮箱、凭据、邮件正文或上游返回正文，不自动重发。SQL 日志默认 INFO，删除无文件 appender 却声明 logging.file.name 的误导配置；Logback 仍输出控制台，避免 Native Image 编译期文件描述符问题。这里描述的是本轮请求/全局异常/反馈邮件日志边界，不表示已逐个证明所有历史服务 logger 均无敏感内容。
+
+演示环境复用既有 Azure App Service 文件日志，不新增付费日志服务。计划开启应用 Information 与容器标准输出捕获，沿用 3 天/100 MB 有界留存；实际配置读回、合成请求日志可读取验证及部署 revision 在本轮发布记录中分别记录。旧日志不会被追溯补齐，磁盘配额满时可能早于 3 天淘汰；这不是长期归档、自动告警或外部指标时序库。[Azure 官方日志说明](https://learn.microsoft.com/en-us/azure/app-service/troubleshoot-diagnostic-logs)与[容器日志配置](https://learn.microsoft.com/en-us/azure/app-service/configure-custom-container?pivots=container-linux)说明了控制台捕获和有界文件日志的用途。
+
+后续按接口模板/handler 分组查看请求量、FAIL、SlowRequest、异常类型与 provider 成功/失败，不根据缺少真实流量的覆盖率数字继续泛化重构。requestId 只用于查找同一次请求及其异步调用；不会作为高基数指标标签。现有 provider/query/slow 计数器是进程内指标，重启清零，未连接长期时序存储。
+
+本地定向 18 项测试通过，覆盖实际发出的日志隐私、业务/HTTP/异常失败、非法请求编号、上下文恢复、真实异步线程池传播和同一工作线程不串请求，以及真实 Spring 反馈流程 SMTP 失败不自动重发。原私有序列化 helper 测试随参数日志实现删除，改为对实际输出事件断言；门槛及排除项不变。完整后端与远端 CI 结果见发布记录，不将定向测试计为全库或真实邮件验收。
+
+完整本地 `check architectureCoverage jacocoTestReport bootJar` 通过 858 项测试，0 失败/错误/跳过；全库行 12605/16622=75.83%，分支 4371/6994=62.5%。原全库 75% 行门槛、架构与关键类门槛均通过，未新增排除项。测试数据库均为本轮 Docker 合成环境，没有调用真实校园账户、SMTP 供应商或 Gemini 生成。

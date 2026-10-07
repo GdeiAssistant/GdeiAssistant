@@ -64,9 +64,7 @@ logging:
     org.springframework.web: ${LOG_LEVEL_WEB:INFO}
     org.mybatis: ${LOG_LEVEL_MYBATIS:INFO}
     java.sql: ${LOG_LEVEL_SQL:INFO}
-    org.apache.ibatis: ${LOG_LEVEL_IBATIS:DEBUG}
-  file:
-    name: logs/gdeiassistant.log
+    org.apache.ibatis: ${LOG_LEVEL_IBATIS:INFO}
 
 management:
   endpoints:

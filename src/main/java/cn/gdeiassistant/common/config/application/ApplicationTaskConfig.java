@@ -1,5 +1,7 @@
 package cn.gdeiassistant.common.config.application;
 
+import org.slf4j.MDC;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
@@ -28,6 +30,7 @@ public class ApplicationTaskConfig implements SchedulingConfigurer, AsyncConfigu
         executor.setCorePoolSize(5);
         executor.setMaxPoolSize(50);
         executor.setQueueCapacity(10);
+        executor.setTaskDecorator(requestCorrelationDecorator());
         executor.initialize();
         return executor;
     }
@@ -39,6 +42,7 @@ public class ApplicationTaskConfig implements SchedulingConfigurer, AsyncConfigu
         executor.setMaxPoolSize(8);
         executor.setQueueCapacity(20);
         executor.setThreadNamePrefix("provider-");
+        executor.setTaskDecorator(requestCorrelationDecorator());
         return executor;
     }
 
@@ -49,8 +53,33 @@ public class ApplicationTaskConfig implements SchedulingConfigurer, AsyncConfigu
         executor.setMaxPoolSize(5);
         executor.setQueueCapacity(10);
         executor.setThreadNamePrefix("campus-sync-");
+        executor.setTaskDecorator(requestCorrelationDecorator());
         executor.initialize();
         return executor;
+    }
+
+    // Capture only the correlation ID, not arbitrary MDC entries from the request thread.
+    static TaskDecorator requestCorrelationDecorator() {
+        return task -> {
+            String requestId = MDC.get("requestId");
+            return () -> {
+                String previous = MDC.get("requestId");
+                try {
+                    if (requestId == null) {
+                        MDC.remove("requestId");
+                    } else {
+                        MDC.put("requestId", requestId);
+                    }
+                    task.run();
+                } finally {
+                    if (previous == null) {
+                        MDC.remove("requestId");
+                    } else {
+                        MDC.put("requestId", previous);
+                    }
+                }
+            };
+        };
     }
 
     @Override

@@ -13,8 +13,6 @@ import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
 import cn.gdeiassistant.core.charge.service.ChargeIdempotencyService;
 import cn.gdeiassistant.core.charge.service.ChargeOrderService;
 import cn.gdeiassistant.core.charge.service.ChargeService;
-import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,9 +63,6 @@ class ChargeRequestControllerTest {
     @Mock
     private UserCertificateService userCertificateService;
 
-    @Mock
-    private UserMapper userMapper;
-
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -77,7 +72,6 @@ class ChargeRequestControllerTest {
         ReflectionTestUtils.setField(controller, "chargeIdempotencyService", chargeIdempotencyService);
         ReflectionTestUtils.setField(controller, "chargeOrderService", chargeOrderService);
         ReflectionTestUtils.setField(controller, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(controller, "userMapper", userMapper);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .addInterceptors(new ApiAuthInterceptor(List.of()))
@@ -301,7 +295,7 @@ class ChargeRequestControllerTest {
                         .param("password", PASSWORD))
                 .andExpect(status().isUnauthorized());
 
-        verifyNoInteractions(userCertificateService, userMapper, chargeService);
+        verifyNoInteractions(userCertificateService, chargeService);
     }
 
     @Test
@@ -313,12 +307,14 @@ class ChargeRequestControllerTest {
                 .andExpect(status().isInternalServerError())
                 .andExpect(jsonPath("$.success").value(false));
 
-        verifyNoInteractions(userCertificateService, userMapper, chargeService);
+        verifyNoInteractions(userCertificateService, chargeService);
     }
 
     @Test
     void shouldRejectChargeRequestWithWrongPassword() throws Exception {
         mockAuthenticatedUser("different-synthetic-password");
+        org.mockito.Mockito.doThrow(new cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException("充值密码验证失败"))
+                .when(userCertificateService).verifyCurrentPassword(USERNAME, PASSWORD);
 
         mockMvc.perform(post("/api/card/charge")
                         .requestAttr("sessionId", SESSION_ID)
@@ -343,7 +339,7 @@ class ChargeRequestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        verifyNoInteractions(userCertificateService, userMapper, chargeService);
+        verifyNoInteractions(userCertificateService, chargeService);
     }
 
     @Test
@@ -463,9 +459,5 @@ class ChargeRequestControllerTest {
 
     private void mockAuthenticatedUser(String storedPassword) {
         when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(new User(USERNAME, storedPassword));
-        CampusAccountView userEntity = new CampusAccountView();
-        userEntity.setUsername(USERNAME);
-        userEntity.setPassword(storedPassword);
-        when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
     }
 }

@@ -85,7 +85,9 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
                 revokeAndClose(session);
                 return;
             }
-            session.sendMessage(new TextMessage("{\"type\":\"pong\"}"));
+            if (!realtimeHub.sendToSession(session, new TextMessage("{\"type\":\"pong\"}"))) {
+                cancelSessionRecheck(session.getId());
+            }
         }
     }
 
@@ -130,9 +132,14 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
             }
             session.getAttributes().put("expiresAt", expiresAt);
             cancelAuthTimeout(session.getId());
-            realtimeHub.register(appUser.getId(), session);
-            scheduleSessionRecheck(session);
-            session.sendMessage(new TextMessage("{\"type\":\"ready\"}"));
+            synchronized (session) {
+                // Hold the send monitor before registration so ready precedes business frames.
+                realtimeHub.register(appUser.getId(), session);
+                scheduleSessionRecheck(session);
+                if (!realtimeHub.sendToSession(session, new TextMessage("{\"type\":\"ready\"}"))) {
+                    cancelSessionRecheck(session.getId());
+                }
+            }
         } catch (Exception e) {
             session.close(CloseStatus.POLICY_VIOLATION);
         }
@@ -235,7 +242,7 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
             if (session.isOpen()) {
                 session.close(status);
             }
-        } catch (IOException ignored) {
+        } catch (IOException | IllegalStateException ignored) {
         }
     }
 }

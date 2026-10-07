@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.annotation.RestAuthentication;
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
 import cn.gdeiassistant.common.exception.chargeexception.ChargeIdempotencyException;
-import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
@@ -17,7 +16,6 @@ import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
 import cn.gdeiassistant.core.charge.service.ChargeIdempotencyService;
 import cn.gdeiassistant.core.charge.service.ChargeOrderService;
 import cn.gdeiassistant.core.charge.service.ChargeService;
-import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,9 +44,6 @@ public class ChargeRequestController {
     @Autowired
     private UserCertificateService userCertificateService;
 
-    @Autowired
-    private UserMapper userMapper;
-
     @RequestMapping(value = "/api/card/charge", method = RequestMethod.POST)
     @RestAuthentication
     @RequestLogPersistence
@@ -68,11 +63,7 @@ public class ChargeRequestController {
 
         // 3. 二次验证用户密码
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        if (!java.security.MessageDigest.isEqual(
-                userMapper.selectUser(user.getUsername()).getPassword().getBytes(java.nio.charset.StandardCharsets.UTF_8),
-                requestParams.getPassword().getBytes(java.nio.charset.StandardCharsets.UTF_8))) {
-            throw new PasswordIncorrectException("充值密码验证失败");
-        }
+        userCertificateService.verifyCurrentPassword(user.getUsername(), requestParams.getPassword());
 
         String idempotencyKey = resolveIdempotencyKey(request);
         ChargeIdempotencyService.ChargeIdempotencyContext idempotencyContext = null;

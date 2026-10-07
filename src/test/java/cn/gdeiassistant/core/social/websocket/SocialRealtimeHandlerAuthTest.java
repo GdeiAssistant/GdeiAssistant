@@ -48,6 +48,7 @@ class SocialRealtimeHandlerAuthTest {
     void setUp() throws Exception {
         when(session.getAttributes()).thenReturn(attrs);
         doNothing().when(session).close(any(CloseStatus.class));
+        lenient().when(realtimeHub.sendToSession(any(), any())).thenReturn(true);
     }
 
     @AfterEach
@@ -68,7 +69,7 @@ class SocialRealtimeHandlerAuthTest {
         when(session.isOpen()).thenReturn(true);
         handler.handleTextMessage(session, new TextMessage("{\"type\":\"auth\",\"token\":\"tok\"}"));
         verify(realtimeHub).register(1L, session);
-        verify(session).sendMessage(argThat(message -> message.getPayload().toString().contains("ready")));
+        verify(realtimeHub).sendToSession(eq(session), argThat(message -> message.getPayload().contains("ready")));
         attrs.put("expiresAt", java.time.Instant.now().getEpochSecond() - 1);
         handler.handleTextMessage(session, new TextMessage("{\"type\":\"ping\"}"));
         verify(session).close(CloseStatus.POLICY_VIOLATION);
@@ -135,7 +136,7 @@ class SocialRealtimeHandlerAuthTest {
         when(userCertificateDao.queryUserLoginCertificate("sid")).thenReturn(new User("alice"));
         var active=new CampusAccountView();active.setId(1L);active.setStatus("ACTIVE");when(userMapper.selectUserById(1L)).thenReturn(active);
         handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));
-        verify(session).sendMessage(argThat(m->m.getPayload().toString().contains("pong")));
+        verify(realtimeHub).sendToSession(eq(session), argThat(m->m.getPayload().contains("pong")));
         when(session.isOpen()).thenReturn(true);when(userMapper.selectUserById(1L)).thenThrow(new RuntimeException("synthetic db outage"));
         handler.handleTextMessage(session,new TextMessage("{\"type\":\"ping\"}"));verify(realtimeHub).unregister(1L,session);
         attrs.put("authenticated",true);when(userCertificateDao.queryUserLoginCertificate("sid")).thenThrow(new RuntimeException("synthetic cache outage"));

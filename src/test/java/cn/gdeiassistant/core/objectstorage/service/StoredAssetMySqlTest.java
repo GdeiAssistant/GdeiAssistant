@@ -48,6 +48,16 @@ class StoredAssetMySqlTest {
     byte[] png() throws Exception {
         var bytes=new java.io.ByteArrayOutputStream();javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(2,2,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",bytes);return bytes.toByteArray();
     }
+    @Test void messagePublicIdentityProjectionHasNoCredentialTableDependency() {
+        sql.execute("CREATE TABLE app_user(id bigint primary key,public_id varchar(36),status varchar(16)) ENGINE=InnoDB");
+        sql.execute("INSERT INTO app_user VALUES(1,'synthetic-active','ACTIVE'),(2,'synthetic-closed','CLOSED')");
+        sessions.getConfiguration().addMapper(cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper.class);
+        var rows=sessions.getMapper(cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper.class).selectPublicIds(List.of(1L,2L,999L));
+        assertEquals(2,rows.size());
+        for(var row:rows) assertEquals(Set.of("userId","publicId"),row.keySet());
+        assertEquals(Set.of("synthetic-active","synthetic-closed"),rows.stream().map(row->row.get("publicId")).collect(java.util.stream.Collectors.toSet()));
+    }
+
     @Test void failedPublicationRollsBackBusinessRowButLeavesDurableCleanup() throws Exception {
         var target=new TopicService();var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic"));
         var authors=mock(PublicAuthorResolver.class);when(authors.resolve("synthetic")).thenReturn(new PublicAuthorResolver.AuthorPublic(null,"用户"));

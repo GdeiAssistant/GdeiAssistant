@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import jakarta.mail.MessagingException;
-import java.io.IOException;
-import java.io.InputStream;
 
 @Component
 public class SmtpEmailVerificationSender implements EmailVerificationSender {
@@ -44,8 +42,8 @@ public class SmtpEmailVerificationSender implements EmailVerificationSender {
             throw new SendEmailException("邮件功能未启用：请先配置 SMTP（email.smtp.host/username/password）");
         }
         try {
-            emailUtils.sendEmail(senderEmail, recipientEmail, "广东二师助手邮箱验证码", text, new InputStream[0]);
-        } catch (MessagingException | IOException | org.springframework.mail.MailException e) {
+            emailUtils.sendEmail(senderEmail, recipientEmail, "广东二师助手邮箱验证码", text, new byte[0][]);
+        } catch (MessagingException | org.springframework.mail.MailException e) {
             throw new SendEmailException("SMTP 邮件发送失败，请检查 SMTP 配置或服务状态");
         }
     }

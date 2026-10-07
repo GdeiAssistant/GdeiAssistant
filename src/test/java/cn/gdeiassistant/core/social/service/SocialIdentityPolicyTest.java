@@ -58,4 +58,12 @@ class SocialIdentityPolicyTest {
         when(summaries.selectUsers(1L,List.of(1L,2L))).thenReturn(List.of(self,closed));var result=service.buildSocialUsers(viewer,List.of(1L,2L));
         assertEquals("SELF",result.get(1L).getMessagePermissionReason());assertFalse(result.get(2L).isCanMessage());assertNull(result.get(2L).getAvatarUrl());
     }
+    @Test void messageIdentityLookupDeduplicatesIdsAndKeepsClosedPublicIdentityOnly() {
+        var closed=Map.<String,Object>of("userId",2L,"publicId","synthetic-closed");
+        var missingPublicId=new HashMap<String,Object>();missingPublicId.put("userId",3L);
+        when(summaries.selectPublicIds(List.of(2L,3L,4L))).thenReturn(List.of(closed,missingPublicId));
+        assertEquals(Map.of(2L,"synthetic-closed"),service.findPublicIds(List.of(2L,2L,3L,4L)));
+        verify(summaries).selectPublicIds(List.of(2L,3L,4L));
+        assertTrue(service.findPublicIds(List.of()).isEmpty());verifyNoMoreInteractions(summaries);
+    }
 }

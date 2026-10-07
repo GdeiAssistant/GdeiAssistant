@@ -331,6 +331,23 @@ class SocialChatServiceTest {
     }
 
     @Test
+    void fiftyMessagePageLoadsDistinctPublicSenderIdsOnce() {
+        stubConversationLookup();
+        var rows = new java.util.ArrayList<ChatMessageEntity>();
+        for (long seq=50;seq>=1;seq--) {
+            rows.add(message(100+seq,10L,seq,seq%2==0 ? 1L : 2L,"synthetic-"+seq,"message"));
+        }
+        when(chatMapper.selectMessages(10L,null,null,51)).thenReturn(rows);
+        when(identityService.findPublicIds(java.util.List.of(2L,1L)))
+                .thenReturn(java.util.Map.of(1L,me.getPublicId(),2L,peer.getPublicId()));
+        var page=chatService.listMessages("sid","10",null,null,50);
+        assertEquals(50,page.getItems().size());assertFalse(page.isHasMore());
+        for (int i=0;i<50;i++) assertEquals((i+1)%2==0 ? me.getPublicId() : peer.getPublicId(),page.getItems().get(i).getSenderId());
+        verify(identityService).findPublicIds(java.util.List.of(2L,1L));
+        verify(identityService,never()).findById(anyLong());
+    }
+
+    @Test
     void conversationCreationLocksOwnersAndInitializesBothMembers() {
         when(identityService.requireActiveViewer("sid")).thenReturn(me);
         when(identityService.requireActiveByPublicId(peer.getPublicId())).thenReturn(peer);

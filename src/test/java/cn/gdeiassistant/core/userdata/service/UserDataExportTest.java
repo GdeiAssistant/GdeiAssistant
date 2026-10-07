@@ -58,6 +58,11 @@ class UserDataExportTest {
     @Mock SecretService secrets;
     @InjectMocks UserDataService service;
 
+    static class ExtendedProfile extends ProfileEntity {
+        private final String internalCredential="synthetic-future-private-field";
+        public String getInternalCredential(){return internalCredential;}
+    }
+
     User user() {
         User u = new User("owner");
         u.setPassword("synthetic-private-password");
@@ -75,7 +80,7 @@ class UserDataExportTest {
         PhoneEntity phone = new PhoneEntity();
         phone.setPhone("13800000000");
         when(phones.selectPhone("owner")).thenReturn(phone);
-        ProfileEntity profile = new ProfileEntity();
+        ProfileEntity profile = new ExtendedProfile();
         profile.setUsername("owner");
         profile.setNickname("Synthetic");
         profile.setDegree(1);
@@ -164,6 +169,8 @@ class UserDataExportTest {
         assertFalse(zip.containsKey("ershou_1_1.jpg"));
         String json = new String(zip.get("data.json"), StandardCharsets.UTF_8);
         assertFalse(json.contains("synthetic-private-password"));
+        assertFalse(json.contains("synthetic-future-private-field"));
+        assertFalse(json.contains("internalCredential"));
         assertFalse(json.contains("other-person"));
         assertFalse(json.contains("13800000000"));
         assertTrue(json.contains("138********"));

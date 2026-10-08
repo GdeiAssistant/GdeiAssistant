@@ -863,6 +863,14 @@ CREATE TABLE `announcement` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Apply to the configured data database before deploying the new announcement unread endpoints.
+CREATE TABLE IF NOT EXISTS announcement_read (
+  username VARCHAR(24) COLLATE utf8mb4_bin NOT NULL,
+  announcement_id INT NOT NULL,
+  PRIMARY KEY (username, announcement_id),
+  CONSTRAINT fk_announcement_read FOREIGN KEY (announcement_id) REFERENCES announcement(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS `electricfees`;
 CREATE TABLE `electricfees` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '电费记录主键ID',

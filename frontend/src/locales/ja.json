@@ -150,7 +150,10 @@
     "selectHometown": "出身地を選択してください",
     "selectFacultyFirst": "先に学部を選択してください",
     "language": "言語 / Language",
-    "campusCredentialManage": "キャンパス認証情報の管理"
+    "campusCredentialManage": "キャンパス認証情報の管理",
+    "unsavedChanges": "未保存の変更があります",
+    "unsavedLeave": "変更を保存せずに移動しますか？",
+    "avatarImmediate": "アバターは変更後すぐに反映されます。他のプロフィール変更は「保存」でまとめて反映します。"
   },
   "info": {
     "news": "ニュース",
@@ -194,7 +197,8 @@
     "targetComment": "コメント",
     "targetLike": "いいね",
     "targetGuess": "名前当て",
-    "announcementMissing": "お知らせが存在しないか、削除されています。"
+    "announcementMissing": "お知らせが存在しないか、削除されています。",
+    "serviceTitle": "サービス・システム通知"
   },
   "router": {
     "siteTitle": "広東第二師範学院キャンパスアシスタント"

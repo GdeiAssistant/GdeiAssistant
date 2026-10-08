@@ -22,6 +22,7 @@ class DeletionCleanupWorkerTest {
     @Mock UserProfileService profileService;
     @Mock UserCertificateService certificateService;
     @Mock CloseMapper closeMapper;
+    @Mock cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper announcements;
     @Mock cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
     @Mock org.springframework.transaction.PlatformTransactionManager transactions;
     @org.junit.jupiter.api.BeforeEach void transaction() {
@@ -47,6 +48,7 @@ class DeletionCleanupWorkerTest {
         claimed(); worker.runOne("task");
         verify(gradeDao).removeGrade("synthetic"); verify(scheduleDao).removeSchedule("synthetic");
         verify(profileService).deleteAvatarForUsername("synthetic"); verify(closeMapper).insertCloseLog(any());
+        verify(announcements).deleteUserReads("synthetic");
         verify(mapper).complete("task"); verify(mapper, never()).retry(anyString(), anyString());
     }
     @Test void unavailableQueueCannotTurnCommittedDeletionIntoAnHttpFailure() {

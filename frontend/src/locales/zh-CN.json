@@ -224,7 +224,10 @@
     "selectLocation": "请选择所在地",
     "selectHometown": "请选择家乡",
     "selectFacultyFirst": "请先选择院系",
-    "language": "语言 / Language"
+    "language": "语言 / Language",
+    "unsavedChanges": "有未保存的修改",
+    "unsavedLeave": "修改还未保存，确定离开吗？",
+    "avatarImmediate": "头像单独上传并立即生效；其他资料修改后统一点击保存。"
   },
   "loginPage": {
     "title": "广东二师助手",
@@ -478,7 +481,8 @@
     "targetComment": "评论",
     "targetLike": "点赞",
     "targetGuess": "猜名字",
-    "announcementMissing": "公告不存在或已删除"
+    "announcementMissing": "公告不存在或已删除",
+    "serviceTitle": "服务与系统提醒"
   },
   "router": {
     "siteTitle": "广东第二师范学院校园助手系统"

@@ -91,3 +91,5 @@ export function updateNickname(data) {
 export function getLocationList() {
   return request.get('/profile/locations')
 }
+
+export function updateProfile(data) { return request.patch('/profile', data) }

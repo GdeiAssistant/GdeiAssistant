@@ -50,6 +50,7 @@
 </template>
 
 <script setup>
+import { refreshMessageUnread } from '@/composables/useMessageUnread'
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ArrowLeft, Check, ImagePlus, MessageCircle, Send, X } from 'lucide-vue-next'
@@ -132,7 +133,8 @@ async function safeMarkRead() {
   const last = lastCommittedSeq(messages.value)
   if (!last) return
   try {
-    await markConversationRead(route.params.id, last)
+    const result = await markConversationRead(route.params.id, last)
+    if (result?.success) await refreshMessageUnread()
   } catch (_) {}
 }
 

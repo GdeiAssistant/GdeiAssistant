@@ -150,7 +150,10 @@
     "selectHometown": "請選擇家鄉",
     "selectFacultyFirst": "請先選擇院系",
     "language": "語言 / Language",
-    "campusCredentialManage": "校園憑證管理"
+    "campusCredentialManage": "校園憑證管理",
+    "unsavedChanges": "有未儲存的修改",
+    "unsavedLeave": "修改尚未儲存，確定離開嗎？",
+    "avatarImmediate": "頭像獨立上傳並立即生效；其他資料修改後統一按儲存。"
   },
   "info": {
     "news": "新聞",
@@ -194,7 +197,8 @@
     "targetComment": "留言",
     "targetLike": "按讚",
     "targetGuess": "猜名字",
-    "announcementMissing": "公告不存在或已刪除"
+    "announcementMissing": "公告不存在或已刪除",
+    "serviceTitle": "服務與系統提醒"
   },
   "router": {
     "siteTitle": "廣東第二師範學院校園助手系統"

@@ -44,6 +44,7 @@ function readState() {
     if (state && typeof state === 'object') {
       return {
         token: state.token || '',
+        announcementReadIds: Array.isArray(state.announcementReadIds) ? state.announcementReadIds : [],
         social: state.social || null,
         savedCetNumber: state.savedCetNumber || '',
         savedCetName: state.savedCetName || '',
@@ -234,6 +235,10 @@ export function handleRequest(options) {
   }
 
   // --- Profile ---
+  if (path === '/api/profile' && (method === 'POST' || method === 'PATCH')) return profileHandlers.handleProfilePatch(token, payload, localizedUtils)
+  if (path === '/api/information/message/categories/unread' && method === 'GET' || /^\/api\/information\/message\/(community|service)\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET' || /^\/api\/information\/message\/(community|service)\/readall$/.test(path) && method === 'POST') return messageHandlers.handleCategories(token, path, method, localizedUtils)
+  if (path === '/api/information/announcement/unread' && method === 'GET' || /^\/api\/information\/announcement\/id\/[^/]+\/read$/.test(path) && method === 'POST') return messageHandlers.handleAnnouncementRead(token, path, method, localizedUtils)
+
   if (path === '/api/profile/avatar' && method === 'GET') {
     return profileHandlers.handleAvatar(token, localizedUtils)
   }

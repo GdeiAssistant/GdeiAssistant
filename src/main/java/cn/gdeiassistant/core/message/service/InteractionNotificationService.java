@@ -67,6 +67,10 @@ public class InteractionNotificationService {
         if (entityList == null || entityList.isEmpty()) {
             return new ArrayList<>();
         }
+        return formatMessages(entityList);
+    }
+
+    private List<InteractionMessageVO> formatMessages(List<InteractionNotificationEntity> entityList) {
         // Batch check which actor usernames are deleted (pre-fix historical data)
         Set<String> deletedActors = new HashSet<>();
         if (userMapper != null) {
@@ -96,6 +100,29 @@ public class InteractionNotificationService {
             list.add(toInteractionMessageVO(entity));
         }
         return list;
+    }
+
+    private User authenticatedUser(String sessionId) throws cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException {
+        User user = userCertificateService.getUserLoginCertificate(sessionId);
+        if (user == null) throw new cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException("登录凭证已过期，请重新登录");
+        return user;
+    }
+
+    public List<InteractionMessageVO> queryCategory(String sessionId, boolean service, int start, int size) throws cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException {
+        User user = authenticatedUser(sessionId);
+        List<InteractionNotificationEntity> entities = interactionNotificationMapper.selectCategoryPage(user.getUsername(), service, start, size);
+        return entities == null ? new ArrayList<>() : formatMessages(entities);
+    }
+
+    public java.util.Map<String, Integer> categoryUnread(String sessionId) throws cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException {
+        User user = authenticatedUser(sessionId);
+        return java.util.Map.of("interaction", interactionNotificationMapper.countCategoryUnread(user.getUsername(), false),
+                "service", interactionNotificationMapper.countCategoryUnread(user.getUsername(), true));
+    }
+
+    public void markCategoryRead(String sessionId, boolean service) throws cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException {
+        User user = authenticatedUser(sessionId);
+        interactionNotificationMapper.markCategoryRead(user.getUsername(), service);
     }
 
     public Integer queryInteractionUnreadCount(String sessionId) {

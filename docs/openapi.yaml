@@ -1985,6 +1985,31 @@
         },
         "type": "object"
       },
+      "common_pojo_result_DataJsonResult_java_util_Map_java_lang_String__java_lang_Integer_": {
+        "properties": {
+          "code": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "data": {
+            "additionalProperties": {
+              "format": "int32",
+              "type": "integer"
+            },
+            "type": "object"
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
       "common_pojo_result_DataJsonResult_java_util_Map_java_lang_String__java_lang_Object_": {
         "properties": {
           "code": {
@@ -9960,6 +9985,93 @@
         ]
       }
     },
+    "/api/information/announcement/id/{id}/read": {
+      "post": {
+        "operationId": "AnnouncementReadController_read_post__api_information_announcement_id__id__read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "read",
+        "tags": [
+          "AnnouncementRead"
+        ]
+      }
+    },
     "/api/information/announcement/start/{start}/size/{size}": {
       "get": {
         "operationId": "AnnouncementController_queryAnnouncementPage_get__api_information_announcement_start__start__size__size_",
@@ -10053,6 +10165,330 @@
         "summary": "queryAnnouncementPage",
         "tags": [
           "Announcement"
+        ]
+      }
+    },
+    "/api/information/announcement/unread": {
+      "get": {
+        "operationId": "AnnouncementReadController_unread_get__api_information_announcement_unread",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_Integer"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "unread",
+        "tags": [
+          "AnnouncementRead"
+        ]
+      }
+    },
+    "/api/information/message/categories/unread": {
+      "get": {
+        "operationId": "MessageCategoryController_unread_get__api_information_message_categories_unread",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_Map_java_lang_String__java_lang_Integer_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "unread",
+        "tags": [
+          "MessageCategory"
+        ]
+      }
+    },
+    "/api/information/message/community/readall": {
+      "post": {
+        "operationId": "MessageCategoryController_readAll_post__api_information_message_community_readall",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "readAll",
+        "tags": [
+          "MessageCategory"
+        ]
+      }
+    },
+    "/api/information/message/community/start/{start}/size/{size}": {
+      "get": {
+        "operationId": "MessageCategoryController_list_get__api_information_message_community_start__start__size__size_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_core_message_pojo_vo_InteractionMessageVO_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "list",
+        "tags": [
+          "MessageCategory"
         ]
       }
     },
@@ -10311,6 +10747,178 @@
         "summary": "readAllInteractionMessages",
         "tags": [
           "Message"
+        ]
+      }
+    },
+    "/api/information/message/service/readall": {
+      "post": {
+        "operationId": "MessageCategoryController_readAll_post__api_information_message_service_readall",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "readAll",
+        "tags": [
+          "MessageCategory"
+        ]
+      }
+    },
+    "/api/information/message/service/start/{start}/size/{size}": {
+      "get": {
+        "operationId": "MessageCategoryController_list_get__api_information_message_service_start__start__size__size_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "start",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_core_message_pojo_vo_InteractionMessageVO_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "list",
+        "tags": [
+          "MessageCategory"
         ]
       }
     },
@@ -15127,6 +15735,182 @@
         "summary": "updateUserPrivacySetting",
         "tags": [
           "Privacy"
+        ]
+      }
+    },
+    "/api/profile": {
+      "patch": {
+        "operationId": "ProfilePatchController_save_patch__api_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": {
+                  "type": "object"
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "save",
+        "tags": [
+          "ProfilePatch"
+        ]
+      },
+      "post": {
+        "operationId": "ProfilePatchController_save_post__api_profile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": {
+                  "type": "object"
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful HTTP response; inspect success/errorCode in the envelope"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request, authentication, authorization, rate-limit or server failure"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "save",
+        "tags": [
+          "ProfilePatch"
         ]
       }
     },

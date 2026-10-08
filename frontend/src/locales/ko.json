@@ -150,7 +150,10 @@
     "selectHometown": "고향을 선택하세요",
     "selectFacultyFirst": "먼저 학과를 선택하세요",
     "language": "언어 / Language",
-    "campusCredentialManage": "캠퍼스 자격증명 관리"
+    "campusCredentialManage": "캠퍼스 자격증명 관리",
+    "unsavedChanges": "저장하지 않은 변경 사항",
+    "unsavedLeave": "변경 사항을 저장하지 않고 나갈까요?",
+    "avatarImmediate": "프로필 사진은 즉시 반영됩니다. 다른 정보는 저장 버튼으로 한 번에 저장하세요."
   },
   "info": {
     "news": "뉴스",
@@ -194,7 +197,8 @@
     "targetComment": "댓글",
     "targetLike": "좋아요",
     "targetGuess": "이름 맞추기",
-    "announcementMissing": "공지가 없거나 삭제되었습니다."
+    "announcementMissing": "공지가 없거나 삭제되었습니다.",
+    "serviceTitle": "서비스 및 시스템 알림"
   },
   "router": {
     "siteTitle": "광둥제2사범대학교 캠퍼스 어시스턴트"

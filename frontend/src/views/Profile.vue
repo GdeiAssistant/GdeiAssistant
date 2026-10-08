@@ -66,6 +66,8 @@
     </AppCard>
 
     <!-- Profile Info -->
+    <p class="px-4 py-2 text-xs text-[var(--c-text-3)]">{{ t('profile.avatarImmediate') }}</p>
+    <fieldset class="profile-editor" :disabled="saving || !profileLoaded">
     <AppCard>
       <template #header>
         <div class="flex items-center gap-2">
@@ -126,11 +128,18 @@
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-0 text-left font-inherit"
               @click="openIntroDialog">
         <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.introduction') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.introduction ? $t('common.filled') : $t('common.notFilled') }}</span>
+        <span class="profile-introduction-preview text-sm text-[var(--c-text-tertiary)]" :title="userInfo.introduction">{{ userInfo.introduction || $t('common.notFilled') }}</span>
         <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
       </button>
 
     </AppCard>
+
+    <p v-if="saveError" role="alert" class="text-sm text-[var(--c-danger)]">{{ saveError }}</p>
+    <div class="profile-save-bar">
+      <span role="status">{{ dirty ? t('profile.unsavedChanges') : '' }}</span>
+      <button type="button" class="profile-save-button" :disabled="!dirty || saving" @click="saveProfile">{{ saving ? t('common.loading') : t('common.save') }}</button>
+    </div>
+    </fieldset>
 
     <AppDialog
       :open="showNicknameDialog"
@@ -217,21 +226,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { onBeforeRouteLeave } from 'vue-router'
+import { buildProfilePatch } from '@/utils/profilePatch'
 import { useI18n } from 'vue-i18n'
 import { setLocale } from '../i18n'
 import {
   getCurrentUserProfile,
   getLocationList,
   getProfileOptions,
-  updateIntroduction,
-  updateBirthday,
-  updateFaculty,
-  updateLocation,
-  updateHometown,
-  updateMajor,
-  updateEnrollment,
-  updateNickname
+  updateProfile
 } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import AppCard from '@/components/ui/AppCard.vue'
@@ -313,42 +317,63 @@ const showSuccess = (msg) => {
   toastSuccess(msg || t('common.saveSuccess'))
 }
 
-// Serialize edits of the same field; commit confirmed values only.
-const pendingEdits = new Map()
+const savedProfile = ref(null)
+const profileLoaded = ref(false)
+const saving = ref(false)
+const saveError = ref('')
 let profileGeneration = 0
-function saveConfirmed(field, request, patch) {
+const dirty = computed(() => savedProfile.value && Object.keys(buildProfilePatch(userInfo.value, savedProfile.value)).length > 0)
+function stageProfileEdit(patch) {
+  if (saving.value || !profileLoaded.value) return
   profileGeneration++
-  const previous = pendingEdits.get(field) || Promise.resolve()
-  const operation = previous.catch(() => {}).then(request).then(() => {
-    Object.assign(userInfo.value, patch)
-    showSuccess()
-  }).catch(() => { toastError(t('common.saveFailed')) })
-  pendingEdits.set(field, operation)
-  return operation.finally(() => {
-    if (pendingEdits.get(field) === operation) pendingEdits.delete(field)
-  })
+  Object.assign(userInfo.value, patch)
 }
+async function saveProfile() {
+  if (!dirty.value || saving.value) return
+  const patch = buildProfilePatch(userInfo.value, savedProfile.value)
+  saving.value = true
+  saveError.value = ''
+  try {
+    const result = await updateProfile(patch)
+    if (!result?.success) throw new Error()
+    savedProfile.value = JSON.parse(JSON.stringify(userInfo.value))
+    showSuccess()
+  } catch (error) {
+    const fields = Object.keys(error.response?.data?.errors || patch)
+    const keys = { enrollment: 'enrollmentYear' }
+    const labels = fields.filter(key => key in patch).map(key => t(`profile.${keys[key] || key}`))
+    saveError.value = `${t('common.saveFailed')}${labels.length ? ': ' + labels.join(', ') : ''}`
+    toastError(saveError.value)
+  }
+  finally { saving.value = false }
+}
+function warnBeforeUnload(event) {
+  if (dirty.value) { event.preventDefault(); event.returnValue = '' }
+}
+onBeforeRouteLeave(() => !dirty.value || window.confirm(t('profile.unsavedLeave')))
+onMounted(() => window.addEventListener('beforeunload', warnBeforeUnload))
+onUnmounted(() => window.removeEventListener('beforeunload', warnBeforeUnload))
 
 function saveBirthday(year, month, date) {
   const birthday = `${year}-${String(month).padStart(2, '0')}-${String(date).padStart(2, '0')}`
-  return saveConfirmed('birthday', () => updateBirthday({ year, month, date }), { birthday })
+  return stageProfileEdit({ birthday })
 }
 
 function saveFaculty(code) {
   if (!Number.isInteger(code)) return Promise.resolve()
-  return saveConfirmed('education', () => updateFaculty({ faculty: code }), {
+  return stageProfileEdit({
     faculty: '', facultyCode: code, major: '', majorCode: ''
   })
 }
 
 function saveMajor(majorCode) {
   if (!majorCode) return Promise.resolve()
-  return saveConfirmed('education', () => updateMajor({ major: majorCode }), { major: '', majorCode })
+  return stageProfileEdit({ major: '', majorCode })
 }
 
 function saveEnrollment(value) {
   const year = value ? parseInt(String(value), 10) : null
-  return saveConfirmed('enrollment', () => updateEnrollment({ year }), { enrollment: value })
+  return stageProfileEdit({ enrollment: value })
 }
 
 const openBirthdayPicker = () => {
@@ -403,14 +428,13 @@ const onLocationConfirm = ({ region, state, city }) => {
   const locationCatalog = getLocationCatalog(locale.value)
   const display = locationCatalog.locationLabel(region?.code, state?.code, city?.code)
   const field = locationPickerType.value
-  const payload = { region: region?.code, state: state?.code || undefined, city: city?.code || undefined }
   const patch = {
     [field + 'Region']: region?.code || '',
     [field + 'State']: state?.code || '',
     [field + 'City']: city?.code || '',
     [field]: display
   }
-  saveConfirmed(field, () => field === 'hometown' ? updateHometown(payload) : updateLocation(payload), patch)
+  stageProfileEdit(patch)
   showLocationPicker.value = false
 }
 
@@ -451,14 +475,14 @@ const confirmNickname = () => {
     toastError(t('profile.nicknamePlaceholder'))
     return
   }
-  saveConfirmed('nickname', () => updateNickname({ nickname }), { nickname })
+  stageProfileEdit({ nickname })
   showNicknameDialog.value = false
 }
 
 const openIntroDialog = () => { tempIntro.value = userInfo.value.introduction || ''; showIntroDialog.value = true }
 const confirmIntro = () => {
   const introduction = (tempIntro.value || '').trim()
-  saveConfirmed('introduction', () => updateIntroduction({ introduction: introduction || null }), { introduction })
+  stageProfileEdit({ introduction })
   showIntroDialog.value = false
 }
 
@@ -469,6 +493,8 @@ async function fetchUserProfile() {
     const ok = res && (res.success === true || res.code === 200) && res.data
     if (ok && generation === profileGeneration) {
       Object.assign(userInfo.value, formatProfileViewModel(res.data, locale.value))
+      savedProfile.value = JSON.parse(JSON.stringify(userInfo.value))
+      profileLoaded.value = true
     }
   } catch (_) {
     toastError(t('common.saveFailed'))
@@ -514,6 +540,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.profile-introduction-preview { max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-editor { border: 0; padding: 0; margin: 0; min-width: 0; }
+.profile-save-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; color: var(--c-text-2); font-size: 14px; }
+.profile-save-button { min-height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius-control); background: var(--c-primary); color: white; font: inherit; cursor: pointer; }
+.profile-save-button:disabled { opacity: .5; cursor: default; }
+
 .profile-page {
   width: 100%;
   max-width: 960px;

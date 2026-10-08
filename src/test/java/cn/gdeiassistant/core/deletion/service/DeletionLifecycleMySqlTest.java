@@ -57,6 +57,7 @@ class DeletionLifecycleMySqlTest {
         ReflectionTestUtils.setField(worker,"gradeDao",grades);ReflectionTestUtils.setField(worker,"scheduleDao",schedules);
         ReflectionTestUtils.setField(worker,"profileService",profiles);ReflectionTestUtils.setField(worker,"certificateService",certificates);
         ReflectionTestUtils.setField(worker,"closeMapper",mock(CloseMapper.class));
+        ReflectionTestUtils.setField(worker,"announcements",mock(cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper.class));
         login=new UserLoginService();ReflectionTestUtils.setField(login,"userCertificateService",certificates);ReflectionTestUtils.setField(login,"userDataService",data);
         executor=Executors.newFixedThreadPool(3);
     }

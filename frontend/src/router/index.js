@@ -553,6 +553,7 @@ const routes = [
         component: AnnouncementDetail,
         meta: { titleKey: 'info.noticeTitle' }
       },
+      { path: 'info/services', name: 'ServiceMessages', component: InteractionList, meta: { titleKey: 'info.serviceTitle' } },
       {
         path: 'info/interactions',
         name: 'InteractionList',

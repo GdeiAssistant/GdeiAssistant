@@ -94,4 +94,26 @@ public interface ProfileMapper {
 
     @Update("update introduction set introduction=#{introduction} where username=#{username}")
     void updateUserIntroduction(@Param("username") String username, @Param("introduction") String introduction);
+    @Update({"<script>update profile <set>",
+            "<if test=\"patch.containsKey('nickname')\">nickname=#{patch.nickname},</if>",
+            "<if test=\"patch.containsKey('birthday')\">birthday=#{patch.birthday},</if>",
+            "<if test=\"patch.containsKey('faculty')\">faculty=#{patch.faculty},</if>",
+            "<if test=\"patch.containsKey('major')\">major=#{patch.major},</if>",
+            "<if test=\"patch.containsKey('enrollment')\">enrollment=#{patch.enrollment},</if>",
+            "<if test=\"patch.containsKey('locationRegion')\">location_region=#{patch.locationRegion},</if>",
+            "<if test=\"patch.containsKey('locationState')\">location_state=#{patch.locationState},</if>",
+            "<if test=\"patch.containsKey('locationCity')\">location_city=#{patch.locationCity},</if>",
+            "<if test=\"patch.containsKey('hometownRegion')\">hometown_region=#{patch.hometownRegion},</if>",
+            "<if test=\"patch.containsKey('hometownState')\">hometown_state=#{patch.hometownState},</if>",
+            "<if test=\"patch.containsKey('hometownCity')\">hometown_city=#{patch.hometownCity},</if>",
+            "</set> where username=#{username}</script>"})
+    int updateProfilePatch(@Param("username") String username, @Param("patch") java.util.Map<String, Object> patch);
+
+    @Select("select * from profile where username=#{username} for update")
+    @ResultMap("Profile")
+    ProfileEntity lockUserProfile(@Param("username") String username);
+
+    @Insert("insert into introduction(username,introduction) values(#{username},#{content}) " +
+            "on duplicate key update introduction=#{content}")
+    void saveIntroduction(@Param("username") String username, @Param("content") String content);
 }

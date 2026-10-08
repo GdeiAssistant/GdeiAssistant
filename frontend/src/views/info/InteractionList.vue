@@ -4,6 +4,7 @@
       <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
     </div>
 
+    <div v-else-if="loadError" role="alert" class="p-4">{{ t('common.networkError') }}<button type="button" @click="reload">{{ t('common.retry') }}</button></div>
     <template v-else>
       <div v-if="!items.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">{{ t('info.noInteraction') }}</div>
 
@@ -52,10 +53,12 @@
 </template>
 
 <script setup>
-import { getInformationMessageInteractionPage, getInformationMessageUnread, postInformationMessageReadall, postInformationMessageByIdRead } from "../../api/informationEndpoints.js"
+import { postInformationMessageByIdRead } from "../../api/informationEndpoints.js"
 
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import request from '@/utils/request'
+import { refreshMessageUnread } from '@/composables/useMessageUnread'
+import { ref, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import {
@@ -65,6 +68,9 @@ import {
 } from './infoContent'
 
 const router = useRouter()
+const route = useRoute()
+const category = computed(() => route.path === '/info/services' ? 'service' : 'community')
+const loadError = ref(false)
 const { t } = useI18n()
 
 const items = ref([])
@@ -95,64 +101,75 @@ function getModuleLabel(module) {
 }
 
 async function loadPage(start) {
-  const res = await getInformationMessageInteractionPage(start, PAGE_SIZE)
-  return normalize(res?.data || [])
+  const res = await request.get(`/information/message/${category.value}/start/${start}/size/${PAGE_SIZE}`)
+  if (!res?.success) throw new Error()
+  return normalize(res.data || [])
 }
 
-onMounted(async () => {
+let loadEpoch = 0
+async function reload() {
+  const epoch = ++loadEpoch
+  loading.value = true
+  loadError.value = false
   try {
-    const [pageRes, unreadRes] = await Promise.allSettled([
-      loadPage(0),
-      getInformationMessageUnread()
-    ])
-    if (pageRes.status === 'fulfilled') {
-      items.value = pageRes.value
-      hasMore.value = pageRes.value.length >= PAGE_SIZE
-    }
-    if (unreadRes.status === 'fulfilled') {
-      unreadCount.value = Number(unreadRes.value?.data || 0)
-    }
-  } finally {
-    loading.value = false
-  }
-})
+    const page = await loadPage(0)
+    if (epoch !== loadEpoch) return
+    items.value = page
+    hasMore.value = page.length >= PAGE_SIZE
+    unreadCount.value = page.filter(item => !item.isRead).length
+  } catch (_) { if (epoch === loadEpoch) loadError.value = true }
+  finally { if (epoch === loadEpoch) loading.value = false }
+}
+watch(category, reload, { immediate: true })
 
 async function loadMore() {
   loadingMore.value = true
   try {
     const newItems = await loadPage(items.value.length)
     items.value = [...items.value, ...newItems]
+    unreadCount.value = items.value.filter(item => !item.isRead).length
     hasMore.value = newItems.length >= PAGE_SIZE
+  } catch (_) {
+    loadError.value = true
   } finally {
     loadingMore.value = false
   }
 }
 
 async function markAllRead() {
-  unreadCount.value = 0
-  items.value = items.value.map(i => ({ ...i, isRead: true }))
-  postInformationMessageReadall().catch(() => {})
+  try {
+    const response = await request.post(`/information/message/${category.value}/readall`)
+    if (!response?.success) throw new Error()
+    unreadCount.value = 0
+    items.value = items.value.map(item => ({ ...item, isRead: true }))
+    await refreshMessageUnread()
+  } catch (_) { loadError.value = true }
 }
 
-function handleSelect(item) {
-  if (!item.isRead) {
-    item.isRead = true
-    unreadCount.value = Math.max(0, unreadCount.value - 1)
-    postInformationMessageByIdRead(item.id).catch(() => {})
-  }
+async function handleSelect(item) {
   // Navigate based on module (same logic as Info.vue)
   const { module, targetId } = item
   const paths = {
-    marketplace: targetId ? `/marketplace/detail/${targetId}` : '/marketplace',
-    lostandfound: targetId ? `/lostandfound/detail/${targetId}` : '/lostandfound',
-    secret: targetId ? `/secret/detail/${targetId}` : '/secret',
-    express: targetId ? `/express/detail/${targetId}` : '/express',
-    topic: targetId ? `/topic/detail/${targetId}` : '/topic',
-    photograph: targetId ? `/photograph/detail/${targetId}` : '/photograph',
-    dating: '/dating/home',
-    delivery: targetId ? `/delivery/detail/${targetId}` : '/delivery'
+    marketplace: targetId ? `/marketplace/detail/${targetId}` : '/marketplace/home',
+    lostandfound: targetId ? `/lostandfound/detail/${targetId}` : '/lostandfound/home',
+    secret: targetId ? `/secret/detail/${targetId}` : '/secret/home',
+    express: targetId ? `/express/detail/${targetId}` : '/express/home',
+    topic: targetId ? `/topic/detail/${targetId}` : '/topic/home',
+    photograph: targetId ? `/photograph/detail/${targetId}` : '/photograph/home',
+    dating: '/dating/center',
+    delivery: targetId ? `/delivery/detail/${targetId}` : '/delivery/home'
   }
   const path = paths[module]
-  if (path) router.push(path)
+  if (!path) { loadError.value = true; return }
+  if (!item.isRead) {
+    try {
+      const response = await postInformationMessageByIdRead(item.id)
+      if (!response?.success) throw new Error()
+      item.isRead = true
+      unreadCount.value = Math.max(0, unreadCount.value - 1)
+      await refreshMessageUnread()
+    } catch (_) { loadError.value = true; return }
+  }
+  router.push({ path, query: { targetId: targetId || '', tab: module === 'dating' ? (item.targetType === 'received' ? 'received' : 'sent') : '', targetType: item.targetType || '', targetSubId: item.targetSubId || '', notificationId: item.id || '' } })
 }
 </script>

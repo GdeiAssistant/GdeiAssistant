@@ -76,7 +76,7 @@ public class ProfilePatchService {
         } catch (RuntimeException e) { errors.put("faculty", "院系不合法"); }
         if (input.containsKey("major")) {
             Object raw = input.get("major");
-            if (raw == null || "".equals(raw)) patch.put("major", null);
+            if (raw == null || (raw instanceof String && ((String) raw).isEmpty())) patch.put("major", null);
             else if (!(raw instanceof String) || !ProfileMajorCatalog.isValidForFaculty(faculty, (String) raw)) errors.put("major", "专业必须属于所选院系");
             else patch.put("major", raw);
         }

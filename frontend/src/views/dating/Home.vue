@@ -154,7 +154,7 @@ onUnmounted(() => {
 
     <!-- FAB -->
     <div
-      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[var(--shadow-md)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.92]"
+      class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[var(--shadow-md)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.98]"
       @click="router.push('/dating/publish')"
     >
       <span class="text-[28px] leading-none text-white font-light">+</span>

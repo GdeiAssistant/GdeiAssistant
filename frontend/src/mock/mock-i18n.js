@@ -144,7 +144,7 @@ const EN_TEXT_MAP = {
   '双选会将于体育馆举行，报名截止至周四中午。': 'The job fair will be held in the gymnasium. Registration closes at noon on Thursday.',
   '本周末体育馆将优先保障校级活动，部分场地借用时间已调整。': 'This weekend the gymnasium will prioritize school events, and some booking times have been adjusted.',
   '卖室友互动': 'Roommate Match Activity',
-  '全民快递提醒': 'Delivery Reminder',
+  '快递代取提醒': 'Express Pickup Reminder',
   '树洞互动': 'Confession Wall Activity',
   '表白墙互动': 'Confession Wall Activity',
   '话题互动': 'Topic Activity',

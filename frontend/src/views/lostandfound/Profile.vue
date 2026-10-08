@@ -220,7 +220,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in lostList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in lostList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />
@@ -256,7 +256,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in foundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in foundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />
@@ -291,7 +291,7 @@ watch(() => route.fullPath, () => {
                 </template>
               </AppEmpty>
             </div>
-            <div v-for="item in didFoundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2">
+            <div v-for="item in didFoundList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2">
               <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
                 <i class="absolute left-2 w-[60px] h-[60px] overflow-hidden block rounded">
                   <img :src="item.image" alt="" class="w-full h-full object-cover" />

@@ -211,7 +211,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'doing'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in doingList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in doingList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
@@ -248,7 +248,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'sold'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in soldList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in soldList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">
@@ -282,7 +282,7 @@ watch(() => route.fullPath, () => {
       <div v-show="activeStat === 'off'">
         <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
         <template v-else>
-          <div v-for="item in offList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] mb-2 overflow-hidden">
+          <div v-for="item in offList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
               <i class="absolute left-2 top-2 w-[60px] h-[60px] overflow-hidden rounded block">
                 <img :src="item.preview" :alt="item.name" class="w-full h-full object-cover">

@@ -26,7 +26,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
             {{ t('about.chineseOnlyNotice') }}
           </div>
 
-          <h3 class="!mt-0 text-center">《校园跑腿 / 全民快递规则》</h3>
+          <h3 class="!mt-0 text-center">《快递代取规则》</h3>
           <p class="text-center">发布日期：2026年4月25日</p>
           <p class="text-center">更新日期：2026年10月7日</p>
           <p class="text-center">生效日期：2026年10月14日</p>
@@ -53,7 +53,7 @@ const isNonChinese = computed(() => !locale.value.startsWith('zh'))
           <h3>第三条 禁止承接或发布的物品</h3>
           <ul>
             <li>违法违规物品、危险品、易燃易爆物、毒害物、活体动物、需要特殊资质运输保管的物品；</li>
-            <li>现金、有价证券、银行卡、证件原件、高价值贵重物品、保密资料或明显超出普通校园跑腿能力范围的物品；</li>
+            <li>现金、有价证券、银行卡、证件原件、高价值贵重物品、保密资料或明显超出普通校园代取能力范围的物品；</li>
             <li>法律法规、学校管理规定或平台规则禁止寄递、转送、代取、代送的其他物品。</li>
           </ul>
 

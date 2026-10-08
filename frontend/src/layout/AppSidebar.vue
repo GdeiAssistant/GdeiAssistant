@@ -243,7 +243,7 @@ function avatarInitial() {
   color: var(--c-text-3);
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .campus-sidebar {
     width: min(280px, 84vw);
     box-shadow: var(--shadow-lg);

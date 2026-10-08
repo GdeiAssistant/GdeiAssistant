@@ -11,7 +11,7 @@
     "saveFailed": "작업에 실패했습니다",
     "saveSuccess": "저장되었습니다",
     "systemBusy": "시스템이 바쁩니다. 잠시 후 다시 시도해 주세요",
-    "networkError": "네트워크 연결에 실패했습니다. 서버 상태를 확인해 주세요",
+    "networkError": "네트워크 연결에 실패했습니다. 네트워크를 확인하고 다시 시도해 주세요",
     "networkException": "네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요",
     "noPermission": "이 기능에 접근할 권한이 없습니다",
     "resourceNotFound": "요청한 리소스가 존재하지 않습니다",
@@ -71,7 +71,7 @@
   },
   "tab": {
     "home": "홈",
-    "info": "알림",
+    "info": "메시지",
     "profile": "프로필"
   },
   "communityTab": {
@@ -84,7 +84,7 @@
   },
   "home": {
     "title": "광둥이사 어시스턴트",
-    "subtitle": "4년의 캠퍼스 생활, 광둥이사 어시스턴트가 함께합니다.",
+    "subtitle": "시간표, 성적, 캠퍼스 커뮤니티를 한 곳에서.",
     "sectionService": "캠퍼스 서비스",
     "sectionServiceDesc": "성적 조회, 시간표, 영어 시험, 도서관, 캠퍼스 카드 및 기타 도구",
     "sectionLife": "캠퍼스 라이프",
@@ -104,8 +104,11 @@
     "todayNoticeDesc": "학교 공지와 상호작용 메시지 확인",
     "todayNoticeMeta": "읽기",
     "todayDeliveryTitle": "내 배달",
-    "todayDeliveryDesc": "심부름과 택배 수령 요청 확인",
-    "todayDeliveryMeta": "이동"
+    "todayDeliveryDesc": "택배 수령 대행 요청 확인",
+    "todayDeliveryMeta": "이동",
+    "greetingMorning": "좋은 아침이에요",
+    "greetingAfternoon": "좋은 오후예요",
+    "greetingEvening": "좋은 저녁이에요"
   },
   "profile": {
     "title": "프로필",
@@ -177,7 +180,7 @@
     "moduleMarketplace": "중고거래",
     "moduleLostAndFound": "분실물",
     "moduleDating": "룸메이트",
-    "moduleDelivery": "배달대행",
+    "moduleDelivery": "택배 대리 수령",
     "moduleSecret": "고백",
     "moduleExpress": "러브월",
     "moduleTopic": "토픽",
@@ -221,7 +224,7 @@
     "menuCommunityGuidelines": "커뮤니티 가이드라인",
     "menuSecondHandPolicy": "중고거래 규칙",
     "menuLostAndFoundPolicy": "분실물 규칙",
-    "menuErrandPolicy": "캠퍼스 심부름 규칙",
+    "menuErrandPolicy": "택배 대리 수령 규칙",
     "menuOpenSourceLicense": "오픈 소스 라이선스",
     "menuCookiePolicy": "쿠키 및 로컬 저장소 안내",
     "menuIPDeclaration": "권리침해 신고 및 반통지 규칙",
@@ -373,7 +376,7 @@
   "downloadPage": {
     "status": {
       "loadingTitle": "내보내기 상태 확인 중",
-      "exportingTitle": "데이터를 묶는 중입니다",
+      "exportingTitle": "데이터를 내보내는 중입니다",
       "exportedTitle": "데이터 사본을 다운로드할 수 있습니다",
       "idleTitle": "계정 데이터 사본 받기",
       "loadingDescription": "최신 내보내기 상태를 가져오고 있습니다. 잠시만 기다려 주세요.",
@@ -578,7 +581,8 @@
     "searchPrompt": "키워드를 입력해 검색하세요",
     "searchRequired": "검색 키워드를 입력해 주세요",
     "searchTitle": "검색 결과",
-    "title": "중고 거래"
+    "title": "중고 거래",
+    "emptyAction": "상품 올리기"
   },
   "lostandfound": {
     "profile": {
@@ -949,7 +953,7 @@
       "community": "커뮤니티 사용자 데이터와 거래 기록이 삭제됩니다",
       "identity": "연동된 휴대폰·이메일 등 신원 정보가 삭제됩니다",
       "interactions": "댓글·좋아요 등 상호작용 기록이 삭제됩니다",
-      "posts": "고백 게시판·토픽·심부름 등 게시물이 영구 삭제됩니다"
+      "posts": "고백 게시판·토픽·택배 대리 수령 등 게시물이 영구 삭제됩니다"
     },
     "riskTitle": "삭제 후 다음 정보는 영구 삭제되며 복구할 수 없습니다:",
     "success": "계정이 삭제되었습니다",
@@ -983,7 +987,7 @@
       "emptyAccepted": "수주한 요청이 없습니다",
       "emptyPublished": "게시한 요청이 없습니다",
       "publishedTab": "게시한 요청",
-      "title": "내 심부름"
+      "title": "내 택배 대리 수령"
     },
     "pickupAddressWithCompany": "{company}에서 수령",
     "pickupBadge": "수",
@@ -1031,11 +1035,11 @@
       "inTransit": "배달 중",
       "pending": "수주 대기"
     },
-    "title": "캠퍼스 배달",
+    "title": "택배 대리 수령",
     "type": {
       "express": "택배 대리 수령",
       "food": "식사 구매",
-      "other": "심부름"
+      "other": "기타"
     },
     "unknownStatus": "알 수 없음"
   },
@@ -1130,7 +1134,8 @@
     "searchPrompt": "키워드를 입력해 검색하세요",
     "searchRequired": "검색 키워드를 입력해 주세요",
     "searchTitle": "고백 검색",
-    "title": "고백 게시판"
+    "title": "고백 게시판",
+    "emptyAction": "고백 올리기"
   },
   "feature": {
     "card": {
@@ -1154,8 +1159,8 @@
       "name": "룸메이트 소개"
     },
     "delivery": {
-      "description": "심부름·택배 대리 수령",
-      "name": "캠퍼스 배달"
+      "description": "택배 수령 대행 요청하기",
+      "name": "택배 대리 수령"
     },
     "ershou": {
       "description": "캠퍼스 내 중고 거래·대면 거래",
@@ -1606,7 +1611,7 @@
       "uploading": "업로드 중..."
     },
     "searchAction": "검색",
-    "searchEmpty": "결과 없음",
+    "searchEmpty": "관련 토픽을 찾지 못했습니다. 다른 키워드를 시도해 보세요.",
     "searchPlaceholder": "토픽·내용 검색...",
     "searchRequired": "검색할 토픽 또는 내용을 입력해 주세요",
     "searchTitle": "토픽 검색",

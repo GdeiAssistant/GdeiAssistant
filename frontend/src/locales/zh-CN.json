@@ -1,6 +1,6 @@
 {
   "common": {
-    "loading": "加载中...",
+    "loading": "加载中……",
     "retry": "重试",
     "confirm": "确定",
     "cancel": "取消",
@@ -11,7 +11,7 @@
     "saveFailed": "操作失败",
     "saveSuccess": "保存成功",
     "systemBusy": "系统繁忙，请稍后再试",
-    "networkError": "网络连接失败，请检查服务器状态",
+    "networkError": "网络连接失败，请检查网络后重试",
     "networkException": "网络连接异常，请稍后重试",
     "noPermission": "您没有权限访问该功能",
     "resourceNotFound": "请求的资源不存在",
@@ -80,15 +80,15 @@
       "description": "闲置物品转让，校内面交"
     },
     "delivery": {
-      "name": "全民快递",
-      "description": "发跑腿需求，帮取快递"
+      "name": "快递代取",
+      "description": "发布代取需求，同学顺路帮你取"
     },
     "lostandfound": {
       "name": "失物招领",
       "description": "丢东西、捡东西都来这"
     },
     "secret": {
-      "name": "校园树洞",
+      "name": "树洞",
       "description": "匿名倾诉，说出心里话"
     },
     "dating": {
@@ -119,7 +119,7 @@
   "gradePage": {
     "title": "成绩查询",
     "moreAction": "更多",
-    "syncLoading": "正在同步教务系统...",
+    "syncLoading": "正在同步教务系统……",
     "updateSuccess": "更新成功",
     "empty": "暂无成绩数据",
     "term": {
@@ -145,7 +145,7 @@
   },
   "tab": {
     "home": "功能主页",
-    "info": "资讯信息",
+    "info": "消息",
     "profile": "个人中心"
   },
   "communityTab": {
@@ -158,11 +158,11 @@
   },
   "home": {
     "title": "广东二师助手",
-    "subtitle": "四年时光，广东二师助手陪你一起走过。",
+    "subtitle": "查课表、看成绩、逛社区，校园生活的常用功能都在这。",
     "sectionService": "校园服务",
     "sectionServiceDesc": "查成绩、课表、四六级、图书馆、校园卡和常用查询工具",
     "sectionLife": "校园生活",
-    "sectionLifeDesc": "二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和校园摄影",
+    "sectionLifeDesc": "二手交易、快递代取、失物招领、树洞、卖室友、表白墙、话题和拍好校园",
     "noFeatures": "当前没有可展示的功能入口",
     "heroPrimary": "查看校园服务",
     "heroSecondary": "逛校园生活",
@@ -178,8 +178,11 @@
     "todayNoticeDesc": "校内通知与互动消息",
     "todayNoticeMeta": "去查看",
     "todayDeliveryTitle": "我的快递",
-    "todayDeliveryDesc": "跑腿和快递代取需求",
-    "todayDeliveryMeta": "去处理"
+    "todayDeliveryDesc": "快递代取需求",
+    "todayDeliveryMeta": "去处理",
+    "greetingMorning": "早上好",
+    "greetingAfternoon": "下午好",
+    "greetingEvening": "晚上好"
   },
   "profile": {
     "title": "个人中心",
@@ -212,7 +215,7 @@
     "editNickname": "修改昵称",
     "nicknamePlaceholder": "请输入新昵称",
     "editIntro": "修改个人简介",
-    "introPlaceholder": "一句话介绍自己...",
+    "introPlaceholder": "一句话介绍自己……",
     "passwordNotAvailable": "修改密码功能暂未开放。如需修改，请前往学校统一身份认证平台或教务系统进行操作。",
     "selectBirthday": "选择生日",
     "selectFaculty": "请选择院系",
@@ -244,7 +247,7 @@
     "campusConsentRequired": "请先单独同意校园账号凭证处理说明后再登录",
     "otherLogin": "其他方式登录",
     "incompleteFields": "请将信息填写完整",
-    "loading": "登录中...",
+    "loading": "登录中……",
     "failed": "登录失败",
     "thirdPartyUnavailable": "该登录方式暂未开放",
     "credentialNotice": "校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。"
@@ -306,7 +309,7 @@
       "renewDialogTitle": "续借图书",
       "renewDialogDescription": "请输入图书馆密码完成续借校验",
       "renewDialogPlaceholder": "图书馆密码",
-      "renewLoading": "续借中...",
+      "renewLoading": "续借中……",
       "renewSuccess": "续借成功"
     }
   },
@@ -327,7 +330,7 @@
     "missingFields": "请填写准考证号和姓名",
     "invalidNumber": "准考证号必须为15位",
     "captchaRequired": "请输入验证码",
-    "queryLoading": "正在查询...",
+    "queryLoading": "正在查询……",
     "savePromptPrefix": "担心遗忘准考证号？点击",
     "savePromptLink": "保存考号",
     "fallbackTitle": "备用查询入口",
@@ -335,7 +338,7 @@
     "fallbackNeea": "中国教育考试网查询",
     "saveSuccess": "保存成功",
     "saveFailed": "保存失败",
-    "saving": "保存中...",
+    "saving": "保存中……",
     "resultTitle": "查询结果",
     "resultDisclaimer": "成绩仅供参考，请以成绩单为准",
     "totalScore": "考试总分",
@@ -371,11 +374,11 @@
     "delete": "删除头像",
     "change": "更换头像",
     "crop": "裁剪头像",
-    "uploading": "正在上传头像...",
+    "uploading": "正在上传头像……",
     "cropFailed": "裁剪失败",
     "updateSuccess": "更新头像完成",
     "deleteConfirm": "确定要删除头像并恢复默认吗？",
-    "deleting": "正在删除头像...",
+    "deleting": "正在删除头像……",
     "deleteSuccess": "已恢复默认头像",
     "deleteFailed": "删除头像失败，请稍后再试",
     "privacyHint": "上传头像或图片前，请自行确认其中不包含不必要的人脸、位置、证件、学生卡、联系方式或其他高敏信息。"
@@ -403,7 +406,7 @@
     "newEmailPlaceholder": "请输入新的电子邮箱",
     "code": "验证码",
     "codePlaceholder": "请输入邮箱验证码",
-    "binding": "绑定中...",
+    "binding": "绑定中……",
     "confirm": "确认绑定",
     "unbindConfirm": "确定要解除绑定该邮箱吗？解除后将无法使用该邮箱找回账号。",
     "confirmUnbind": "确认解绑"
@@ -419,7 +422,7 @@
     "riskTitle": "注销后，以下信息将被永久删除且无法恢复：",
     "risk": {
       "account": "账号及所有个人资料将被清空",
-      "posts": "表白墙、话题、跑腿等所有发布内容将被永久删除",
+      "posts": "表白墙、话题、快递代取等所有发布内容将被永久删除",
       "interactions": "所有互动记录（评论、点赞等）将被清除",
       "academic": "自定义课程以及保存的四六级准考证号信息将被删除",
       "community": "社交功能平台的用户数据和交易记录将被清空",
@@ -427,7 +430,7 @@
     },
     "irreversible": "注销操作不可逆，请谨慎操作。",
     "agreement": "我已充分阅读并同意上述注销后果",
-    "deleting": "注销中...",
+    "deleting": "注销中……",
     "confirm": "确认注销",
     "finalConfirmTitle": "最后确认",
     "finalConfirmDescription": "注销操作不可逆，确定要永久删除该账号吗？",
@@ -441,7 +444,7 @@
     "systemNotice": "系统公告",
     "noNotice": "暂无系统公告",
     "interaction": "互动消息",
-    "loadingInfo": "正在加载资讯信息...",
+    "loadingInfo": "正在加载资讯信息……",
     "noticeTitle": "通知公告",
     "expand": "查看更多",
     "collapse": "收起",
@@ -455,13 +458,13 @@
     "defaultInteractionTitle": "互动消息",
     "defaultInteractionContent": "你有一条新的互动消息",
     "loadMore": "加载更多",
-    "loadingMore": "加载中...",
+    "loadingMore": "加载中……",
     "read": "已读",
     "unread": "未读",
     "moduleMarketplace": "二手交易",
     "moduleLostAndFound": "失物招领",
     "moduleDating": "卖室友",
-    "moduleDelivery": "全民快递",
+    "moduleDelivery": "快递代取",
     "moduleSecret": "树洞",
     "moduleExpress": "表白墙",
     "moduleTopic": "话题",
@@ -486,7 +489,7 @@
     "notLoggedIn": "未登录"
   },
   "commandPalette": {
-    "searchPlaceholder": "搜索功能...",
+    "searchPlaceholder": "搜索功能……",
     "academicGroup": "学业服务",
     "communityGroup": "社区服务",
     "empty": "没有匹配的功能",
@@ -738,7 +741,7 @@
     "form": {
       "typeTitle": "选择反馈类型",
       "contentTitle": "反馈内容",
-      "contentPlaceholder": "请详细描述您遇到的问题或建议...",
+      "contentPlaceholder": "请详细描述您遇到的问题或建议……",
       "contentRequired": "请填写反馈内容",
       "contactTitle": "联系方式（选填）",
       "contactPlaceholder": "请留下您的QQ/微信或手机号，方便我们联系您（选填）",
@@ -747,7 +750,7 @@
       "screenshotPreview": "截图预览",
       "addImage": "添加图片",
       "submit": "提交反馈",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "submitSuccess": "提交成功"
     }
   },
@@ -794,10 +797,10 @@
       "minWeek": "开始周次",
       "maxWeek": "结束周次",
       "submit": "保存课程",
-      "submitting": "保存中..."
+      "submitting": "保存中……"
     },
     "message": {
-      "syncLoading": "正在同步课表...",
+      "syncLoading": "正在同步课表……",
       "syncSuccess": "课表已刷新",
       "nameRequired": "请输入课程名称",
       "locationRequired": "请输入上课地点",
@@ -811,7 +814,7 @@
   },
   "electricityFees": {
     "title": "电费查询",
-    "loading": "正在查询电费...",
+    "loading": "正在查询电费……",
     "queryFailed": "查询失败，请稍后重试",
     "submit": "开始查询",
     "retry": "重新查询",
@@ -848,7 +851,7 @@
     "title": "黄页查询"
   },
   "communityCommon": {
-    "refreshing": "正在刷新...",
+    "refreshing": "正在刷新……",
     "releaseToRefresh": "释放立即刷新",
     "pullToRefresh": "下拉刷新",
     "loading": "正在加载",
@@ -876,9 +879,9 @@
       "editTitle": "编辑二手商品",
       "finish": "完成",
       "submitting": "提交中",
-      "loading": "正在加载商品信息...",
-      "saving": "正在保存...",
-      "uploading": "正在上传...",
+      "loading": "正在加载商品信息……",
+      "saving": "正在保存……",
+      "uploading": "正在上传……",
       "publishSuccess": "发布成功",
       "imageEditUnsupported": "编辑模式暂不支持修改商品图片",
       "invalidImageType": "不合法的图片文件类型",
@@ -982,7 +985,8 @@
         "relist": "已重新上架"
       },
       "soldHint": "已售出的商品不再支持编辑或重新上架"
-    }
+    },
+    "emptyAction": "去发布闲置"
   },
   "express": {
     "title": "表白墙",
@@ -1001,7 +1005,7 @@
     "guessRequired": "请输入你猜的真实姓名",
     "guessCorrect": "恭喜你，猜对了！",
     "guessWrong": "猜错了，再试试看吧！",
-    "guessUnavailable": "TA很神秘，没有留下真名让人猜哦~",
+    "guessUnavailable": "对方还没有设置昵称",
     "publish": {
       "title": "发布表白",
       "myInfo": "你的信息",
@@ -1013,11 +1017,11 @@
       "nicknamePlaceholder": "请输入昵称",
       "realNamePlaceholder": "请输入真名",
       "receiverNamePlaceholder": "请输入TA的名字",
-      "contentPlaceholder": "写下你想对TA说的话...",
+      "contentPlaceholder": "写下你想对TA说的话……",
       "realNameTip": "注：真实姓名可选填，默认保密不显示！填写即可参加猜名字游戏。",
       "submitAction": "发布表白",
-      "submitting": "提交中...",
-      "publishing": "正在发布...",
+      "submitting": "提交中……",
+      "publishing": "正在发布……",
       "publishSuccess": "发布成功",
       "nicknameRequired": "请输入昵称",
       "nicknameTooLong": "昵称不能超过 10 个字",
@@ -1035,12 +1039,13 @@
       "commentEmpty": "暂无评论，快来抢沙发吧！",
       "commentRequired": "请输入评论内容",
       "commentTooLong": "评论不能超过50字",
-      "commentPlaceholder": "我想说...",
-      "sending": "发送中...",
+      "commentPlaceholder": "我想说……",
+      "sending": "发送中……",
       "send": "发送",
       "me": "我",
       "floor": "{index}楼"
-    }
+    },
+    "emptyAction": "去发布表白"
   },
   "topic": {
     "title": "话题",
@@ -1048,17 +1053,17 @@
     "anonymousUser": "匿名",
     "imageAlt": "图片{index}",
     "searchTitle": "搜索话题",
-    "searchPlaceholder": "搜索话题、内容...",
+    "searchPlaceholder": "搜索话题、内容……",
     "searchAction": "搜索",
     "searchRequired": "请输入您要搜索的话题或内容！",
-    "searching": "搜索中...",
-    "searchEmpty": "暂无结果",
+    "searching": "搜索中……",
+    "searchEmpty": "没有找到相关话题，换个关键词试试",
     "publish": {
       "title": "发布话题",
       "submitAction": "提交",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "topicPlaceholder": "请输入你的话题",
-      "contentPlaceholder": "请输入你的内容...",
+      "contentPlaceholder": "请输入你的内容……",
       "addImage": "添加图片",
       "imageLimit": "最多只能上传9张图片",
       "invalidImageType": "只能上传图片文件",
@@ -1066,8 +1071,8 @@
       "topicRequired": "请输入话题标签",
       "contentRequired": "请输入内容",
       "contentTooLong": "内容不能超过250字",
-      "uploading": "正在上传...",
-      "publishing": "正在发布...",
+      "uploading": "正在上传……",
+      "publishing": "正在发布……",
       "publishSuccess": "发布成功"
     },
     "detail": {
@@ -1080,7 +1085,7 @@
     }
   },
   "secret": {
-    "title": "校园树洞",
+    "title": "树洞",
     "publishAction": "说个小秘密",
     "empty": "暂无树洞信息",
     "voiceAlt": "语音",
@@ -1096,7 +1101,7 @@
       "voiceStateIdle": "未录音",
       "voiceStateFinished": "录音完成（{duration}）",
       "voiceStateRemaining": "正在录音，还剩 {seconds} 秒",
-      "voiceStateProcessing": "录音处理中...",
+      "voiceStateProcessing": "录音处理中……",
       "voiceStatePreview": "正在试听录音",
       "browserUnsupported": "当前浏览器不支持录音",
       "voiceTooLarge": "语音文件过大，请缩短录音时长",
@@ -1106,8 +1111,8 @@
       "stopRecordingFirst": "请先结束当前录音",
       "contentRequired": "树洞内容不能为空",
       "contentTooLong": "树洞内容长度超过限制",
-      "publishing": "正在发布...",
-      "uploadingVoice": "正在上传语音...",
+      "publishing": "正在发布……",
+      "uploadingVoice": "正在上传语音……",
       "submitFailed": "提交失败",
       "deleteAfter24h": "24小时后删除",
       "switchToTextPrefix": "切换到",
@@ -1126,7 +1131,7 @@
     "detail": {
       "title": "树洞详情",
       "audioLoadFailed": "语音加载失败，请稍后重试",
-      "audioLoading": "语音加载中...",
+      "audioLoading": "语音加载中……",
       "audioPause": "点击暂停播放",
       "audioResume": "点击继续播放",
       "audioPlay": "点击播放语音",
@@ -1169,9 +1174,9 @@
       "editTitle": "编辑信息",
       "finish": "完成",
       "submitting": "提交中",
-      "loading": "正在加载信息...",
-      "saving": "正在保存...",
-      "uploading": "正在上传...",
+      "loading": "正在加载信息……",
+      "saving": "正在保存……",
+      "uploading": "正在上传……",
       "publishSuccess": "发布成功",
       "modeTitle": "寻找类型",
       "modeFoundOwner": "寻主",
@@ -1248,7 +1253,7 @@
     }
   },
   "delivery": {
-    "title": "全民快递",
+    "title": "快递代取",
     "empty": "暂无任务",
     "smallSize": "小件",
     "pickupShort": "取件",
@@ -1264,7 +1269,7 @@
     "type": {
       "express": "代取快递",
       "food": "买饭",
-      "other": "跑腿"
+      "other": "其他"
     },
     "size": {
       "small": "小件(外卖/文件)",
@@ -1274,7 +1279,7 @@
     "publish": {
       "title": "发布任务",
       "submitAction": "确认发布",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "pickupSection": "取件信息",
       "pickupAddress": "取件地点",
       "pickupPlaceholder": "如：菜鸟驿站、南门快递点",
@@ -1290,14 +1295,14 @@
       "itemSection": "物品描述",
       "sizeLabel": "重量/体积",
       "descriptionLabel": "备注说明（可选）",
-      "descriptionPlaceholder": "补充说明...",
-      "rewardLabel": "跑腿费：",
+      "descriptionPlaceholder": "补充说明……",
+      "rewardLabel": "酬金：",
       "invalidImageType": "只能上传图片文件",
       "imageTooLarge": "图片大小不能超过5MB",
       "pickupRequired": "请输入取件地点",
       "deliveryRequired": "请输入送达地址",
       "phoneRequired": "请输入联系人电话",
-      "rewardInvalid": "请输入有效的跑腿费（0.01-9999.99元）",
+      "rewardInvalid": "请输入有效的酬金（0.01-9999.99元）",
       "publishSuccess": "发布成功",
       "payloadName": "代收",
       "defaultCompany": "代取快递",
@@ -1315,16 +1320,16 @@
       "publishTime": "发布时间：",
       "statusLabel": "任务状态：",
       "acceptAction": "立即抢单",
-      "accepting": "接单中...",
+      "accepting": "接单中……",
       "completeAction": "确认完成",
-      "completing": "确认中...",
+      "completing": "确认中……",
       "acceptSuccess": "接单成功！",
       "completeSuccess": "订单已完成！",
       "completeConfirmTitle": "确认完成",
       "completeConfirmMessage": "确定要完成这个订单吗？完成后将无法撤销。"
     },
     "mine": {
-      "title": "我的跑腿",
+      "title": "我的快递代取",
       "publishedTab": "我发布的",
       "acceptedTab": "我接的单",
       "emptyPublished": "暂无发布的任务",
@@ -1335,7 +1340,7 @@
     "appName": "广东二师助手",
     "enterSystem": "进入系统",
     "appIntroTitle": "应用介绍",
-    "appIntroContent": "广东第二师范学院校园助手，是为广东第二师范学院专属打造的校园服务应用。它不仅提供了课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书馆检索、我的借阅、教学质量评价、电费查询、黄页查询、校园卡信息、消费记录、校园卡挂失等综合性的教务功能，还提供了二手交易、失物招领、校园树洞、恋爱交友、表白墙、全民快递、拍好校园、话题、匿名评教等社区交流平台。广东二师助手旨在为广东第二师范学院的在校师生们提供最优质的教育教学、校园生活、社团活动、文化娱乐和教务服务等信息。四年时光，广东二师助手陪你一起走过。",
+    "appIntroContent": "广东二师助手是面向广东第二师范学院学生的校园服务应用，提供课表查询、成绩查询、四六级考试成绩查询、空课室查询、图书馆检索、我的借阅、教学质量评价、电费查询、黄页查询、校园卡信息、消费记录、校园卡挂失等教务功能，以及二手交易、失物招领、树洞、表白墙、快递代取、拍好校园、话题等社区功能。",
     "screenshotsTitle": "应用截图",
     "screenshotAlt": "应用截图 {n}",
     "cookieNotice": "本网站会使用 Cookie 和浏览器本地存储来记住登录状态、界面偏好、数据源选择和提示关闭状态。继续访问即表示您已知悉相关说明。",
@@ -1351,7 +1356,7 @@
     "menuCommunityGuidelines": "社区准则",
     "menuSecondHandPolicy": "二手交易规则",
     "menuLostAndFoundPolicy": "失物招领规则",
-    "menuErrandPolicy": "校园跑腿规则",
+    "menuErrandPolicy": "快递代取规则",
     "menuOpenSourceLicense": "开源协议",
     "menuCookiePolicy": "Cookie与本地存储说明",
     "menuIPDeclaration": "侵权投诉与反通知规则",
@@ -1371,7 +1376,7 @@
       "sectionDesc": "查看授权状态、已保存凭证和快速认证；撤回授权或删除凭证后，相关校园查询可能需要重新登录。",
       "statusTitle": "当前管理状态",
       "refresh": "刷新",
-      "loading": "正在获取状态...",
+      "loading": "正在获取状态……",
       "consentStatus": "授权状态",
       "authorized": "已授权",
       "unauthorized": "未授权",
@@ -1494,7 +1499,7 @@
     "codeSent": "验证码已发送，请查看短信",
     "bindSuccess": "绑定成功",
     "unbindSuccess": "已解除绑定",
-    "submitting": "绑定中...",
+    "submitting": "绑定中……",
     "confirmBind": "确认绑定",
     "unbindDialogTitle": "解除绑定",
     "unbindDialogContent": "确定要解除绑定该手机号吗？解除后将无法使用该手机号找回账号。",
@@ -1503,7 +1508,7 @@
   "downloadPage": {
     "status": {
       "loadingTitle": "正在检查导出状态",
-      "exportingTitle": "正在为您打包数据",
+      "exportingTitle": "正在导出数据",
       "exportedTitle": "数据副本已可下载",
       "idleTitle": "获取您的账号数据副本",
       "loadingDescription": "正在获取当前导出任务状态，请稍候。",
@@ -1514,13 +1519,13 @@
     "privacyNotice": "为了保护您的隐私，该文件仅供您本人下载，下载链接有效期为 90 分钟。",
     "frequencyNotice": "注意：24 小时内只能导出一次。若您刚完成导出，后续可直接回到本页继续下载。",
     "actions": {
-      "checking": "正在检查状态...",
+      "checking": "正在检查状态……",
       "start": "开始导出数据",
-      "starting": "提交中...",
-      "exporting": "数据打包中，请稍候...",
+      "starting": "提交中……",
+      "exporting": "数据打包中，请稍候……",
       "refresh": "刷新状态",
       "download": "点击下载文件",
-      "downloading": "正在获取下载链接..."
+      "downloading": "正在获取下载链接……"
     },
     "exportedHint": "您的数据副本已生成完毕，请点击下方按钮下载",
     "toast": {
@@ -1634,7 +1639,7 @@
     "submitAction": "一键评教",
     "riskNotice": "注意：评教信息提交后，将不能再作修改。",
     "confirmMessage": "确定要进行一键评教吗？此操作不可逆。",
-    "loading": "自动评教中...",
+    "loading": "自动评教中……",
     "success": "评价提交成功！",
     "error": "评教提交失败，请稍后重试"
   },
@@ -1683,7 +1688,7 @@
       "privacyHint": "在接受撩一下请求前，QQ和微信不会公开显示",
       "warningHint": "请勿违规盗用他人照片或冒充他人，欢迎举报监督",
       "contentPlaceholder": "什么样的TA会让你心动呢？谈谈你的理想对象，不超过100字",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "submitAction": "发布资料",
       "invalidImageType": "不合法的图片文件类型",
       "imageTooLarge": "图片文件不能超过5MB",
@@ -1696,8 +1701,8 @@
       "contactInvalid": "联系方式长度不合法",
       "contentRequired": "填一下你心目中的那个TA吧",
       "contentTooLong": "心动条件不超过100字",
-      "uploading": "正在上传...",
-      "publishing": "正在发布...",
+      "uploading": "正在上传……",
+      "publishing": "正在发布……",
       "publishSuccess": "发布成功"
     }
   }

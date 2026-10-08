@@ -224,7 +224,10 @@
     "selectLocation": "Select Location",
     "selectHometown": "Select Hometown",
     "selectFacultyFirst": "Please select a faculty first",
-    "language": "Language"
+    "language": "Language",
+    "unsavedChanges": "Unsaved changes",
+    "unsavedLeave": "Leave without saving your changes?",
+    "avatarImmediate": "Avatar changes apply immediately. Save all other profile edits together."
   },
   "loginPage": {
     "title": "GdeiAssistant",
@@ -478,7 +481,8 @@
     "targetComment": "Comment",
     "targetLike": "Like",
     "targetGuess": "Guess Name",
-    "announcementMissing": "This announcement does not exist or has been deleted."
+    "announcementMissing": "This announcement does not exist or has been deleted.",
+    "serviceTitle": "Service and system updates"
   },
   "router": {
     "siteTitle": "GdeiAssistant - Guangdong University of Education"

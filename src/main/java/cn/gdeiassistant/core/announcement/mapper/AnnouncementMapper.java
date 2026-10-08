@@ -39,4 +39,15 @@ public interface AnnouncementMapper {
     @Insert("insert into announcement (title,content,publish_time) values(#{title},#{content},#{publishTime})")
     void insertAnnouncement(AnnouncementEntity announcement);
 
+
+    @org.apache.ibatis.annotations.Delete("delete from announcement_read where username=#{username}")
+    void deleteUserReads(@Param("username") String username);
+
+    @Select("select count(*) from announcement a where not exists " +
+            "(select 1 from announcement_read r where r.announcement_id=a.id and r.username=#{username})")
+    int countUnread(@Param("username") String username);
+
+    @Insert("insert into announcement_read(username,announcement_id) select #{username},id from announcement where id=#{id} " +
+            "on duplicate key update announcement_id=values(announcement_id)")
+    void markRead(@Param("username") String username, @Param("id") int id);
 }

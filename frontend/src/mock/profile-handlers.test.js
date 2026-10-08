@@ -4,6 +4,7 @@ import {
   handleLocationList,
   handleLocationUpdate,
   handleProfile,
+  handleProfilePatch,
   handleProfileOptions,
 } from './profile-handlers'
 import { BASE_PROFILE } from './mock-data'
@@ -103,4 +104,13 @@ describe('profile-handlers', () => {
     expect(utils.readState().profile).not.toHaveProperty('hometownRegion')
     expect(utils.readState().profile).not.toHaveProperty('hometownCity')
   })
+})
+
+it('bulk mock validates all fields before replacing the saved snapshot', async () => {
+ const utils = createUtils()
+ await expect(handleProfilePatch('token', { nickname: 'after', major: 'invalid' }, utils)).rejects.toThrow()
+ expect(utils.readState().profile.nickname).toBe(BASE_PROFILE.nickname)
+ await handleProfilePatch('token', { nickname: 'after', introduction: '', birthday: null }, utils)
+ expect(utils.readState().profile.nickname).toBe('after')
+ expect(utils.readState().profile.birthday).toBe('')
 })

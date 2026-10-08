@@ -220,3 +220,46 @@ export function handlePrivacyUpdate(token, payload, utils) {
   utils.writeState(state)
   return utils.resolveWithDelay(utils.buildSuccess(null))
 }
+
+
+export function handleProfilePatch(token, payload, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  const next = utils.cloneValue ? utils.cloneValue(utils.readState()) : JSON.parse(JSON.stringify(utils.readState()))
+  const profile = next.profile
+  const allowed = ['nickname', 'introduction', 'birthday', 'faculty', 'major', 'enrollment', 'location', 'hometown']
+  if (Object.keys(payload).some(key => !allowed.includes(key))) return utils.rejectWithMessage('不支持修改此字段')
+  for (const key of ['nickname', 'introduction']) if (key in payload) {
+    const value = payload[key] === null && key === 'introduction' ? '' : payload[key]
+    if (typeof value !== 'string' || (key === 'nickname' && !value.trim()) || value.trim().length > (key === 'nickname' ? 32 : 80)) return utils.rejectWithMessage('长度不合法')
+    profile[key] = value.trim()
+  }
+  if ('birthday' in payload) {
+    const date = payload.birthday
+    if (date === null) profile.birthday = ''
+    else {
+      const value = new Date(Date.UTC(date.year, date.month - 1, date.date))
+      if (![date.year, date.month, date.date].every(Number.isInteger) || date.year < 1900 || value.getUTCFullYear() !== date.year || value.getUTCMonth() !== date.month - 1 || value.getUTCDate() !== date.date || value > new Date()) return utils.rejectWithMessage('生日不合法')
+      profile.birthday = value.toISOString().slice(0, 10)
+    }
+  }
+  if ('enrollment' in payload) {
+    if (payload.enrollment !== null && (!Number.isInteger(payload.enrollment) || payload.enrollment < 1900 || payload.enrollment > new Date().getFullYear())) return utils.rejectWithMessage('入学年份不合法')
+    profile.enrollment = payload.enrollment === null ? '' : String(payload.enrollment)
+  }
+  const faculty = 'faculty' in payload ? payload.faculty : profile.facultyCode
+  if (!FACULTY_CODES.has(faculty)) return utils.rejectWithMessage('院系不合法')
+  const major = 'major' in payload ? payload.major : ('faculty' in payload && faculty !== profile.facultyCode ? null : profile.majorCode)
+  if (major && !MAJOR_CODES_BY_FACULTY[faculty]?.has(major)) return utils.rejectWithMessage('专业必须属于所选院系')
+  profile.facultyCode = faculty
+  profile.majorCode = major || ''
+  for (const key of ['location', 'hometown']) if (key in payload) {
+    const codes = payload[key]
+    if (codes === null) { profile[key] = null; continue }
+    const node = findLocationNodeByCodes(codes.region, codes.state, codes.city)
+    if (!node) return utils.rejectWithMessage('地区代码不合法')
+    profile[key] = node
+  }
+  utils.writeState(next)
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}

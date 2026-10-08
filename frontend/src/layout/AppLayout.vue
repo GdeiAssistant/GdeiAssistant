@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref, provide, onMounted, onUnmounted } from 'vue'
+import { computed, ref, provide, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Home, Bell, UserRound } from 'lucide-vue-next'
@@ -10,7 +10,11 @@ import CommandPalette from '@/components/ui/CommandPalette.vue'
 const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
+import { messageBadge, refreshMessageUnread, resetMessageUnread } from '@/composables/useMessageUnread'
 const sidebarOpen = ref(false)
+let unreadTimer
+const refreshVisibleUnread = () => { if (!document.hidden) refreshMessageUnread() }
+watch(() => route.path, refreshVisibleUnread)
 const showCommandPalette = ref(false)
 
 provide('showCommandPalette', showCommandPalette)
@@ -46,11 +50,18 @@ function navigateMobile(path) {
 }
 
 onMounted(() => {
+  refreshVisibleUnread()
+  unreadTimer = setInterval(refreshVisibleUnread, 30000)
+  window.addEventListener('social-auth-changed', resetMessageUnread)
+  document.addEventListener('visibilitychange', refreshVisibleUnread)
   window.addEventListener('keydown', handleCmdK)
   window.addEventListener('open-command-palette', handleOpenPalette)
 })
 
 onUnmounted(() => {
+  clearInterval(unreadTimer)
+  window.removeEventListener('social-auth-changed', resetMessageUnread)
+  document.removeEventListener('visibilitychange', refreshVisibleUnread)
   window.removeEventListener('keydown', handleCmdK)
   window.removeEventListener('open-command-palette', handleOpenPalette)
 })
@@ -94,6 +105,7 @@ onUnmounted(() => {
       >
         <component :is="tab.icon" class="campus-mobile-tabbar__icon" />
         <span>{{ tab.label }}</span>
+        <span v-if="tab.path === '/info' && messageBadge" class="message-unread-badge">{{ messageBadge }}</span>
       </button>
     </nav>
 

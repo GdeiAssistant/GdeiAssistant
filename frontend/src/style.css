@@ -699,3 +699,6 @@ textarea.ui-control { min-height: 96px; }
     border-color: var(--c-border);
   }
 }
+
+.message-unread-badge { min-width: 20px; padding: 1px 5px; border-radius: 999px; background: var(--c-danger, #c43d3d); color: white; font-size: 11px; text-align: center; line-height: 18px; }
+.campus-mobile-tabbar__item > .message-unread-badge { position: absolute; top: 1px; left: calc(50% + 8px); }

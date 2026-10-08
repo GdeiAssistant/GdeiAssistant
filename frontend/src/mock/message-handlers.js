@@ -92,3 +92,37 @@ export function handleMessageReadAll(token, utils) {
   utils.writeState(nextState)
   return utils.resolveWithDelay(utils.buildSuccess(null))
 }
+
+
+export function handleCategories(token, path, method, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  const state = utils.readState()
+  const all = state.interactionMessages || []
+  if (path.endsWith('/categories/unread')) return utils.resolveWithDelay(utils.buildSuccess({
+    interaction: all.filter(item => item.module !== 'delivery' && !item.isRead).length,
+    service: all.filter(item => item.module === 'delivery' && !item.isRead).length
+  }))
+  const service = path.includes('/message/service/')
+  const matches = item => (item.module === 'delivery') === service
+  if (method === 'POST') {
+    state.interactionMessages = all.map(item => matches(item) ? Object.assign({}, item, { isRead: true }) : item)
+    utils.writeState(state)
+    return utils.resolveWithDelay(utils.buildSuccess(null))
+  }
+  const match = /start\/(\d+)\/size\/(\d+)/.exec(path)
+  return utils.resolveWithDelay(utils.buildSuccess(all.filter(matches).slice(Number(match[1]), Number(match[1]) + Number(match[2]))))
+}
+export function handleAnnouncementRead(token, path, method, utils) {
+  const authError = utils.ensureAuthorized(token)
+  if (authError) return authError
+  const state = utils.readState()
+  const read = state.announcementReadIds || []
+  const announcements = data.ANNOUNCEMENT_LIST
+  if (method === 'GET') return utils.resolveWithDelay(utils.buildSuccess(announcements.filter(item => !read.includes(String(item.id))).length))
+  const id = /announcement\/id\/([^/]+)\/read/.exec(path)[1]
+  if (!announcements.some(item => String(item.id) === id)) return utils.rejectWithMessage('公告不存在或已删除')
+  state.announcementReadIds = Array.from(new Set(read.concat(id)))
+  utils.writeState(state)
+  return utils.resolveWithDelay(utils.buildSuccess(null))
+}

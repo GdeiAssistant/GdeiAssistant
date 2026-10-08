@@ -52,17 +52,27 @@ test.describe('mock 模式 UI smoke', () => {
     await expect(page.getByText('数据结构')).toBeVisible()
   })
 
-  test('资讯页可以加载新闻、公告和互动消息', async ({ page }) => {
+  test('消息分类可以打开公告和互动，分类已读同步且互不影响', async ({ page }) => {
     await loginAsMockUser(page)
-
     await page.goto('/info')
-
-    await expect(page.getByText('校园新闻', { exact: true })).toBeVisible()
-    await expect(page.getByText('查看学校公开发布的校园新闻')).toBeVisible()
-    await expect(page.getByText('系统公告', { exact: true })).toBeVisible()
-    await expect(page.getByText('互动消息', { exact: true })).toBeVisible()
-    await expect(page.getByText('系统维护通知')).toBeVisible()
-    await expect(page.getByText('卖室友互动')).toBeVisible()
+    const categories = page.locator('.message-categories')
+    await expect(categories.getByRole('link', { name: '私信', exact: true })).toBeVisible()
+    await expect(categories.getByRole('link', { name: '系统公告 6', exact: true })).toBeVisible()
+    await expect(categories.getByRole('link', { name: '互动消息 4', exact: true })).toBeVisible()
+    await expect(categories.getByRole('link', { name: '服务与系统提醒 2', exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: '校园新闻', exact: true })).toBeVisible()
+    await page.getByRole('link', { name: /系统维护通知/ }).click()
+    await expect(page.getByRole('heading', { name: '系统维护通知' })).toBeVisible()
+    await page.goto('/info')
+    await expect(categories.getByRole('link', { name: '系统公告 5', exact: true })).toBeVisible()
+    await categories.getByRole('link', { name: '服务与系统提醒 2', exact: true }).click()
+    await expect(page.getByText('你发布的订单已被接单', { exact: false })).toBeVisible()
+    await page.getByRole('button', { name: '全部已读', exact: true }).click()
+    await page.goto('/info')
+    await expect(categories.getByRole('link', { name: '服务与系统提醒', exact: true })).toBeVisible()
+    await expect(categories.getByRole('link', { name: '互动消息 4', exact: true })).toBeVisible()
+    await categories.getByRole('link', { name: '互动消息 4', exact: true }).click()
+    await expect(page.getByText('卖室友互动', { exact: true })).toBeVisible()
   })
 
   test('二手模块可查看详情并校验发布页空表单提示', async ({ page }) => {

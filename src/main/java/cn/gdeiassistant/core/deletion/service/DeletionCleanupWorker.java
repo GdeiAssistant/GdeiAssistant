@@ -34,6 +34,7 @@ public class DeletionCleanupWorker {
     @Autowired private UserProfileService profileService;
     @Autowired private UserCertificateService certificateService;
     @Autowired private CloseMapper closeMapper;
+    @Autowired private cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper announcements;
     @Autowired(required=false) private SocialRealtimeHub realtimeHub;
 
     @TransactionalEventListener
@@ -82,6 +83,7 @@ public class DeletionCleanupWorker {
             log.setUsername(task.getUsername());
             log.setResetname(task.getResetname());
             closeMapper.insertCloseLog(log);
+            announcements.deleteUserReads(task.getUsername());
             mapper.complete(id);
         } catch (Exception failure) {
             if (claimed) {

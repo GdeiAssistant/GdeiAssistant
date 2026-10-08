@@ -54,4 +54,19 @@ public interface InteractionNotificationMapper {
 
     @Update("update interaction_notification set is_read=1 where receiver_username=#{username} and is_read=0")
     int updateAllInteractionNotificationRead(@Param("username") String username);
+
+    @Select({"<script>select * from interaction_notification where receiver_username=#{username}",
+            "<choose><when test='service'>and module='delivery'</when><otherwise>and module &lt;&gt; 'delivery'</otherwise></choose>",
+            "order by create_time desc,notification_id desc limit #{start},#{size}</script>"})
+    @org.apache.ibatis.annotations.ResultMap("InteractionNotification")
+    List<InteractionNotificationEntity> selectCategoryPage(@Param("username") String username, @Param("service") boolean service,
+            @Param("start") int start, @Param("size") int size);
+
+    @Select({"<script>select count(*) from interaction_notification where receiver_username=#{username} and is_read=0",
+            "<choose><when test='service'>and module='delivery'</when><otherwise>and module &lt;&gt; 'delivery'</otherwise></choose></script>"})
+    int countCategoryUnread(@Param("username") String username, @Param("service") boolean service);
+
+    @Update({"<script>update interaction_notification set is_read=1 where receiver_username=#{username} and is_read=0",
+            "<choose><when test='service'>and module='delivery'</when><otherwise>and module &lt;&gt; 'delivery'</otherwise></choose></script>"})
+    void markCategoryRead(@Param("username") String username, @Param("service") boolean service);
 }

@@ -338,3 +338,20 @@ describe('mock smoke', () => {
     expect(Array.isArray(photographComments.data)).toBe(true)
   })
 })
+
+it('persists announcement reads and keeps message categories disjoint', async () => {
+ const token = await login()
+ const initial = (await request('/api/information/announcement/unread', { token })).data
+ const notices = (await request('/api/information/announcement/start/0/size/3', { token })).data
+ const id = notices[0].id
+ await request(`/api/information/announcement/id/${id}/read`, { token, method: 'POST' })
+ await request(`/api/information/announcement/id/${id}/read`, { token, method: 'POST' })
+ expect((await request('/api/information/announcement/unread', { token })).data).toBe(initial - 1)
+ const categories = (await request('/api/information/message/categories/unread', { token })).data
+ const legacy = (await request('/api/information/message/unread', { token })).data
+ expect(categories.interaction + categories.service).toBe(legacy)
+ const services = (await request('/api/information/message/service/start/0/size/20', { token })).data
+ expect(services.every(item => item.module === 'delivery')).toBe(true)
+ await request('/api/information/message/service/readall', { token, method: 'POST' })
+ expect((await request('/api/information/message/categories/unread', { token })).data).toEqual({ interaction: categories.interaction, service: 0 })
+})

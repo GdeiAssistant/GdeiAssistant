@@ -11,6 +11,7 @@ const router = useRouter()
 const route = useRoute()
 const { t } = useI18n()
 
+import { messageBadge } from '@/composables/useMessageUnread'
 const profile = ref(null)
 
 onMounted(async () => {
@@ -56,6 +57,7 @@ function avatarInitial() {
           >
             <component :is="item.icon" class="campus-sidebar__icon" />
             <span class="campus-sidebar__label">{{ item.label }}</span>
+            <span v-if="item.path === '/info' && messageBadge" class="message-unread-badge">{{ messageBadge }}</span>
           </button>
         </li>
       </ul>

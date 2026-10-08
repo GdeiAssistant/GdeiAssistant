@@ -60,6 +60,22 @@ class SocialChatMapperIntegrationTest {
     }
 
     @Test
+    void totalUnreadMatchesPerConversationCursorsAndFallsAfterReading() throws Exception {
+        execute("CREATE TABLE conversation(id BIGINT PRIMARY KEY)");
+        execute("CREATE TABLE conversation_member(conversation_id BIGINT,user_id BIGINT,last_read_seq BIGINT)");
+        execute("INSERT INTO conversation VALUES(1),(2)");
+        execute("INSERT INTO conversation_member VALUES(1,1,1),(2,1,0),(1,2,0)");
+        execute("INSERT INTO chat_message(conversation_id,seq,sender_id,content) VALUES(1,1,2,'read'),(1,2,1,'mine'),(1,3,2,'unread'),(2,1,3,'other')");
+        try (SqlSession session = sessions.openSession()) {
+            var mapper = session.getMapper(SocialChatMapper.class);
+            assertEquals(mapper.countUnreadFromPeer(1,2,1)+mapper.countUnreadFromPeer(2,3,0), mapper.countTotalUnread(1));
+            execute("UPDATE conversation_member SET last_read_seq=3 WHERE conversation_id=1 AND user_id=1");
+            session.clearCache();
+            assertEquals(1, mapper.countTotalUnread(1));
+        }
+    }
+
+    @Test
     void retryConfirmationSeesMessageCommittedAfterAnEarlierEmptyLookup() throws Exception {
         String clientId = UUID.randomUUID().toString();
         try (SqlSession session = sessions.openSession()) {

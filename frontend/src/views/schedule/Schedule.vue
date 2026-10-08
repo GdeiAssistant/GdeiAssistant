@@ -78,15 +78,13 @@ const showEmptyState = computed(() => {
   return !!scheduleResult.value && filteredList.value.length === 0
 })
 
-// 课程颜色配置
-const courseColors = [
-  '#2F8FA6', '#17937E', '#C38A49', '#C56E64', '#6E88C9',
-  '#C78BA3', '#3A9FB4', '#D08A63', '#5C86BE', '#2F9E95',
-  '#B96F84', '#7B8FCB', '#4F9EC4', '#83A85D'
-]
+// 课程颜色配置（token 值见 style.css --c-course-*，深色模式有对应降明度变体）
+const COURSE_COLOR_COUNT = 14
 
 function getCourseColor(course) {
-  return course.colorCode || courseColors[(course.position || 0) % courseColors.length]
+  if (course.colorCode) return course.colorCode
+  const index = (course.position || 0) % COURSE_COLOR_COUNT + 1
+  return `var(--c-course-${index})`
 }
 
 function getCourseStyle(course) {
@@ -323,16 +321,16 @@ onMounted(() => {
     <div class="flex justify-center py-3">
       <button
         @click="openWeekPicker"
-        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--c-primary)]/8 text-[var(--c-primary)] text-sm font-medium transition active:scale-95"
+        class="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[var(--c-primary)]/8 text-[var(--c-primary)] text-sm font-medium transition duration-[0.12s] active:scale-[0.98]"
       >
         <span>{{ scheduleResult ? currentWeekLabel : t('schedule.selectWeek') }}</span>
         <svg class="w-3.5 h-3.5 opacity-60" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/></svg>
       </button>
     </div>
 
-    <!-- Schedule grid -->
-    <div class="relative w-full min-h-[500px] bg-[var(--c-surface)]">
-      <div class="grid w-full min-h-[500px]" style="grid-template-columns: 30px repeat(7, 1fr); grid-template-rows: 36px repeat(12, 1fr);">
+    <!-- Schedule grid: horizontal scroll container keeps the wide table usable on tablets -->
+    <div class="relative w-full min-h-[500px] bg-[var(--c-surface)] overflow-x-auto">
+      <div class="grid min-h-[500px] min-w-[640px]" style="grid-template-columns: 30px repeat(7, 1fr); grid-template-rows: 36px repeat(12, 1fr);">
         <!-- Corner cell -->
         <div class="flex items-center justify-center text-xs text-[var(--c-text-3)] border-[0.5px] border-[var(--c-divider)] bg-[var(--c-surface)]" style="grid-column: 1; grid-row: 1;"></div>
 
@@ -399,13 +397,13 @@ onMounted(() => {
           v-for="(course, index) in filteredList"
           :key="'course-' + index"
           type="button"
-          class="m-[2px] px-1 py-1.5 rounded-r-lg border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer shadow-sm transition active:scale-[0.97]"
+          class="m-[2px] px-1 py-1.5 rounded-r-lg border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer shadow-sm transition duration-[0.12s] active:scale-[0.98]"
           :style="getCourseStyle(course)"
           @click="openCourseDetail(course)"
         >
           <div class="flex flex-col items-center justify-center gap-0.5 w-full min-h-0 break-all leading-tight">
             <span class="text-xs font-semibold text-[var(--c-text-1)]">{{ course.scheduleName }}</span>
-            <span class="text-[10px] text-[var(--c-text-3)]">{{ course.scheduleLocation }}</span>
+            <span class="text-[10px] text-[var(--c-text-2)]">{{ course.scheduleLocation }}</span>
           </div>
         </button>
       </div>
@@ -575,7 +573,7 @@ onMounted(() => {
               type="button"
               :disabled="addCustomSubmitting"
               @click="submitAddCustom"
-              class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-[var(--c-on-primary)] text-sm font-semibold transition active:scale-95 disabled:opacity-50"
+              class="w-full max-w-[200px] py-2.5 rounded-full bg-[var(--c-primary)] text-[var(--c-on-primary)] text-sm font-semibold transition duration-[0.12s] active:scale-[0.98] disabled:opacity-50"
             >
               {{ addCustomSubmitting ? t('schedule.addDialog.submitting') : t('schedule.addDialog.submit') }}
             </button>

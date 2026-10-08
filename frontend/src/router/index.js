@@ -473,7 +473,7 @@ const routes = [
       { path: 'search', name: 'TopicSearch', component: TopicSearch }
     ]
   },
-  // 全民快递 / 校园跑腿主路由
+  // 快递代取主路由
   {
     path: '/delivery',
     component: DeliveryIndex,

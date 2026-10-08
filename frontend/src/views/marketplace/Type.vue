@@ -99,7 +99,7 @@ watch(
         <div
           v-for="item in list"
           :key="item.id"
-          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
@@ -115,6 +115,13 @@ watch(
       <div v-if="!loading && !refreshing && list.length === 0" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
         <div class="text-3xl mb-3">?</div>
         <p class="text-sm">{{ t('marketplace.emptyByCategory') }}</p>
+        <button
+          type="button"
+          class="mt-4 inline-flex min-h-[40px] items-center rounded-[var(--radius-control)] bg-[var(--c-primary)] px-4 text-sm font-semibold text-[var(--c-on-primary)] transition-colors hover:bg-[var(--c-primary-hover)]"
+          @click="router.push('/marketplace/publish')"
+        >
+          {{ t('marketplace.emptyAction') }}
+        </button>
       </div>
 
       <!-- 上拉加载更多 -->
@@ -135,7 +142,7 @@ watch(
 }
 
 .marketplace-action-link:hover {
-  color: color-mix(in srgb, var(--c-ershou) 72%, #0f766e);
+  color: var(--c-primary-hover);
 }
 
 .marketplace-action-icon {
@@ -151,7 +158,7 @@ watch(
 }
 
 [data-theme="dark"] .marketplace-price {
-  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+  color: var(--c-warning);
 }
 
 </style>

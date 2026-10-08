@@ -132,16 +132,16 @@ function toggleTheme() {
   .campus-topbar {
     padding: 0 24px;
   }
+
+  .campus-topbar__menu {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 767px) {
   .campus-topbar {
     height: 56px;
     padding: 0 16px;
-  }
-
-  .campus-topbar__menu {
-    display: inline-flex;
   }
 
   .campus-topbar__desktop-title {

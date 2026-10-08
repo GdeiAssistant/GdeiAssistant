@@ -30,7 +30,7 @@
               v-model="item.visible"
               @change="handleToggle"
             />
-            <div class="feature-manage-switch w-11 h-6 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
+            <div class="feature-manage-switch w-11 h-6 rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-[var(--c-surface)] after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
           </div>
         </label>
       </div>

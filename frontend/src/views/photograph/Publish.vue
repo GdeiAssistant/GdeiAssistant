@@ -186,7 +186,7 @@ const submit = async () => {
 .community-photograph-page {
   --photograph-form-accent: var(--c-photograph);
   --photograph-form-accent-soft: color-mix(in srgb, var(--c-photograph) 8%, var(--c-card));
-  --photograph-form-action-end: color-mix(in srgb, var(--c-photograph) 72%, #0ea5e9);
+  --photograph-form-action-end: var(--c-primary-hover);
 }
 
 .community-photograph-page input[type="radio"] {

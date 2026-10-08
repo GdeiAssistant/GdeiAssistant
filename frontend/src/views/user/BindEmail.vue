@@ -214,7 +214,7 @@ onUnmounted(() => {
               v-model="formEmail"
               type="email"
               :placeholder="currentEmail ? t('bindEmail.newEmailPlaceholder') : t('bindEmail.emailPlaceholder')"
-              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none"
             />
           </div>
 
@@ -226,7 +226,7 @@ onUnmounted(() => {
               type="number"
               inputmode="numeric"
               :placeholder="t('bindEmail.codePlaceholder')"
-              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none"
             />
             <button
               type="button"

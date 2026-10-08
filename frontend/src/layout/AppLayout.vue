@@ -2,7 +2,7 @@
 import { computed, ref, provide, onMounted, onUnmounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Home, Newspaper, UserRound } from 'lucide-vue-next'
+import { Home, Bell, UserRound } from 'lucide-vue-next'
 import AppSidebar from './AppSidebar.vue'
 import AppTopbar from './AppTopbar.vue'
 import CommandPalette from '@/components/ui/CommandPalette.vue'
@@ -17,7 +17,7 @@ provide('showCommandPalette', showCommandPalette)
 
 const mobileTabs = computed(() => [
   { path: '/home', label: t('tab.home'), icon: Home },
-  { path: '/info', label: t('tab.info'), icon: Newspaper },
+  { path: '/info', label: t('tab.info'), icon: Bell },
   { path: '/profile', label: t('tab.profile'), icon: UserRound }
 ])
 
@@ -134,17 +134,23 @@ onUnmounted(() => {
 }
 
 @media (max-width: 1023px) {
-  .campus-content {
-    padding: 24px 24px 56px;
-  }
-}
-
-@media (max-width: 767px) {
   .campus-main {
     margin-left: 0;
   }
 
   .campus-content {
+    max-width: 42rem;
+    padding: 24px 24px 56px;
+  }
+
+  .campus-sidebar-backdrop {
+    display: block;
+  }
+}
+
+@media (max-width: 767px) {
+  .campus-content {
+    max-width: 100%;
     padding: 16px 16px calc(88px + env(safe-area-inset-bottom, 0px));
   }
 

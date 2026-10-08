@@ -71,7 +71,7 @@ function close() {
 <template>
   <Teleport to="body">
     <div v-if="open" class="fixed inset-0 z-[1000] flex items-end justify-center sm:items-center">
-      <div class="absolute inset-0 bg-[rgb(10_20_17/48%)]" @click="close" />
+      <div class="absolute inset-0 bg-[var(--c-scrim)]" @click="close" />
       <div class="relative z-10 bg-[var(--c-surface)] border border-[var(--c-border)] rounded-t-[var(--radius-card)] sm:rounded-[var(--radius-card)] w-full sm:w-[460px] overflow-hidden shadow-[var(--shadow-lg)] flex flex-col max-h-[80vh]">
         <!-- Header -->
         <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--c-divider)] shrink-0">
@@ -96,7 +96,7 @@ function close() {
               v-for="region in tree" :key="region.code"
               class="w-full px-3 py-3 text-left text-sm border-0 cursor-pointer font-inherit truncate transition-colors"
               :class="selectedRegion?.code === region.code
-                ? 'bg-[var(--c-primary-light,#e8f0fe)] text-[var(--c-primary)] font-medium'
+                ? 'bg-[var(--c-primary-light)] text-[var(--c-primary)] font-medium'
                 : 'bg-transparent text-[var(--c-text-primary)] hover:bg-[var(--c-surface-hover)]'"
               @click="selectRegion(region)">
               {{ region.name }}
@@ -110,7 +110,7 @@ function close() {
               v-for="state in states" :key="state.code"
               class="w-full px-3 py-3 text-left text-sm border-0 cursor-pointer font-inherit truncate transition-colors"
               :class="selectedState?.code === state.code
-                ? 'bg-[var(--c-primary-light,#e8f0fe)] text-[var(--c-primary)] font-medium'
+                ? 'bg-[var(--c-primary-light)] text-[var(--c-primary)] font-medium'
                 : 'bg-transparent text-[var(--c-text-primary)] hover:bg-[var(--c-surface-hover)]'"
               @click="selectState(state)">
               {{ state.name }}
@@ -124,7 +124,7 @@ function close() {
               v-for="city in cities" :key="city.code"
               class="w-full px-3 py-3 text-left text-sm border-0 cursor-pointer font-inherit truncate transition-colors"
               :class="selectedCity?.code === city.code
-                ? 'bg-[var(--c-primary-light,#e8f0fe)] text-[var(--c-primary)] font-medium'
+                ? 'bg-[var(--c-primary-light)] text-[var(--c-primary)] font-medium'
                 : 'bg-transparent text-[var(--c-text-primary)] hover:bg-[var(--c-surface-hover)]'"
               @click="selectCity(city)">
               {{ city.name }}

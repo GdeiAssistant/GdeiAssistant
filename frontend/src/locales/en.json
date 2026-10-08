@@ -11,7 +11,7 @@
     "saveFailed": "Operation failed",
     "saveSuccess": "Saved",
     "systemBusy": "System is busy, please try again later",
-    "networkError": "Network connection failed, please check the server",
+    "networkError": "Network connection failed. Check your connection and try again",
     "networkException": "Network error, please try again later",
     "noPermission": "You do not have permission to access this feature",
     "resourceNotFound": "The requested resource does not exist",
@@ -80,8 +80,8 @@
       "description": "Sell idle items and trade on campus"
     },
     "delivery": {
-      "name": "Delivery",
-      "description": "Post errands and pickup requests"
+      "name": "Express Pickup",
+      "description": "Post pickup requests and let classmates grab parcels for you"
     },
     "lostandfound": {
       "name": "Lost & Found",
@@ -104,7 +104,7 @@
       "description": "Join hot campus discussions"
     },
     "photograph": {
-      "name": "Campus Photography",
+      "name": "Campus Photos",
       "description": "Capture the best moments on campus"
     }
   },
@@ -145,7 +145,7 @@
   },
   "tab": {
     "home": "Home",
-    "info": "Info",
+    "info": "Messages",
     "profile": "Profile"
   },
   "communityTab": {
@@ -158,11 +158,11 @@
   },
   "home": {
     "title": "GdeiAssistant",
-    "subtitle": "Four years of campus life — GdeiAssistant walks the journey with you.",
+    "subtitle": "Timetable, grades, campus utilities and community in one place.",
     "sectionService": "Campus Services",
     "sectionServiceDesc": "Grades, schedule, CET, library, campus card and common tools",
     "sectionLife": "Campus Life",
-    "sectionLifeDesc": "Marketplace, delivery, lost & found, confessions, roommate, love wall, topics and photography",
+    "sectionLifeDesc": "Marketplace, express pickup, lost & found, secret notes, dating, love wall, topics and campus photos",
     "noFeatures": "No features to display",
     "heroPrimary": "View campus services",
     "heroSecondary": "Explore campus life",
@@ -178,8 +178,11 @@
     "todayNoticeDesc": "School notices and interaction messages",
     "todayNoticeMeta": "Read",
     "todayDeliveryTitle": "My delivery",
-    "todayDeliveryDesc": "Errands and parcel pickup requests",
-    "todayDeliveryMeta": "Go"
+    "todayDeliveryDesc": "Parcel pickup requests",
+    "todayDeliveryMeta": "Go",
+    "greetingMorning": "Good morning",
+    "greetingAfternoon": "Good afternoon",
+    "greetingEvening": "Good evening"
   },
   "profile": {
     "title": "Profile",
@@ -419,7 +422,7 @@
     "riskTitle": "After deletion, the following information will be permanently removed and cannot be recovered:",
     "risk": {
       "account": "Your account and all profile information will be cleared",
-      "posts": "All published content such as confessions, topics, and delivery posts will be permanently deleted",
+      "posts": "All published content such as confessions, topics, and express pickup posts will be permanently deleted",
       "interactions": "All interaction records such as comments and likes will be removed",
       "academic": "Custom schedules and saved CET admission ticket numbers will be deleted",
       "community": "User data and transaction records on community platforms will be cleared",
@@ -461,7 +464,7 @@
     "moduleMarketplace": "Marketplace",
     "moduleLostAndFound": "Lost & Found",
     "moduleDating": "Roommate",
-    "moduleDelivery": "Delivery",
+    "moduleDelivery": "Express Pickup",
     "moduleSecret": "Confessions",
     "moduleExpress": "Love Wall",
     "moduleTopic": "Topics",
@@ -982,7 +985,8 @@
         "relist": "Item relisted"
       },
       "soldHint": "Sold items can no longer be edited or relisted"
-    }
+    },
+    "emptyAction": "List an item"
   },
   "express": {
     "title": "Confession Wall",
@@ -1040,7 +1044,8 @@
       "send": "Send",
       "me": "Me",
       "floor": "Floor {index}"
-    }
+    },
+    "emptyAction": "Post a confession"
   },
   "topic": {
     "title": "Topics",
@@ -1052,7 +1057,7 @@
     "searchAction": "Search",
     "searchRequired": "Please enter the topic or content you want to search for",
     "searching": "Searching...",
-    "searchEmpty": "No results found",
+    "searchEmpty": "No matching topics. Try another keyword.",
     "publish": {
       "title": "Post Topic",
       "submitAction": "Submit",
@@ -1248,7 +1253,7 @@
     }
   },
   "delivery": {
-    "title": "Campus Delivery",
+    "title": "Express Pickup",
     "empty": "No tasks yet",
     "smallSize": "Small",
     "pickupShort": "Pickup",
@@ -1264,7 +1269,7 @@
     "type": {
       "express": "Parcel Pickup",
       "food": "Meal Errand",
-      "other": "Errand"
+      "other": "Other"
     },
     "size": {
       "small": "Small (Food / Documents)",
@@ -1324,7 +1329,7 @@
       "completeConfirmMessage": "Are you sure you want to complete this order? This action cannot be undone."
     },
     "mine": {
-      "title": "My Delivery Tasks",
+      "title": "My Pickup Tasks",
       "publishedTab": "Published",
       "acceptedTab": "Accepted",
       "emptyPublished": "No published tasks yet",
@@ -1351,7 +1356,7 @@
     "menuCommunityGuidelines": "Community Guidelines",
     "menuSecondHandPolicy": "Second-Hand Trading Rules",
     "menuLostAndFoundPolicy": "Lost & Found Rules",
-    "menuErrandPolicy": "Errand & Delivery Rules",
+    "menuErrandPolicy": "Express Pickup Rules",
     "menuOpenSourceLicense": "Open Source License",
     "menuCookiePolicy": "Cookie & Local Storage Notice",
     "menuIPDeclaration": "IP Complaints and Counter-Notice Rules",
@@ -1503,7 +1508,7 @@
   "downloadPage": {
     "status": {
       "loadingTitle": "Checking export status",
-      "exportingTitle": "Packaging your data",
+      "exportingTitle": "Exporting data",
       "exportedTitle": "Your data copy is ready",
       "idleTitle": "Get your account data copy",
       "loadingDescription": "Fetching the latest export task status. Please wait.",

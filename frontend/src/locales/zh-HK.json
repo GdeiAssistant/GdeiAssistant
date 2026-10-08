@@ -1,6 +1,6 @@
 {
   "common": {
-    "loading": "載入緊...",
+    "loading": "載入緊……",
     "retry": "再試一次",
     "confirm": "確定",
     "cancel": "取消",
@@ -11,7 +11,7 @@
     "saveFailed": "操作失敗",
     "saveSuccess": "儲存成功",
     "systemBusy": "系統而家好繁忙，請陣間再試",
-    "networkError": "網絡連唔上，請檢查吓伺服器狀態",
+    "networkError": "網絡連接失敗，請檢查網絡後再試",
     "networkException": "網絡暫時唔穩定，請陣間再試",
     "noPermission": "你冇權限使用呢個功能",
     "resourceNotFound": "搵唔到你要嘅資源",
@@ -45,7 +45,7 @@
   "gradePage": {
     "title": "成績查詢",
     "moreAction": "更多",
-    "syncLoading": "正在同步教務系統...",
+    "syncLoading": "正在同步教務系統……",
     "updateSuccess": "更新成功",
     "empty": "暫無成績數據",
     "term": {
@@ -71,7 +71,7 @@
   },
   "tab": {
     "home": "功能主頁",
-    "info": "資訊",
+    "info": "訊息",
     "profile": "個人中心"
   },
   "communityTab": {
@@ -84,11 +84,11 @@
   },
   "home": {
     "title": "廣東二師助手",
-    "subtitle": "四年時光，廣東二師助手陪你一齊走過。",
+    "subtitle": "查課表、睇成績、逛社區，校園生活的常用功能都在呢度。",
     "sectionService": "校園服務",
     "sectionServiceDesc": "查成績、時間表、四六級、圖書館、校園卡同常用查詢工具",
     "sectionLife": "校園生活",
-    "sectionLifeDesc": "二手交易、速遞代取、失物招領、樹洞、賣室友、表白牆、話題同校園攝影",
+    "sectionLifeDesc": "二手交易、速遞代取、失物招領、樹洞、賣室友、表白牆、話題同拍好校園",
     "noFeatures": "而家未有可以展示嘅功能入口",
     "heroPrimary": "睇校園服務",
     "heroSecondary": "逛校園生活",
@@ -104,8 +104,11 @@
     "todayNoticeDesc": "校內通知同互動訊息",
     "todayNoticeMeta": "去睇",
     "todayDeliveryTitle": "我的速遞",
-    "todayDeliveryDesc": "跑腿同速遞代取需求",
-    "todayDeliveryMeta": "去處理"
+    "todayDeliveryDesc": "速遞代取需求",
+    "todayDeliveryMeta": "去處理",
+    "greetingMorning": "早晨",
+    "greetingAfternoon": "下午好",
+    "greetingEvening": "晚上好"
   },
   "profile": {
     "title": "個人中心",
@@ -137,7 +140,7 @@
     "editNickname": "改花名",
     "nicknamePlaceholder": "請輸入新花名",
     "editIntro": "改個人簡介",
-    "introPlaceholder": "用一句話介紹吓自己...",
+    "introPlaceholder": "用一句話介紹吓自己……",
     "passwordNotAvailable": "改密碼功能暫時未開放。如果要改，請去學校統一身份認證平台或者教務系統操作。",
     "selectBirthday": "揀生日",
     "selectFaculty": "請揀院系",
@@ -157,7 +160,7 @@
     "systemNotice": "系統公告",
     "noNotice": "暫時未有系統公告",
     "interaction": "互動訊息",
-    "loadingInfo": "資訊載入緊...",
+    "loadingInfo": "資訊載入緊……",
     "noticeTitle": "通知公告",
     "expand": "睇多啲",
     "collapse": "收起",
@@ -171,13 +174,13 @@
     "defaultInteractionTitle": "互動訊息",
     "defaultInteractionContent": "你有一條新嘅互動訊息",
     "loadMore": "載入多啲",
-    "loadingMore": "載入緊...",
+    "loadingMore": "載入緊……",
     "read": "已讀",
     "unread": "未讀",
     "moduleMarketplace": "二手交易",
     "moduleLostAndFound": "失物招領",
     "moduleDating": "賣室友",
-    "moduleDelivery": "全民快遞",
+    "moduleDelivery": "速遞代取",
     "moduleSecret": "樹洞",
     "moduleExpress": "表白牆",
     "moduleTopic": "話題",
@@ -205,7 +208,7 @@
     "appName": "廣東二師助手",
     "enterSystem": "進入系統",
     "appIntroTitle": "應用介紹",
-    "appIntroContent": "廣東第二師範學院校園助手，是為廣東第二師範學院專屬打造的校園服務應用。它不僅提供了課表查詢、成績查詢、四六級考試成績查詢、空課室查詢、圖書館檢索、我的借閱、教學質量評價、電費查詢、黃頁查詢、校園卡信息、消費記錄、校園卡掛失等綜合性的教務功能，還提供了二手交易、失物招領、校園樹洞、戀愛交友、表白牆、全民快遞、拍好校園、話題、匿名評教等社區交流平台。廣東二師助手旨在為廣東第二師範學院的在校師生們提供最優質的教育教學、校園生活、社團活動、文化娛樂和教務服務等信息。四年時光，廣東二師助手陪你一起走過。",
+    "appIntroContent": "廣東二師助手是面向廣東第二師範學院學生嘅校園服務應用，提供課表查詢、成績查詢、四六級考試成績查詢、空課室查詢、圖書館檢索、我的借閱、教學質素評價、電費查詢、黃頁查詢、校園卡資訊、消費記錄、校園卡掛失等教務功能，以及二手交易、失物招領、樹洞、表白牆、速遞代取、拍好校園、話題等社區功能。",
     "screenshotsTitle": "應用截圖",
     "screenshotAlt": "應用截圖 {n}",
     "cookieNotice": "本網站會使用 Cookie 和瀏覽器本地儲存來記住登入狀態、介面偏好、資料來源選擇及提示關閉狀態。繼續訪問即表示您已知悉相關說明。",
@@ -221,7 +224,7 @@
     "menuCommunityGuidelines": "社區準則",
     "menuSecondHandPolicy": "二手交易規則",
     "menuLostAndFoundPolicy": "失物招領規則",
-    "menuErrandPolicy": "校園跑腿規則",
+    "menuErrandPolicy": "速遞代取規則",
     "menuOpenSourceLicense": "開源協議",
     "menuCookiePolicy": "Cookie與本地儲存說明",
     "menuIPDeclaration": "侵權投訴與反通知規則",
@@ -241,7 +244,7 @@
       "sectionDesc": "睇授權狀態、已儲存憑證同快速認證；撤回授權或者刪除憑證之後，相關校園查詢可能要重新登入。",
       "statusTitle": "而家管理狀態",
       "refresh": "重新整理",
-      "loading": "狀態攞緊...",
+      "loading": "狀態攞緊……",
       "consentStatus": "授權狀態",
       "authorized": "已授權",
       "unauthorized": "未授權",
@@ -364,7 +367,7 @@
     "codeSent": "驗證碼已發送，請查看短訊",
     "bindSuccess": "綁定成功",
     "unbindSuccess": "已解除綁定",
-    "submitting": "綁定中...",
+    "submitting": "綁定中……",
     "confirmBind": "確認綁定",
     "unbindDialogTitle": "解除綁定",
     "unbindDialogContent": "確定要解除綁定該手機號嗎？解除後將無法使用該手機號找回帳號。",
@@ -373,7 +376,7 @@
   "downloadPage": {
     "status": {
       "loadingTitle": "正在檢查匯出狀態",
-      "exportingTitle": "正在為您打包數據",
+      "exportingTitle": "正在匯出數據",
       "exportedTitle": "數據副本已可下載",
       "idleTitle": "取得您的帳號數據副本",
       "loadingDescription": "正在取得當前匯出任務狀態，請稍候。",
@@ -384,13 +387,13 @@
     "privacyNotice": "為了保護您的私隱，該檔案僅供您本人下載，下載連結有效期為 90 分鐘。",
     "frequencyNotice": "注意：24 小時內只能匯出一次。若您剛完成匯出，之後可直接回到本頁繼續下載。",
     "actions": {
-      "checking": "正在檢查狀態...",
+      "checking": "正在檢查狀態……",
       "start": "開始匯出數據",
-      "starting": "提交中...",
-      "exporting": "數據打包中，請稍候...",
+      "starting": "提交中……",
+      "exporting": "數據打包中，請稍候……",
       "refresh": "刷新狀態",
       "download": "點擊下載檔案",
-      "downloading": "正在取得下載連結..."
+      "downloading": "正在取得下載連結……"
     },
     "exportedHint": "您的數據副本已生成完畢，請點擊下方按鈕下載",
     "toast": {
@@ -399,7 +402,7 @@
     }
   },
   "secret": {
-    "title": "校園樹洞",
+    "title": "樹洞",
     "publishAction": "說個小秘密",
     "empty": "暫無樹洞內容",
     "voiceAlt": "語音",
@@ -415,7 +418,7 @@
       "voiceStateIdle": "未錄音",
       "voiceStateFinished": "錄音完成（{duration}）",
       "voiceStateRemaining": "正在錄音，尚餘 {seconds} 秒",
-      "voiceStateProcessing": "錄音處理中...",
+      "voiceStateProcessing": "錄音處理中……",
       "voiceStatePreview": "正在試聽錄音",
       "browserUnsupported": "當前瀏覽器不支援錄音",
       "voiceTooLarge": "語音檔案過大，請縮短錄音時間",
@@ -425,8 +428,8 @@
       "stopRecordingFirst": "請先結束目前錄音",
       "contentRequired": "樹洞內容不能為空",
       "contentTooLong": "樹洞內容超出長度限制",
-      "publishing": "正在發佈...",
-      "uploadingVoice": "正在上傳語音...",
+      "publishing": "正在發佈……",
+      "uploadingVoice": "正在上傳語音……",
       "submitFailed": "提交失敗",
       "deleteAfter24h": "24小時後刪除",
       "switchToTextPrefix": "切換到",
@@ -445,7 +448,7 @@
     "detail": {
       "title": "樹洞詳情",
       "audioLoadFailed": "語音載入失敗，請稍後再試",
-      "audioLoading": "語音載入中...",
+      "audioLoading": "語音載入中……",
       "audioPause": "撳一下暫停播放",
       "audioResume": "撳一下繼續播放",
       "audioPlay": "撳一下播放語音",
@@ -551,7 +554,7 @@
       "imageTooLarge": "圖片文件不能超過5MB",
       "invalidImageType": "不合法的圖片文件類型",
       "itemNotFound": "未找到要編輯的商品",
-      "loading": "正在載入商品資訊...",
+      "loading": "正在載入商品資訊……",
       "locationRequired": "請填寫交易地點",
       "nameRequired": "請填寫商品名稱",
       "placeholder": {
@@ -563,13 +566,13 @@
       "priceInvalid": "請填寫有效的商品價格（0-9999.99元）",
       "publishSuccess": "發佈成功",
       "qqRequired": "請填寫QQ號",
-      "saving": "正在儲存...",
+      "saving": "正在儲存……",
       "selectImageRequired": "請至少選擇一張圖片",
       "submitting": "提交中",
       "title": "發佈二手商品",
       "typePickerTitle": "選擇分類",
       "typeRequired": "請選擇商品分類",
-      "uploading": "正在上載...",
+      "uploading": "正在上載……",
       "safetyHint": "唔好發佈違法違規物品、危險品、證件正本、賬號憑證，或者侵權盜版內容。公開手機號碼、微信號、住址等聯絡資料前要諗清楚，並自行核實商品狀況、價錢同當面交易嘅風險。"
     },
     "searchAction": "搜索",
@@ -578,7 +581,8 @@
     "searchPrompt": "請輸入關鍵詞搜索",
     "searchRequired": "請輸入搜索關鍵詞",
     "searchTitle": "搜索結果",
-    "title": "二手交易"
+    "title": "二手交易",
+    "emptyAction": "去放售閒置"
   },
   "lostandfound": {
     "profile": {
@@ -664,7 +668,7 @@
       "itemTypePickerTitle": "選擇物品分類",
       "itemTypeRequired": "請選擇物品分類",
       "itemTypeTitle": "物品分類",
-      "loading": "正在載入資訊...",
+      "loading": "正在載入資訊……",
       "locationRequired": "請填寫地點",
       "locationTooLong": "地點不能超過30個字符",
       "lostLocation": "丟失地點",
@@ -675,12 +679,12 @@
       },
       "previewAlt": "預覽圖",
       "publishSuccess": "發佈成功",
-      "saving": "正在儲存...",
+      "saving": "正在儲存……",
       "submitting": "提交中",
       "title": "發佈資訊",
       "titleRequired": "請填寫物品名稱",
       "titleTooLong": "物品名稱不能超過25個字符",
-      "uploading": "正在上載...",
+      "uploading": "正在上載……",
       "privacyHint": "證件、學生卡、相片同聯絡資料，請盡量遮住敏感部分，或者只展示必需內容。唔好公開完整證件號碼、手機號碼、二維碼，或者其他可能畀人冒領嘅資料。"
     },
     "tab": {
@@ -790,17 +794,17 @@
     "deleteConfirm": "確定要刪除頭像並恢復預設嗎？",
     "deleteFailed": "刪除頭像失敗，請稍後再試",
     "deleteSuccess": "已恢復預設頭像",
-    "deleting": "正在刪除頭像...",
+    "deleting": "正在刪除頭像……",
     "title": "個人頭像",
     "updateSuccess": "更新頭像完成",
-    "uploading": "正在上載頭像...",
+    "uploading": "正在上載頭像……",
     "privacyHint": "上傳頭像或圖片之前，請先確認冇包含唔必要嘅人臉、位置、證件、學生卡、聯絡資料，或者其他高度敏感資料。"
   },
   "bindEmail": {
     "bindFailed": "綁定失敗，請稍後重試",
     "bindNow": "立即綁定",
     "bindSuccess": "綁定成功",
-    "binding": "綁定中...",
+    "binding": "綁定中……",
     "boundDescription": "您當前綁定的電郵爲：{email}",
     "boundTitle": "已綁定電郵",
     "code": "驗證碼",
@@ -893,14 +897,14 @@
     "nameLabel": "姓名",
     "namePlaceholder": "姓名超過3個字可只輸入前3個",
     "noSavedNumber": "你未儲存准考證號",
-    "queryLoading": "正在查詢...",
+    "queryLoading": "正在查詢……",
     "refreshCaptcha": "點擊獲取",
     "saveFailed": "儲存失敗",
     "savePromptLink": "儲存考號",
     "savePromptPrefix": "擔心遺忘准考證號？點擊",
     "saveSuccess": "儲存成功",
     "saveTitle": "儲存考號",
-    "saving": "儲存中...",
+    "saving": "儲存中……",
     "submit": "查詢",
     "title": "四六級查詢",
     "resultTitle": "查詢結果",
@@ -919,7 +923,7 @@
     "empty": "沒有匹配的功能",
     "navigate": "導航",
     "open": "跳轉",
-    "searchPlaceholder": "搜索功能..."
+    "searchPlaceholder": "搜索功能……"
   },
   "communityCommon": {
     "gender": {
@@ -930,7 +934,7 @@
     "loading": "載入緊",
     "noMore": "冇更多喇",
     "pullToRefresh": "下拉重新整理",
-    "refreshing": "重新整理緊...",
+    "refreshing": "重新整理緊……",
     "releaseToRefresh": "鬆手即刻重新整理",
     "select": "請揀",
     "loadFailed": "載入失敗，請陣間再試"
@@ -938,7 +942,7 @@
   "deleteAccount": {
     "agreement": "我已充分閱讀並同意上述註銷後果",
     "confirm": "確認註銷",
-    "deleting": "註銷中...",
+    "deleting": "註銷中……",
     "finalConfirmAction": "殘忍註銷",
     "finalConfirmDescription": "註銷操作不可逆，確定要永久刪除該帳號嗎？",
     "finalConfirmTitle": "最後確認",
@@ -949,7 +953,7 @@
       "community": "社交功能平臺的用戶數據和交易記錄將被清空",
       "identity": "綁定的手機號、電郵地址等身份資訊將被刪除",
       "interactions": "所有互動記錄（評論、點贊等）將被清除",
-      "posts": "表白牆、話題、跑腿等所有發佈內容將被永久刪除"
+      "posts": "表白牆、話題、速遞代取等所有發佈內容將被永久刪除"
     },
     "riskTitle": "註銷後，以下資訊將被永久刪除且無法恢復：",
     "success": "帳號已註銷",
@@ -960,12 +964,12 @@
     "detail": {
       "acceptAction": "立即搶單",
       "acceptSuccess": "接單成功！",
-      "accepting": "接單中...",
+      "accepting": "接單中……",
       "completeAction": "確認完成",
       "completeConfirmMessage": "確定要完成這個訂單嗎？完成後將無法撤銷。",
       "completeConfirmTitle": "確認完成",
       "completeSuccess": "訂單已完成！",
-      "completing": "確認中...",
+      "completing": "確認中……",
       "contactPhone": "聯繫電話：",
       "descriptionLabel": "備註說明：",
       "myRole": "我的角色：",
@@ -983,7 +987,7 @@
       "emptyAccepted": "暫無接單的任務",
       "emptyPublished": "暫無發佈的任務",
       "publishedTab": "我發佈的",
-      "title": "我的跑腿"
+      "title": "我的速遞代取"
     },
     "pickupAddressWithCompany": "{company} 取件",
     "pickupBadge": "取",
@@ -996,7 +1000,7 @@
       "deliveryRequired": "請輸入送達地址",
       "deliverySection": "送達資訊",
       "descriptionLabel": "備註說明（可選）",
-      "descriptionPlaceholder": "補充說明...",
+      "descriptionPlaceholder": "補充說明……",
       "imageTooLarge": "圖片大小不能超過5MB",
       "invalidImageType": "只能上載圖片文件",
       "itemSection": "物品描述",
@@ -1011,11 +1015,11 @@
       "pickupRequired": "請輸入取件地點",
       "pickupSection": "取件資訊",
       "publishSuccess": "發佈成功",
-      "rewardInvalid": "請輸入有效的跑腿費（0.01-9999.99元）",
-      "rewardLabel": "跑腿費：",
+      "rewardInvalid": "請輸入有效的酬金（0.01-9999.99元）",
+      "rewardLabel": "酬金：",
       "sizeLabel": "重量/體積",
       "submitAction": "確認發佈",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "title": "發佈任務",
       "uploadImage": "上載圖片",
       "privacyHint": "取件碼、地址、手機號碼同姓名等通常屬於高度敏感資料，請只填寫同展示必需內容。唔好接涉及違法違規、危險、貴重物品，或者明顯超出自己能力嘅任務。"
@@ -1031,11 +1035,11 @@
       "inTransit": "配送中",
       "pending": "待接單"
     },
-    "title": "全民快遞",
+    "title": "速遞代取",
     "type": {
       "express": "代取快遞",
       "food": "買飯",
-      "other": "跑腿"
+      "other": "其他"
     },
     "unknownStatus": "未知"
   },
@@ -1045,7 +1049,7 @@
       "number": "學號",
       "year": "年份"
     },
-    "loading": "正在查詢電費...",
+    "loading": "正在查詢電費……",
     "placeholder": {
       "name": "請輸入姓名",
       "number": "請輸入學號"
@@ -1079,13 +1083,13 @@
     "detail": {
       "commentEmpty": "暫無評論，快來搶沙發吧！",
       "commentList": "評論列表",
-      "commentPlaceholder": "我想說...",
+      "commentPlaceholder": "我想說……",
       "commentRequired": "請輸入評論內容",
       "commentTooLong": "評論不能超過50字",
       "floor": "{index}樓",
       "me": "我",
       "send": "發送",
-      "sending": "發送中...",
+      "sending": "發送中……",
       "title": "表白詳情"
     },
     "empty": "暫無表白牆內容",
@@ -1093,12 +1097,12 @@
     "guessDialogTitle": "猜名字",
     "guessPlaceholder": "請輸入你猜的真實姓名：",
     "guessRequired": "請輸入你猜的真實姓名",
-    "guessUnavailable": "TA很神祕，沒有留下真名讓人猜哦~",
+    "guessUnavailable": "對方仲未設定暱稱",
     "guessWrong": "猜錯了，再試試看吧！",
     "justNow": "剛剛",
     "legend": "藍色下劃線：男生 / 紅色下劃線：女生 / 黑色下劃線：其他或保密",
     "publish": {
-      "contentPlaceholder": "寫下你想對TA說的話...",
+      "contentPlaceholder": "寫下你想對TA說的話……",
       "contentRequired": "請填寫表白內容",
       "contentTitle": "表白內容",
       "contentTooLong": "表白內容不能超過 250 個字",
@@ -1109,7 +1113,7 @@
       "nicknameRequired": "請輸入暱稱",
       "nicknameTooLong": "暱稱不能超過 10 個字",
       "publishSuccess": "發佈成功",
-      "publishing": "正在發佈...",
+      "publishing": "正在發佈……",
       "realName": "真名",
       "realNamePlaceholder": "請輸入真名",
       "realNameTip": "注：真實姓名可選填，預設保密不顯示！填寫即可參加猜名字遊戲。",
@@ -1119,7 +1123,7 @@
       "receiverNameRequired": "請輸入TA的名字",
       "receiverNameTooLong": "TA的名字不能超過 10 個字",
       "submitAction": "發佈表白",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "targetInfo": "TA的資訊",
       "targetName": "名字",
       "title": "發佈表白"
@@ -1130,7 +1134,8 @@
     "searchPrompt": "輸入關鍵詞搜索",
     "searchRequired": "請輸入搜索關鍵詞",
     "searchTitle": "搜索表白",
-    "title": "表白牆"
+    "title": "表白牆",
+    "emptyAction": "去發佈表白"
   },
   "feature": {
     "card": {
@@ -1154,8 +1159,8 @@
       "name": "賣室友"
     },
     "delivery": {
-      "description": "發跑腿需求，幫取快遞",
-      "name": "全民快遞"
+      "description": "發佈代取需求，同學順路幫你取",
+      "name": "速遞代取"
     },
     "ershou": {
       "description": "閒置物品轉讓，校內面交",
@@ -1195,7 +1200,7 @@
     },
     "secret": {
       "description": "匿名傾訴，說出心裏話",
-      "name": "校園樹洞"
+      "name": "樹洞"
     },
     "spare": {
       "description": "看看現在還有哪些空課室",
@@ -1239,7 +1244,7 @@
       "addImage": "添加圖片",
       "contactPlaceholder": "請留下您的QQ/微信或手機號，方便我們聯繫您（選填）",
       "contactTitle": "聯繫方式（選填）",
-      "contentPlaceholder": "請詳細描述您遇到的問題或建議...",
+      "contentPlaceholder": "請詳細描述您遇到的問題或建議……",
       "contentRequired": "請填寫意見內容",
       "contentTitle": "意見內容",
       "screenshotLimit": "（可選，最多 {count} 張）",
@@ -1247,7 +1252,7 @@
       "screenshotTitle": "截圖上載",
       "submit": "提交意見",
       "submitSuccess": "提交成功",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "typeTitle": "選擇意見類型"
     },
     "tab": {
@@ -1284,7 +1289,7 @@
       "renewDialogDescription": "請輸入圖書館密碼完成續借校驗",
       "renewDialogPlaceholder": "圖書館密碼",
       "renewDialogTitle": "續借圖書",
-      "renewLoading": "續借中...",
+      "renewLoading": "續借中……",
       "renewSuccess": "續借成功",
       "returnDate": "應還日期",
       "title": "我的借閱"
@@ -1337,7 +1342,7 @@
     "campusConsentRequired": "請先單獨同意校園帳號憑證處理說明後再登入",
     "failed": "登入失敗",
     "incompleteFields": "請將資訊填寫完整",
-    "loading": "登入中...",
+    "loading": "登入中……",
     "mockActive": "已開啓",
     "mockMode": "本地示例數據",
     "otherLogin": "其他方式登入",
@@ -1416,7 +1421,7 @@
       "scheduleLength": "課程長度",
       "startSection": "開始節次",
       "submit": "儲存課程",
-      "submitting": "儲存中...",
+      "submitting": "儲存中……",
       "title": "添加自定義課程"
     },
     "day": {
@@ -1446,7 +1451,7 @@
       "invalidWeekRange": "結束周次不能早於開始周次",
       "locationRequired": "請輸入上課地點",
       "nameRequired": "請輸入課程名稱",
-      "syncLoading": "正在同步課表...",
+      "syncLoading": "正在同步課表……",
       "syncSuccess": "課表已重新整理"
     },
     "more": "更多",
@@ -1590,27 +1595,27 @@
     "imageAlt": "圖片{index}",
     "publish": {
       "addImage": "添加圖片",
-      "contentPlaceholder": "請輸入你的內容...",
+      "contentPlaceholder": "請輸入你的內容……",
       "contentRequired": "請輸入內容",
       "contentTooLong": "內容不能超過250字",
       "imageLimit": "最多隻能上載9張圖片",
       "imageTooLarge": "圖片大小不能超過5MB",
       "invalidImageType": "只能上載圖片文件",
       "publishSuccess": "發佈成功",
-      "publishing": "正在發佈...",
+      "publishing": "正在發佈……",
       "submitAction": "提交",
-      "submitting": "提交中...",
+      "submitting": "提交中……",
       "title": "發佈話題",
       "topicPlaceholder": "請輸入你的話題",
       "topicRequired": "請輸入話題標籤",
-      "uploading": "正在上載..."
+      "uploading": "正在上載……"
     },
     "searchAction": "搜索",
-    "searchEmpty": "暫無結果",
-    "searchPlaceholder": "搜索話題、內容...",
+    "searchEmpty": "搵唔到相關話題，試下第二個關鍵詞",
+    "searchPlaceholder": "搜索話題、內容……",
     "searchRequired": "請輸入您要搜索的話題或內容！",
     "searchTitle": "搜索話題",
-    "searching": "搜索中...",
+    "searching": "搜索中……",
     "title": "話題"
   },
   "yellowPage": {
@@ -1634,7 +1639,7 @@
     "submitAction": "一鍵評教",
     "riskNotice": "注意：評教資訊提交之後，就唔可以再改。",
     "confirmMessage": "確定要進行一鍵評教嗎？呢個操作唔可以還原。",
-    "loading": "自動評教中...",
+    "loading": "自動評教中……",
     "success": "評價提交成功！",
     "error": "評教提交失敗，請稍後再試"
   },

@@ -225,8 +225,8 @@ export const ANNOUNCEMENT_LIST = [
 
 export const INTERACTION_MESSAGES = [
   { id: 'msg_interaction_001', module: 'dating', type: 'interaction', targetType: 'sent', targetId: '802', targetSubId: '701', title: '卖室友互动', content: '你发出的卖室友申请已被对方查看，去看看最新状态。', createdAt: '刚刚', isRead: false },
-  { id: 'msg_interaction_002', module: 'delivery', type: 'interaction', targetType: 'published', targetId: '601', targetSubId: '9001', title: '全民快递提醒', content: '你发布的订单已被接单，建议尽快和接单同学确认送达时间。', createdAt: '6分钟前', isRead: false },
-  { id: 'msg_interaction_003', module: 'delivery', type: 'interaction', targetType: 'accepted', targetId: '602', targetSubId: '9001', title: '全民快递提醒', content: '你接的订单已完成，系统已同步为已完成状态。', createdAt: '12分钟前', isRead: false },
+  { id: 'msg_interaction_002', module: 'delivery', type: 'interaction', targetType: 'published', targetId: '601', targetSubId: '9001', title: '快递代取提醒', content: '你发布的订单已被接单，建议尽快和接单同学确认送达时间。', createdAt: '6分钟前', isRead: false },
+  { id: 'msg_interaction_003', module: 'delivery', type: 'interaction', targetType: 'accepted', targetId: '602', targetSubId: '9001', title: '快递代取提醒', content: '你接的订单已完成，系统已同步为已完成状态。', createdAt: '12分钟前', isRead: false },
   { id: 'msg_interaction_004', module: 'secret', type: 'comment', targetType: 'comment', targetId: '301', targetSubId: '1', title: '树洞互动', content: '有人回复了你的树洞，打开详情即可查看最新评论。', createdAt: '10分钟前', isRead: false },
   { id: 'msg_interaction_005', module: 'express', type: 'comment', targetType: 'comment', targetId: '401', targetSubId: '1', title: '表白墙互动', content: '有人给你的表白留了言，打开详情即可查看最新评论。', createdAt: '14分钟前', isRead: false },
   { id: 'msg_interaction_006', module: 'express', type: 'interaction', targetType: 'guess', targetId: '401', targetSubId: '', title: '表白墙互动', content: '有人参与了你的猜名字互动，去看看最新猜测次数。', createdAt: '18分钟前', isRead: true },

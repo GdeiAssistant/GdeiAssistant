@@ -1180,7 +1180,7 @@ function handleDelivery(path, method, data, token, utils) {
       tradeId: null
     }
     if (!nextOrder.contactPhone || !nextOrder.pickupLocation || !nextOrder.deliveryAddress || !(nextOrder.price > 0)) {
-      return utils.rejectWithMessage('请完整填写跑腿订单信息')
+      return utils.rejectWithMessage('请完整填写快递代取订单信息')
     }
     communityState.deliveryOrders.unshift(nextOrder)
     saveCommunityState(utils, communityState)

@@ -220,6 +220,13 @@ onUnmounted(() => {
     <div v-if="!loading && !refreshing && list.length === 0" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <Mail class="mb-3" :size="40" :stroke-width="1.5" aria-hidden="true" />
       <p class="text-sm">{{ t('express.empty') }}</p>
+      <button
+        type="button"
+        class="mt-4 inline-flex min-h-[40px] items-center rounded-[var(--radius-control)] bg-[var(--c-primary)] px-4 text-sm font-semibold text-[var(--c-on-primary)] transition-colors hover:bg-[var(--c-primary-hover)]"
+        @click="router.push('/express/publish')"
+      >
+        {{ t('express.emptyAction') }}
+      </button>
     </div>
 
     <!-- 上拉加载更多 -->

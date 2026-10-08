@@ -11,7 +11,7 @@
     "saveFailed": "操作に失敗しました",
     "saveSuccess": "保存しました",
     "systemBusy": "システムが混雑しています。しばらくしてからもう一度お試しください",
-    "networkError": "ネットワーク接続に失敗しました。サーバーの状態を確認してください",
+    "networkError": "ネットワーク接続に失敗しました。接続を確認してから再試行してください",
     "networkException": "ネットワークエラーが発生しました。しばらくしてからもう一度お試しください",
     "noPermission": "この機能にアクセスする権限がありません",
     "resourceNotFound": "リクエストされたリソースが存在しません",
@@ -71,7 +71,7 @@
   },
   "tab": {
     "home": "ホーム",
-    "info": "お知らせ",
+    "info": "メッセージ",
     "profile": "マイページ"
   },
   "communityTab": {
@@ -84,7 +84,7 @@
   },
   "home": {
     "title": "広東二師アシスタント",
-    "subtitle": "4年間のキャンパスライフ、広東二師アシスタントがともに歩みます。",
+    "subtitle": "時間割・成績・キャンパスコミュニティを、ひとつのアプリで。",
     "sectionService": "キャンパスサービス",
     "sectionServiceDesc": "成績照会、時間割、英語試験、図書館、キャンパスカード、その他ツール",
     "sectionLife": "キャンパスライフ",
@@ -103,9 +103,12 @@
     "todayNoticeTitle": "お知らせ",
     "todayNoticeDesc": "学内通知とメッセージを確認",
     "todayNoticeMeta": "読む",
-    "todayDeliveryTitle": "配達代行",
-    "todayDeliveryDesc": "荷物受取や代行依頼を確認",
-    "todayDeliveryMeta": "移動"
+    "todayDeliveryTitle": "宅配代取",
+    "todayDeliveryDesc": "宅配の受け取り代行を確認",
+    "todayDeliveryMeta": "移動",
+    "greetingMorning": "おはようございます",
+    "greetingAfternoon": "こんにちは",
+    "greetingEvening": "こんばんは"
   },
   "profile": {
     "title": "マイページ",
@@ -177,7 +180,7 @@
     "moduleMarketplace": "フリマ",
     "moduleLostAndFound": "落とし物",
     "moduleDating": "ルームメイト",
-    "moduleDelivery": "配達代行",
+    "moduleDelivery": "宅配代取",
     "moduleSecret": "告白",
     "moduleExpress": "ラブウォール",
     "moduleTopic": "トピック",
@@ -221,7 +224,7 @@
     "menuCommunityGuidelines": "コミュニティガイドライン",
     "menuSecondHandPolicy": "中古取引ルール",
     "menuLostAndFoundPolicy": "遺失物ルール",
-    "menuErrandPolicy": "キャンパス代行ルール",
+    "menuErrandPolicy": "宅配代取ルール",
     "menuOpenSourceLicense": "オープンソースライセンス",
     "menuCookiePolicy": "Cookieとローカルストレージについて",
     "menuIPDeclaration": "権利侵害申告と反通知ルール",
@@ -373,7 +376,7 @@
   "downloadPage": {
     "status": {
       "loadingTitle": "エクスポート状況を確認中",
-      "exportingTitle": "データをパッケージ化しています",
+      "exportingTitle": "データをエクスポートしています",
       "exportedTitle": "データコピーをダウンロードできます",
       "idleTitle": "アカウントデータのコピーを取得",
       "loadingDescription": "最新のエクスポート状況を取得しています。しばらくお待ちください。",
@@ -578,7 +581,8 @@
     "searchPrompt": "キーワードを入力して検索",
     "searchRequired": "検索キーワードを入力してください",
     "searchTitle": "検索結果",
-    "title": "フリマ"
+    "title": "フリマ",
+    "emptyAction": "商品を出品する"
   },
   "lostandfound": {
     "profile": {
@@ -949,7 +953,7 @@
       "community": "コミュニティのユーザーデータと取引記録が消去されます",
       "identity": "連携した電話番号・メールなどの本人情報が削除されます",
       "interactions": "コメント・いいねなどのやり取り記録が削除されます",
-      "posts": "告白板・トピック・おつかいなどの投稿が永久に削除されます"
+      "posts": "告白・トピック・宅配代取などの投稿が永久に削除されます"
     },
     "riskTitle": "削除後、以下の情報は永久に失われ復元できません：",
     "success": "アカウントを削除しました",
@@ -983,7 +987,7 @@
       "emptyAccepted": "受注した依頼はありません",
       "emptyPublished": "投稿した依頼はありません",
       "publishedTab": "投稿した依頼",
-      "title": "マイおつかい"
+      "title": "依頼した代行"
     },
     "pickupAddressWithCompany": "{company} で受取",
     "pickupBadge": "取",
@@ -1031,11 +1035,11 @@
       "inTransit": "配送中",
       "pending": "受注待ち"
     },
-    "title": "キャンパス配送",
+    "title": "宅配代取",
     "type": {
       "express": "宅配代取",
       "food": "食事の購入",
-      "other": "おつかい"
+      "other": "その他"
     },
     "unknownStatus": "不明"
   },
@@ -1130,7 +1134,8 @@
     "searchPrompt": "キーワードを入力して検索",
     "searchRequired": "検索キーワードを入力してください",
     "searchTitle": "告白を検索",
-    "title": "告白板"
+    "title": "告白板",
+    "emptyAction": "告白を投稿する"
   },
   "feature": {
     "card": {
@@ -1154,8 +1159,8 @@
       "name": "ルームメイト紹介"
     },
     "delivery": {
-      "description": "おつかい依頼・宅配代取",
-      "name": "キャンパス配送"
+      "description": "宅配の受け取り代行を依頼",
+      "name": "宅配代取"
     },
     "ershou": {
       "description": "校内で中古品を譲渡・面渡し",
@@ -1606,7 +1611,7 @@
       "uploading": "アップロード中..."
     },
     "searchAction": "検索",
-    "searchEmpty": "結果がありません",
+    "searchEmpty": "該当するトピックが見つかりません。別のキーワードを試してください。",
     "searchPlaceholder": "トピック・内容を検索...",
     "searchRequired": "検索するトピックまたは内容を入力してください",
     "searchTitle": "トピック検索",

@@ -63,7 +63,7 @@ function confirmEvaluate() {
           <span class="text-[15px] text-[var(--c-text)]">{{ t('evaluatePage.directSubmit') }}</span>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" v-model="isDirectSubmit" class="sr-only peer" />
-            <div class="w-11 h-6 bg-[var(--c-fill-3)] rounded-full peer-checked:bg-[var(--c-primary)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
+            <div class="w-11 h-6 bg-[var(--c-fill-3)] rounded-full peer-checked:bg-[var(--c-primary)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-[var(--c-surface)] after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
           </label>
         </div>
       </div>

@@ -1,6 +1,6 @@
 /* ============================================================
    社区功能统一设计令牌 (Community Design Tokens)
-   仅作用于社区模块，不影响教务系统/主系统的 WeUI 样式
+   仅作用于社区模块；品牌令牌统一由 style.css 定义
    ============================================================ */
 
 :root {
@@ -204,13 +204,13 @@
 }
 
 /* ============================================================
-   对话框 (覆盖 WeUI Dialog 以匹配社区风格)
+   对话框 (社区风格)
    ============================================================ */
 
 .community-dialog-mask {
   position: fixed;
   inset: 0;
-  background: rgb(10 20 17 / 48%);
+  background: var(--c-scrim);
   z-index: 1000;
   animation: community-fade-in 0.2s ease;
 }
@@ -445,8 +445,7 @@
   background: var(--c-primary) !important;
 }
 
-.community-delivery-page .text-red-500,
-.community-lostandfound-page [class*="text-[#f6383a]"] {
+.community-delivery-page .text-red-500 {
   color: var(--c-danger) !important;
 }
 

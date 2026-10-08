@@ -279,7 +279,7 @@ onUnmounted(() => {
               type="tel"
               maxlength="11"
               :placeholder="currentPhone ? t('bindPhonePage.phonePlaceholderNew') : t('bindPhonePage.phonePlaceholder')"
-              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none"
             />
           </div>
 
@@ -290,7 +290,7 @@ onUnmounted(() => {
               type="number"
               inputmode="numeric"
               :placeholder="t('bindPhonePage.verificationPlaceholder')"
-              class="flex-1 text-sm text-[var(--c-text-1)] outline-none placeholder-gray-400"
+              class="flex-1 text-sm text-[var(--c-text-1)] outline-none"
             />
             <button
               type="button"

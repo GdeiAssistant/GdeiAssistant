@@ -16,12 +16,9 @@ export function showErrorTopTips(message) {
   if (typeof document === 'undefined' || !document.body) return
   document.querySelector('[data-error-top-tip="true"]')?.remove()
 
-  const isDark = document.documentElement.dataset.theme === 'dark'
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 767
   const topOffset = isMobile ? 70 : 16
   const maxWidth = isMobile ? 'min(calc(100vw - 32px), 360px)' : 'min(calc(100vw - 24px), 520px)'
-  const iconBg = isDark ? 'rgba(255, 232, 163, 0.14)' : 'rgba(255, 237, 213, 0.92)'
-  const iconColor = isDark ? '#fcd34d' : '#b45309'
   const tip = document.createElement('div')
   tip.setAttribute('role', 'alert')
   tip.dataset.errorTopTip = 'true'
@@ -37,17 +34,15 @@ export function showErrorTopTips(message) {
     `max-width:${maxWidth}`,
     'padding:12px 16px',
     'border-radius:20px',
-    `border:1px solid ${isDark ? 'rgba(248, 113, 113, 0.24)' : 'rgba(251, 146, 60, 0.22)'}`,
-    `box-shadow:${isDark ? '0 18px 40px rgba(15,23,42,0.28)' : '0 18px 34px rgba(148, 64, 18, 0.12)'}`,
+    'border:1px solid var(--c-tip-border)',
+    'box-shadow:var(--c-tip-shadow)',
     'backdrop-filter:blur(18px)',
     'font-size:14px',
     'font-weight:700',
     'line-height:1.45',
     'text-align:left',
-    `color:${isDark ? '#fff1f2' : '#7c2d12'}`,
-    `background:${isDark
-      ? 'linear-gradient(135deg, rgba(84, 28, 28, 0.92), rgba(63, 24, 34, 0.94))'
-      : 'linear-gradient(135deg, rgba(255, 247, 237, 0.96), rgba(255, 241, 242, 0.94))'}`,
+    'color:var(--c-tip-text)',
+    'background:var(--c-tip-bg)',
     `transform:${'translate(-50%, -10px)'}`,
     'opacity:0',
     'transition:opacity 0.22s ease, transform 0.22s ease'
@@ -64,8 +59,8 @@ export function showErrorTopTips(message) {
     'justify-content:center',
     'flex:0 0 auto',
     'border-radius:999px',
-    `background:${iconBg}`,
-    `color:${iconColor}`,
+    'background:var(--c-tip-icon-bg)',
+    'color:var(--c-tip-icon)',
     'font-size:14px',
     'font-weight:900'
   ].join(';')

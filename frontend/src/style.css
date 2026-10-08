@@ -43,13 +43,14 @@
   --font-sans: 'PingFang SC', 'HarmonyOS Sans SC', 'MiSans', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
+  /* Radius scale: compact 4 / small 6 / control 10 / card 14 / sheet 20 / pill full */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 10px;
   --radius-xl: 14px;
-  --radius-2xl: 14px;
-  --radius-3xl: 14px;
+  --radius-2xl: 20px;
+  --radius-3xl: 9999px;
   --radius-full: 9999px;
 }
 
@@ -77,6 +78,8 @@
 
   --radius-card: 14px;
   --radius-control: 10px;
+  --radius-compact: 6px;
+  --radius-sheet: 20px;
 
   /* Derived aliases kept for existing components */
   --c-primary-50: var(--c-primary-soft);
@@ -100,6 +103,25 @@
   --c-cyan: #4F8796;
   --c-orange: #A9844A;
 
+  /* Shared scrim behind modal layers (dark in both themes so content above stays readable) */
+  --c-scrim: rgb(10 20 17 / 48%);
+
+  /* Timetable course block palette: content colors for distinguishing courses */
+  --c-course-1: #2F8FA6;
+  --c-course-2: #17937E;
+  --c-course-3: #C38A49;
+  --c-course-4: #C56E64;
+  --c-course-5: #6E88C9;
+  --c-course-6: #C78BA3;
+  --c-course-7: #3A9FB4;
+  --c-course-8: #D08A63;
+  --c-course-9: #5C86BE;
+  --c-course-10: #2F9E95;
+  --c-course-11: #B96F84;
+  --c-course-12: #7B8FCB;
+  --c-course-13: #4F9EC4;
+  --c-course-14: #83A85D;
+
   /* Community module tag colors: low saturation, only for small marks */
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);
@@ -109,6 +131,18 @@
   --c-delivery: var(--c-primary);
   --c-dating: var(--c-primary);
   --c-photograph: var(--c-primary);
+
+  /* Solid deep brand surface (login visual column) */
+  --c-brand-deep: #0A7559;
+  --c-on-brand-deep: #FFFFFF;
+
+  /* Imperative top warning tip (utils/toast.js inline styles) */
+  --c-tip-bg: linear-gradient(135deg, rgba(255, 247, 237, 0.96), rgba(255, 241, 242, 0.94));
+  --c-tip-border: rgba(251, 146, 60, 0.22);
+  --c-tip-shadow: 0 18px 34px rgba(148, 64, 18, 0.12);
+  --c-tip-text: #7C2D12;
+  --c-tip-icon-bg: rgba(255, 237, 213, 0.92);
+  --c-tip-icon: #B45309;
 
   /* Green-gray tinted shadows */
   --shadow-sm: 0 1px 2px rgb(17 32 28 / 4%), 0 2px 8px rgb(17 32 28 / 4%);
@@ -121,6 +155,8 @@
   --space-md: 12px;
   --space-lg: 16px;
   --space-xl: 24px;
+  --space-20: 20px;
+  --space-32: 32px;
 
   /* Font sizes */
   --font-xs: 11px;
@@ -179,6 +215,36 @@
   --c-cyan: #84B5C2;
   --c-orange: #D2AE72;
 
+  --c-scrim: rgb(10 20 17 / 48%);
+
+  /* Solid deep brand surface (login visual column) */
+  --c-brand-deep: #0F3A2E;
+  --c-on-brand-deep: #FFFFFF;
+
+  /* Imperative top warning tip (utils/toast.js inline styles) */
+  --c-tip-bg: linear-gradient(135deg, rgba(84, 28, 28, 0.92), rgba(63, 24, 34, 0.94));
+  --c-tip-border: rgba(248, 113, 113, 0.24);
+  --c-tip-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+  --c-tip-text: #FFF1F2;
+  --c-tip-icon-bg: rgba(255, 232, 163, 0.14);
+  --c-tip-icon: #FCD34D;
+
+  /* Dark timetable course blocks: same hues, darkened to sit on the dark surface */
+  --c-course-1: #2A6E7E;
+  --c-course-2: #1E6B5C;
+  --c-course-3: #8A6536;
+  --c-course-4: #8A5049;
+  --c-course-5: #55679B;
+  --c-course-6: #8F6076;
+  --c-course-7: #2E7484;
+  --c-course-8: #8F5F42;
+  --c-course-9: #4A6891;
+  --c-course-10: #28796F;
+  --c-course-11: #7E5261;
+  --c-course-12: #5E6E99;
+  --c-course-13: #3E7186;
+  --c-course-14: #61794A;
+
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);
   --c-secret: var(--c-primary);
@@ -194,6 +260,18 @@
 }
 
 /* ── Base Resets ────────────────────────────────────────── */
+
+/* Fixed samples for theme-preview swatches: they depict both palettes and
+   therefore must not flip with the active theme. */
+:root {
+  --c-preview-bg: #F4F7F6;
+  --c-preview-line: #DBE4E0;
+  --c-preview-dark-bg: #0E1513;
+  --c-preview-dark-surface: #26332F;
+  --c-preview-muted: #9AA8A3;
+  --c-preview-brand: #0E8F6E;
+  --c-preview-brand-dark: #34C79A;
+}
 
 :root {
   font-family: var(--font-sans);
@@ -266,6 +344,15 @@ a:focus-visible {
   box-shadow: var(--shadow-sm);
 }
 
+/* Unified press feedback: quick 0.12s scale-down on activation */
+.campus-press {
+  transition: transform 0.12s ease;
+}
+
+.campus-press:active {
+  transform: scale(0.98);
+}
+
 .campus-page-title {
   color: var(--c-text-1);
   font-size: 20px;
@@ -336,88 +423,6 @@ select {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-}
-
-/* ── Dark compatibility for legacy Tailwind utility pages ───
-   Several account sub-pages still use fixed Tailwind gray/white utilities
-   instead of design tokens. Limit the remap to screens rooted at bg-gray-50
-   so community cards and white icon marks are not affected globally. */
-[data-theme="dark"] .bg-gray-50 {
-  background-color: var(--c-bg) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .bg-white {
-  background-color: var(--c-surface) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .bg-gray-50 {
-  background-color: var(--c-surface-hover) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .bg-gray-100 {
-  background-color: var(--c-border-light) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .bg-gray-200 {
-  background-color: var(--c-fill-3) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .text-black,
-[data-theme="dark"] .bg-gray-50 .text-gray-900,
-[data-theme="dark"] .bg-gray-50 .text-gray-700,
-[data-theme="dark"] .bg-gray-50 .text-gray-600 {
-  color: var(--c-text-1) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .text-gray-500 {
-  color: var(--c-text-2) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .text-gray-400 {
-  color: var(--c-text-3) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .placeholder-gray-400::placeholder {
-  color: var(--c-text-3) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .border-gray-100,
-[data-theme="dark"] .bg-gray-50 .border-gray-200,
-[data-theme="dark"] .bg-gray-50 .border-gray-300 {
-  border-color: var(--c-border) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
-  border-color: var(--c-divider) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .divide-gray-100 > :not(:last-child) {
-  border-color: var(--c-divider) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .shadow-sm {
-  box-shadow: var(--shadow-sm) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .bg-green-500,
-[data-theme="dark"] .bg-gray-50 .bg-emerald-500 {
-  background-color: var(--c-primary) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .text-green-500,
-[data-theme="dark"] .bg-gray-50 .text-emerald-500 {
-  color: var(--c-primary) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 .border-green-500,
-[data-theme="dark"] .bg-gray-50 .border-emerald-500 {
-  border-color: var(--c-primary) !important;
-}
-
-[data-theme="dark"] .bg-gray-50 input,
-[data-theme="dark"] .bg-gray-50 textarea,
-[data-theme="dark"] .bg-gray-50 select {
-  color: var(--c-text-1);
 }
 
 /* Social views follow the campus palette and keep text readable on both themes. */
@@ -611,7 +616,7 @@ select {
 }
 
 .ui-scrim {
-  background-color: rgb(10 20 17 / 48%) !important;
+  background-color: var(--c-scrim) !important;
   backdrop-filter: none !important;
 }
 
@@ -670,8 +675,11 @@ textarea.ui-control { min-height: 96px; }
 @media (prefers-reduced-motion: reduce) {
   .ui-btn-primary,
   .ui-control,
+  .campus-press,
   .subpage-bar__back,
   .subpage-bar__action { transition: none; }
+
+  .campus-press:active { transform: none; }
 }
 
 /* 社区模块色已统一为品牌主色：主色底上的白字跟随 on-primary，保证暗色模式对比度 */

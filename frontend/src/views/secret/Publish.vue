@@ -7,6 +7,15 @@ import { useRouter } from 'vue-router'
 
 import { uploadFileByPresignedUrl } from '../../utils/presignedUpload'
 import { useToast } from '@/composables/useToast'
+import { useThemeMode } from '../../composables/useThemeMode'
+import {
+  getThemeBg,
+  getThemeTextColor,
+  getThemeMutedTextColor,
+  getThemeAccentColor,
+  getThemeCardChrome,
+  useLightVoiceAsset
+} from '../../utils/secretPalette'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import {
   createSecretSwitchCopy,
@@ -39,9 +48,7 @@ const previewPlaying = ref(false)
 const recordedAudioUrl = ref('')
 const recordedAudioFile = ref(null)
 const recordSeconds = ref(0)
-const activeThemeMode = ref(typeof document !== 'undefined'
-  ? (document.documentElement.getAttribute('data-theme') || 'light')
-  : 'light')
+const isDark = useThemeMode()
 
 let mediaRecorder = null
 let mediaStream = null
@@ -51,7 +58,6 @@ let volumeAnimationId = 0
 let recordTimer = null
 let previewAudio = null
 let recordedChunks = []
-let themeObserver = null
 
 const switchCopy = computed(() => createSecretSwitchCopy(t))
 const voiceState = computed(() => getSecretVoiceState(voiceStateKey.value, t, voiceStateParams.value))
@@ -366,100 +372,19 @@ const remainingChars = computed(() => {
   return 100 - formData.value.content.length
 })
 
-const themeColors = {
-  1: 'var(--c-surface)',
-  2: '#595959',
-  3: '#f5d676',
-  4: '#f69695',
-  5: '#c6a8c1',
-  6: '#89cdcb',
-  7: '#90cce2',
-  8: '#6e7e90',
-  9: '#61ae97',
-  10: '#d3cd72',
-  11: '#e8d5a8',
-  12: '#daa6a1'
-}
-
-const darkThemeColors = {
-  1: 'rgba(28, 38, 52, 0.98)',
-  2: '#464b57',
-  3: '#716b3f',
-  4: '#75515e',
-  5: '#64536f',
-  6: '#477071',
-  7: '#4a6278',
-  8: '#475362',
-  9: '#42665d',
-  10: '#72693e',
-  11: '#786650',
-  12: '#755a56'
-}
-
-const darkThemeAccentColors = {
-  1: '#9aa7bd',
-  2: '#d9e1ef',
-  3: '#f0e29a',
-  4: '#f3c3d1',
-  5: '#dcc7f0',
-  6: '#b8ece8',
-  7: '#bfd8f5',
-  8: '#d4dceb',
-  9: '#b8ead3',
-  10: '#f2df93',
-  11: '#f1dec4',
-  12: '#f2cbc4'
-}
-
-function isDarkTheme() {
-  return activeThemeMode.value === 'dark'
-}
-
-function getThemeBg(theme) {
-  if (isDarkTheme()) return darkThemeColors[theme] || darkThemeColors[1]
-  return themeColors[theme] || 'var(--c-surface)'
-}
-
-function getThemeTextColor(theme) {
-  if (isDarkTheme()) return theme === 1 ? 'var(--c-text-1)' : '#f8fafc'
-  return theme === 1 ? '#111827' : '#ffffff'
-}
-
-function getThemeMutedTextColor(theme) {
-  if (isDarkTheme()) {
-    return theme === 1 ? 'rgba(148, 163, 184, 0.88)' : 'rgba(241, 245, 249, 0.72)'
-  }
-  return theme === 1 ? '#9ca3af' : 'rgba(255,255,255,0.76)'
-}
-
-function getThemeAccentColor(theme) {
-  if (isDarkTheme()) return darkThemeAccentColors[theme] || '#dbeafe'
-  return theme === 1 ? 'var(--c-secret)' : '#ffffff'
-}
-
-function getThemeCardChrome(theme) {
-  if (isDarkTheme()) {
-    return theme === 1 ? 'rgba(148, 163, 184, 0.18)' : 'rgba(255, 255, 255, 0.14)'
-  }
-  return theme === 1 ? 'rgba(15, 23, 42, 0.08)' : 'rgba(0, 0, 0, 0.1)'
-}
-
-function useLightVoiceAsset(theme) {
-  return isDarkTheme() || theme !== 1
-}
+const noteBg = (theme) => getThemeBg(theme, isDark.value)
+const noteText = (theme) => getThemeTextColor(theme, isDark.value)
+const noteMutedText = (theme) => getThemeMutedTextColor(theme, isDark.value)
+const noteAccent = (theme) => getThemeAccentColor(theme, isDark.value)
+const noteChrome = (theme) => getThemeCardChrome(theme, isDark.value)
+const noteVoiceAsset = (theme) => useLightVoiceAsset(theme, isDark.value)
 
 onMounted(() => {
   const rand = Math.ceil(Math.random() * 12)
   formData.value.theme = rand
-  themeObserver = new MutationObserver(() => {
-    activeThemeMode.value = document.documentElement.getAttribute('data-theme') || 'light'
-  })
-  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 })
 
 onBeforeUnmount(() => {
-  themeObserver?.disconnect()
-  themeObserver = null
   stopPreviewAudio()
   if (recording.value) {
     stopRecord()
@@ -478,16 +403,16 @@ onBeforeUnmount(() => {
 
     <div
       class="secret-note-editor relative rounded-lg mx-2.5 pb-5 border-l-4 border-[var(--c-secret)]"
-      :style="{ backgroundColor: getThemeBg(formData.theme), color: getThemeTextColor(formData.theme) }"
+      :style="{ backgroundColor: noteBg(formData.theme), color: noteText(formData.theme) }"
     >
       <form>
-        <header class="leading-10 text-center font-bold text-base border-b relative" :style="{ borderColor: getThemeCardChrome(formData.theme) }">
+        <header class="leading-10 text-center font-bold text-base border-b relative" :style="{ borderColor: noteChrome(formData.theme) }">
           <i
             class="inline-block w-10 h-10 bg-[length:1rem] bg-center bg-no-repeat align-middle absolute left-0 cursor-pointer bg-[url('/img/secret/back1.png')] opacity-85"
             @click="router.back()"
           ></i>
           <span class="inline-block">{{ t('secret.publish.cardTitle') }}</span>
-          <label class="absolute right-4 top-0 cursor-pointer" :style="{ color: getThemeAccentColor(formData.theme) }" @click="submit">{{ submitting ? t('secret.publish.submitting') : t('secret.publish.submitAction') }}</label>
+          <label class="absolute right-4 top-0 cursor-pointer" :style="{ color: noteAccent(formData.theme) }" @click="submit">{{ submitting ? t('secret.publish.submitting') : t('secret.publish.submitAction') }}</label>
         </header>
         <div class="h-[284px] relative text-center">
           <div
@@ -501,11 +426,11 @@ onBeforeUnmount(() => {
             <img
               width="50px"
               height="50px"
-              :src="useLightVoiceAsset(formData.theme) ? '/img/secret/voice_normal.png' : '/img/secret/voice_normal_white.png'"
+              :src="noteVoiceAsset(formData.theme) ? '/img/secret/voice_normal.png' : '/img/secret/voice_normal_white.png'"
               :alt="t('secret.voiceAlt')"
             />
             <br>
-            <span :style="{ color: getThemeMutedTextColor(formData.theme) }">
+            <span :style="{ color: noteMutedText(formData.theme) }">
               {{ voiceHint }}
             </span>
           </div>
@@ -518,7 +443,7 @@ onBeforeUnmount(() => {
               :placeholder="t('secret.publish.placeholder')"
               class="text-center w-full mx-auto border-none text-lg overflow-x-hidden leading-6 bg-inherit text-inherit h-auto p-5 resize-none outline-none placeholder:text-inherit placeholder:leading-6 placeholder:opacity-60"
             ></textarea>
-            <div class="absolute bottom-2.5 right-4 text-sm" :style="{ color: getThemeMutedTextColor(formData.theme) }">{{ remainingChars }}</div>
+            <div class="absolute bottom-2.5 right-4 text-sm" :style="{ color: noteMutedText(formData.theme) }">{{ remainingChars }}</div>
           </div>
         </div>
       </form>
@@ -566,7 +491,7 @@ onBeforeUnmount(() => {
           v-for="i in 6"
           :key="i"
           class="flex-1 h-[2.7rem] relative rounded cursor-pointer"
-          :style="{ backgroundColor: getThemeBg(i) }"
+          :style="{ backgroundColor: noteBg(i) }"
           @click="selectTheme(i)"
         >
           <i v-if="formData.theme === i" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-[var(--c-primary)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>
@@ -577,7 +502,7 @@ onBeforeUnmount(() => {
           v-for="i in 6"
           :key="i + 6"
           class="flex-1 h-[2.7rem] relative rounded cursor-pointer"
-          :style="{ backgroundColor: getThemeBg(i + 6) }"
+          :style="{ backgroundColor: noteBg(i + 6) }"
           @click="selectTheme(i + 6)"
         >
           <i v-if="formData.theme === i + 6" class="inline-flex items-center justify-center w-6 h-6 absolute -right-2 -top-2 rounded-full bg-[var(--c-primary)] before:content-[''] before:w-[0.38rem] before:h-[0.72rem] before:border-r-2 before:border-b-2 before:border-white before:rotate-45 before:-translate-x-[8%] before:-translate-y-[8%]"></i>

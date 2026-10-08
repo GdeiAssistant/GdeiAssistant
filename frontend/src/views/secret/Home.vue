@@ -6,6 +6,14 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { useScrollLoad } from '../../composables/useScrollLoad'
+import { useThemeMode } from '../../composables/useThemeMode'
+import {
+  getThemeBg,
+  getThemeTextColor,
+  getFooterBg,
+  getFooterTextColor,
+  resolveNoteTheme
+} from '../../utils/secretPalette'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { createCommunityPullMessages } from '../community/communityContent'
@@ -56,44 +64,18 @@ function toggleLike(item) {
   }
 }
 
-const themeColors = {
-  1: 'var(--c-surface)',
-  2: '#595959',
-  3: '#f7df8e',
-  4: '#f6b7bd',
-  5: '#d8c4df',
-  6: '#b5dfdd',
-  7: '#bddff0',
-  8: '#6e7e90',
-  9: '#b8dfcf',
-  10: '#e6dc97',
-  11: '#eadfc4',
-  12: '#e7c2bd'
-}
-const lightNoteThemes = new Set([1, 3, 4, 5, 6, 7, 9, 10, 11, 12])
-
-function getThemeBg(theme) {
-  return themeColors[theme] || 'var(--c-surface)'
-}
-
-function getThemeTextColor(theme) {
-  return lightNoteThemes.has(Number(theme)) ? '#3f3359' : '#fff'
-}
-
-function getFooterBg(theme) {
-  return theme === 1 ? 'rgba(0,0,0,0.05)' : 'rgba(0,0,0,0.1)'
-}
-
-function getFooterTextColor(theme) {
-  return lightNoteThemes.has(Number(theme)) ? '#6a5a78' : '#fff'
-}
+const isDark = useThemeMode()
+const noteBg = (theme) => getThemeBg(theme, isDark.value)
+const noteText = (theme) => getThemeTextColor(theme, isDark.value)
+const noteFooterBg = (theme) => getFooterBg(theme, isDark.value)
+const noteFooterText = (theme) => getFooterTextColor(theme, isDark.value)
 
 function getPregoodIcon(theme) {
-  return theme === 1 ? '/img/secret/grayg.png' : '/img/secret/pregood.png'
+  return resolveNoteTheme(theme) ? '/img/secret/pregood.png' : '/img/secret/grayg.png'
 }
 
 function getCommentIcon(theme) {
-  return theme === 1 ? '/img/secret/grayc.png' : '/img/secret/comment.png'
+  return resolveNoteTheme(theme) ? '/img/secret/comment.png' : '/img/secret/grayc.png'
 }
 
 onMounted(() => {
@@ -146,7 +128,7 @@ onMounted(() => {
           :key="item.id"
           :id="item.id"
           class="community-desktop-note-card mx-2.5 my-5 text-center text-[17px] leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
-          :style="{ backgroundColor: getThemeBg(item.theme || 1), color: getThemeTextColor(item.theme || 1), animationDelay: index * 0.05 + 's' }"
+          :style="{ backgroundColor: noteBg(item.theme), color: noteText(item.theme), animationDelay: index * 0.05 + 's' }"
         >
           <a href="javascript:;" class="community-secret-note-link block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">
             <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
@@ -175,11 +157,11 @@ onMounted(() => {
           </a>
           <footer
             class="h-[42px] absolute bottom-0 left-0 w-full text-[0] rounded-b-lg"
-            :style="{ backgroundColor: getFooterBg(item.theme || 1) }"
+            :style="{ backgroundColor: noteFooterBg(item.theme) }"
           >
             <div
               class="w-1/2 inline-block text-base leading-10 cursor-pointer"
-              :style="{ color: getFooterTextColor(item.theme || 1) }"
+              :style="{ color: noteFooterText(item.theme) }"
             >
               <i
                 class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"
@@ -191,7 +173,7 @@ onMounted(() => {
             <a href="javascript:;" class="no-underline" @click.stop="goDetail(item.id)">
               <div
                 class="w-1/2 inline-block text-base leading-10 cursor-pointer"
-                :style="{ color: getFooterTextColor(item.theme || 1) }"
+                :style="{ color: noteFooterText(item.theme) }"
               >
                 <i
                   class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"

@@ -205,12 +205,8 @@ function handleThirdPartyLogin(type) {
   justify-content: space-between;
   overflow: hidden;
   padding: 40px 48px;
-  background: #0A7559;
-  color: #fff;
-}
-
-[data-theme="dark"] .login-visual {
-  background: #0F3A2E;
+  background: var(--c-brand-deep);
+  color: var(--c-on-brand-deep);
 }
 
 .login-visual__grid {
@@ -218,7 +214,7 @@ function handleThirdPartyLogin(type) {
   inset: 0;
   width: 100%;
   height: 100%;
-  color: rgb(255 255 255 / 7%);
+  color: color-mix(in srgb, var(--c-on-brand-deep) 7%, transparent);
   pointer-events: none;
 }
 
@@ -232,7 +228,7 @@ function handleThirdPartyLogin(type) {
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  box-shadow: 0 0 0 1px rgb(255 255 255 / 18%);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--c-on-brand-deep) 18%, transparent);
 }
 
 .login-visual__card {
@@ -241,7 +237,7 @@ function handleThirdPartyLogin(type) {
 
 .login-visual h2 {
   margin: 0;
-  color: #fff;
+  color: var(--c-on-brand-deep);
   font-size: clamp(36px, 4.4vw, 56px);
   font-weight: 700;
   letter-spacing: -0.01em;
@@ -414,8 +410,8 @@ function handleThirdPartyLogin(type) {
   width: 18px;
   height: 18px;
   border-radius: 999px;
-  background: #fff;
-  box-shadow: 0 1px 2px rgb(17 32 28 / 20%);
+  background: var(--c-on-brand-deep);
+  box-shadow: 0 1px 2px var(--c-shadow);
   transition: transform 0.15s ease;
 }
 

@@ -118,7 +118,7 @@ watch(
         <div
           v-for="item in list"
           :key="item.id"
-          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform active:scale-[0.985] overflow-hidden cursor-pointer"
+          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
@@ -175,7 +175,7 @@ watch(
 }
 
 [data-theme="dark"] .marketplace-price {
-  color: color-mix(in srgb, var(--c-warning) 78%, #fde68a);
+  color: var(--c-warning);
 }
 
 </style>

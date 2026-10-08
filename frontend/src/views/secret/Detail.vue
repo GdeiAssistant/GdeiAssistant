@@ -6,6 +6,15 @@ import { ref, onMounted, computed, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
+import { useThemeMode } from '../../composables/useThemeMode'
+import {
+  getThemeBg,
+  getThemeTextColor,
+  getFooterBg,
+  getFooterTextColor,
+  resolveNoteTheme,
+  useLightVoiceAsset
+} from '../../utils/secretPalette'
 import CommunityHeader from '../../components/community/CommunityHeader.vue'
 
 const route = useRoute()
@@ -227,47 +236,31 @@ const showSubmitBtn = computed(() => {
   return commentText.value && commentText.value.trim().length > 0
 })
 
-const themeColors = {
-  1: 'var(--c-surface)',
-  2: '#595959',
-  3: '#f5d676',
-  4: '#f69695',
-  5: '#c6a8c1',
-  6: '#89cdcb',
-  7: '#90cce2',
-  8: '#6e7e90',
-  9: '#61ae97',
-  10: '#d3cd72',
-  11: '#e8d5a8',
-  12: '#daa6a1'
-}
-
-function getThemeBg(theme) {
-  return themeColors[theme] || 'var(--c-surface)'
-}
-
-function getThemeTextColor(theme) {
-  return theme === 1 ? 'var(--c-text-1)' : '#fff'
-}
-
-function getFooterBg(theme) {
-  return theme === 1 ? 'var(--c-fill-2)' : 'rgba(0,0,0,0.1)'
-}
-
-function getFooterTextColor(theme) {
-  return theme === 1 ? 'var(--c-text-2)' : '#fff'
-}
+const isDark = useThemeMode()
+const noteBg = (theme) => getThemeBg(theme, isDark.value)
+const noteText = (theme) => getThemeTextColor(theme, isDark.value)
+const noteFooterBg = (theme) => getFooterBg(theme, isDark.value)
+const noteFooterText = (theme) => getFooterTextColor(theme, isDark.value)
 
 function getPregoodIcon(theme) {
-  return theme === 1 ? '/img/secret/grayg.png' : '/img/secret/pregood.png'
+  return resolveNoteTheme(theme) ? '/img/secret/pregood.png' : '/img/secret/grayg.png'
 }
 
 function getCommentIcon(theme) {
-  return theme === 1 ? '/img/secret/grayc.png' : '/img/secret/comment.png'
+  return resolveNoteTheme(theme) ? '/img/secret/comment.png' : '/img/secret/grayc.png'
 }
 
 function getProgressBg(theme) {
-  return theme === 1 ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.3)'
+  const note = resolveNoteTheme(theme)
+  if (!note) return 'var(--c-border-light)'
+  return note.light ? 'rgba(17, 32, 28, 0.14)' : 'rgba(255, 255, 255, 0.3)'
+}
+
+function voiceIcon(playingState) {
+  if (playingState) return '/img/secret/voice_pressed.png'
+  return useLightVoiceAsset(secret?.theme, isDark.value)
+    ? '/img/secret/voice_normal.png'
+    : '/img/secret/voice_normal_white.png'
 }
 
 onMounted(async () => {
@@ -295,7 +288,7 @@ onBeforeUnmount(() => {
       <div
         :id="secret.id"
         class="mx-2.5 mt-5 text-center text-[17px] leading-[25px] relative h-[240px] rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm"
-        :style="{ backgroundColor: getThemeBg(secret.theme || 1), color: getThemeTextColor(secret.theme || 1) }"
+        :style="{ backgroundColor: noteBg(secret.theme), color: noteText(secret.theme) }"
       >
         <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
           <template v-if="secret.type === 0">
@@ -303,18 +296,9 @@ onBeforeUnmount(() => {
           </template>
           <template v-else>
             <img
-              v-if="secret.theme === 1"
               width="50px"
               height="50px"
-              :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal_white.png'"
-              class="w-12 h-12 mx-auto"
-              :alt="t('secret.voiceAlt')"
-            />
-            <img
-              v-else
-              width="50px"
-              height="50px"
-              :src="playing ? '/img/secret/voice_pressed.png' : '/img/secret/voice_normal.png'"
+              :src="voiceIcon(playing)"
               class="w-12 h-12 mx-auto"
               :alt="t('secret.voiceAlt')"
             />
@@ -331,11 +315,11 @@ onBeforeUnmount(() => {
         </section>
         <footer
           class="h-[42px] absolute bottom-0 left-0 w-full text-[0] rounded-b-lg"
-          :style="{ backgroundColor: getFooterBg(secret.theme || 1) }"
+          :style="{ backgroundColor: noteFooterBg(secret.theme) }"
         >
           <div
             class="w-1/2 inline-block text-base leading-10 cursor-pointer"
-            :style="{ color: getFooterTextColor(secret.theme || 1) }"
+            :style="{ color: noteFooterText(secret.theme) }"
           >
             <i
               class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"
@@ -346,7 +330,7 @@ onBeforeUnmount(() => {
           </div>
           <div
             class="w-1/2 inline-block text-base leading-10 cursor-pointer"
-            :style="{ color: getFooterTextColor(secret.theme || 1) }"
+            :style="{ color: noteFooterText(secret.theme) }"
           >
             <i
               class="inline-block h-10 w-10 bg-no-repeat bg-[length:1.1rem] bg-center align-middle"

@@ -108,7 +108,13 @@
     "todayDeliveryMeta": "移動",
     "greetingMorning": "おはようございます",
     "greetingAfternoon": "こんにちは",
-    "greetingEvening": "こんばんは"
+    "greetingEvening": "こんばんは",
+    "todayCourseCount": "今日の授業 {count} コマ",
+    "todayOpenSchedule": "時間割を開く",
+    "todayNoCourse": "今日は授業がありません。",
+    "todayUnavailable": "時間割を取得できません。時間割ページで再試行してください。",
+    "todayUnread": "未読メッセージ {count} 件",
+    "todayAllRead": "未読メッセージはありません"
   },
   "profile": {
     "title": "マイページ",

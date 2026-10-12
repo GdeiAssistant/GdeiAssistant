@@ -70,7 +70,7 @@
     }
   },
   "tab": {
-    "home": "功能主頁",
+    "home": "首頁",
     "info": "訊息",
     "profile": "個人中心"
   },
@@ -108,7 +108,13 @@
     "todayDeliveryMeta": "去處理",
     "greetingMorning": "早晨",
     "greetingAfternoon": "下午好",
-    "greetingEvening": "晚上好"
+    "greetingEvening": "晚上好",
+    "todayCourseCount": "今日 {count} 節課",
+    "todayOpenSchedule": "完整課表",
+    "todayNoCourse": "今日沒有課，好好休息。",
+    "todayUnavailable": "課表暫時無法取得，可開啟課表頁重試。",
+    "todayUnread": "{count} 則未讀訊息",
+    "todayAllRead": "暫無未讀訊息"
   },
   "profile": {
     "title": "個人中心",

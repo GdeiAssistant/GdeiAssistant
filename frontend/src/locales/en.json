@@ -182,7 +182,13 @@
     "todayDeliveryMeta": "Go",
     "greetingMorning": "Good morning",
     "greetingAfternoon": "Good afternoon",
-    "greetingEvening": "Good evening"
+    "greetingEvening": "Good evening",
+    "todayCourseCount": "Classes today: {count}",
+    "todayOpenSchedule": "Full timetable",
+    "todayNoCourse": "No classes today. Enjoy the break.",
+    "todayUnavailable": "Timetable is unavailable right now. Open the timetable to retry.",
+    "todayUnread": "Unread messages: {count}",
+    "todayAllRead": "No unread messages"
   },
   "profile": {
     "title": "Profile",

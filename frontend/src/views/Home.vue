@@ -5,7 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, getLocalizedFeatures } from '@/constants/features'
 import { getSchedule } from '@/api/schedule'
 import { useLatestRequest } from '@/composables/useLatestRequest'
-import { selectTodayCourses, todayColumn } from './homeToday'
+import { campusDateLabel, selectTodayCourses, todayColumn } from './homeToday'
 import {
   ArrowRight, Calendar, CalendarCheck, Database, DoorOpen,
   Dumbbell, Eye, FileText, GraduationCap, Heart, Info as InfoIcon, MessageCircle,
@@ -63,6 +63,7 @@ onActivated(loadFeaturesConfig)
 // 今日课程：静默读取课表（后端有缓存），失败时只给出入口，不弹全局错误
 const todayState = ref('loading') // loading | ready | unavailable
 const todayCourses = ref([])
+const todayDate = ref(new Date())
 const todayRequest = useLatestRequest()
 
 async function loadTodayCourses() {
@@ -71,8 +72,13 @@ async function loadTodayCourses() {
   try {
     const res = await getSchedule(undefined, { signal: task.signal, skipErrorTip: true })
     if (!task.isCurrent()) return
-    if (res && res.success && res.data) {
-      todayCourses.value = selectTodayCourses(res.data.scheduleList, res.data.week ?? null, todayColumn())
+    const date = new Date()
+    todayDate.value = date
+    const courses = res?.success && res.data
+      ? selectTodayCourses(res.data.scheduleList, res.data.week, todayColumn(date))
+      : null
+    if (courses !== null) {
+      todayCourses.value = courses
       todayState.value = 'ready'
     } else {
       todayState.value = 'unavailable'
@@ -151,7 +157,7 @@ const greetingKey = computed(() => {
 
 const todayLabel = computed(() => {
   try {
-    return new Intl.DateTimeFormat(locale.value, { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date())
+    return campusDateLabel(todayDate.value, locale.value)
   } catch (_) {
     return ''
   }

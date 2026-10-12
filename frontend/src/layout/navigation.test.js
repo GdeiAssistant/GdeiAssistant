@@ -14,7 +14,8 @@ describe('layout navigation i18n', () => {
   const t = (key) => messages[key] ?? key
 
   it('creates sidebar labels from translation keys', () => {
-    expect(createNavItems(t).map((item) => item.label)).toEqual(['Home', 'Info'])
+    expect(createNavItems(t).map((item) => item.label)).toEqual(['Home'])
+    expect(createNavItems(t).map((item) => item.path)).toEqual(['/home'])
     expect(createFooterItems(t).map((item) => item.label)).toEqual(['Settings', 'About'])
   })
 

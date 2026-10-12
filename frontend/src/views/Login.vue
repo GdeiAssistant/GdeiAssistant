@@ -7,6 +7,8 @@ import { login } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
 import { isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
 import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD, getMockCredentialsHint } from '@/constants/mock.js'
+import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
+import { setLocale } from '@/i18n'
 
 const router = useRouter()
 const { t, locale } = useI18n()
@@ -18,6 +20,12 @@ const password = ref('')
 const isDev = import.meta.env.DEV
 const mockMode = ref(isMockMode())
 const campusCredentialConsent = ref(false)
+
+// 未登录时也能切换语言：浏览器语言自动识别可能不是用户想要的
+const localeOptions = LOCALE_OPTIONS
+function onLocaleChange(event) {
+  setLocale(resolveSupportedLocale(event.target.value))
+}
 
 function fillMockCredentials() {
   username.value = MOCK_ACCOUNT_USERNAME
@@ -103,6 +111,13 @@ function handleThirdPartyLogin(type) {
           <p>{{ t('loginPage.subtitle') }}</p>
         </div>
       </div>
+
+      <label class="login-locale">
+        <span>{{ t('appearance.language.label') }}</span>
+        <select :value="locale" @change="onLocaleChange">
+          <option v-for="option in localeOptions" :key="option.code" :value="option.code" :lang="option.code">{{ option.label }}</option>
+        </select>
+      </label>
 
       <div class="login-panel__notice">
         {{ t('loginPage.credentialNotice') }}
@@ -242,6 +257,33 @@ function handleThirdPartyLogin(type) {
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.1;
+}
+
+/* Language switch, available before sign-in */
+.login-locale {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 8px;
+  margin-bottom: -8px;
+  color: var(--c-text-2);
+  font-size: 13px;
+}
+
+.login-locale select {
+  min-height: 36px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control, 10px);
+  background: var(--c-surface);
+  color: var(--c-text-1);
+  font: inherit;
+  font-size: 13px;
+  padding: 0 8px;
+}
+
+.login-locale select:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
 }
 
 /* Form column */

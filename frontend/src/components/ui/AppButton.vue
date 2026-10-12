@@ -36,7 +36,7 @@ const buttonVariants = cva(
         destructive: 'bg-[var(--c-danger)] text-[var(--c-on-primary)] hover:bg-[color-mix(in_srgb,var(--c-danger)_88%,var(--c-text-1))]',
       },
       size: {
-        sm: 'text-[13px] min-h-9 px-3.5',
+        sm: 'text-callout min-h-9 px-3.5',
         md: 'text-sm min-h-11 px-5',
       },
     },

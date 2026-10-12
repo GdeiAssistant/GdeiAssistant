@@ -127,7 +127,7 @@ onMounted(() => {
           v-for="(item, index) in list"
           :key="item.id"
           :id="item.id"
-          class="community-desktop-note-card mx-2.5 my-5 text-center text-[17px] leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
+          class="community-desktop-note-card mx-2.5 my-5 text-center text-headline leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
           :style="{ backgroundColor: noteBg(item.theme), color: noteText(item.theme), animationDelay: index * 0.05 + 's' }"
         >
           <a href="javascript:;" class="community-secret-note-link block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">

@@ -74,7 +74,7 @@ async function handleConfirmDelete() {
       </label>
       <!-- Risk list -->
       <div class="delete-account-card rounded-xl p-5 mb-3">
-        <p class="text-[15px] font-medium text-[var(--c-text-1)] mb-4">{{ t('deleteAccount.riskTitle') }}</p>
+        <p class="text-body font-medium text-[var(--c-text-1)] mb-4">{{ t('deleteAccount.riskTitle') }}</p>
         <ul class="space-y-2 mb-4">
           <li class="delete-account-risk-item text-sm leading-relaxed pl-5 relative">{{ t('deleteAccount.risk.account') }}</li>
           <li class="delete-account-risk-item text-sm leading-relaxed pl-5 relative">{{ t('deleteAccount.risk.posts') }}</li>
@@ -83,7 +83,7 @@ async function handleConfirmDelete() {
           <li class="delete-account-risk-item text-sm leading-relaxed pl-5 relative">{{ t('deleteAccount.risk.community') }}</li>
           <li class="delete-account-risk-item text-sm leading-relaxed pl-5 relative">{{ t('deleteAccount.risk.identity') }}</li>
         </ul>
-        <p class="delete-account-card__warning text-[13px] font-medium pt-4">{{ t('deleteAccount.irreversible') }}</p>
+        <p class="delete-account-card__warning text-callout font-medium pt-4">{{ t('deleteAccount.irreversible') }}</p>
       </div>
 
       <!-- Agreement checkbox -->
@@ -104,7 +104,7 @@ async function handleConfirmDelete() {
       <!-- Delete button -->
       <button
         type="button"
-        class="delete-account-button w-full rounded-lg text-white text-[17px] font-medium py-3 flex items-center justify-center cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+        class="delete-account-button w-full rounded-lg text-white text-headline font-medium py-3 flex items-center justify-center cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
         :class="{ 'delete-account-button--enabled': agreed && !deleting }"
         :disabled="!agreed || deleting"
         @click="handleDeleteClick"

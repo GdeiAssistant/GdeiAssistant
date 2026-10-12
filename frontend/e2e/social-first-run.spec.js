@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 
 const peer = '22222222-2222-4222-8222-222222222222'
 test.setTimeout(60000)

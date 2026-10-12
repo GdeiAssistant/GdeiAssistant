@@ -7,8 +7,8 @@
 
     <div v-else-if="item" class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-5 py-5">
       <h1 class="text-[18px] font-bold text-[var(--c-text-1)] leading-tight">{{ item.title }}</h1>
-      <p class="mt-2 text-[13px] text-[var(--c-text-3)]">{{ item.publishTime }}</p>
-      <div class="mt-4 pt-4 border-t border-[var(--c-border-light)] text-[15px] text-[var(--c-text-1)] leading-relaxed whitespace-pre-line">
+      <p class="mt-2 text-callout text-[var(--c-text-3)]">{{ item.publishTime }}</p>
+      <div class="mt-4 pt-4 border-t border-[var(--c-border-light)] text-body text-[var(--c-text-1)] leading-relaxed whitespace-pre-line">
         {{ item.content }}
       </div>
     </div>

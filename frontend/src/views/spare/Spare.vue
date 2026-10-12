@@ -174,7 +174,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
         <!-- Search button -->
         <button
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
           @click="doSearch"
         >
           {{ t('spare.search') }}
@@ -210,7 +210,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
               :key="item.number || index"
               class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] p-4"
             >
-              <h4 class="text-[15px] font-medium text-[var(--c-text)] mb-2">{{ item.name || item.number || '—' }}</h4>
+              <h4 class="text-body font-medium text-[var(--c-text)] mb-2">{{ item.name || item.number || '—' }}</h4>
               <div class="space-y-1 text-xs text-[var(--c-text-secondary)]">
                 <p>{{ t('spare.result.number') }}：{{ item.number || '—' }}</p>
                 <p>{{ t('spare.result.type') }}：{{ item.type || '—' }}</p>

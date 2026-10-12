@@ -163,7 +163,7 @@ onMounted(async () => {
         <!-- Route -->
         <div class="mb-5 p-4 bg-[var(--c-bg)] rounded-lg">
           <div class="flex items-start mb-4">
-            <span class="community-delivery-pickup-badge w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5">{{ t('delivery.pickupBadge') }}</span>
+            <span class="community-delivery-pickup-badge w-7 h-7 rounded-full flex items-center justify-center text-callout font-bold text-white mr-3 shrink-0 mt-0.5">{{ t('delivery.pickupBadge') }}</span>
             <div class="flex-1">
               <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ canViewSensitiveInfo ? item.pickupAddress : maskAddress(item.pickupAddress) }}</div>
               <div v-if="item.pickupCode && canViewSensitiveInfo" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.pickupCode') }}{{ item.pickupCode }}</div>
@@ -171,7 +171,7 @@ onMounted(async () => {
             </div>
           </div>
           <div class="flex items-start">
-            <span class="community-delivery-dropoff-badge w-7 h-7 rounded-full flex items-center justify-center text-[13px] font-bold text-white mr-3 shrink-0 mt-0.5">{{ t('delivery.deliveryBadge') }}</span>
+            <span class="community-delivery-dropoff-badge w-7 h-7 rounded-full flex items-center justify-center text-callout font-bold text-white mr-3 shrink-0 mt-0.5">{{ t('delivery.deliveryBadge') }}</span>
             <div class="flex-1">
               <div class="text-lg text-[var(--c-text-1)] leading-relaxed mb-1.5 font-medium">{{ canViewSensitiveInfo ? item.deliveryAddress : maskAddress(item.deliveryAddress) }}</div>
               <div v-if="item.contactPhone && canViewSensitiveInfo" class="text-base text-[var(--c-text-2)] mt-1">{{ t('delivery.detail.contactPhone') }}{{ item.contactPhone }}</div>
@@ -190,7 +190,7 @@ onMounted(async () => {
           <!-- Role -->
           <div v-if="getUserRole()" class="flex items-center mb-4 pb-3 border-b border-[var(--c-border)]">
             <span class="text-base text-[var(--c-text-2)] min-w-[80px]">{{ t('delivery.detail.myRole') }}</span>
-            <div class="community-delivery-role-badge px-3.5 py-1.5 rounded-full text-[13px] font-medium" :class="getUserRole() === 'publisher' ? 'community-delivery-role-badge--publisher' : 'community-delivery-role-badge--runner'">
+            <div class="community-delivery-role-badge px-3.5 py-1.5 rounded-full text-callout font-medium" :class="getUserRole() === 'publisher' ? 'community-delivery-role-badge--publisher' : 'community-delivery-role-badge--runner'">
               {{ getUserRole() === 'publisher' ? t('delivery.detail.publisherRole') : t('delivery.detail.runnerRole') }}
             </div>
           </div>

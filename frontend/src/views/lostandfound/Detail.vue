@@ -109,7 +109,7 @@ function copyText(text) {
       <!-- 基本信息 -->
       <div class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform p-4 border-b border-[var(--c-border)] rounded-none m-0">
         <h5 class="text-lg font-medium text-[var(--c-text-1)] m-0 mb-2.5 p-0">{{ detail.title }}</h5>
-        <p class="text-[13px] text-[var(--c-text-3)] m-0 p-0">{{ t('lostandfound.detail.publishTime') }}<b>{{ detail.time }}</b></p>
+        <p class="text-callout text-[var(--c-text-3)] m-0 p-0">{{ t('lostandfound.detail.publishTime') }}<b>{{ detail.time }}</b></p>
       </div>
 
       <!-- 地点信息 -->
@@ -148,17 +148,17 @@ function copyText(text) {
         <span class="block mb-2.5">{{ t('lostandfound.detail.contact') }}</span>
         <div v-if="detail.contact?.qq" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
           <span>{{ t('lostandfound.detail.qq') }}<b>{{ maskContactHandle(detail.contact.qq) }}</b></span>
-          <button class="community-lostandfound-contact-action px-3 py-1 text-[13px] bg-transparent border rounded cursor-pointer no-underline" @click="copyText(detail.contact.qq)">{{ t('lostandfound.detail.copyQQ') }}</button>
+          <button class="community-lostandfound-contact-action px-3 py-1 text-callout bg-transparent border rounded cursor-pointer no-underline" @click="copyText(detail.contact.qq)">{{ t('lostandfound.detail.copyQQ') }}</button>
         </div>
         <div v-if="detail.contact?.wechat" class="flex items-center justify-between py-2 border-b border-[var(--c-border)]">
           <span>{{ t('lostandfound.detail.wechat') }}<b>{{ maskContactHandle(detail.contact.wechat) }}</b></span>
-          <button class="community-lostandfound-contact-action px-3 py-1 text-[13px] bg-transparent border rounded cursor-pointer no-underline" @click="copyText(detail.contact.wechat)">{{ t('lostandfound.detail.copyWechat') }}</button>
+          <button class="community-lostandfound-contact-action px-3 py-1 text-callout bg-transparent border rounded cursor-pointer no-underline" @click="copyText(detail.contact.wechat)">{{ t('lostandfound.detail.copyWechat') }}</button>
         </div>
         <div v-if="detail.contact?.phone" class="flex items-center justify-between py-2">
           <span>{{ t('lostandfound.detail.phone') }}<a class="text-[var(--c-text-2)]">{{ maskPhone(detail.contact.phone) }}</a></span>
           <span class="flex gap-2">
-            <a :href="`tel:${detail.contact.phone}`" class="community-lostandfound-contact-action px-3 py-1 text-[13px] bg-transparent border rounded cursor-pointer no-underline">{{ t('lostandfound.detail.call') }}</a>
-            <a :href="`sms:${detail.contact.phone}`" class="community-lostandfound-contact-action px-3 py-1 text-[13px] bg-transparent border rounded cursor-pointer no-underline">{{ t('lostandfound.detail.sms') }}</a>
+            <a :href="`tel:${detail.contact.phone}`" class="community-lostandfound-contact-action px-3 py-1 text-callout bg-transparent border rounded cursor-pointer no-underline">{{ t('lostandfound.detail.call') }}</a>
+            <a :href="`sms:${detail.contact.phone}`" class="community-lostandfound-contact-action px-3 py-1 text-callout bg-transparent border rounded cursor-pointer no-underline">{{ t('lostandfound.detail.sms') }}</a>
           </span>
         </div>
       </div>

@@ -4,11 +4,10 @@ import { onMounted, onActivated, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, getLocalizedFeatures } from '@/constants/features'
 import { getSchedule } from '@/api/schedule'
-import { totalMessageUnread } from '@/composables/useMessageUnread'
 import { useLatestRequest } from '@/composables/useLatestRequest'
-import { selectTodayCourses, todayColumn } from './homeToday'
+import { campusDateLabel, selectTodayCourses, todayColumn } from './homeToday'
 import {
-  ArrowRight, Bell, Calendar, CalendarCheck, Database, DoorOpen,
+  ArrowRight, Calendar, CalendarCheck, Database, DoorOpen,
   Dumbbell, Eye, FileText, GraduationCap, Heart, Info as InfoIcon, MessageCircle,
   PenLine, Search, ShoppingCart, Star, Truck, Users, BookOpen,
   Camera, WalletCards
@@ -64,6 +63,7 @@ onActivated(loadFeaturesConfig)
 // 今日课程：静默读取课表（后端有缓存），失败时只给出入口，不弹全局错误
 const todayState = ref('loading') // loading | ready | unavailable
 const todayCourses = ref([])
+const todayDate = ref(new Date())
 const todayRequest = useLatestRequest()
 
 async function loadTodayCourses() {
@@ -72,8 +72,13 @@ async function loadTodayCourses() {
   try {
     const res = await getSchedule(undefined, { signal: task.signal, skipErrorTip: true })
     if (!task.isCurrent()) return
-    if (res && res.success && res.data) {
-      todayCourses.value = selectTodayCourses(res.data.scheduleList, res.data.week ?? null, todayColumn())
+    const date = new Date()
+    todayDate.value = date
+    const courses = res?.success && res.data
+      ? selectTodayCourses(res.data.scheduleList, res.data.week, todayColumn(date))
+      : null
+    if (courses !== null) {
+      todayCourses.value = courses
       todayState.value = 'ready'
     } else {
       todayState.value = 'unavailable'
@@ -85,10 +90,6 @@ async function loadTodayCourses() {
 onMounted(loadTodayCourses)
 onActivated(loadTodayCourses)
 
-const unreadLabel = computed(() => totalMessageUnread.value > 0
-  ? t('home.todayUnread', { count: totalMessageUnread.value > 99 ? '99+' : totalMessageUnread.value })
-  : t('home.todayAllRead'))
-
 const visibleMenuList = computed(() => {
   const config = featuresConfig.value
   return localizedFeatures.value.filter((f) => {
@@ -97,7 +98,6 @@ const visibleMenuList = computed(() => {
   }).map((f) => ({
     id: f.id,
     title: f.name,
-    description: f.description,
     path: f.path,
     type: f.type,
     key: f.key,
@@ -115,13 +115,11 @@ const featureSections = computed(() => {
     {
       id: 'service',
       title: t('home.sectionService'),
-      description: t('home.sectionServiceDesc'),
       items: serviceItems
     },
     {
       id: 'life',
       title: t('home.sectionLife'),
-      description: t('home.sectionLifeDesc'),
       items: lifeItems
     }
   ].filter((section) => section.items.length > 0)
@@ -159,7 +157,7 @@ const greetingKey = computed(() => {
 
 const todayLabel = computed(() => {
   try {
-    return new Intl.DateTimeFormat(locale.value, { month: 'long', day: 'numeric', weekday: 'long' }).format(new Date())
+    return campusDateLabel(todayDate.value, locale.value)
   } catch (_) {
     return ''
   }
@@ -171,7 +169,6 @@ const todayLabel = computed(() => {
     <header class="home-hero">
       <p v-if="todayLabel" class="home-hero__date">{{ todayLabel }}</p>
       <h1 class="home-hero__title">{{ $t(greetingKey) }}</h1>
-      <p class="home-hero__subtitle">{{ $t('home.subtitle') }}</p>
     </header>
 
     <div class="home-today-grid">
@@ -212,17 +209,6 @@ const todayLabel = computed(() => {
         </p>
       </section>
 
-      <button type="button" class="campus-page-card home-inbox campus-press" @click="goTo('/info')">
-        <span class="home-inbox__icon" aria-hidden="true">
-          <Bell class="w-5 h-5" />
-        </span>
-        <span class="home-inbox__body">
-          <strong>{{ $t('tab.info') }}</strong>
-          <small>{{ unreadLabel }}</small>
-        </span>
-        <span v-if="totalMessageUnread > 0" class="home-inbox__badge">{{ totalMessageUnread > 99 ? '99+' : totalMessageUnread }}</span>
-        <ArrowRight class="feature-card__arrow" aria-hidden="true" />
-      </button>
     </div>
 
     <section
@@ -234,9 +220,7 @@ const todayLabel = computed(() => {
       <header class="feature-section__header">
         <div class="feature-section__title">
           <h2>{{ section.title }}</h2>
-          <span class="feature-section__count">{{ section.items.length }}</span>
         </div>
-        <p>{{ section.description }}</p>
       </header>
 
       <div class="feature-section__grid">
@@ -252,7 +236,6 @@ const todayLabel = computed(() => {
           </span>
           <span class="feature-card__body">
             <strong>{{ item.title }}</strong>
-            <small>{{ item.description }}</small>
           </span>
           <ArrowRight class="feature-card__arrow" aria-hidden="true" />
         </button>
@@ -300,10 +283,10 @@ const todayLabel = computed(() => {
   line-height: 1.6;
 }
 
-/* Today: real courses for today plus the inbox entry */
+/* Today: real courses for today */
 .home-today-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-lg, 16px);
   align-items: start;
 }
@@ -329,8 +312,7 @@ const todayLabel = computed(() => {
   min-width: 0;
 }
 
-.home-today__icon,
-.home-inbox__icon {
+.home-today__icon {
   display: grid;
   width: 44px;
   height: 44px;
@@ -437,55 +419,6 @@ const todayLabel = computed(() => {
 
 .home-today__skeleton--short {
   width: 64px;
-}
-
-.home-inbox {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) auto 16px;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  border: 1px solid var(--c-border);
-  color: inherit;
-  cursor: pointer;
-  font: inherit;
-  padding: var(--space-lg, 16px);
-  text-align: left;
-}
-
-.home-inbox:hover {
-  border-color: color-mix(in srgb, var(--c-primary) 40%, var(--c-border));
-}
-
-.home-inbox__body {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.home-inbox__body strong {
-  color: var(--c-text-1);
-  font-size: 15px;
-  font-weight: 650;
-}
-
-.home-inbox__body small {
-  color: var(--c-text-2);
-  font-size: 13px;
-}
-
-.home-inbox__badge {
-  display: inline-grid;
-  min-width: 22px;
-  height: 22px;
-  place-items: center;
-  border-radius: 999px;
-  background: var(--c-danger);
-  color: var(--c-on-primary);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 0 6px;
 }
 
 /* Feature sections: one flat card per group, brand-primary icons only */
@@ -603,7 +536,6 @@ const todayLabel = computed(() => {
 }
 
 .feature-card:focus-visible,
-.home-inbox:focus-visible,
 .home-today__action:focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
@@ -657,7 +589,6 @@ const todayLabel = computed(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .feature-card,
-  .home-inbox,
   .home-today__action {
     transition: none;
   }

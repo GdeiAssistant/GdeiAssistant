@@ -287,7 +287,7 @@ onBeforeUnmount(() => {
       <!-- 树洞卡片 -->
       <div
         :id="secret.id"
-        class="mx-2.5 mt-5 text-center text-[17px] leading-[25px] relative h-[240px] rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm"
+        class="mx-2.5 mt-5 text-center text-headline leading-[25px] relative h-[240px] rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm"
         :style="{ backgroundColor: noteBg(secret.theme), color: noteText(secret.theme) }"
       >
         <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">

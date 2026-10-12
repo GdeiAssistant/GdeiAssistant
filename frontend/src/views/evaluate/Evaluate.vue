@@ -60,7 +60,7 @@ function confirmEvaluate() {
       <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] overflow-hidden">
         <!-- Toggle row -->
         <div class="flex items-center justify-between px-4 py-4">
-          <span class="text-[15px] text-[var(--c-text)]">{{ t('evaluatePage.directSubmit') }}</span>
+          <span class="text-body text-[var(--c-text)]">{{ t('evaluatePage.directSubmit') }}</span>
           <label class="relative inline-flex items-center cursor-pointer">
             <input type="checkbox" v-model="isDirectSubmit" class="sr-only peer" />
             <div class="w-11 h-6 bg-[var(--c-fill-3)] rounded-full peer-checked:bg-[var(--c-primary)] transition-colors after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-[var(--c-surface)] after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5"></div>
@@ -72,7 +72,7 @@ function confirmEvaluate() {
       <button
         type="button"
         :disabled="isLoading"
-        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 disabled:opacity-50 transition-opacity"
+        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 disabled:opacity-50 transition-opacity"
         @click="doEvaluate"
       >
         {{ t('evaluatePage.submitAction') }}
@@ -96,11 +96,11 @@ function confirmEvaluate() {
           </div>
           <div class="flex border-t border-[var(--c-border)]">
             <button
-              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-text-secondary)] border-r border-[var(--c-border)] hover:bg-[var(--c-surface-hover)]"
+              class="flex-1 py-3.5 text-center text-body text-[var(--c-text-secondary)] border-r border-[var(--c-border)] hover:bg-[var(--c-surface-hover)]"
               @click="closeEvaluateConfirmDialog"
             >{{ t('common.cancel') }}</button>
             <button
-              class="flex-1 py-3.5 text-center text-[15px] text-[var(--c-primary)] font-medium hover:bg-[var(--c-surface-hover)] disabled:opacity-40"
+              class="flex-1 py-3.5 text-center text-body text-[var(--c-primary)] font-medium hover:bg-[var(--c-surface-hover)] disabled:opacity-40"
               :disabled="isLoading"
               @click="confirmEvaluate"
             >{{ t('common.confirm') }}</button>

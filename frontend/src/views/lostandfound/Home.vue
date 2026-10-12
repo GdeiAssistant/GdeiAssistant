@@ -57,7 +57,7 @@ onMounted(() => {
     <!-- Tab 切换：寻物启事 / 失物招领 -->
     <div class="flex bg-[var(--c-surface)] border-b border-[var(--c-border)]">
       <div
-        class="community-lostandfound-tab flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
+        class="community-lostandfound-tab flex-1 py-3.5 text-center text-body cursor-pointer relative"
         :class="{ 'community-lostandfound-tab--active': activeType === 0 }"
         @click="switchType(0)"
       >
@@ -65,7 +65,7 @@ onMounted(() => {
         <span v-if="activeType === 0" class="community-lostandfound-tab__indicator absolute bottom-0 left-0 right-0 h-0.5"></span>
       </div>
       <div
-        class="community-lostandfound-tab flex-1 py-3.5 text-center text-[15px] cursor-pointer relative"
+        class="community-lostandfound-tab flex-1 py-3.5 text-center text-body cursor-pointer relative"
         :class="{ 'community-lostandfound-tab--active': activeType === 1 }"
         @click="switchType(1)"
       >

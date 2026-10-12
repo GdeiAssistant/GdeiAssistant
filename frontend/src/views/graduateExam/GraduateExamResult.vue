@@ -116,7 +116,7 @@ onMounted(() => {
         <!-- Re-query button -->
         <button
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-[15px] font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
           @click="reQuery"
         >
           {{ t('graduateExam.reQuery') }}

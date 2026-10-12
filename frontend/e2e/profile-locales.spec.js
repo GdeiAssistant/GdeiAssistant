@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 import { readFileSync } from 'node:fs'
 
 const codes = ['zh-CN', 'zh-HK', 'zh-TW', 'en', 'ja', 'ko']

@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./styles/design-tokens.generated.css";
 
 /* ============================================================
    Unified Design Tokens
@@ -43,6 +44,11 @@
   --font-sans: 'PingFang SC', 'HarmonyOS Sans SC', 'MiSans', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
+  /* Type scale shared with the apps: display 30 / title 24 / headline 17 / body 15 / callout 13 / caption 12 */
+  --text-headline: 17px;
+  --text-body: 15px;
+  --text-callout: 13px;
+
   /* Radius scale: compact 4 / small 6 / control 10 / card 14 / sheet 20 / pill full */
   --radius-xs: 4px;
   --radius-sm: 6px;
@@ -54,29 +60,30 @@
   --radius-full: 9999px;
 }
 
+/* Keep utilities connected to the approved source, including PR #287 consumers. */
+@theme inline {
+  --text-display: var(--ds-font-display);
+  --text-title: var(--ds-font-title);
+  --text-headline: var(--ds-font-headline);
+  --text-body: var(--ds-font-body);
+  --text-callout: var(--ds-font-callout);
+  --text-caption: var(--ds-font-caption);
+}
+
 /* ── Light Theme (default) ──────────────────────────────── */
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
-  /* Brand tokens shared with the mini program, Android and iOS clients */
-  --c-primary: #0E8F6E;
+  /* Audited shared palette comes from design/tokens.json. Extra Web roles stay here. */
   --c-primary-hover: #0A7559;
-  --c-primary-soft: #E3F3EE;
-  --c-bg: #F4F7F6;
-  --c-surface: #FFFFFF;
   --c-surface-raised: #FFFFFF;
-  --c-text-1: #11201C;
-  --c-text-2: #4E5F5A;
   --c-text-3: #6F7F7A;
   --c-border: #DDE6E3;
   --c-divider: #E9EFED;
-  --c-danger: #D14343;
-  --c-warning: #B7791F;
   --c-info: var(--c-text-2);
   --c-on-primary: #FFFFFF;
 
-  --radius-card: 14px;
   --radius-control: 10px;
   --radius-compact: 6px;
   --radius-sheet: 20px;
@@ -153,7 +160,7 @@
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 12px;
-  --space-lg: 16px;
+  --space-lg: var(--space-page);
   --space-xl: 24px;
   --space-20: 20px;
   --space-32: 32px;
@@ -178,19 +185,11 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-primary: #34C79A;
   --c-primary-hover: #5AD6AE;
-  --c-primary-soft: #12332A;
-  --c-bg: #0E1513;
-  --c-surface: #151E1B;
   --c-surface-raised: #1C2724;
-  --c-text-1: #E6EEEB;
-  --c-text-2: #A3B3AE;
   --c-text-3: #84948F;
   --c-border: #2A3733;
   --c-divider: #222D2A;
-  --c-danger: #F07171;
-  --c-warning: #E0A54A;
   --c-info: var(--c-text-2);
   --c-on-primary: #0B1A15;
 

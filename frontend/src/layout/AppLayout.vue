@@ -129,7 +129,7 @@ onUnmounted(() => {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 28px 40px 64px;
+  padding: 28px 40px calc(88px + env(safe-area-inset-bottom, 0px));
 }
 
 .campus-sidebar-backdrop {
@@ -142,17 +142,70 @@ onUnmounted(() => {
 }
 
 .campus-mobile-tabbar {
-  display: none;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: var(--rail-width, 248px);
+  z-index: 50;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--c-border);
+  background: var(--c-surface);
+}
+
+.campus-mobile-tabbar__item {
+  position: relative;
+  display: flex;
+  min-height: 52px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--c-text-3);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.campus-mobile-tabbar__icon {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.75;
+}
+
+.campus-mobile-tabbar__item--active {
+  color: var(--c-primary);
+}
+
+.campus-mobile-tabbar__item--active::before {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  width: 24px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--c-primary);
+  content: '';
+  transform: translateX(-50%);
 }
 
 @media (max-width: 1023px) {
+  .campus-mobile-tabbar {
+    left: 0;
+  }
+
   .campus-main {
     margin-left: 0;
   }
 
   .campus-content {
     max-width: 42rem;
-    padding: 24px 24px 56px;
+    padding: 24px 24px calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .campus-sidebar-backdrop {
@@ -163,64 +216,11 @@ onUnmounted(() => {
 @media (max-width: 767px) {
   .campus-content {
     max-width: 100%;
-    padding: 16px 16px calc(88px + env(safe-area-inset-bottom, 0px));
+    padding: var(--space-page) var(--space-page) calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .campus-sidebar-backdrop {
     display: block;
-  }
-
-  .campus-mobile-tabbar {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 50;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
-    border-top: 1px solid var(--c-border);
-    background: var(--c-surface);
-  }
-
-  .campus-mobile-tabbar__item {
-    position: relative;
-    display: flex;
-    min-height: 52px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    border: 0;
-    border-radius: var(--radius-control);
-    background: transparent;
-    color: var(--c-text-3);
-    font: inherit;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-
-  .campus-mobile-tabbar__icon {
-    width: 22px;
-    height: 22px;
-    stroke-width: 1.75;
-  }
-
-  .campus-mobile-tabbar__item--active {
-    color: var(--c-primary);
-  }
-
-  .campus-mobile-tabbar__item--active::before {
-    position: absolute;
-    top: -6px;
-    left: 50%;
-    width: 24px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--c-primary);
-    content: '';
-    transform: translateX(-50%);
   }
 }
 </style>

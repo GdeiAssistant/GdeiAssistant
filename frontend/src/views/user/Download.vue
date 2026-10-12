@@ -126,7 +126,7 @@ onUnmounted(() => {
         <h2 class="text-lg font-medium text-[var(--c-text-1)] mb-5">{{ statusTitle }}</h2>
         <p class="text-sm leading-relaxed text-[var(--c-text-2)] text-left mb-3">{{ statusDescription }}</p>
         <p class="text-sm leading-relaxed text-[var(--c-text-1)] font-medium text-left mb-3">{{ t('downloadPage.privacyNotice') }}</p>
-        <p class="text-[13px] leading-relaxed text-[var(--c-text-3)] text-left mt-4 pt-4 border-t border-[var(--c-divider)]">{{ t('downloadPage.frequencyNotice') }}</p>
+        <p class="text-callout leading-relaxed text-[var(--c-text-3)] text-left mt-4 pt-4 border-t border-[var(--c-divider)]">{{ t('downloadPage.frequencyNotice') }}</p>
       </div>
 
       <div class="bg-[var(--c-surface)] rounded-xl shadow-sm p-5">

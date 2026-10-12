@@ -128,13 +128,13 @@ async function handleSubmit() {
     <div class="feedback-tabs flex">
       <button
         type="button"
-        class="feedback-tab flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
+        class="feedback-tab flex-1 text-center py-3 text-body cursor-pointer relative bg-transparent transition-colors"
         :class="{ 'feedback-tab--active': activeTab === 'faq' }"
         @click="activeTab = 'faq'"
       >{{ t('feedback.tab.faq') }}</button>
       <button
         type="button"
-        class="feedback-tab flex-1 text-center py-3 text-[15px] cursor-pointer relative bg-transparent transition-colors"
+        class="feedback-tab flex-1 text-center py-3 text-body cursor-pointer relative bg-transparent transition-colors"
         :class="{ 'feedback-tab--active': activeTab === 'form' }"
         @click="activeTab = 'form'"
       >{{ t('feedback.tab.form') }}</button>
@@ -153,7 +153,7 @@ async function handleSubmit() {
             class="feedback-card__button w-full px-4 py-3.5 flex items-center justify-between cursor-pointer border-none"
             @click="toggleFaq(index)"
           >
-            <span class="feedback-card__title text-[15px] text-left">{{ item.title }}</span>
+            <span class="feedback-card__title text-body text-left">{{ item.title }}</span>
             <span
               class="feedback-card__chevron text-sm transition-transform duration-200"
               :class="{ 'rotate-180': openedFaqIndex === index }"
@@ -167,7 +167,7 @@ async function handleSubmit() {
           </div>
         </div>
 
-        <p class="feedback-footnote mt-2 text-[13px] text-center">
+        <p class="feedback-footnote mt-2 text-callout text-center">
           {{ t('feedback.faq.moreHelpPrefix') }}
           <span class="feedback-footnote__accent font-semibold">「{{ t('feedback.tab.form') }}」</span>
           {{ t('feedback.faq.moreHelpSuffix') }}
@@ -178,13 +178,13 @@ async function handleSubmit() {
       <section v-else class="space-y-3">
         <!-- Type selection -->
         <div class="feedback-card rounded-xl shadow-sm p-3.5">
-          <h2 class="feedback-section-title text-[15px] font-semibold mb-2.5">{{ t('feedback.form.typeTitle') }}</h2>
+          <h2 class="feedback-section-title text-body font-semibold mb-2.5">{{ t('feedback.form.typeTitle') }}</h2>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="type in feedbackTypes"
               :key="type"
               type="button"
-              class="feedback-type-chip rounded-full px-3.5 py-1.5 text-[13px] border cursor-pointer transition-colors"
+              class="feedback-type-chip rounded-full px-3.5 py-1.5 text-callout border cursor-pointer transition-colors"
               :class="{ 'feedback-type-chip--active': feedbackType === type }"
               @click="handleSelectType(type)"
             >{{ type }}</button>
@@ -193,7 +193,7 @@ async function handleSubmit() {
 
         <!-- Content -->
         <div class="feedback-card rounded-xl shadow-sm p-3.5">
-          <h2 class="feedback-section-title text-[15px] font-semibold mb-2.5">{{ t('feedback.form.contentTitle') }}</h2>
+          <h2 class="feedback-section-title text-body font-semibold mb-2.5">{{ t('feedback.form.contentTitle') }}</h2>
           <div class="relative">
             <textarea
               :placeholder="t('feedback.form.contentPlaceholder')"
@@ -211,7 +211,7 @@ async function handleSubmit() {
 
         <!-- Contact -->
         <div class="feedback-card rounded-xl shadow-sm p-3.5">
-          <h2 class="feedback-section-title text-[15px] font-semibold mb-2.5">{{ t('feedback.form.contactTitle') }}</h2>
+          <h2 class="feedback-section-title text-body font-semibold mb-2.5">{{ t('feedback.form.contactTitle') }}</h2>
           <input
             type="text"
             v-model="contact"
@@ -222,7 +222,7 @@ async function handleSubmit() {
 
         <!-- Screenshots -->
         <div class="feedback-card rounded-xl shadow-sm p-3.5">
-          <h2 class="feedback-section-title text-[15px] font-semibold mb-2.5">
+          <h2 class="feedback-section-title text-body font-semibold mb-2.5">
             {{ t('feedback.form.screenshotTitle') }}
             <span class="feedback-section-note ml-1 text-xs font-normal">{{ t('feedback.form.screenshotLimit', { count: maxScreenshots }) }}</span>
           </h2>

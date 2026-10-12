@@ -1,0 +1,31 @@
+/* Generated from design/tokens.json; do not edit. */
+page,
+.theme-light {
+  --c-primary: #0E8F6E;
+  --c-primary-soft: #E3F3EE;
+  --c-bg: #F4F7F6;
+  --c-surface: #FFFFFF;
+  --c-text-1: #11201C;
+  --c-text-2: #4E5F5A;
+  --c-danger: #D14343;
+  --c-warning: #B7791F;
+  --ds-font-display: 60rpx;
+  --ds-font-title: 48rpx;
+  --ds-font-headline: 34rpx;
+  --ds-font-body: 30rpx;
+  --ds-font-callout: 26rpx;
+  --ds-font-caption: 24rpx;
+  --radius-card: 28rpx;
+  --space-page: 32rpx;
+}
+
+.theme-dark {
+  --c-primary: #34C79A;
+  --c-primary-soft: #12332A;
+  --c-bg: #0E1513;
+  --c-surface: #151E1B;
+  --c-text-1: #E6EEEB;
+  --c-text-2: #A3B3AE;
+  --c-danger: #F07171;
+  --c-warning: #E0A54A;
+}

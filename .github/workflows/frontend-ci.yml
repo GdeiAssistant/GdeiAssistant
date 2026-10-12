@@ -7,6 +7,7 @@ on:
       - master
       - 'release/**'
     paths:
+      - 'design/**'
       - 'frontend/**'
       - 'docker-compose.yml'
       - '.github/workflows/frontend-ci.yml'
@@ -16,6 +17,7 @@ on:
       - master
       - 'release/**'
     paths:
+      - 'design/**'
       - 'frontend/**'
       - 'docker-compose.yml'
       - '.github/workflows/frontend-ci.yml'
@@ -46,6 +48,9 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+
+      - name: Check generated design tokens
+        run: npm run check:design-tokens
 
       - name: Check generated location names
         run: npm run check:location-names

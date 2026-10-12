@@ -163,7 +163,7 @@ onUnmounted(() => {
 @media (max-width: 767px) {
   .campus-content {
     max-width: 100%;
-    padding: 16px 16px calc(88px + env(safe-area-inset-bottom, 0px));
+    padding: var(--space-page) var(--space-page) calc(88px + env(safe-area-inset-bottom, 0px));
   }
 
   .campus-sidebar-backdrop {

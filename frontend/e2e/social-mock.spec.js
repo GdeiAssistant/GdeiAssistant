@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 import { readFileSync } from 'node:fs'
 
 const me = '11111111-1111-4111-8111-111111111111'

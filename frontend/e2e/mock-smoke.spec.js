@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect } from './fixtures.js'
 
 const MOCK_USERNAME = 'gdeiassistant'
 const MOCK_PASSWORD = 'gdeiassistant'

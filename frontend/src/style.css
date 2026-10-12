@@ -43,6 +43,11 @@
   --font-sans: 'PingFang SC', 'HarmonyOS Sans SC', 'MiSans', system-ui, sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
 
+  /* Type scale shared with the apps: display 30 / title 24 / headline 17 / body 15 / callout 13 / caption 12 */
+  --text-headline: 17px;
+  --text-body: 15px;
+  --text-callout: 13px;
+
   /* Radius scale: compact 4 / small 6 / control 10 / card 14 / sheet 20 / pill full */
   --radius-xs: 4px;
   --radius-sm: 6px;

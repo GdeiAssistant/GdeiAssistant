@@ -90,7 +90,7 @@ watch(
         <i class="inline-block w-4 h-4 shrink-0 mr-1.5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27%239ca3af%27%3E%3Cpath%20d=%27M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%27/%3E%3C/svg%3E')] bg-center bg-contain bg-no-repeat"></i>
         <input type="text" :placeholder="t('marketplace.searchPlaceholder')" v-model="keywordInput" @keyup.enter="doSearch" class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]" />
       </div>
-      <span class="marketplace-action-link text-[15px] ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('marketplace.searchAction') }}</span>
+      <span class="marketplace-action-link text-body ml-4 whitespace-nowrap cursor-pointer font-medium" @click="doSearch">{{ t('marketplace.searchAction') }}</span>
     </div>
 
     <!-- 滚动容器 -->

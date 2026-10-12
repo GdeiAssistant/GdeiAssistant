@@ -272,20 +272,20 @@ onUnmounted(() => {
         <div class="ui-scrim fixed inset-0 bg-black/60 z-[1000]" @click="closeUnbindDialog"></div>
         <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[300px] bg-[var(--c-surface)] rounded-xl z-[1001] overflow-hidden">
           <div class="px-5 pt-5 pb-2.5 text-center">
-            <strong class="text-[17px] font-medium text-[var(--c-text-1)]">{{ t('bindEmail.unbind') }}</strong>
+            <strong class="text-headline font-medium text-[var(--c-text-1)]">{{ t('bindEmail.unbind') }}</strong>
           </div>
-          <div class="px-5 pb-5 text-center text-[15px] text-[var(--c-text-2)] leading-relaxed">
+          <div class="px-5 pb-5 text-center text-body text-[var(--c-text-2)] leading-relaxed">
             {{ t('bindEmail.unbindConfirm') }}
           </div>
           <div class="flex border-t border-[var(--c-border)]">
             <button
               type="button"
-              class="flex-1 py-3.5 text-center text-[17px] text-[var(--c-text-1)] border-r border-[var(--c-border)] cursor-pointer bg-transparent"
+              class="flex-1 py-3.5 text-center text-headline text-[var(--c-text-1)] border-r border-[var(--c-border)] cursor-pointer bg-transparent"
               @click="closeUnbindDialog"
             >{{ t('common.cancel') }}</button>
             <button
               type="button"
-              class="flex-1 py-3.5 text-center text-[17px] text-red-500 font-medium cursor-pointer bg-transparent"
+              class="flex-1 py-3.5 text-center text-headline text-red-500 font-medium cursor-pointer bg-transparent"
               @click="confirmUnbind"
             >{{ t('bindEmail.confirmUnbind') }}</button>
           </div>

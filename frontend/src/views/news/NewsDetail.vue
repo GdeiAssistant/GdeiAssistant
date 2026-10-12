@@ -144,7 +144,7 @@ onMounted(() => {
           @click="openSource"
         >{{ t('news.detail.openSource') }}</a>
 
-        <div v-if="contentParagraphs.length" class="mt-5 text-[15px] leading-[1.9] text-[var(--c-text)]">
+        <div v-if="contentParagraphs.length" class="mt-5 text-body leading-[1.9] text-[var(--c-text)]">
           <p
             v-for="(paragraph, index) in contentParagraphs"
             :key="`paragraph-${index}`"

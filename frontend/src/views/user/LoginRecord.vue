@@ -30,10 +30,10 @@
             <span class="login-record-time text-base font-medium">{{ record.loginTime }}</span>
             <span class="login-record-status text-sm">{{ t('loginRecord.success') }}</span>
           </div>
-          <div class="login-record-meta text-[13px] leading-relaxed mt-0.5">
+          <div class="login-record-meta text-callout leading-relaxed mt-0.5">
             {{ record.location }} · {{ record.ip }}
           </div>
-          <div class="login-record-meta text-[13px] leading-relaxed mt-0.5">
+          <div class="login-record-meta text-callout leading-relaxed mt-0.5">
             {{ record.device }}
           </div>
         </div>

@@ -12,10 +12,10 @@
         @click="router.push(`/info/announcements/${item.id}`)"
       >
         <div class="flex items-start justify-between gap-3">
-          <span class="text-[15px] font-semibold text-[var(--c-text-1)] flex-1">{{ item.title }}</span>
+          <span class="text-body font-semibold text-[var(--c-text-1)] flex-1">{{ item.title }}</span>
           <span class="text-[12px] text-[var(--c-text-3)] shrink-0 mt-0.5">{{ item.publishTime }}</span>
         </div>
-        <p class="mt-1.5 text-[13px] text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
+        <p class="mt-1.5 text-callout text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
       </div>
 
       <div v-if="!list.length" class="py-16 text-center text-sm text-[var(--c-text-3)]">{{ t('info.noNotice') }}</div>

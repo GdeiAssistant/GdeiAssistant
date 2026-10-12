@@ -417,23 +417,23 @@ onMounted(() => {
           <div class="py-2">
             <button
               @click="onManageCache"
-              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+              class="w-full py-3.5 text-center text-body text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
             >{{ t('schedule.action.manageCache') }}</button>
             <div class="mx-4 border-t border-[var(--c-divider)]"></div>
             <button
               @click="onRefreshSchedule"
-              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+              class="w-full py-3.5 text-center text-body text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
             >{{ t('schedule.action.refresh') }}</button>
             <div class="mx-4 border-t border-[var(--c-divider)]"></div>
             <button
               @click="onAddCustomCourse"
-              class="w-full py-3.5 text-center text-[15px] text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
+              class="w-full py-3.5 text-center text-body text-[var(--c-text-1)] active:bg-[var(--c-bg)] transition"
             >{{ t('schedule.action.addCustomCourse') }}</button>
           </div>
           <div class="border-t-[6px] border-[var(--c-bg)]">
             <button
               @click="closeActionSheet"
-              class="w-full py-3.5 text-center text-[15px] font-medium text-[var(--c-text-3)] active:bg-[var(--c-bg)] transition"
+              class="w-full py-3.5 text-center text-body font-medium text-[var(--c-text-3)] active:bg-[var(--c-bg)] transition"
             >{{ t('common.cancel') }}</button>
           </div>
           <div class="pb-[env(safe-area-inset-bottom)]"></div>
@@ -448,7 +448,7 @@ onMounted(() => {
         <div class="ui-modal fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[340px] bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)]">
-            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.detail.title') }}</h3>
+            <h3 class="text-body font-semibold text-[var(--c-text-1)]">{{ t('schedule.detail.title') }}</h3>
             <button @click="closeCourseDetail" class="text-sm text-[var(--c-primary)] font-medium">{{ t('common.close') }}</button>
           </div>
           <!-- Body -->
@@ -488,7 +488,7 @@ onMounted(() => {
         <div class="ui-modal fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-32px)] max-w-[380px] max-h-[85vh] overflow-y-auto bg-[var(--c-surface)] rounded-2xl z-[5001] shadow-xl">
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] sticky top-0 bg-[var(--c-surface)] rounded-t-2xl">
-            <h3 class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.addDialog.title') }}</h3>
+            <h3 class="text-body font-semibold text-[var(--c-text-1)]">{{ t('schedule.addDialog.title') }}</h3>
             <button @click="closeAddCustomDialog" class="text-sm text-[var(--c-primary)] font-medium">{{ t('common.close') }}</button>
           </div>
           <!-- Form -->
@@ -590,7 +590,7 @@ onMounted(() => {
           <!-- Header -->
           <div class="flex items-center justify-between px-4 py-3 border-b border-[var(--c-divider)] shrink-0">
             <button @click="closeWeekPicker" class="text-sm text-[var(--c-text-3)]">{{ t('common.cancel') }}</button>
-            <span class="text-[15px] font-semibold text-[var(--c-text-1)]">{{ t('schedule.selectWeek') }}</span>
+            <span class="text-body font-semibold text-[var(--c-text-1)]">{{ t('schedule.selectWeek') }}</span>
             <div class="w-10"></div>
           </div>
           <!-- Options -->
@@ -599,7 +599,7 @@ onMounted(() => {
               v-for="opt in weekPickerOptions"
               :key="opt.value"
               type="button"
-              class="w-full py-3 text-center text-[15px] transition active:bg-[var(--c-bg)]"
+              class="w-full py-3 text-center text-body transition active:bg-[var(--c-bg)]"
               :class="opt.value === currentWeek ? 'text-[var(--c-primary)] font-semibold' : 'text-[var(--c-text-1)]'"
               @click="selectWeek(opt.value)"
             >

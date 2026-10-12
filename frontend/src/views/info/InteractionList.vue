@@ -19,7 +19,7 @@
           <span class="text-[14px] font-semibold text-[var(--c-text-1)] flex-1 leading-snug">{{ item.title }}</span>
           <span class="text-[11px] text-[var(--c-text-3)] shrink-0 mt-0.5">{{ item.createdAt }}</span>
         </div>
-        <p class="mt-1 text-[13px] text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
+        <p class="mt-1 text-callout text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
         <div class="mt-2 flex items-center justify-between">
           <span class="text-[11px] text-[var(--c-text-3)]">{{ getModuleLabel(item.module) }}</span>
           <span

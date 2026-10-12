@@ -144,7 +144,7 @@
     }
   },
   "tab": {
-    "home": "功能主页",
+    "home": "首页",
     "info": "消息",
     "profile": "个人中心"
   },
@@ -182,7 +182,13 @@
     "todayDeliveryMeta": "去处理",
     "greetingMorning": "早上好",
     "greetingAfternoon": "下午好",
-    "greetingEvening": "晚上好"
+    "greetingEvening": "晚上好",
+    "todayCourseCount": "今天 {count} 节课",
+    "todayOpenSchedule": "完整课表",
+    "todayNoCourse": "今天没有课，好好休息。",
+    "todayUnavailable": "课表暂时无法获取，可打开课表页重试。",
+    "todayUnread": "{count} 条未读消息",
+    "todayAllRead": "暂无未读消息"
   },
   "profile": {
     "title": "个人中心",

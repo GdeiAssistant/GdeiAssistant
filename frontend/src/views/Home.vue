@@ -3,8 +3,12 @@ import { useRouter } from 'vue-router'
 import { onMounted, onActivated, ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ALL_FEATURES, getLocalizedFeatures } from '@/constants/features'
+import { getSchedule } from '@/api/schedule'
+import { totalMessageUnread } from '@/composables/useMessageUnread'
+import { useLatestRequest } from '@/composables/useLatestRequest'
+import { selectTodayCourses, todayColumn } from './homeToday'
 import {
-  ArrowRight, Calendar, CalendarCheck, Database, DoorOpen,
+  ArrowRight, Bell, Calendar, CalendarCheck, Database, DoorOpen,
   Dumbbell, Eye, FileText, GraduationCap, Heart, Info as InfoIcon, MessageCircle,
   PenLine, Search, ShoppingCart, Star, Truck, Users, BookOpen,
   Camera, WalletCards
@@ -56,6 +60,34 @@ function loadFeaturesConfig() {
 }
 onMounted(loadFeaturesConfig)
 onActivated(loadFeaturesConfig)
+
+// 今日课程：静默读取课表（后端有缓存），失败时只给出入口，不弹全局错误
+const todayState = ref('loading') // loading | ready | unavailable
+const todayCourses = ref([])
+const todayRequest = useLatestRequest()
+
+async function loadTodayCourses() {
+  const task = todayRequest.begin()
+  if (todayCourses.value.length === 0) todayState.value = 'loading'
+  try {
+    const res = await getSchedule(undefined, { signal: task.signal, skipErrorTip: true })
+    if (!task.isCurrent()) return
+    if (res && res.success && res.data) {
+      todayCourses.value = selectTodayCourses(res.data.scheduleList, res.data.week ?? null, todayColumn())
+      todayState.value = 'ready'
+    } else {
+      todayState.value = 'unavailable'
+    }
+  } catch (error) {
+    if (task.isCurrent() && !error?.cancelled) todayState.value = 'unavailable'
+  }
+}
+onMounted(loadTodayCourses)
+onActivated(loadTodayCourses)
+
+const unreadLabel = computed(() => totalMessageUnread.value > 0
+  ? t('home.todayUnread', { count: totalMessageUnread.value > 99 ? '99+' : totalMessageUnread.value })
+  : t('home.todayAllRead'))
 
 const visibleMenuList = computed(() => {
   const config = featuresConfig.value
@@ -142,19 +174,56 @@ const todayLabel = computed(() => {
       <p class="home-hero__subtitle">{{ $t('home.subtitle') }}</p>
     </header>
 
-    <section class="campus-page-card home-today" aria-labelledby="home-today-title">
-      <div class="home-today__icon" aria-hidden="true">
-        <CalendarCheck class="w-5 h-5" />
-      </div>
-      <div class="home-today__body">
-        <h2 id="home-today-title">{{ $t('home.todayScheduleTitle') }}</h2>
-        <p>{{ $t('home.todayScheduleDesc') }}</p>
-      </div>
-      <button type="button" class="home-today__action campus-press" @click="goTo('/schedule')">
-        {{ $t('home.todayScheduleMeta') }}
-        <ArrowRight class="w-4 h-4" aria-hidden="true" />
+    <div class="home-today-grid">
+      <section class="campus-page-card home-today" aria-labelledby="home-today-title" :aria-busy="todayState === 'loading'">
+        <header class="home-today__header">
+          <div class="home-today__heading">
+            <span class="home-today__icon" aria-hidden="true">
+              <CalendarCheck class="w-5 h-5" />
+            </span>
+            <div>
+              <h2 id="home-today-title">{{ $t('home.todayScheduleTitle') }}</h2>
+              <p v-if="todayState === 'ready' && todayCourses.length">{{ $t('home.todayCourseCount', { count: todayCourses.length }) }}</p>
+            </div>
+          </div>
+          <button type="button" class="home-today__action campus-press" @click="goTo('/schedule')">
+            {{ $t('home.todayOpenSchedule') }}
+            <ArrowRight class="w-4 h-4" aria-hidden="true" />
+          </button>
+        </header>
+
+        <ul v-if="todayState === 'loading'" class="home-today__list" aria-hidden="true">
+          <li v-for="n in 2" :key="n" class="home-today__item home-today__item--skeleton">
+            <span class="home-today__skeleton home-today__skeleton--short"></span>
+            <span class="home-today__skeleton"></span>
+          </li>
+        </ul>
+        <ol v-else-if="todayState === 'ready' && todayCourses.length" class="home-today__list">
+          <li v-for="course in todayCourses" :key="course.key" class="home-today__item">
+            <span class="home-today__lesson">{{ course.lesson }}</span>
+            <span class="home-today__course">
+              <strong>{{ course.name }}</strong>
+              <small v-if="course.location">{{ course.location }}</small>
+            </span>
+          </li>
+        </ol>
+        <p v-else class="home-today__empty">
+          {{ todayState === 'ready' ? $t('home.todayNoCourse') : $t('home.todayUnavailable') }}
+        </p>
+      </section>
+
+      <button type="button" class="campus-page-card home-inbox campus-press" @click="goTo('/info')">
+        <span class="home-inbox__icon" aria-hidden="true">
+          <Bell class="w-5 h-5" />
+        </span>
+        <span class="home-inbox__body">
+          <strong>{{ $t('tab.info') }}</strong>
+          <small>{{ unreadLabel }}</small>
+        </span>
+        <span v-if="totalMessageUnread > 0" class="home-inbox__badge">{{ totalMessageUnread > 99 ? '99+' : totalMessageUnread }}</span>
+        <ArrowRight class="feature-card__arrow" aria-hidden="true" />
       </button>
-    </section>
+    </div>
 
     <section
       v-for="section in featureSections"
@@ -231,15 +300,37 @@ const todayLabel = computed(() => {
   line-height: 1.6;
 }
 
-/* Today's schedule: a single flat card with one primary action */
+/* Today: real courses for today plus the inbox entry */
+.home-today-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+  gap: var(--space-lg, 16px);
+  align-items: start;
+}
+
 .home-today {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: var(--space-md, 12px);
   padding: var(--space-lg, 16px) var(--space-xl, 24px);
 }
 
-.home-today__icon {
+.home-today__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md, 12px);
+}
+
+.home-today__heading {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md, 12px);
+  min-width: 0;
+}
+
+.home-today__icon,
+.home-inbox__icon {
   display: grid;
   width: 44px;
   height: 44px;
@@ -250,19 +341,14 @@ const todayLabel = computed(() => {
   color: var(--c-primary);
 }
 
-.home-today__body {
-  min-width: 0;
-  flex: 1;
-}
-
-.home-today__body h2 {
+.home-today__heading h2 {
   margin: 0;
   color: var(--c-text-1);
   font-size: 16px;
   font-weight: 650;
 }
 
-.home-today__body p {
+.home-today__heading p {
   margin: 2px 0 0;
   color: var(--c-text-2);
   font-size: 13px;
@@ -287,6 +373,119 @@ const todayLabel = computed(() => {
 
 .home-today__action:hover {
   background: var(--c-primary-hover);
+}
+
+.home-today__list {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-today__item {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  align-items: center;
+  gap: var(--space-md, 12px);
+  border-top: 1px solid var(--c-divider);
+  padding: 12px 0;
+}
+
+.home-today__lesson {
+  color: var(--c-primary-hover);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-today__course {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home-today__course strong {
+  overflow: hidden;
+  color: var(--c-text-1);
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-today__course small {
+  color: var(--c-text-2);
+  font-size: 13px;
+}
+
+.home-today__empty {
+  margin: 0;
+  border-top: 1px solid var(--c-divider);
+  color: var(--c-text-2);
+  font-size: 14px;
+  padding: 14px 0 4px;
+}
+
+.home-today__skeleton {
+  display: block;
+  height: 14px;
+  border-radius: 6px;
+  background: var(--c-fill-2);
+}
+
+.home-today__skeleton--short {
+  width: 64px;
+}
+
+.home-inbox {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) auto 16px;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid var(--c-border);
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: var(--space-lg, 16px);
+  text-align: left;
+}
+
+.home-inbox:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 40%, var(--c-border));
+}
+
+.home-inbox__body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.home-inbox__body strong {
+  color: var(--c-text-1);
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.home-inbox__body small {
+  color: var(--c-text-2);
+  font-size: 13px;
+}
+
+.home-inbox__badge {
+  display: inline-grid;
+  min-width: 22px;
+  height: 22px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--c-danger);
+  color: var(--c-on-primary);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0 6px;
 }
 
 /* Feature sections: one flat card per group, brand-primary icons only */
@@ -404,6 +603,7 @@ const todayLabel = computed(() => {
 }
 
 .feature-card:focus-visible,
+.home-inbox:focus-visible,
 .home-today__action:focus-visible {
   outline: 2px solid var(--c-primary);
   outline-offset: 2px;
@@ -418,8 +618,17 @@ const todayLabel = computed(() => {
     padding-top: var(--space-sm, 8px);
   }
 
+  .home-today-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-md, 12px);
+  }
+
   .home-today {
     padding: var(--space-md, 12px) var(--space-lg, 16px);
+  }
+
+  .home-today__item {
+    grid-template-columns: 72px minmax(0, 1fr);
   }
 
   .feature-section {
@@ -448,6 +657,7 @@ const todayLabel = computed(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .feature-card,
+  .home-inbox,
   .home-today__action {
     transition: none;
   }

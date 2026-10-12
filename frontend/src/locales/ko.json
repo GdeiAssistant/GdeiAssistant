@@ -108,7 +108,13 @@
     "todayDeliveryMeta": "이동",
     "greetingMorning": "좋은 아침이에요",
     "greetingAfternoon": "좋은 오후예요",
-    "greetingEvening": "좋은 저녁이에요"
+    "greetingEvening": "좋은 저녁이에요",
+    "todayCourseCount": "오늘 수업 {count}개",
+    "todayOpenSchedule": "전체 시간표",
+    "todayNoCourse": "오늘은 수업이 없습니다.",
+    "todayUnavailable": "시간표를 불러올 수 없습니다. 시간표 화면에서 다시 시도하세요.",
+    "todayUnread": "읽지 않은 메시지 {count}개",
+    "todayAllRead": "읽지 않은 메시지가 없습니다"
   },
   "profile": {
     "title": "프로필",

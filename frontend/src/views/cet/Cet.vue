@@ -1,4 +1,5 @@
 <script setup>
+import { toBase64ImageDataUrl } from '@/utils/base64ImageDataUrl.js'
 import { getCetCheckcode } from "../../api/cetEndpoints.js"
 
 import { ChevronLeft } from 'lucide-vue-next'
@@ -31,7 +32,7 @@ function refreshVcode() {
   getCetCheckcode().then((res) => {
     const payload = res && res.data
     const base64 = typeof payload === 'string' ? payload : (payload && payload.data)
-    vcodeUrl.value = base64 ? 'data:image/jpg;base64,' + base64 : ''
+    vcodeUrl.value = toBase64ImageDataUrl(base64)
   }).catch(() => {
     vcodeUrl.value = ''
   })

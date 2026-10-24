@@ -25,12 +25,11 @@ class AiRoutingTest {
                 .forEach(source->environment.getPropertySources().addLast(source));
         var settings=Binder.get(environment).bind("api.ai",AiProperties.class).get();
         settings.validate();assertEquals(AiProperties.Region.MAINLAND,settings.getRegion());
-        assertTrue(settings.isCatalogEnabled());assertEquals(19,settings.getEndpoints().size());
+        assertEquals(19,settings.getEndpoints().size());
         var code=settings.getEndpoints().stream().filter(e->e.getId().equals("opencode-claude")).findFirst().orElseThrow();
         assertEquals(AiProperties.AccessMode.AGGREGATOR,code.getAccessMode());
         assertEquals(AiProperties.Authentication.BEARER,code.getAuthentication());
-        assertEquals("https://opencode.ai/inference/v1/models",code.catalogUri().toString());
-        assertTrue(code.getRoutes().get("ocr").isEmpty());
+        assertTrue(settings.getEndpoints().stream().flatMap(endpoint -> endpoint.getRoutes().values().stream()).allMatch(List::isEmpty));
     }
     @Test void regionPolicyFiltersBeforeNetworkAndDirectCallsAlsoFailClosed() {
         var settings=new AiProperties();
@@ -39,24 +38,20 @@ class AiRoutingTest {
         overseas.setAccessMode(AiProperties.AccessMode.AGGREGATOR);
         settings.setEndpoints(List.of(mainland,overseas));settings.validate();
         var registry=new AiProviderRegistry(settings,new OutboundIntegrationProperties());
-        assertEquals(List.of("china/vision-one","china/vision-two"),registry.providers("ocr",new AiModelCatalog(settings,registry)).stream().map(p->p.providerName()).toList());
+        assertEquals(List.of("china/vision-one","china/vision-two"),registry.providers("ocr").stream().map(p->p.providerName()).toList());
         var http=new RestTemplate();var server=MockRestServiceServer.bindTo(http).build();
         var blocked=new AiModelProvider(settings,overseas,"vision-one",http);
         assertFalse(blocked.isConfigured());
         assertThrows(ProviderException.class,()->blocked.execute(AiRequest.image("digits", "image/png", "private-image")));
         server.verify();
         settings.setRegion(AiProperties.Region.OVERSEAS);
-        assertEquals(List.of("global/vision-one","global/vision-two"),registry.providers("ocr",new AiModelCatalog(settings,registry)).stream().map(p->p.providerName()).toList());
-        mainland.setApiKey("");settings.setRegion(AiProperties.Region.MAINLAND);assertTrue(registry.providers("ocr",new AiModelCatalog(settings,registry)).isEmpty());
+        assertEquals(List.of("global/vision-one","global/vision-two"),registry.providers("ocr").stream().map(p->p.providerName()).toList());
+        mainland.setApiKey("");settings.setRegion(AiProperties.Region.MAINLAND);assertTrue(registry.providers("ocr").isEmpty());
     }
     @Test void invalidOrAmbiguousConfigCannotStart() {
         for(String url:List.of("http://synthetic.invalid","https://user:secret@synthetic.invalid","https://synthetic.invalid?key=secret","https://synthetic.invalid#fragment","https://synthetic.invalid/../v1")) {
             var settings=new AiProperties();var endpoint=endpoint("a",AiProperties.Region.MAINLAND,AiProtocol.GEMINI);
             endpoint.setBaseUrl(url);settings.setEndpoints(List.of(endpoint));assertThrows(IllegalArgumentException.class,settings::validate);
-        }
-        for(String path:List.of("https://other.invalid/models","//other.invalid/models","/../models","/models?key=secret","/models#bad","/models\\bad")) {
-            var settings=new AiProperties();var endpoint=endpoint("a",AiProperties.Region.MAINLAND,AiProtocol.GEMINI);
-            endpoint.setCatalogPath(path);settings.setEndpoints(List.of(endpoint));assertThrows(IllegalArgumentException.class,settings::validate);
         }
         for(String model:List.of("../vision","vision?key=value","vision#fragment","vision/")) {
             var settings=new AiProperties();var endpoint=endpoint("a",AiProperties.Region.MAINLAND,AiProtocol.GEMINI);

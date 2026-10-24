@@ -105,10 +105,8 @@ encrypt:
 
 api:
   ai:
-    # One deployment uses one processing region; fallback and discovery obey the same policy.
+    # One deployment uses one processing region; fallback obeys the same policy.
     region: ${AI_SERVICE_REGION:MAINLAND}
-    catalog-enabled: ${AI_MODEL_CATALOG_ENABLED:true}
-    catalog-refresh-ms: ${AI_MODEL_CATALOG_REFRESH_MS:21600000}
     endpoints:
       - id: doubao
         region: MAINLAND
@@ -117,7 +115,7 @@ api:
         base-url: ${DOUBAO_BASE_URL:${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}}
         api-key: ${DOUBAO_API_KEY:}
         routes:
-          ocr: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}
+          ocr: ${DOUBAO_OCR_MODEL:}
           chat: ${DOUBAO_CHAT_MODELS:}
         priority: 0
       - id: deepseek
@@ -137,7 +135,7 @@ api:
         base-url: ${QWEN_BASE_URL:${QWEN_OCR_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}}
         api-key: ${QWEN_API_KEY:}
         routes:
-          ocr: ${QWEN_OCR_MODEL:qwen-vl-plus}
+          ocr: ${QWEN_OCR_MODEL:}
           chat: ${QWEN_CHAT_MODELS:}
         priority: 2
       - id: siliconflow
@@ -157,7 +155,7 @@ api:
         base-url: ${OPENAI_BASE_URL:${OPENAI_OCR_BASE_URL:https://api.openai.com/v1}}
         api-key: ${OPENAI_API_KEY:}
         routes:
-          ocr: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
+          ocr: ${OPENAI_OCR_MODEL:}
           chat: ${OPENAI_CHAT_MODELS:}
         priority: 4
       - id: claude
@@ -177,7 +175,7 @@ api:
         base-url: ${GEMINI_BASE_URL:${GEMINI_OCR_BASE_URL:https://generativelanguage.googleapis.com/v1beta}}
         api-key: ${GEMINI_API_KEY:}
         routes:
-          ocr: ${GEMINI_OCR_MODEL:gemini-3.8-flash}
+          ocr: ${GEMINI_OCR_MODEL:}
           chat: ${GEMINI_CHAT_MODELS:}
         priority: 6
       - id: openrouter
@@ -201,7 +199,6 @@ api:
           chat: ${OPENCODE_OPENAI_CHAT_MODELS:}
         priority: 8
         authentication: BEARER
-        catalog-path: /inference/v1/models
       - id: opencode-claude
         region: OVERSEAS
         access-mode: AGGREGATOR
@@ -213,7 +210,6 @@ api:
           chat: ${OPENCODE_CLAUDE_CHAT_MODELS:}
         priority: 9
         authentication: BEARER
-        catalog-path: /inference/v1/models
       - id: opencode-chat
         region: OVERSEAS
         access-mode: AGGREGATOR
@@ -225,7 +221,6 @@ api:
           chat: ${OPENCODE_CHAT_MODELS:}
         priority: 10
         authentication: BEARER
-        catalog-path: /inference/v1/models
       - id: opencode-gemini
         region: OVERSEAS
         access-mode: AGGREGATOR
@@ -237,7 +232,6 @@ api:
           chat: ${OPENCODE_GEMINI_CHAT_MODELS:}
         priority: 11
         authentication: BEARER
-        catalog-path: /inference/v1/models
 
       - id: zhipu
         region: MAINLAND

@@ -13,8 +13,7 @@ class CapabilityFacadeFlowTest {
     @AfterEach void closeRegistry() { registry.close(); }
     @Test void ocrRejectsInvalidOutputFallsBackAndReportsExhaustionWithoutFabrication() throws Exception {
         var providers=mock(cn.gdeiassistant.core.capability.ai.AiProviderRegistry.class);
-        var catalog=mock(cn.gdeiassistant.core.capability.ai.AiModelCatalog.class);
-        var ai=new cn.gdeiassistant.core.capability.ai.AiService(providers,catalog,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
+        var ai=new cn.gdeiassistant.core.capability.ai.AiService(providers,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
         var local=mock(LocalCaptchaOcrProvider.class);when(local.isConfigured()).thenReturn(true);
         when(local.execute(any())).thenReturn("1234");
         var service=new OcrService(ai,local);

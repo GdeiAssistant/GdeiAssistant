@@ -32,9 +32,9 @@ class AiServiceTest {
         {
             var service=new AiService(registry,catalog,meters,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
             assertEquals("answer for a future chat feature",service.generate("chat",AiRequest.text("question")));
-            var local=mock(LocalCaptchaOcrProvider.class);var ocr=new OcrService(service,local);
-            assertEquals("1234",ocr.recognizeDigits("c3ludGhldGlj"));verifyNoInteractions(local);
-            assertEquals(2,ocr.getProviderStatus().size());
+            var local=mock(LocalCaptchaOcrProvider.class);when(local.isConfigured()).thenReturn(true);var ocr=new OcrService(service,local);
+            assertEquals("1234",ocr.recognizeDigits("c3ludGhldGlj"));verify(local,never()).execute(any());
+            assertEquals(3,ocr.getProviderStatus().size());
             assertThrows(ProviderChainExhaustedException.class,()->service.generate("summary",AiRequest.text("question")));
             assertThrows(IllegalArgumentException.class,()->service.generate("Invalid Route",AiRequest.text("question")));
             assertEquals("",ocr.recognizeDigits(""));

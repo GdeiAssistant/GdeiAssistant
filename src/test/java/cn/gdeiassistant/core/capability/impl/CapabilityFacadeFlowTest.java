@@ -12,9 +12,10 @@ class CapabilityFacadeFlowTest {
     private final SimpleMeterRegistry registry = new SimpleMeterRegistry();
     @AfterEach void closeRegistry() { registry.close(); }
     @Test void ocrRejectsInvalidOutputFallsBackAndReportsExhaustionWithoutFabrication() throws Exception {
-        var ai=mock(cn.gdeiassistant.core.capability.ai.AiService.class);
-        var local=mock(LocalCaptchaOcrProvider.class);
-        when(ai.generate(eq("ocr"),any(),any())).thenThrow(new cn.gdeiassistant.common.exception.ProviderChainExhaustedException(java.util.List.of("synthetic")));
+        var providers=mock(cn.gdeiassistant.core.capability.ai.AiProviderRegistry.class);
+        var catalog=mock(cn.gdeiassistant.core.capability.ai.AiModelCatalog.class);
+        var ai=new cn.gdeiassistant.core.capability.ai.AiService(providers,catalog,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
+        var local=mock(LocalCaptchaOcrProvider.class);when(local.isConfigured()).thenReturn(true);
         when(local.execute(any())).thenReturn("1234");
         var service=new OcrService(ai,local);
         assertEquals("1234",service.recognizeCaptcha("synthetic","digits",4));assertEquals("1234",service.recognizeDigits("synthetic"));

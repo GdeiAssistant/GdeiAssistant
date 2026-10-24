@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.exception.ProviderChainExhaustedException;
 import cn.gdeiassistant.common.exception.ProviderException;
 import cn.gdeiassistant.core.capability.ai.AiRequest;
 import cn.gdeiassistant.core.capability.ai.AiService;
+import cn.gdeiassistant.core.capability.ServiceProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,19 @@ import java.util.Map;
 public class OcrService {
     private static final Logger log = LoggerFactory.getLogger(OcrService.class);
     private final AiService ai;
-    private final LocalCaptchaOcrProvider local;
-    public OcrService(AiService ai, LocalCaptchaOcrProvider local) { this.ai = ai; this.local = local; }
+    private final List<ServiceProvider<AiRequest, String>> localFallback;
+    public OcrService(AiService ai, LocalCaptchaOcrProvider local) {
+        this.ai = ai;
+        this.localFallback = List.of(new ServiceProvider<AiRequest, String>() {
+            public String providerName() { return "local-ocr"; }
+            public int priority() { return 1000; }
+            public boolean isConfigured() { return local.isConfigured(); }
+            public String execute(AiRequest request) throws ProviderException {
+                AiRequest.Message message = request.messages().get(0);
+                return local.execute(new OcrRequest(message.images().get(0).base64(), message.text(), null, 0));
+            }
+        });
+    }
     public String recognizeCaptcha(String imageBase64, String typeHint, int length) {
         return recognize(OcrRequest.forCaptcha(imageBase64, typeHint, length));
     }
@@ -29,17 +41,11 @@ public class OcrService {
         if (request.getImageBase64() == null || request.getImageBase64().isBlank()) return "";
         try {
             return ai.generate("ocr", AiRequest.image(request.getPrompt(), "image/png", request.getImageBase64()),
-                    result -> valid(request, result));
+                    result -> valid(request, result), localFallback);
         } catch (ProviderChainExhaustedException failure) {
-            try {
-                String result = local.execute(request);
-                if (valid(request, result)) return result;
-            } catch (ProviderException ignored) {
-                // Optional recognition failure: never log images or upstream response bodies.
-            }
             log.warn("OCR recognition unavailable from configured AI models and local engine");
             return "";
         }
     }
-    public List<Map<String, Object>> getProviderStatus() { return ai.providerStatus("ocr"); }
+    public List<Map<String, Object>> getProviderStatus() { return ai.providerStatus("ocr", localFallback); }
 }

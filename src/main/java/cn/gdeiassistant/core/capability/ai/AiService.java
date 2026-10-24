@@ -21,16 +21,15 @@ public class AiService {
     private record Route(List<String> names, ProviderChain<Call, String> chain) {}
     private final Map<String, Route> routes = new HashMap<>();
     private final AiProviderRegistry providers;
-    private final AiModelCatalog catalog;
     private final MeterRegistry meters;
     private final CircuitBreakerRegistry breakers;
     private final Executor executor;
     private final Duration budget;
 
-    public AiService(AiProviderRegistry providers, AiModelCatalog catalog, MeterRegistry meters,
+    public AiService(AiProviderRegistry providers, MeterRegistry meters,
                      CircuitBreakerRegistry breakers, @Qualifier("providerExecutor") Executor executor,
                      OutboundIntegrationProperties settings) {
-        this.providers = providers; this.catalog = catalog; this.meters = meters; this.breakers = breakers;
+        this.providers = providers; this.meters = meters; this.breakers = breakers;
         this.executor = executor; this.budget = Duration.ofMillis(settings.getProviderBudgetMs());
     }
     public String generate(String route, AiRequest request) throws ProviderChainExhaustedException {
@@ -52,7 +51,7 @@ public class AiService {
 
     private synchronized ProviderChain<Call, String> route(String name, List<ServiceProvider<AiRequest, String>> fallbacks) {
         if (name == null || !name.matches("[a-z][a-z0-9-]{0,63}")) throw new IllegalArgumentException("Invalid AI route");
-        var candidates = new ArrayList<>(providers.providers(name, catalog));
+        var candidates = new ArrayList<>(providers.providers(name));
         candidates.addAll(fallbacks);
         var names = candidates.stream().map(ServiceProvider::providerName).toList();
         Route current = routes.get(name);

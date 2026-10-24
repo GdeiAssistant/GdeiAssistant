@@ -24,13 +24,13 @@ class AiServiceTest {
         var settings=new AiProperties();var endpoint=endpoint("china",AiProperties.Region.MAINLAND,AiProtocol.OPENAI_CHAT);
         endpoint.setRoutes(Map.of("chat",List.of("text-model"),"ocr",List.of("vision-one","vision-two")));
         settings.setEndpoints(List.of(endpoint));var registry=new AiProviderRegistry(settings,new OutboundIntegrationProperties());
-        var catalog=new AiModelCatalog(settings,registry);var server=MockRestServiceServer.bindTo(registry.http()).build();
+        var server=MockRestServiceServer.bindTo(registry.http()).build();
         for(String text:List.of("answer for a future chat feature","explanation instead of digits","1234")) {
             server.expect(requestTo("https://synthetic.invalid/v1/chat/completions"))
                     .andRespond(withSuccess("{\"choices\":[{\"message\":{\"content\":\""+text+"\"}}]}",MediaType.APPLICATION_JSON));
         }
         {
-            var service=new AiService(registry,catalog,meters,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
+            var service=new AiService(registry,meters,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
             assertEquals("answer for a future chat feature",service.generate("chat",AiRequest.text("question")));
             var local=mock(LocalCaptchaOcrProvider.class);when(local.isConfigured()).thenReturn(true);var ocr=new OcrService(service,local);
             assertEquals("1234",ocr.recognizeDigits("c3ludGhldGlj"));verify(local,never()).execute(any());
@@ -41,24 +41,23 @@ class AiServiceTest {
         }
         server.verify();
     }
-    @Test void retiredModelsDisappearFromAlreadyUsedQueueWithoutADeployAndCanReturnIfRestored() throws Exception {
+    @Test void explicitlyConfiguredModelsAreTriedInOrderWithoutCatalogRequests() throws Exception {
         var settings=new AiProperties();var endpoint=endpoint("china",AiProperties.Region.MAINLAND,AiProtocol.OPENAI_CHAT);
-        settings.setEndpoints(List.of(endpoint));var registry=new AiProviderRegistry(settings,new OutboundIntegrationProperties());
-        var catalog=new AiModelCatalog(settings,registry);var server=MockRestServiceServer.bindTo(registry.http()).build();
-        for(String listing:List.of("{\"data\":[{\"id\":\"vision-one\"},{\"id\":\"vision-two\"}]}",
-                "{\"data\":[{\"id\":\"vision-two\",\"lifecycle\":\"deprecated\"}]}",
-                "{\"data\":[{\"id\":\"vision-one\"},{\"id\":\"vision-two\"}]}")) {
-            server.expect(requestTo("https://synthetic.invalid/v1/models")).andRespond(withSuccess(listing,MediaType.APPLICATION_JSON));
-        }
-        {
-            var service=new AiService(registry,catalog,meters,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
-            assertEquals(2,service.providerStatus("ocr").size());catalog.refresh();assertEquals(2,service.providerStatus("ocr").size());
-            catalog.refresh();assertTrue(service.providerStatus("ocr").isEmpty());
-            assertThrows(ProviderChainExhaustedException.class,()->service.generate("ocr",AiRequest.text("question")));
-            assertTrue(catalog.isUnavailable("china","vision-one"));assertTrue(catalog.isUnavailable("china","vision-two"));
-            catalog.refresh();assertEquals(2,service.providerStatus("ocr").size());
-        }
-        server.verify();
+        endpoint.setRoutes(Map.of("chat",List.of("model-v1","model-v2")));settings.setEndpoints(List.of(endpoint));
+        var registry=new AiProviderRegistry(settings,new OutboundIntegrationProperties());
+        var server=MockRestServiceServer.bindTo(registry.http()).build();
+        server.expect(requestTo("https://synthetic.invalid/v1/chat/completions"))
+                .andExpect(request -> assertEquals("model-v1",JSONObject.parseObject(
+                        ((org.springframework.mock.http.client.MockClientHttpRequest)request).getBodyAsString()).getString("model")))
+                .andRespond(withStatus(org.springframework.http.HttpStatus.SERVICE_UNAVAILABLE));
+        server.expect(requestTo("https://synthetic.invalid/v1/chat/completions"))
+                .andExpect(request -> assertEquals("model-v2",JSONObject.parseObject(
+                        ((org.springframework.mock.http.client.MockClientHttpRequest)request).getBodyAsString()).getString("model")))
+                .andRespond(withSuccess("{\"choices\":[{\"message\":{\"content\":\"configured fallback answer\"}}]}",MediaType.APPLICATION_JSON));
+        var service=new AiService(registry,meters,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
+        assertEquals("configured fallback answer",service.generate("chat",AiRequest.text("question")));
+        assertEquals(List.of("china/model-v1","china/model-v2"),service.providerStatus("chat").stream().map(status -> status.get("name")).toList());
+        assertEquals(List.of("model-v1","model-v2"),endpoint.getRoutes().get("chat"));server.verify();
     }
     @Test void genericMessagesPreserveRolesImagesSystemInstructionsAndTokenBudgetAcrossProtocols() {
         var messages=List.of(AiRequest.Message.text(AiRequest.Role.SYSTEM,"system instruction"),

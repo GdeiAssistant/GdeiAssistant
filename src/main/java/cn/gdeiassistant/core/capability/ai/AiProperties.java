@@ -16,13 +16,10 @@ public class AiProperties {
     public enum Authentication { NATIVE, BEARER }
 
     private Region region = Region.MAINLAND;
-    private boolean catalogEnabled = true;
     private List<Endpoint> endpoints = new ArrayList<>();
 
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = Objects.requireNonNull(region); }
-    public boolean isCatalogEnabled() { return catalogEnabled; }
-    public void setCatalogEnabled(boolean value) { catalogEnabled = value; }
     public List<Endpoint> getEndpoints() { return endpoints; }
     public void setEndpoints(List<Endpoint> value) { endpoints = List.copyOf(value); }
     public boolean permits(Endpoint endpoint) { return endpoint.region == region; }
@@ -38,7 +35,6 @@ public class AiProperties {
                 throw new IllegalArgumentException("AI endpoint requires region, access-mode and protocol: " + endpoint.id);
             }
             secureBase(endpoint.baseUrl);
-            if (!endpoint.catalogPath.isBlank()) securePath(endpoint.catalogPath);
             if (endpoint.priority < 0 || endpoint.priority >= 1000) throw new IllegalArgumentException("Invalid AI priority");
             if (endpoint.routes.values().stream().anyMatch(models -> new HashSet<>(models).size() != models.size())) {
                 throw new IllegalArgumentException("Duplicate AI models: " + endpoint.id);
@@ -60,13 +56,6 @@ public class AiProperties {
         }
     }
 
-    private static void securePath(String value) {
-        if (!value.startsWith("/") || value.startsWith("//") || value.contains("..")
-                || value.contains("?") || value.contains("#") || value.contains("\\")) {
-            throw new IllegalArgumentException("AI catalog path must be an absolute path on the configured host");
-        }
-    }
-
     public static class Endpoint {
         private String id;
         private Region region;
@@ -75,7 +64,6 @@ public class AiProperties {
         private Authentication authentication = Authentication.NATIVE;
         private String baseUrl = "";
         private String apiKey = "";
-        private String catalogPath = "";
         private int priority;
         private Map<String, List<String>> routes = new LinkedHashMap<>();
         public String getId() { return id; }
@@ -92,8 +80,6 @@ public class AiProperties {
         public void setBaseUrl(String value) { baseUrl = value.replaceAll("/+$", ""); }
         public String getApiKey() { return apiKey; }
         public void setApiKey(String value) { apiKey = value; }
-        public String getCatalogPath() { return catalogPath; }
-        public void setCatalogPath(String value) { catalogPath = value; }
         public int getPriority() { return priority; }
         public void setPriority(int value) { priority = value; }
         /** Approved model queues by business route, e.g. ocr, chat, summary. */
@@ -107,9 +93,5 @@ public class AiProperties {
             routes = Collections.unmodifiableMap(copy);
         }
         public boolean isConfigured() { return apiKey != null && !apiKey.isBlank(); }
-        public URI catalogUri() {
-            return catalogPath.isBlank() ? URI.create(baseUrl + "/models")
-                    : URI.create(baseUrl).resolve(catalogPath);
-        }
     }
 }

@@ -26,10 +26,9 @@ public class AiProviderRegistry {
         this.http = new RestTemplate(factory);
     }
     public RestTemplate http() { return http; }
-    public List<ServiceProvider<AiRequest, String>> providers(String route, AiModelCatalog catalog) {
+    public List<ServiceProvider<AiRequest, String>> providers(String route) {
         return settings.getEndpoints().stream().filter(settings::permits).filter(AiProperties.Endpoint::isConfigured)
                 .flatMap(endpoint -> endpoint.getRoutes().getOrDefault(route, List.of()).stream()
-                        .filter(model -> !catalog.isUnavailable(endpoint.getId(), model))
                         .map(model -> (ServiceProvider<AiRequest, String>) new AiModelProvider(settings, endpoint, model, http))).toList();
     }
 }

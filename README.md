@@ -185,4 +185,4 @@ npm run test:e2e
 
 ### AI 服务适配
 
-通用 AI 调用、境内外路由、直连与聚合平台、模型目录定时更新及型号淘汰见 [AI 服务说明](docs/AI_SERVICES.zh-CN.md)。
+通用 AI 调用、境内外路由、直连与聚合平台、手动模型配置见 [AI 服务说明](docs/AI_SERVICES.zh-CN.md)。

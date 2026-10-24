@@ -58,11 +58,11 @@ public class AiService {
         Route current = routes.get(name);
         if (current != null && current.names().equals(names)) return current.chain();
         List<ServiceProvider<Call, String>> adapters = candidates.stream().map(provider -> (ServiceProvider<Call, String>) new ServiceProvider<Call, String>() {
-            public String providerName() { return provider.providerName(); }
-            public int priority() { return provider.priority(); }
-            public boolean isConfigured() { return provider.isConfigured(); }
-            public boolean isHealthy() { return provider.isHealthy(); }
-            public String execute(Call call) throws ProviderException { return provider.execute(call.request()); }
+            @Override public String providerName() { return provider.providerName(); }
+            @Override public int priority() { return provider.priority(); }
+            @Override public boolean isConfigured() { return provider.isConfigured(); }
+            @Override public boolean isHealthy() { return provider.isHealthy(); }
+            @Override public String execute(Call call) throws ProviderException { return provider.execute(call.request()); }
         }).toList();
         var chain = new ProviderChain<>("ai." + name, adapters, meters, breakers,
                 (Call call, String result) -> call.validResult().test(result), executor, budget);

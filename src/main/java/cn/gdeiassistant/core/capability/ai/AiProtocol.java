@@ -72,7 +72,10 @@ public enum AiProtocol {
                 body.put("model", model); body.put("input", messages); body.put("store", false);
                 body.put("max_output_tokens", request.maxOutputTokens());
             }
-            case OPENAI_CHAT, ANTHROPIC -> {
+            case OPENAI_CHAT -> {
+                body.put("model", model); body.put("messages", messages); body.put("max_tokens", request.maxOutputTokens());
+            }
+            case ANTHROPIC -> {
                 body.put("model", model); body.put("messages", messages); body.put("max_tokens", request.maxOutputTokens());
                 if (!system.isEmpty()) body.put("system", system.toString());
             }

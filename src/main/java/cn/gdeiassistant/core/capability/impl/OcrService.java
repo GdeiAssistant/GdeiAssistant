@@ -20,10 +20,10 @@ public class OcrService {
     public OcrService(AiService ai, LocalCaptchaOcrProvider local) {
         this.ai = ai;
         this.localFallback = List.of(new ServiceProvider<AiRequest, String>() {
-            public String providerName() { return "local-ocr"; }
-            public int priority() { return 1000; }
-            public boolean isConfigured() { return local.isConfigured(); }
-            public String execute(AiRequest request) throws ProviderException {
+            @Override public String providerName() { return "local-ocr"; }
+            @Override public int priority() { return 1000; }
+            @Override public boolean isConfigured() { return local.isConfigured(); }
+            @Override public String execute(AiRequest request) throws ProviderException {
                 AiRequest.Message message = request.messages().get(0);
                 return local.execute(new OcrRequest(message.images().get(0).base64(), message.text(), null, 0));
             }

@@ -1,72 +1,45 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderChainExhaustedException;
-import cn.gdeiassistant.core.capability.ProviderChain;
-import cn.gdeiassistant.core.capability.ServiceProvider;
-import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
-import io.micrometer.core.instrument.MeterRegistry;
+import cn.gdeiassistant.common.exception.ProviderException;
+import cn.gdeiassistant.core.capability.ai.AiRequest;
+import cn.gdeiassistant.core.capability.ai.AiService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
+/** OCR owns recognition constraints and the local fallback; AI transport is shared with other features. */
 @Component
 public class OcrService {
-
     private static final Logger log = LoggerFactory.getLogger(OcrService.class);
-
-    private final ProviderChain<OcrRequest, String> chain;
-
-    @Autowired
-    public OcrService(
-            DeepSeekOcrProvider deepSeekOcrProvider,
-            DoubaoOcrProvider doubaoOcrProvider,
-            GeminiOcrProvider geminiOcrProvider,
-            OpenAiOcrProvider openAiOcrProvider,
-            ClaudeOcrProvider claudeOcrProvider,
-            LocalCaptchaOcrProvider localCaptchaOcrProvider,
-            MeterRegistry meterRegistry,
-            CircuitBreakerRegistry circuitBreakerRegistry,
-            @org.springframework.beans.factory.annotation.Qualifier("providerExecutor") java.util.concurrent.Executor executor,
-            cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
-        List<ServiceProvider<OcrRequest, String>> providers = Arrays.asList(
-                deepSeekOcrProvider,
-                doubaoOcrProvider,
-                geminiOcrProvider,
-                openAiOcrProvider,
-                claudeOcrProvider,
-                localCaptchaOcrProvider
-        );
-        this.chain = new ProviderChain<>("ocr", providers, meterRegistry, circuitBreakerRegistry, (request, result) ->
-                result != null && !result.isBlank() && (request.getLength() > 0
-                        ? result.trim().matches("[A-Za-z0-9]{" + request.getLength() + "}")
-                        : result.trim().matches("[0-9]+")), executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs()));
-    }
-
+    private final AiService ai;
+    private final LocalCaptchaOcrProvider local;
+    public OcrService(AiService ai, LocalCaptchaOcrProvider local) { this.ai = ai; this.local = local; }
     public String recognizeCaptcha(String imageBase64, String typeHint, int length) {
+        return recognize(OcrRequest.forCaptcha(imageBase64, typeHint, length));
+    }
+    public String recognizeDigits(String imageBase64) { return recognize(OcrRequest.forDigits(imageBase64)); }
+    private boolean valid(OcrRequest request, String result) {
+        return result != null && !result.isBlank() && (request.getLength() > 0
+                ? result.trim().matches("[A-Za-z0-9]{" + request.getLength() + "}") : result.trim().matches("[0-9]+"));
+    }
+    private String recognize(OcrRequest request) {
+        if (request.getImageBase64() == null || request.getImageBase64().isBlank()) return "";
         try {
-            OcrRequest request = OcrRequest.forCaptcha(imageBase64, typeHint, length);
-            return chain.execute(request);
-        } catch (ProviderChainExhaustedException e) {
-            log.error("AI验证码识别 — 所有 provider 均不可用", e);
+            return ai.generate("ocr", AiRequest.image(request.getPrompt(), "image/png", request.getImageBase64()),
+                    result -> valid(request, result));
+        } catch (ProviderChainExhaustedException failure) {
+            try {
+                String result = local.execute(request);
+                if (valid(request, result)) return result;
+            } catch (ProviderException ignored) {
+                // Optional recognition failure: never log images or upstream response bodies.
+            }
+            log.warn("OCR recognition unavailable from configured AI models and local engine");
             return "";
         }
     }
-
-    public String recognizeDigits(String imageBase64) {
-        try {
-            OcrRequest request = OcrRequest.forDigits(imageBase64);
-            return chain.execute(request);
-        } catch (ProviderChainExhaustedException e) {
-            log.error("AI数字识别 — 所有 provider 均不可用", e);
-            return "";
-        }
-    }
-
-    public ProviderChain<OcrRequest, String> getChain() {
-        return chain;
-    }
+    public List<Map<String, Object>> getProviderStatus() { return ai.providerStatus("ocr"); }
 }

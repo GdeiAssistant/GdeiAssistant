@@ -12,15 +12,15 @@ class CapabilityFacadeFlowTest {
     private final SimpleMeterRegistry registry = new SimpleMeterRegistry();
     @AfterEach void closeRegistry() { registry.close(); }
     @Test void ocrRejectsInvalidOutputFallsBackAndReportsExhaustionWithoutFabrication() throws Exception {
-        var deep=mock(DeepSeekOcrProvider.class);var doubao=mock(DoubaoOcrProvider.class);var gemini=mock(GeminiOcrProvider.class);var openai=mock(OpenAiOcrProvider.class);var claude=mock(ClaudeOcrProvider.class);var local=mock(LocalCaptchaOcrProvider.class);
-        when(deep.providerName()).thenReturn("deepseek");when(deep.isConfigured()).thenReturn(true);when(deep.isHealthy()).thenReturn(true);when(deep.execute(any())).thenReturn("explanation instead of digits");
-        when(gemini.providerName()).thenReturn("gemini");when(gemini.priority()).thenReturn(2);when(gemini.isConfigured()).thenReturn(true);when(gemini.isHealthy()).thenReturn(true);when(gemini.execute(any())).thenReturn("1234");
-        {
-            var service=new OcrService(deep,doubao,gemini,openai,claude,local,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
-            assertEquals("1234",service.recognizeCaptcha("synthetic","digits",4));assertEquals("1234",service.recognizeDigits("synthetic"));assertNotNull(service.getChain());verify(gemini,times(2)).execute(any());
-            when(deep.execute(any())).thenThrow(new ProviderException("synthetic outage"));when(gemini.execute(any())).thenThrow(new ProviderException("synthetic outage"));
-            assertEquals("",service.recognizeDigits("synthetic"));assertEquals("",service.recognizeCaptcha("synthetic","digits",4));
-        }
+        var ai=mock(cn.gdeiassistant.core.capability.ai.AiService.class);
+        var local=mock(LocalCaptchaOcrProvider.class);
+        when(ai.generate(eq("ocr"),any(),any())).thenThrow(new cn.gdeiassistant.common.exception.ProviderChainExhaustedException(java.util.List.of("synthetic")));
+        when(local.execute(any())).thenReturn("1234");
+        var service=new OcrService(ai,local);
+        assertEquals("1234",service.recognizeCaptcha("synthetic","digits",4));assertEquals("1234",service.recognizeDigits("synthetic"));
+        assertNotNull(service.getProviderStatus());verify(local,times(2)).execute(any());
+        when(local.execute(any())).thenThrow(new ProviderException("synthetic outage"));
+        assertEquals("",service.recognizeDigits("synthetic"));assertEquals("",service.recognizeCaptcha("synthetic","digits",4));
     }
     @Test void missingSmsServicesFailClearlyAndFallbackPreservesGlobalCountryContext() throws Exception {
         var tencent=mock(TencentSmsProvider.class);var aliyun=mock(AliyunSmsProvider.class);when(tencent.providerName()).thenReturn("tencent");when(aliyun.providerName()).thenReturn("aliyun");when(aliyun.priority()).thenReturn(1);

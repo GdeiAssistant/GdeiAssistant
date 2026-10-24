@@ -105,25 +105,210 @@ encrypt:
 
 api:
   ai:
-    ocr:
-      openai:
-        api-key: ${OPENAI_API_KEY:}
-        model: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
-      gemini:
-        api-key: ${GEMINI_API_KEY:}
-        model: ${GEMINI_OCR_MODEL:gemini-3.8-flash}
-      claude:
-        api-key: ${CLAUDE_API_KEY:}
-        model: ${CLAUDE_OCR_MODEL:claude-sonnet-4-20250514}
-        api-url: ${CLAUDE_OCR_API_URL:https://api.anthropic.com/v1/messages}
-      deepseek:
-        api-key: ${DEEPSEEK_API_KEY:}
-        model: ${DEEPSEEK_OCR_MODEL:deepseek-chat}
-        base-url: ${DEEPSEEK_OCR_BASE_URL:https://api.deepseek.com/v1}
-      doubao:
+    # One deployment uses one processing region; fallback and discovery obey the same policy.
+    region: ${AI_SERVICE_REGION:MAINLAND}
+    catalog-enabled: ${AI_MODEL_CATALOG_ENABLED:true}
+    catalog-refresh-ms: ${AI_MODEL_CATALOG_REFRESH_MS:21600000}
+    endpoints:
+      - id: doubao
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${DOUBAO_BASE_URL:${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}}
         api-key: ${DOUBAO_API_KEY:}
-        model: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}
-        base-url: ${DOUBAO_OCR_BASE_URL:https://ark.cn-beijing.volces.com/api/v3}
+        routes:
+          ocr: ${DOUBAO_OCR_MODEL:doubao-1.5-vision-pro-32k}
+          chat: ${DOUBAO_CHAT_MODELS:}
+        priority: 0
+      - id: deepseek
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${DEEPSEEK_BASE_URL:${DEEPSEEK_OCR_BASE_URL:https://api.deepseek.com/v1}}
+        api-key: ${DEEPSEEK_API_KEY:}
+        routes:
+          ocr: ${DEEPSEEK_OCR_MODEL:}
+          chat: ${DEEPSEEK_CHAT_MODELS:}
+        priority: 1
+      - id: qwen
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${QWEN_BASE_URL:${QWEN_OCR_BASE_URL:https://dashscope.aliyuncs.com/compatible-mode/v1}}
+        api-key: ${QWEN_API_KEY:}
+        routes:
+          ocr: ${QWEN_OCR_MODEL:qwen-vl-plus}
+          chat: ${QWEN_CHAT_MODELS:}
+        priority: 2
+      - id: siliconflow
+        region: MAINLAND
+        access-mode: AGGREGATOR
+        protocol: OPENAI_CHAT
+        base-url: ${SILICONFLOW_BASE_URL:${SILICONFLOW_OCR_BASE_URL:https://api.siliconflow.cn/v1}}
+        api-key: ${SILICONFLOW_API_KEY:}
+        routes:
+          ocr: ${SILICONFLOW_OCR_MODEL:}
+          chat: ${SILICONFLOW_CHAT_MODELS:}
+        priority: 3
+      - id: openai
+        region: OVERSEAS
+        access-mode: DIRECT
+        protocol: OPENAI_RESPONSES
+        base-url: ${OPENAI_BASE_URL:${OPENAI_OCR_BASE_URL:https://api.openai.com/v1}}
+        api-key: ${OPENAI_API_KEY:}
+        routes:
+          ocr: ${OPENAI_OCR_MODEL:gpt-4.1-mini}
+          chat: ${OPENAI_CHAT_MODELS:}
+        priority: 4
+      - id: claude
+        region: OVERSEAS
+        access-mode: DIRECT
+        protocol: ANTHROPIC
+        base-url: ${CLAUDE_BASE_URL:${CLAUDE_OCR_BASE_URL:https://api.anthropic.com/v1}}
+        api-key: ${CLAUDE_API_KEY:}
+        routes:
+          ocr: ${CLAUDE_OCR_MODEL:}
+          chat: ${CLAUDE_CHAT_MODELS:}
+        priority: 5
+      - id: gemini
+        region: OVERSEAS
+        access-mode: DIRECT
+        protocol: GEMINI
+        base-url: ${GEMINI_BASE_URL:${GEMINI_OCR_BASE_URL:https://generativelanguage.googleapis.com/v1beta}}
+        api-key: ${GEMINI_API_KEY:}
+        routes:
+          ocr: ${GEMINI_OCR_MODEL:gemini-3.8-flash}
+          chat: ${GEMINI_CHAT_MODELS:}
+        priority: 6
+      - id: openrouter
+        region: OVERSEAS
+        access-mode: AGGREGATOR
+        protocol: OPENAI_CHAT
+        base-url: ${OPENROUTER_BASE_URL:${OPENROUTER_OCR_BASE_URL:https://openrouter.ai/api/v1}}
+        api-key: ${OPENROUTER_API_KEY:}
+        routes:
+          ocr: ${OPENROUTER_OCR_MODEL:}
+          chat: ${OPENROUTER_CHAT_MODELS:}
+        priority: 7
+      - id: opencode-openai
+        region: OVERSEAS
+        access-mode: AGGREGATOR
+        protocol: OPENAI_RESPONSES
+        base-url: ${OPENCODE_OPENAI_BASE_URL:${OPENCODE_OPENAI_OCR_BASE_URL:https://opencode.ai/inference/openai/v1}}
+        api-key: ${OPENCODE_API_KEY:}
+        routes:
+          ocr: ${OPENCODE_OPENAI_OCR_MODEL:}
+          chat: ${OPENCODE_OPENAI_CHAT_MODELS:}
+        priority: 8
+        authentication: BEARER
+        catalog-path: /inference/v1/models
+      - id: opencode-claude
+        region: OVERSEAS
+        access-mode: AGGREGATOR
+        protocol: ANTHROPIC
+        base-url: ${OPENCODE_CLAUDE_BASE_URL:${OPENCODE_CLAUDE_OCR_BASE_URL:https://opencode.ai/inference/anthropic/v1}}
+        api-key: ${OPENCODE_API_KEY:}
+        routes:
+          ocr: ${OPENCODE_CLAUDE_OCR_MODEL:}
+          chat: ${OPENCODE_CLAUDE_CHAT_MODELS:}
+        priority: 9
+        authentication: BEARER
+        catalog-path: /inference/v1/models
+      - id: opencode-chat
+        region: OVERSEAS
+        access-mode: AGGREGATOR
+        protocol: OPENAI_CHAT
+        base-url: ${OPENCODE_CHAT_BASE_URL:${OPENCODE_CHAT_OCR_BASE_URL:https://opencode.ai/inference/openai/v1}}
+        api-key: ${OPENCODE_API_KEY:}
+        routes:
+          ocr: ${OPENCODE_CHAT_OCR_MODEL:}
+          chat: ${OPENCODE_CHAT_MODELS:}
+        priority: 10
+        authentication: BEARER
+        catalog-path: /inference/v1/models
+      - id: opencode-gemini
+        region: OVERSEAS
+        access-mode: AGGREGATOR
+        protocol: GEMINI
+        base-url: ${OPENCODE_GEMINI_BASE_URL:${OPENCODE_GEMINI_OCR_BASE_URL:https://opencode.ai/inference/google/v1beta}}
+        api-key: ${OPENCODE_API_KEY:}
+        routes:
+          ocr: ${OPENCODE_GEMINI_OCR_MODEL:}
+          chat: ${OPENCODE_GEMINI_CHAT_MODELS:}
+        priority: 11
+        authentication: BEARER
+        catalog-path: /inference/v1/models
+
+      - id: zhipu
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${ZHIPU_BASE_URL:https://open.bigmodel.cn/api/paas/v4}
+        api-key: ${ZHIPU_API_KEY:}
+        routes:
+          ocr: ${ZHIPU_OCR_MODEL:}
+          chat: ${ZHIPU_CHAT_MODELS:}
+        priority: 12
+      - id: moonshot
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${MOONSHOT_BASE_URL:https://api.moonshot.cn/v1}
+        api-key: ${MOONSHOT_API_KEY:}
+        routes:
+          ocr: ${MOONSHOT_OCR_MODEL:}
+          chat: ${MOONSHOT_CHAT_MODELS:}
+        priority: 13
+      - id: minimax
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${MINIMAX_BASE_URL:https://api.minimaxi.com/v1}
+        api-key: ${MINIMAX_API_KEY:}
+        routes:
+          ocr: ${MINIMAX_OCR_MODEL:}
+          chat: ${MINIMAX_CHAT_MODELS:}
+        priority: 14
+      - id: baidu
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${BAIDU_BASE_URL:https://qianfan.baidubce.com/v2}
+        api-key: ${BAIDU_API_KEY:}
+        routes:
+          ocr: ${BAIDU_OCR_MODEL:}
+          chat: ${BAIDU_CHAT_MODELS:}
+        priority: 15
+      - id: hunyuan
+        region: MAINLAND
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${HUNYUAN_BASE_URL:https://api.hunyuan.cloud.tencent.com/v1}
+        api-key: ${HUNYUAN_API_KEY:}
+        routes:
+          ocr: ${HUNYUAN_OCR_MODEL:}
+          chat: ${HUNYUAN_CHAT_MODELS:}
+        priority: 16
+      - id: xai
+        region: OVERSEAS
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${XAI_BASE_URL:https://api.x.ai/v1}
+        api-key: ${XAI_API_KEY:}
+        routes:
+          ocr: ${XAI_OCR_MODEL:}
+          chat: ${XAI_CHAT_MODELS:}
+        priority: 17
+      - id: mistral
+        region: OVERSEAS
+        access-mode: DIRECT
+        protocol: OPENAI_CHAT
+        base-url: ${MISTRAL_BASE_URL:https://api.mistral.ai/v1}
+        api-key: ${MISTRAL_API_KEY:}
+        routes:
+          ocr: ${MISTRAL_OCR_MODEL:}
+          chat: ${MISTRAL_CHAT_MODELS:}
+        priority: 18
 
 sms:
   tencent:

@@ -1,0 +1,98 @@
+name: 问题反馈
+description: 报告可以复现的缺陷
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        这个仓库包含后端接口和 Web 前端。客户端问题请到对应仓库反馈：Android / iOS / 小程序。
+
+        提交前请先搜索已有 Issue。
+
+        **不要在 Issue 里贴真实账号、密码、验证码、Token、Cookie 或他人个人信息。** 日志和截图请先脱敏。
+        安全问题请按 [SECURITY.md](../blob/master/SECURITY.md) 处理，不要开公开 Issue。
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: 问题是什么
+      description: 先用一句话说清现象，再补充细节。
+      placeholder: 例如：课表页切到第 20 周后显示空白
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 能稳定复现最好。只出现过一次也请说明。
+      placeholder: |
+        1. 打开课表页
+        2. 切换到第 20 周
+        3. 页面显示空白
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望结果与实际结果
+      placeholder: |
+        期望：显示第 20 周的课程
+        实际：空白，没有报错提示
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: 版本
+      description: 后端或前端的 commit、tag，或部署时间。
+      placeholder: 例如：v2.0.0 / commit 1a2b3c4
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: 运行环境
+      description: 部署方式、数据库、浏览器。自建部署请说明。
+      placeholder: 例如：Docker 部署，MariaDB 10.11，Chrome 130
+    validations:
+      required: true
+
+  - type: dropdown
+    id: network
+    attributes:
+      label: 网络环境
+      description: 只在特定网络下出现的问题，多半和网络层有关。
+      options:
+        - 校园网
+        - 移动数据
+        - 家用宽带
+        - 代理或 VPN
+        - 不确定
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志或截图
+      description: 请先脱敏。没有可以留空。
+      render: text
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已搜索过已有 Issue，没有重复
+          required: true
+        - label: 内容里没有真实账号、密码、验证码、Token 或他人个人信息
+          required: true
+        - label: 这不是安全问题（安全问题走 SECURITY.md）
+          required: true

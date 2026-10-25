@@ -120,7 +120,7 @@ npm run dev
 
 成绩、课表这些数据靠模拟登录拿到，但文本处理、图片识别这类任务走独立的 AI 服务层：境内外路由、直连与聚合平台、官方 `latest` 别名与定时模型更新都在那一层。
 
-接入方式和配置见 [AI 服务说明](docs/AI_SERVICES.zh-CN.md)。
+接入方式和配置见 [AI 服务说明](docs/ai-services.zh-CN.md)。
 
 ## 项目结构
 

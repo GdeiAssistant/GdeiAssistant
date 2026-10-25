@@ -1,6 +1,6 @@
 # 社交与私信实现说明（GdeiAssistant）
 
-日期：2026-10-06（图片私信追加及实际验证）。对应共享契约：`docs/SOCIAL_MESSAGING_DESIGN.zh-CN.md`（未改字段/端点；实现遵循最新「图片私信追加契约」）。
+日期：2026-10-06（图片私信追加及实际验证）。对应共享契约：`docs/social-messaging-design.zh-CN.md`（未改字段/端点；实现遵循最新「图片私信追加契约」）。
 
 ## 身份模型
 

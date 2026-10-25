@@ -133,12 +133,13 @@ CLAUDE.md
 frontend/coverage/
 
 # 内部审计、复盘与交接记录不进仓库。
-# 这类文档是一次性资料，写的时候有用，留在仓库里只会变成过期且误导人的「当前状态」。
-# 需要追溯时看 commit 历史或本地存档。
-*AUDIT*.md
-*audit*.md
-*-REVIEW-*.md
-*_REVIEW_*.md
-*HANDOFF*.md
+# 这类文档描述某一刻的状态，写完之后代码继续变，它不会跟着变，
+# 留在仓库里只会变成一份看起来权威的过期材料。需要追溯时看 commit 历史。
+*[Aa][Uu][Dd][Ii][Tt]*.md
+*[Hh][Aa][Nn][Dd][Oo][Ff][Ff]*.md
+*-[Rr][Ee][Vv][Ii][Ee][Ww]-*.md
+*_[Rr][Ee][Vv][Ii][Ee][Ww]_*.md
 docs/audits/
+docs/plans/
+docs/handoffs/
 docs/superpowers/

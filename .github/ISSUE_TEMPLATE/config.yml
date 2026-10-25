@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 安全问题
+    url: https://github.com/GdeiAssistant/GdeiAssistant/blob/master/SECURITY.md
+    about: 不要在公开 Issue 里报告安全漏洞，先看这里。
+  - name: 使用问题与讨论
+    url: https://github.com/GdeiAssistant/GdeiAssistant/blob/master/README.md
+    about: 先看 README 的快速开始和功能边界，很多问题那里已有答案。

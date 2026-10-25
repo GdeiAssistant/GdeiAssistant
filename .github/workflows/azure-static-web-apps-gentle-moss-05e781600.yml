@@ -6,18 +6,19 @@ on:
       - master
     paths:
       - 'frontend/**'
-      - '.github/workflows/azure-static-web-apps-gentle-moss-05e781600.yml'
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - master
     paths:
       - 'frontend/**'
-      - '.github/workflows/azure-static-web-apps-gentle-moss-05e781600.yml'
   pull_request_target:
     types: [closed]
     branches:
       - master
+
+permissions:
+  contents: read
 
 jobs:
   build_and_deploy_job:
@@ -27,11 +28,12 @@ jobs:
     env:
       VITE_APP_BASE_API: https://gdeiassistant.azurewebsites.net/api
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          persist-credentials: false
           submodules: true
           lfs: false
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24.14.1
           cache: npm
@@ -42,7 +44,7 @@ jobs:
           npm run build --prefix frontend
       - name: Build And Deploy
         id: builddeploy
-        uses: Azure/static-web-apps-deploy@v1
+        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_MOSS_05E781600 }}
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
@@ -63,7 +65,7 @@ jobs:
     steps:
       - name: Close Pull Request
         id: closepullrequest
-        uses: Azure/static-web-apps-deploy@v1
+        uses: Azure/static-web-apps-deploy@4d27395796ac319302594769cfe812bd207490b1 # v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_GENTLE_MOSS_05E781600 }}
           action: "close"

@@ -58,6 +58,7 @@ npm run check:location-names --prefix frontend
 
 ## 命名与文档
 
+- 文档语言按项目读者和现有约定选择，可使用英文、中文或其他语言；通用开发者资料默认优先英文，业务和本地化资料使用目标读者的语言。保持同一文档用语一致，不顺带整篇翻译或新增无维护需求的多语副本。
 - 新增文档文件名小写、`-` 连接，中文版后缀 `.zh-CN.md`；`README.md`、`AGENTS.md` 等工具约定文件保留固定名称。源码沿用现有语言命名。
 - 不提交审计报告、复盘、交接单、进度快照、升级计划。要追溯看 commit 历史。
 - 改文件名时同一次提交改完所有引用。
@@ -71,13 +72,13 @@ npm run check:location-names --prefix frontend
 
 ## 提交与 PR
 
-Conventional Commits，标题中文，不超过 50 字。类型只用 `feat` `fix` `docs` `refactor` `test` `chore` `perf` `ci`。
+遵循 Conventional Commits，commit 标题原则上使用英文并保持简洁（建议 50 字符以内）；项目有明确不同语言约定时按其约定。类型只用 `feat` `fix` `docs` `refactor` `test` `chore` `perf` `ci`。
 
 分支名 `<type>/<主题>`，例如 `docs/normalize-filenames`。不直接推默认分支，不 force push 已 review 的分支。
 
 提交、推送、合并及生产动作按用户已明确授权的范围执行；同范围已有授权不重复确认。
 
-PR 描述写改了什么、为什么改、怎么验证。
+PR 标题和说明原则上使用英文，写清问题、变更后行为和实际验证；项目有明确不同语言约定时按其约定。
 
 ## AI 维护与交付
 

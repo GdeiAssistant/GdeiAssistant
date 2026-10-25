@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 import sys
 import unicodedata
 import urllib.parse
@@ -194,6 +195,18 @@ def check_paragraphs(root: Path, path: Path) -> None:
 
 
 def check_agents(root: Path) -> None:
+    tracked = subprocess.run(
+        ["git", "ls-files", "--cached", "-z", "--", "AGENTS.md", "CLAUDE.md"],
+        cwd=root, capture_output=True, text=True, check=False,
+    )
+    if tracked.returncode:
+        err("无法读取 Git 跟踪状态，请在仓库根目录检查 AGENTS.md / CLAUDE.md")
+    else:
+        names = set(tracked.stdout.split("\0"))
+        for name in ("AGENTS.md", "CLAUDE.md"):
+            if name not in names:
+                err(f"{name} 未被 Git 跟踪；本地存在不代表已提交")
+
     agents = root / "AGENTS.md"
     if not agents.exists():
         err("缺少 AGENTS.md，见标准第四章")
@@ -207,7 +220,9 @@ def check_agents(root: Path) -> None:
         err(f"AGENTS.md 缺少章节：{', '.join(missing)}")
 
     claude = root / "CLAUDE.md"
-    if claude.exists():
+    if not claude.exists():
+        err("缺少 CLAUDE.md，内容应为单行 @AGENTS.md")
+    else:
         content = claude.read_text(encoding="utf-8", errors="ignore").strip()
         if content != "@AGENTS.md":
             err("CLAUDE.md 内容应为单行 @AGENTS.md，不要复制 AGENTS.md 正文")
@@ -244,7 +259,7 @@ def check_secrets(root: Path) -> None:
             continue
         for pat, label in SECRET_PATTERNS:
             for m in pat.finditer(text):
-                err(f"{p.relative_to(root)}: 疑似硬编码{label} {m.group(0)[:12]}…")
+                err(f"{p.relative_to(root)}: 疑似硬编码{label}（值不输出）")
 
 
 def main() -> int:

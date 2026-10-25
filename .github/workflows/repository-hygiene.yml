@@ -1,0 +1,23 @@
+name: Repository hygiene
+on:
+  pull_request:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  hygiene:
+    name: Repository hygiene
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify checker regressions
+        run: python scripts/test_hygiene.py
+      - name: Check versioned instructions and repository hygiene
+        run: python scripts/check_hygiene.py

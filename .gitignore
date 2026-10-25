@@ -130,3 +130,14 @@ CLAUDE.md
 .cursorrules
 # Frontend test coverage artifacts
 frontend/coverage/
+
+# 内部审计、复盘与交接记录不进仓库。
+# 这类文档是一次性资料，写的时候有用，留在仓库里只会变成过期且误导人的「当前状态」。
+# 需要追溯时看 commit 历史或本地存档。
+*AUDIT*.md
+*audit*.md
+*-REVIEW-*.md
+*_REVIEW_*.md
+*HANDOFF*.md
+docs/audits/
+docs/superpowers/

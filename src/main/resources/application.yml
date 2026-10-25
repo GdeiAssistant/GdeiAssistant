@@ -107,6 +107,9 @@ api:
   ai:
     # One deployment uses one processing region; fallback obeys the same policy.
     region: ${AI_SERVICE_REGION:MAINLAND}
+    auto-update: ${AI_MODEL_AUTO_UPDATE:true}
+    initial-delay-ms: ${AI_MODEL_INITIAL_DELAY_MS:30000}
+    refresh-ms: ${AI_MODEL_REFRESH_MS:21600000}
     endpoints:
       - id: doubao
         region: MAINLAND
@@ -117,6 +120,13 @@ api:
         routes:
           ocr: ${DOUBAO_OCR_MODEL:}
           chat: ${DOUBAO_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'doubao-seed-(?<version>[0-9]+(?:[.-][0-9]+)*)-lite(?:-(?<revision>[0-9]{6}))?'
+              image-input: true
+          ocr:
+            - pattern: 'doubao-seed-(?<version>[0-9]+(?:[.-][0-9]+)*)-lite(?:-(?<revision>[0-9]{6}))?'
+              image-input: true
         priority: 0
       - id: deepseek
         region: MAINLAND
@@ -127,6 +137,13 @@ api:
         routes:
           ocr: ${DEEPSEEK_OCR_MODEL:}
           chat: ${DEEPSEEK_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - alias: deepseek-flash
+              image-input: true
+          ocr:
+            - alias: deepseek-flash
+              image-input: true
         priority: 1
       - id: qwen
         region: MAINLAND
@@ -137,6 +154,13 @@ api:
         routes:
           ocr: ${QWEN_OCR_MODEL:}
           chat: ${QWEN_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - alias: qwen-plus-latest
+              image-input: false
+          ocr:
+            - alias: qwen-vl-plus-latest
+              image-input: true
         priority: 2
       - id: siliconflow
         region: MAINLAND
@@ -147,6 +171,13 @@ api:
         routes:
           ocr: ${SILICONFLOW_OCR_MODEL:}
           chat: ${SILICONFLOW_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'deepseek-ai/DeepSeek-V(?<version>[0-9]+(?:[.-][0-9]+)*)-Flash'
+              image-input: false
+          ocr:
+            - pattern: 'Qwen/Qwen(?<version>[0-9]+(?:[.-][0-9]+)*)-VL-[0-9]+B(?:-A[0-9]+B)?-Instruct'
+              image-input: true
         priority: 3
       - id: openai
         region: OVERSEAS
@@ -157,6 +188,13 @@ api:
         routes:
           ocr: ${OPENAI_OCR_MODEL:}
           chat: ${OPENAI_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
+          ocr:
+            - pattern: 'gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
         priority: 4
       - id: claude
         region: OVERSEAS
@@ -167,6 +205,13 @@ api:
         routes:
           ocr: ${CLAUDE_OCR_MODEL:}
           chat: ${CLAUDE_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
+          ocr:
+            - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
         priority: 5
       - id: gemini
         region: OVERSEAS
@@ -177,6 +222,13 @@ api:
         routes:
           ocr: ${GEMINI_OCR_MODEL:}
           chat: ${GEMINI_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - alias: gemini-flash-latest
+              image-input: true
+          ocr:
+            - alias: gemini-flash-latest
+              image-input: true
         priority: 6
       - id: openrouter
         region: OVERSEAS
@@ -187,6 +239,21 @@ api:
         routes:
           ocr: ${OPENROUTER_OCR_MODEL:}
           chat: ${OPENROUTER_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'openai/gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
+            - pattern: 'anthropic/claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
+            - pattern: 'google/gemini-(?<version>[0-9]+(?:\.[0-9]+)?)-flash'
+              image-input: true
+          ocr:
+            - pattern: 'openai/gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
+            - pattern: 'anthropic/claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
+            - pattern: 'google/gemini-(?<version>[0-9]+(?:\.[0-9]+)?)-flash'
+              image-input: true
         priority: 7
       - id: opencode-openai
         region: OVERSEAS
@@ -197,6 +264,14 @@ api:
         routes:
           ocr: ${OPENCODE_OPENAI_OCR_MODEL:}
           chat: ${OPENCODE_OPENAI_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
+          ocr:
+            - pattern: 'gpt-(?<version>[0-9]+(?:\.[0-9]+)?)-sol'
+              image-input: true
+        catalog-path: /inference/v1/models
         priority: 8
         authentication: BEARER
       - id: opencode-claude
@@ -208,6 +283,14 @@ api:
         routes:
           ocr: ${OPENCODE_CLAUDE_OCR_MODEL:}
           chat: ${OPENCODE_CLAUDE_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
+          ocr:
+            - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+              image-input: true
+        catalog-path: /inference/v1/models
         priority: 9
         authentication: BEARER
       - id: opencode-chat
@@ -219,6 +302,16 @@ api:
         routes:
           ocr: ${OPENCODE_CHAT_OCR_MODEL:}
           chat: ${OPENCODE_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'deepseek-v(?<version>(?:4\.[1-9][0-9]*|[5-9]|[1-9][0-9]+)(?:\.[0-9]+)?)-flash'
+              image-input: true
+            - pattern: 'glm-(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
+          ocr:
+            - pattern: 'deepseek-v(?<version>(?:4\.[1-9][0-9]*|[5-9]|[1-9][0-9]+)(?:\.[0-9]+)?)-flash'
+              image-input: true
+        catalog-path: /inference/v1/models
         priority: 10
         authentication: BEARER
       - id: opencode-gemini
@@ -230,6 +323,14 @@ api:
         routes:
           ocr: ${OPENCODE_GEMINI_OCR_MODEL:}
           chat: ${OPENCODE_GEMINI_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'gemini-(?<version>[0-9]+(?:\.[0-9]+)?)-flash'
+              image-input: true
+          ocr:
+            - pattern: 'gemini-(?<version>[0-9]+(?:\.[0-9]+)?)-flash'
+              image-input: true
+        catalog-path: /inference/v1/models
         priority: 11
         authentication: BEARER
 
@@ -242,6 +343,13 @@ api:
         routes:
           ocr: ${ZHIPU_OCR_MODEL:}
           chat: ${ZHIPU_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'glm-(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
+          ocr:
+            - pattern: 'glm-(?<version>[0-9]+(?:[.-][0-9]+)*)v'
+              image-input: true
         priority: 12
       - id: moonshot
         region: MAINLAND
@@ -252,6 +360,13 @@ api:
         routes:
           ocr: ${MOONSHOT_OCR_MODEL:}
           chat: ${MOONSHOT_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'kimi-k(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
+          ocr:
+            - pattern: 'kimi-k(?<version>(?:2\.[5-9]|[3-9][0-9]*)(?:\.[0-9]+)?)'
+              image-input: true
         priority: 13
       - id: minimax
         region: MAINLAND
@@ -262,6 +377,10 @@ api:
         routes:
           ocr: ${MINIMAX_OCR_MODEL:}
           chat: ${MINIMAX_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'MiniMax-M(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
         priority: 14
       - id: baidu
         region: MAINLAND
@@ -272,6 +391,10 @@ api:
         routes:
           ocr: ${BAIDU_OCR_MODEL:}
           chat: ${BAIDU_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'ernie-(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
         priority: 15
       - id: hunyuan
         region: MAINLAND
@@ -282,6 +405,10 @@ api:
         routes:
           ocr: ${HUNYUAN_OCR_MODEL:}
           chat: ${HUNYUAN_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - alias: hunyuan-turbos-latest
+              image-input: false
         priority: 16
       - id: xai
         region: OVERSEAS
@@ -292,6 +419,10 @@ api:
         routes:
           ocr: ${XAI_OCR_MODEL:}
           chat: ${XAI_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - pattern: 'grok-(?<version>[0-9]+(?:[.-][0-9]+)*)'
+              image-input: false
         priority: 17
       - id: mistral
         region: OVERSEAS
@@ -302,6 +433,13 @@ api:
         routes:
           ocr: ${MISTRAL_OCR_MODEL:}
           chat: ${MISTRAL_CHAT_MODELS:}
+        automatic-routes:
+          chat:
+            - alias: mistral-small-latest
+              image-input: true
+          ocr:
+            - alias: mistral-small-latest
+              image-input: true
         priority: 18
 
 sms:

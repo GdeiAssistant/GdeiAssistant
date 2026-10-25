@@ -47,5 +47,5 @@ public class OcrService {
             return "";
         }
     }
-    public List<Map<String, Object>> getProviderStatus() { return ai.providerStatus("ocr", localFallback); }
+    public List<Map<String, Object>> getProviderStatus() { return ai.providerStatus("ocr", true, localFallback); }
 }

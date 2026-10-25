@@ -11,7 +11,7 @@ flowchart LR
   Policy --> Chain[同区域模型降级链与熔断]
   Chain --> Adapter[Responses / Chat / Messages / Gemini 适配器]
   Adapter --> Platform[直连厂商或聚合平台]
-  Config[手动配置模型 ID 与尝试顺序] --> Service
+  Config[官方别名 / 定时选择最新系列版本 / 固定型号] --> Service
 ```
 
 协议适配器负责 HTTP 请求和响应，平台配置负责地址、凭据、实际处理区域及模型队列；直连与聚合平台使用相同接口。`ProviderChain` 继续负责失败降级、总时间预算、指标和熔断。没有引入新的 SDK、网关服务或生产依赖。
@@ -49,11 +49,13 @@ flowchart LR
 
 ```dotenv
 AI_SERVICE_REGION=MAINLAND
-QWEN_CHAT_MODELS=qwen-plus
-QWEN_OCR_MODEL=qwen-vl-plus
+AI_MODEL_AUTO_UPDATE=true
+# 留空采用自动规则；填写型号则固定该业务队列
+QWEN_CHAT_MODELS=
+QWEN_OCR_MODEL=
 ```
 
-示例型号用于说明配置方式，使用前核对服务商当前目录。一个变量可以配置逗号分隔的多个型号，按列表顺序尝试。所有业务队列默认留空，不内置模型型号。空队列不启用该业务，空 API key 不启用该端点。平台之间按 `priority` 从小到大降级。
+示例型号用于说明配置方式，使用前核对服务商当前目录。一个变量可以配置逗号分隔的多个型号，按列表顺序尝试。显式队列默认留空，使用下述自动规则；空 API key 不启用该端点。平台之间按 `priority` 从小到大降级。
 
 ```java
 String answer = aiService.generate("chat", AiRequest.text("请总结这段公开资料……"));
@@ -73,21 +75,44 @@ routes:
 
 同一个模型可以出现在多个业务队列。配置 OCR 时必须选支持图片输入的模型，不能仅根据名字或厂商判断。未来如果增加不支持图片的协议，须明确拒绝相应请求，不能悄悄丢弃图片。
 
-## 模型由配置决定
+## 自动使用最新模型
 
-模型 ID、数量和尝试顺序完全由部署者配置。服务不定时拉取模型目录，不推断模型新旧或质量，不自动加入、删除或替换型号，也不做额外推理评测。
+`AI_MODEL_AUTO_UPDATE=true` 默认启用自动选择，分两种方式：
 
-新增或替换模型时，修改对应的 `*_CHAT_MODELS`、`*_OCR_MODEL` 或 YAML `routes`。更新部署环境变量后重启应用使配置生效。本地修改 `.env` 后需要重新启动 `bootRun`。
+1. **官方别名**：DeepSeek `deepseek-flash`、通义 `qwen-plus-latest` / `qwen-vl-plus-latest`、Gemini `gemini-flash-latest`、Mistral `mistral-small-latest`、混元 `hunyuan-turbos-latest`（文本）。应用直接发送该 ID，平台更新其背后的版本，不需要额外查目录或重启。
+2. **版本目录**：其他默认规则在启动 30 秒后、此后每 6 小时通过当前端点的模型目录选择指定系列的最大数字版本。刷新结果直接替换调用队列，下一次业务请求即使用新型号。例如 `gpt-6.1-sol` 替换 `gpt-6-sol`，`claude-sonnet-5-5` 替换 `claude-sonnet-5`。按数字比较版本，`10` 大于 `9`；不把目录创建时间、列表位置或字符串排序当作新旧依据。
 
-可以只配置一个模型，也可以配置多个备用型号。模型错误、下线、超时或返回不符合业务校验的内容时，按当前配置尝试下一个模型；连续失败由熔断器暂时跳过，等待恢复探测。这不会修改配置中的型号列表。永久停用某个型号时，手动从配置中删除。
+“最新”限定在同一系列和档位：OpenAI Sol、Claude Sonnet、Gemini Flash、豆包 Seed Lite 等，不自动从轻量型号跳到旗舰档，也不代表质量评测结果。通义的 `qwen-plus-latest` 跟随 Plus 别名，并不表示 Qwen 平台全部系列中最新的模型。Gemini 官方说明 `latest` 可以指向稳定版、预览版或实验版；需要固定行为时填写明确型号。目录规则使用完整系列模式，默认不匹配 preview、实验、免费专用、音频、embedding 或代码专用后缀。
+
+目录规则在端点的 `automatic-routes` 配置：
+
+```yaml
+automatic-routes:
+  chat:
+    - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+      image-input: true
+  summary:
+    - pattern: 'claude-sonnet-(?<version>[0-9]+(?:[.-][0-9]{1,2})?)(?:-(?<revision>[0-9]{8}))?'
+      image-input: true
+```
+
+每条规则只保留一个最新型号，多条规则按配置顺序组成队列。新增系列时由服务端配置明确其协议和图片能力；平台目录不能改变端点、区域、认证方式或准许的系列。如果目录提供能力元数据，明确不支持图片或文本输出的型号会被排除。请求含图片时还会过滤仅批准文本输入的自动规则。显式队列仍由部署者负责选择兼容型号。
+
+只有当前区域、有 API key、且存在未被显式队列覆盖的版本规则的端点才查目录。OpenCode 的目录固定使用同一批准主机的 `/inference/v1/models`，各协议端点只匹配对应系列。完整分页成功后一次替换结果，移除目录中消失、明确 deprecated / retired / unavailable 或已到期的型号。失败、响应格式错误、分页中断或循环时保留上次成功结果和原更新时间，状态标为失败；成功空目录会清空选择。未首次成功更新时不猜测型号，继续其他平台或本地备用方案。目录快照仅存内存，重启后重新刷新。
+
+`AI_MODEL_INITIAL_DELAY_MS`、`AI_MODEL_REFRESH_MS` 控制定时周期。内部 Actuator `aimodels` 分别提供文本请求和图片请求的当前选择、更新时间、是否需要目录及刷新结果，默认不通过 HTTP 暴露；不含凭据、提示词或图片。官方别名无需目录，刷新时间和结果为 null，不能据此断言调用已通过。不会发送额外推理请求，不增加付费质量测试；正常业务使用的新型号仍按平台价格收费。
+
+填写 `*_CHAT_MODELS`、`*_OCR_MODEL` 或非空 `routes` 会覆盖该业务的自动规则，可固定单个型号或有序备用队列。`AI_MODEL_AUTO_UPDATE=false` 关闭所有自动规则，只使用显式队列。自定义端点无法从目录判定兼容系列时，配置官方别名、明确系列规则或固定型号，不任意挑选目录中一个模型。
+
+依据：[Gemini 别名规则](https://ai.google.dev/gemini-api/docs/models#latest)、[通义系列说明](https://help.aliyun.com/zh/model-studio/faq-about-alibaba-cloud-model-studio)、[DeepSeek 视觉接口](https://api-docs.deepseek.com/guides/vision/)、[Mistral 视觉接口](https://docs.mistral.ai/studio/conversations/vision)、[混元模型列表](https://cloud.tencent.com/document/product/876/131318)、[SiliconFlow 模型升级](https://docs.siliconflow.cn/docs/release-notes/overview)、[Claude 模型目录](https://platform.claude.com/docs/en/api/models/list)。
 
 ## 原配置迁移
 
 - `OPENAI_API_KEY`、`CLAUDE_API_KEY`、`GEMINI_API_KEY`、`DEEPSEEK_API_KEY`、`DOUBAO_API_KEY` 继续有效；原 `*_OCR_MODEL` 用作 `ocr` 队列，可填写多个型号。
 - 新增通用 `*_BASE_URL`，原 `*_OCR_BASE_URL` 继续作为后备读取。`CLAUDE_OCR_API_URL` 原来是完整 `/messages` URL，现在改用 `CLAUDE_BASE_URL=https://api.anthropic.com/v1`。
 - 原 `AI_OCR_PROVIDER` 未实际控制旧降级链，现已从模板移除；现在由区域、业务队列和 priority 共同决定。
-- 所有厂商的模型配置默认留空，需明确填写所需业务的模型 ID；原有显式设置的 `*_OCR_MODEL` 继续有效。
-- 旧 `AI_MODEL_CATALOG_*` 设置和端点 `catalog-path` 已不再使用。AI 模型目录的定时任务、Actuator `aimodels` endpoint 和缓存读写已移除；既有 Redis 目录键不再参与模型选择，无需操作历史数据。
+- 原有非空 `*_OCR_MODEL` 继续固定该业务队列；留空则使用新自动规则。仅配置 key 就会启用当前区域端点已提供的自动规则；需要保持全部手动配置时设置 `AI_MODEL_AUTO_UPDATE=false`。
+- 旧 `AI_MODEL_CATALOG_*` 设置不再使用，改用 `AI_MODEL_AUTO_UPDATE` / `AI_MODEL_REFRESH_MS`。不读取旧 Redis 目录缓存，无需操作历史数据。
 - 从旧版升级后默认 `MAINLAND`，旧配置中只有境外密钥时仅使用本地 OCR。启用境内厂商或另行批准境外部署的配置后，才会调用对应 AI 服务。
 
 ## 协议依据

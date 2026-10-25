@@ -15,9 +15,12 @@ public class AiProperties {
     public enum AccessMode { DIRECT, AGGREGATOR }
     public enum Authentication { NATIVE, BEARER }
 
+    private boolean autoUpdate = true;
     private Region region = Region.MAINLAND;
     private List<Endpoint> endpoints = new ArrayList<>();
 
+    public boolean isAutoUpdate() { return autoUpdate; }
+    public void setAutoUpdate(boolean value) { autoUpdate = value; }
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = Objects.requireNonNull(region); }
     public List<Endpoint> getEndpoints() { return endpoints; }
@@ -35,6 +38,10 @@ public class AiProperties {
                 throw new IllegalArgumentException("AI endpoint requires region, access-mode and protocol: " + endpoint.id);
             }
             secureBase(endpoint.baseUrl);
+            if (!endpoint.catalogPath.matches("/[A-Za-z0-9/_-]+") || endpoint.catalogPath.contains("//")) {
+                throw new IllegalArgumentException("Invalid AI catalog path");
+            }
+            endpoint.automaticRoutes.forEach((route, rules) -> rules.forEach(Selection::validate));
             if (endpoint.priority < 0 || endpoint.priority >= 1000) throw new IllegalArgumentException("Invalid AI priority");
             if (endpoint.routes.values().stream().anyMatch(models -> new HashSet<>(models).size() != models.size())) {
                 throw new IllegalArgumentException("Duplicate AI models: " + endpoint.id);
@@ -65,6 +72,8 @@ public class AiProperties {
         private String baseUrl = "";
         private String apiKey = "";
         private int priority;
+        private String catalogPath = "/models";
+        private Map<String, List<Selection>> automaticRoutes = Map.of();
         private Map<String, List<String>> routes = new LinkedHashMap<>();
         public String getId() { return id; }
         public void setId(String value) { id = value; }
@@ -92,6 +101,44 @@ public class AiProperties {
             });
             routes = Collections.unmodifiableMap(copy);
         }
+        public String getCatalogPath() { return catalogPath; }
+        public void setCatalogPath(String value) { catalogPath = value; }
+        public URI catalogUri() {
+            // A leading /inference/ path is absolute on this approved host, never a remote URL.
+            return catalogPath.equals("/models") ? URI.create(baseUrl + catalogPath) : URI.create(baseUrl).resolve(catalogPath);
+        }
+        public Map<String, List<Selection>> getAutomaticRoutes() { return automaticRoutes; }
+        public void setAutomaticRoutes(Map<String, List<Selection>> value) {
+            var copy = new LinkedHashMap<String, List<Selection>>();
+            value.forEach((route, rules) -> {
+                if (!route.matches("[a-z][a-z0-9-]{0,63}")) throw new IllegalArgumentException("Invalid AI route");
+                copy.put(route, List.copyOf(rules));
+            });
+            automaticRoutes = Collections.unmodifiableMap(copy);
+        }
         public boolean isConfigured() { return apiKey != null && !apiKey.isBlank(); }
+    }
+
+    /** Each rule follows one server-approved model family, using its official alias or numeric version. */
+    public static class Selection {
+        private String alias = "";
+        private String pattern = "";
+        private boolean imageInput;
+        public String getAlias() { return alias; }
+        public void setAlias(String value) { alias = value; }
+        public String getPattern() { return pattern; }
+        public void setPattern(String value) { pattern = value; }
+        public boolean isImageInput() { return imageInput; }
+        public void setImageInput(boolean value) { imageInput = value; }
+        void validate() {
+            if (alias.isBlank() == pattern.isBlank()) throw new IllegalArgumentException("Choose AI alias or version pattern");
+            if (!alias.isBlank() && (!alias.matches("[A-Za-z0-9][A-Za-z0-9._:/-]{0,199}") || alias.contains(".."))) {
+                throw new IllegalArgumentException("Invalid AI alias");
+            }
+            if (!pattern.isBlank()) {
+                java.util.regex.Pattern.compile(pattern);
+                if (!pattern.contains("(?<version>")) throw new IllegalArgumentException("AI pattern needs version group");
+            }
+        }
     }
 }

@@ -34,6 +34,28 @@ class AiRoutingTest {
         assertEquals(AiProperties.Authentication.BEARER,code.getAuthentication());
         assertTrue(settings.getEndpoints().stream().flatMap(endpoint -> endpoint.getRoutes().values().stream()).allMatch(List::isEmpty));
     }
+    @Test void defaultOpenCodeRulesSelectCurrentFamiliesWithoutCrossingNativeProtocols() throws Exception {
+        var environment = new StandardEnvironment();
+        new YamlPropertySourceLoader().load("application", new ClassPathResource("application.yml"))
+                .forEach(source -> environment.getPropertySources().addLast(source));
+        var settings = Binder.get(environment).bind("api.ai", AiProperties.class).get();
+        settings.setRegion(AiProperties.Region.OVERSEAS);
+        settings.getEndpoints().forEach(endpoint -> endpoint.setApiKey(endpoint.getId().startsWith("opencode-") ? "synthetic-only" : ""));
+        settings.validate();
+        var registry = new AiProviderRegistry(settings, new OutboundIntegrationProperties());
+        var server = MockRestServiceServer.bindTo(registry.http()).build();
+        for (int i = 0; i < 4; i++) server.expect(org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo("https://opencode.ai/inference/v1/models"))
+                .andRespond(org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess("""
+                        {"data":[{"id":"gpt-6-sol"},{"id":"gpt-6.1-sol"},{"id":"claude-sonnet-5-5"},
+                        {"id":"gemini-3.8-flash"},{"id":"deepseek-v4.1-flash"},{"id":"glm-5.3"},
+                        {"id":"claude-opus-5-5"},{"id":"gpt-7-codex"},{"id":"test"}]}
+                        """, org.springframework.http.MediaType.APPLICATION_JSON));
+        registry.refreshModels();
+        assertEquals(List.of("opencode-openai/gpt-6.1-sol", "opencode-claude/claude-sonnet-5-5",
+                "opencode-chat/deepseek-v4.1-flash", "opencode-chat/glm-5.3", "opencode-gemini/gemini-3.8-flash"),
+                registry.providers("chat").stream().map(provider -> provider.providerName()).toList());
+        assertEquals(4, registry.providers("ocr", true).size()); server.verify();
+    }
     @Test void regionPolicyFiltersBeforeNetworkAndDirectCallsAlsoFailClosed() {
         var settings=new AiProperties();
         var mainland=endpoint("china",AiProperties.Region.MAINLAND,AiProtocol.OPENAI_CHAT);

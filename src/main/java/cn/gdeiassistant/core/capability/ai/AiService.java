@@ -48,7 +48,10 @@ public class AiService {
     }
     public List<Map<String, Object>> providerStatus(String route) { return providerStatus(route, List.of()); }
     public List<Map<String, Object>> providerStatus(String route, List<ServiceProvider<AiRequest, String>> fallbacks) {
-        return route(route, fallbacks, false).getProviderStatus();
+        return providerStatus(route, false, fallbacks);
+    }
+    public List<Map<String, Object>> providerStatus(String route, boolean images, List<ServiceProvider<AiRequest, String>> fallbacks) {
+        return route(route, fallbacks, images).getProviderStatus();
     }
 
     private synchronized ProviderChain<Call, String> route(String name, List<ServiceProvider<AiRequest, String>> fallbacks, boolean images) {

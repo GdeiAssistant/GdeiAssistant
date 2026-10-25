@@ -79,7 +79,7 @@ routes:
 
 `AI_MODEL_AUTO_UPDATE=true` 默认启用自动选择，分两种方式：
 
-1. **官方别名**：DeepSeek `deepseek-flash`、通义 `qwen-plus-latest` / `qwen-vl-plus-latest`、Gemini `gemini-flash-latest`、Mistral `mistral-small-latest`。应用直接发送该 ID，平台更新其背后的版本，不需要额外查目录或重启。
+1. **官方别名**：DeepSeek `deepseek-flash`、通义 `qwen-plus-latest` / `qwen-vl-plus-latest`、Gemini `gemini-flash-latest`、Mistral `mistral-small-latest`、混元 `hunyuan-turbos-latest`（文本）。应用直接发送该 ID，平台更新其背后的版本，不需要额外查目录或重启。
 2. **版本目录**：其他默认规则在启动 30 秒后、此后每 6 小时通过当前端点的模型目录选择指定系列的最大数字版本。刷新结果直接替换调用队列，下一次业务请求即使用新型号。例如 `gpt-6.1-sol` 替换 `gpt-6-sol`，`claude-sonnet-5-5` 替换 `claude-sonnet-5`。按数字比较版本，`10` 大于 `9`；不把目录创建时间、列表位置或字符串排序当作新旧依据。
 
 “最新”限定在同一系列和档位：OpenAI Sol、Claude Sonnet、Gemini Flash、豆包 Seed Lite 等，不自动从轻量型号跳到旗舰档，也不代表质量评测结果。通义的 `qwen-plus-latest` 跟随 Plus 别名，并不表示 Qwen 平台全部系列中最新的模型。Gemini 官方说明 `latest` 可以指向稳定版、预览版或实验版；需要固定行为时填写明确型号。目录规则使用完整系列模式，默认不匹配 preview、实验、免费专用、音频、embedding 或代码专用后缀。
@@ -100,11 +100,11 @@ automatic-routes:
 
 只有当前区域、有 API key、且存在未被显式队列覆盖的版本规则的端点才查目录。OpenCode 的目录固定使用同一批准主机的 `/inference/v1/models`，各协议端点只匹配对应系列。完整分页成功后一次替换结果，移除目录中消失、明确 deprecated / retired / unavailable 或已到期的型号。失败、响应格式错误、分页中断或循环时保留上次成功结果和原更新时间，状态标为失败；成功空目录会清空选择。未首次成功更新时不猜测型号，继续其他平台或本地备用方案。目录快照仅存内存，重启后重新刷新。
 
-`AI_MODEL_INITIAL_DELAY_MS`、`AI_MODEL_REFRESH_MS` 控制定时周期。内部 Actuator `aimodels` 提供当前选择、更新时间、是否需要目录及刷新结果，默认不通过 HTTP 暴露；不含凭据、提示词或图片。官方别名无需目录，刷新时间和结果为 null，不能据此断言调用已通过。不会发送额外推理请求，不增加付费质量测试；正常业务使用的新型号仍按平台价格收费。
+`AI_MODEL_INITIAL_DELAY_MS`、`AI_MODEL_REFRESH_MS` 控制定时周期。内部 Actuator `aimodels` 分别提供文本请求和图片请求的当前选择、更新时间、是否需要目录及刷新结果，默认不通过 HTTP 暴露；不含凭据、提示词或图片。官方别名无需目录，刷新时间和结果为 null，不能据此断言调用已通过。不会发送额外推理请求，不增加付费质量测试；正常业务使用的新型号仍按平台价格收费。
 
 填写 `*_CHAT_MODELS`、`*_OCR_MODEL` 或非空 `routes` 会覆盖该业务的自动规则，可固定单个型号或有序备用队列。`AI_MODEL_AUTO_UPDATE=false` 关闭所有自动规则，只使用显式队列。自定义端点无法从目录判定兼容系列时，配置官方别名、明确系列规则或固定型号，不任意挑选目录中一个模型。
 
-依据：[Gemini 别名规则](https://ai.google.dev/gemini-api/docs/models#latest)、[通义系列说明](https://help.aliyun.com/zh/model-studio/faq-about-alibaba-cloud-model-studio)、[DeepSeek 视觉接口](https://api-docs.deepseek.com/guides/vision/)、[Mistral 视觉接口](https://docs.mistral.ai/studio/conversations/vision)、[Claude 模型目录](https://platform.claude.com/docs/en/api/models/list)。
+依据：[Gemini 别名规则](https://ai.google.dev/gemini-api/docs/models#latest)、[通义系列说明](https://help.aliyun.com/zh/model-studio/faq-about-alibaba-cloud-model-studio)、[DeepSeek 视觉接口](https://api-docs.deepseek.com/guides/vision/)、[Mistral 视觉接口](https://docs.mistral.ai/studio/conversations/vision)、[混元模型列表](https://cloud.tencent.com/document/product/876/131318)、[SiliconFlow 模型升级](https://docs.siliconflow.cn/docs/release-notes/overview)、[Claude 模型目录](https://platform.claude.com/docs/en/api/models/list)。
 
 ## 原配置迁移
 

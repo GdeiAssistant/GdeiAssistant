@@ -21,7 +21,7 @@ public class AiModelSelection {
     private record Version(String number, String revision) {}
     private record Model(String id, boolean imageInput) {}
     private record Snapshot(List<Model> models, Instant updatedAt, boolean succeeded) {}
-    public record Status(boolean catalogRequired, Instant updatedAt, Boolean lastRefreshSucceeded, Map<String, List<String>> selected) {}
+    public record Status(boolean catalogRequired, Instant updatedAt, Boolean lastRefreshSucceeded, Map<String, List<String>> selected, Map<String, List<String>> imageSelected) {}
     private final AiProperties settings;
     private final RestTemplate http;
     private final Map<String, Snapshot> snapshots = new ConcurrentHashMap<>();
@@ -103,12 +103,16 @@ public class AiModelSelection {
         var result = new LinkedHashMap<String, Status>();
         settings.getEndpoints().stream().filter(settings::permits).filter(AiProperties.Endpoint::isConfigured).forEach(endpoint -> {
             var selected = new LinkedHashMap<String, List<String>>();
+            var imageSelected = new LinkedHashMap<String, List<String>>();
             var routes = new TreeSet<>(endpoint.getAutomaticRoutes().keySet());
             routes.addAll(endpoint.getRoutes().keySet());
-            routes.forEach(route -> selected.put(route, models(endpoint, route, false)));
+            routes.forEach(route -> {
+                selected.put(route, models(endpoint, route, false));
+                imageSelected.put(route, models(endpoint, route, true));
+            });
             Snapshot snapshot = snapshots.get(endpoint.getId());
             result.put(endpoint.getId(), new Status(settings.isAutoUpdate() && needsCatalog(endpoint), snapshot == null ? null : snapshot.updatedAt(),
-                    snapshot == null ? null : snapshot.succeeded(), Collections.unmodifiableMap(selected)));
+                    snapshot == null ? null : snapshot.succeeded(), Collections.unmodifiableMap(selected), Collections.unmodifiableMap(imageSelected)));
         });
         return Collections.unmodifiableMap(result);
     }

@@ -62,7 +62,8 @@ class AiModelSelectionTest {
                 """, MediaType.APPLICATION_JSON));
         registry.refreshModels();
         assertEquals(List.of("china/model-10.2"), names(registry, false));
-        assertEquals(List.of("china/model-10.1"), names(registry, true)); server.verify();
+        assertEquals(List.of("china/model-10.1"), names(registry, true));
+        assertEquals(List.of("model-10.1"), registry.modelStatus().get("china").imageSelected().get("chat")); server.verify();
     }
     @Test void snapshotDateNeverOutranksNextMinorReleaseAndNewerRevisionWinsSameRelease() {
         var endpoint = endpoint("china", AiProperties.Region.MAINLAND, AiProtocol.ANTHROPIC);

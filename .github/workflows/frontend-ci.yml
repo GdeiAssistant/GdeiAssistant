@@ -30,7 +30,7 @@ jobs:
             echo 'frontend=true' >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/frontend-files"
+          git diff --no-renames --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/frontend-files"
           python - <<'PY'
           import os
           from pathlib import Path

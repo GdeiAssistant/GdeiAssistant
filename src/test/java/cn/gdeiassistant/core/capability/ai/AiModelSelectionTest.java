@@ -121,7 +121,7 @@ class AiModelSelectionTest {
         var settings = settings(endpoint); var registry = new AiProviderRegistry(settings, new OutboundIntegrationProperties());
         var server = MockRestServiceServer.bindTo(registry.http()).build();
         registry.refreshModels(); assertTrue(registry.modelStatus().isEmpty());
-        settings.setRegion(AiProperties.Region.OVERSEAS); endpoint.setApiKey(""); registry.refreshModels();
+        settings.setRegionRestrictionEnabled(false); endpoint.setApiKey(""); registry.refreshModels();
         endpoint.setApiKey("synthetic-only"); endpoint.setAutomaticRoutes(Map.of("chat", List.of(family(false))));
         server.expect(anything()).andRespond(withSuccess("{\"data\":[{\"id\":\"model-1\"}]}", MediaType.APPLICATION_JSON));
         registry.refreshModels(); assertEquals(List.of("global/model-1"), names(registry, false)); assertTrue(names(registry, true).isEmpty()); server.verify();

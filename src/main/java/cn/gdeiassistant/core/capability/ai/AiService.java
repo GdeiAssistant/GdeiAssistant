@@ -42,19 +42,22 @@ public class AiService {
     /** Business-owned local fallbacks share the same deadline and result validation. */
     public String generate(String route, AiRequest request, Predicate<String> validResult,
                            List<ServiceProvider<AiRequest, String>> fallbacks) throws ProviderChainExhaustedException {
-        return route(route, fallbacks).execute(new Call(Objects.requireNonNull(request), Objects.requireNonNull(validResult)));
+        Objects.requireNonNull(request);
+        boolean images = request.messages().stream().anyMatch(message -> !message.images().isEmpty());
+        return route(route, fallbacks, images).execute(new Call(request, Objects.requireNonNull(validResult)));
     }
     public List<Map<String, Object>> providerStatus(String route) { return providerStatus(route, List.of()); }
     public List<Map<String, Object>> providerStatus(String route, List<ServiceProvider<AiRequest, String>> fallbacks) {
-        return route(route, fallbacks).getProviderStatus();
+        return route(route, fallbacks, false).getProviderStatus();
     }
 
-    private synchronized ProviderChain<Call, String> route(String name, List<ServiceProvider<AiRequest, String>> fallbacks) {
+    private synchronized ProviderChain<Call, String> route(String name, List<ServiceProvider<AiRequest, String>> fallbacks, boolean images) {
         if (name == null || !name.matches("[a-z][a-z0-9-]{0,63}")) throw new IllegalArgumentException("Invalid AI route");
-        var candidates = new ArrayList<>(providers.providers(name));
+        var candidates = new ArrayList<>(providers.providers(name, images));
         candidates.addAll(fallbacks);
         var names = candidates.stream().map(ServiceProvider::providerName).toList();
-        Route current = routes.get(name);
+        String key = name + (images ? ":image" : ":text");
+        Route current = routes.get(key);
         if (current != null && current.names().equals(names)) return current.chain();
         List<ServiceProvider<Call, String>> adapters = candidates.stream().map(provider -> (ServiceProvider<Call, String>) new ServiceProvider<Call, String>() {
             @Override public String providerName() { return provider.providerName(); }
@@ -65,7 +68,7 @@ public class AiService {
         }).toList();
         var chain = new ProviderChain<>("ai." + name, adapters, meters, breakers,
                 (Call call, String result) -> call.validResult().test(result), executor, budget);
-        routes.put(name, new Route(names, chain));
+        routes.put(key, new Route(names, chain));
         return chain;
     }
 }

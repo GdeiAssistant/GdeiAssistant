@@ -26,6 +26,9 @@ class AiRoutingTest {
         var settings=Binder.get(environment).bind("api.ai",AiProperties.class).get();
         settings.validate();assertEquals(AiProperties.Region.MAINLAND,settings.getRegion());
         assertEquals(19,settings.getEndpoints().size());
+        assertTrue(settings.isAutoUpdate());
+        assertTrue(settings.getEndpoints().stream().allMatch(endpoint -> !endpoint.getAutomaticRoutes().isEmpty()));
+        assertEquals("gemini-flash-latest", settings.getEndpoints().stream().filter(endpoint -> endpoint.getId().equals("gemini")).findFirst().orElseThrow().getAutomaticRoutes().get("chat").get(0).getAlias());
         var code=settings.getEndpoints().stream().filter(e->e.getId().equals("opencode-claude")).findFirst().orElseThrow();
         assertEquals(AiProperties.AccessMode.AGGREGATOR,code.getAccessMode());
         assertEquals(AiProperties.Authentication.BEARER,code.getAuthentication());

@@ -31,7 +31,7 @@ jobs:
             exit 0
           fi
           git diff --no-renames --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/frontend-files"
-          python - <<'PY'
+          python3 - <<'PY'
           import os
           from pathlib import Path
           paths = Path(os.environ['RUNNER_TEMP'], 'frontend-files').read_text().splitlines()
@@ -119,8 +119,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$SCOPE_RESULT" == success ]]
-          case "$FRONTEND_NEEDED:$BUILD_RESULT" in
-            true:success|false:skipped) echo 'Applicable frontend checks passed.' ;;
+          case "$SCOPE_RESULT:$FRONTEND_NEEDED:$BUILD_RESULT" in
+            success:true:success|success:false:skipped) echo 'Applicable frontend checks passed.' ;;
             *) echo 'Frontend verification failed or unexpectedly skipped.' >&2; exit 1 ;;
           esac

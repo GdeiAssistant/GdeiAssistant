@@ -1,0 +1,39 @@
+name: Dependabot update policy
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [master]
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  metadata:
+    name: Verify Dependabot metadata
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      eligible: ${{ steps.policy.outputs.eligible }}
+    steps:
+      # Execute only the protected base revision; never checkout dependency PR code.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - name: Fetch signed Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
+        with:
+          github-token: ${{ github.token }}
+      - name: Check dependency policy against the current PR
+        id: policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DEPENDABOT_DEPENDENCIES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: node .github/scripts/dependabot-policy.cjs metadata
+  safe:
+    name: Safe dependency update
+    needs: metadata
+    if: needs.metadata.outputs.eligible == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Verified patch policy passed; current CI and branch protection must also succeed.'

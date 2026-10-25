@@ -1,11 +1,8 @@
 # Security Policy
 
-## 漏洞报告方式
+## Reporting a vulnerability
 
-如果你发现可能影响 GdeiAssistant 的安全问题，请优先通过项目公开反馈渠道、Issue 或后续公布的安全联系方式提交。
-
-- 对可直接利用、可能导致越权、账号接管、敏感信息泄露、远程执行或批量影响用户的漏洞，请避免在公开 Issue 中直接披露完整利用细节。
-- 如需先公开占位，请仅描述影响范围和大致现象，并等待维护者引导到更适合补充细节的渠道。
+Report security vulnerabilities through [GitHub private vulnerability reporting](https://github.com/GdeiAssistant/GdeiAssistant/security/advisories/new). Do not post exploit details, credentials, private sessions or personal data in public issues or PRs. Include the affected version, impact and minimal redacted reproduction. The maintainer handles reports on a best-effort basis; no bounty or response-time guarantee is implied.
 
 ## 支持版本
 

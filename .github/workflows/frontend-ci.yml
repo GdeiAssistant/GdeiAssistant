@@ -2,28 +2,46 @@ name: Frontend CI
 
 on:
   push:
-    branches:
-      - main
-      - master
-      - 'release/**'
-    paths:
-      - 'design/**'
-      - 'frontend/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/frontend-ci.yml'
+    branches: [main, master, 'release/**']
   pull_request:
-    branches:
-      - main
-      - master
-      - 'release/**'
-    paths:
-      - 'design/**'
-      - 'frontend/**'
-      - 'docker-compose.yml'
-      - '.github/workflows/frontend-ci.yml'
-
+    branches: [main, master, 'release/**']
+permissions:
+  contents: read
 jobs:
+  changes:
+    name: Determine frontend scope
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.scope.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Determine applicable checks
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            echo 'frontend=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git diff --name-only "$BASE_SHA" "$HEAD_SHA" > "$RUNNER_TEMP/frontend-files"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          paths = Path(os.environ['RUNNER_TEMP'], 'frontend-files').read_text().splitlines()
+          needed = any(p.startswith(('frontend/', 'design/')) or p in ('docker-compose.yml', '.github/workflows/frontend-ci.yml') for p in paths)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'frontend={str(needed).lower()}\n')
+          PY
   build-test:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
     name: Build and Test Frontend
     runs-on: ubuntu-latest
     permissions:
@@ -34,10 +52,12 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: frontend/.nvmrc
           cache: npm
@@ -63,7 +83,7 @@ jobs:
 
       - name: Upload coverage report
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: frontend-coverage
           path: frontend/coverage/
@@ -77,10 +97,30 @@ jobs:
 
       - name: Upload Playwright artifacts on failure
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: playwright-artifacts
           path: |
             frontend/playwright-report/
             frontend/test-results/
           retention-days: 7
+
+  verification:
+    name: Frontend verification
+    needs: [changes, build-test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require applicable frontend checks
+        env:
+          SCOPE_RESULT: ${{ needs.changes.result }}
+          FRONTEND_NEEDED: ${{ needs.changes.outputs.frontend }}
+          BUILD_RESULT: ${{ needs.build-test.result }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$SCOPE_RESULT" == success ]]
+          case "$FRONTEND_NEEDED:$BUILD_RESULT" in
+            true:success|false:skipped) echo 'Applicable frontend checks passed.' ;;
+            *) echo 'Frontend verification failed or unexpectedly skipped.' >&2; exit 1 ;;
+          esac

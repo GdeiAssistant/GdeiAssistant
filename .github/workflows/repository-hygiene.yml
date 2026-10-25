@@ -39,3 +39,5 @@ jobs:
           "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes=
       - name: Verify dependency policy regressions
         run: node --test .github/scripts/test-dependabot-policy.cjs
+      - name: Verify frontend scope and failure handling
+        run: python .github/scripts/test_frontend_gate.py

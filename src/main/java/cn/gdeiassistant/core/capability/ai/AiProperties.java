@@ -16,16 +16,19 @@ public class AiProperties {
     public enum Authentication { NATIVE, BEARER }
 
     private boolean autoUpdate = true;
+    private boolean regionRestrictionEnabled = true;
     private Region region = Region.MAINLAND;
     private List<Endpoint> endpoints = new ArrayList<>();
 
     public boolean isAutoUpdate() { return autoUpdate; }
     public void setAutoUpdate(boolean value) { autoUpdate = value; }
+    public boolean isRegionRestrictionEnabled() { return regionRestrictionEnabled; }
+    public void setRegionRestrictionEnabled(boolean value) { regionRestrictionEnabled = value; }
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = Objects.requireNonNull(region); }
     public List<Endpoint> getEndpoints() { return endpoints; }
     public void setEndpoints(List<Endpoint> value) { endpoints = List.copyOf(value); }
-    public boolean permits(Endpoint endpoint) { return endpoint.region == region; }
+    public boolean permits(Endpoint endpoint) { return !regionRestrictionEnabled || endpoint.region == region; }
 
     @PostConstruct
     public void validate() {

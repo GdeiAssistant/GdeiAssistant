@@ -27,6 +27,7 @@ class AiRoutingTest {
         settings.validate();assertEquals(AiProperties.Region.MAINLAND,settings.getRegion());
         assertEquals(19,settings.getEndpoints().size());
         assertTrue(settings.isAutoUpdate());
+        assertTrue(settings.isRegionRestrictionEnabled());
         assertTrue(settings.getEndpoints().stream().allMatch(endpoint -> !endpoint.getAutomaticRoutes().isEmpty()));
         assertEquals("gemini-flash-latest", settings.getEndpoints().stream().filter(endpoint -> endpoint.getId().equals("gemini")).findFirst().orElseThrow().getAutomaticRoutes().get("chat").get(0).getAlias());
         var code=settings.getEndpoints().stream().filter(e->e.getId().equals("opencode-claude")).findFirst().orElseThrow();
@@ -80,6 +81,32 @@ class AiRoutingTest {
         settings.setRegion(AiProperties.Region.OVERSEAS);
         assertEquals(List.of("global/vision-one","global/vision-two"),registry.providers("ocr").stream().map(p->p.providerName()).toList());
         mainland.setApiKey("");settings.setRegion(AiProperties.Region.MAINLAND);assertTrue(registry.providers("ocr").isEmpty());
+    }
+    @Test void disablingRegionRestrictionAllowsBothRegionsAndDirectCallsButStillRequiresCredentials() throws Exception {
+        var settings = new AiProperties();
+        var mainland = endpoint("china", AiProperties.Region.MAINLAND, AiProtocol.OPENAI_CHAT);
+        var overseas = endpoint("global", AiProperties.Region.OVERSEAS, AiProtocol.ANTHROPIC);
+        var unconfigured = endpoint("no-key", AiProperties.Region.OVERSEAS, AiProtocol.OPENAI_CHAT);
+        unconfigured.setApiKey(""); settings.setEndpoints(List.of(mainland, overseas, unconfigured)); settings.validate();
+        var registry = new AiProviderRegistry(settings, new OutboundIntegrationProperties());
+        var server = MockRestServiceServer.bindTo(registry.http()).build();
+        var provider = new AiModelProvider(settings, overseas, "vision-one", registry.http());
+        assertThrows(ProviderException.class, () -> provider.execute(AiRequest.text("question")));
+        settings.setRegionRestrictionEnabled(false);
+        assertEquals(List.of("china/vision-one", "china/vision-two", "global/vision-one", "global/vision-two"),
+                registry.providers("ocr").stream().map(p -> p.providerName()).toList());
+        assertTrue(provider.isConfigured());
+        server.expect(org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo("https://synthetic.invalid/v1/messages"))
+                .andRespond(org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess(
+                        "{\"content\":[{\"type\":\"text\",\"text\":\"answer\"}]}", org.springframework.http.MediaType.APPLICATION_JSON));
+        assertEquals("answer", provider.execute(AiRequest.text("question")));
+        assertFalse(new AiModelProvider(settings, unconfigured, "vision-one", registry.http()).isConfigured());
+        settings.setRegionRestrictionEnabled(true);
+        assertFalse(provider.isConfigured());
+        assertThrows(ProviderException.class, () -> provider.execute(AiRequest.text("question")));
+        assertEquals(List.of("china/vision-one", "china/vision-two"),
+                registry.providers("ocr").stream().map(p -> p.providerName()).toList());
+        server.verify();
     }
     @Test void invalidOrAmbiguousConfigCannotStart() {
         for(String url:List.of("http://synthetic.invalid","https://user:secret@synthetic.invalid","https://synthetic.invalid?key=secret","https://synthetic.invalid#fragment","https://synthetic.invalid/../v1")) {

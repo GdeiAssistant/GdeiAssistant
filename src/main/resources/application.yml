@@ -105,8 +105,9 @@ encrypt:
 
 api:
   ai:
-    # One deployment uses one processing region; fallback obeys the same policy.
+    # Restrict inference and catalog requests to one region unless explicitly disabled.
     region: ${AI_SERVICE_REGION:MAINLAND}
+    region-restriction-enabled: ${AI_REGION_RESTRICTION_ENABLED:true}
     auto-update: ${AI_MODEL_AUTO_UPDATE:true}
     initial-delay-ms: ${AI_MODEL_INITIAL_DELAY_MS:30000}
     refresh-ms: ${AI_MODEL_REFRESH_MS:21600000}

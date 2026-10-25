@@ -304,12 +304,12 @@ api:
           chat: ${OPENCODE_CHAT_MODELS:}
         automatic-routes:
           chat:
-            - pattern: 'deepseek-v(?<version>[0-9]+(?:[.-][0-9]+)*)-flash'
+            - pattern: 'deepseek-v(?<version>(?:4\.[1-9][0-9]*|[5-9]|[1-9][0-9]+)(?:\.[0-9]+)?)-flash'
               image-input: true
             - pattern: 'glm-(?<version>[0-9]+(?:[.-][0-9]+)*)'
               image-input: false
           ocr:
-            - pattern: 'deepseek-v(?<version>[0-9]+(?:[.-][0-9]+)*)-flash'
+            - pattern: 'deepseek-v(?<version>(?:4\.[1-9][0-9]*|[5-9]|[1-9][0-9]+)(?:\.[0-9]+)?)-flash'
               image-input: true
         catalog-path: /inference/v1/models
         priority: 10

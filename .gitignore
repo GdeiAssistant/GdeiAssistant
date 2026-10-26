@@ -145,3 +145,7 @@ docs/superpowers/
 # AI 编程约束随仓库版本管理。
 !/AGENTS.md
 !/CLAUDE.md
+
+# Local Python validation artifacts
+__pycache__/
+*.py[cod]

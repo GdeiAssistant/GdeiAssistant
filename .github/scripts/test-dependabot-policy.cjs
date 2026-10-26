@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const {eligible, checksReady, mergeArguments} = require('./dependabot-policy.cjs');
+const {eligible} = require('./dependabot-policy.cjs');
 
 function fixture() {
   return {
@@ -33,20 +33,3 @@ for (const [name, change] of [
   ['build tool update', f => {f.dependencies[0].dependencyName = 'vite';}],
   ['action update', f => {f.dependencies[0].packageEcosystem = 'github_actions';}],
 ]) test(name + ' needs maintainer review', () => {const f = fixture(); change(f); assert.equal(eligible(f), false);});
-
-test('merge is bound to the verified SHA and never uses admin bypass', () => {
-  const args = mergeArguments('owner/repo', 3, 'a'.repeat(40));
-  assert.equal(args[args.indexOf('--match-head-commit') + 1], 'a'.repeat(40));
-  assert.equal(args.includes('--admin'), false);
-});
-
-function check(conclusion = 'success', name = 'Required') {
-  return {name, app: {id: 15368}, head_sha: 'a'.repeat(40), status: 'completed', conclusion};
-}
-test('current, unique Actions check succeeds', () => assert.equal(checksReady([check()], ['Required'], 'a'.repeat(40)), true));
-for (const [name, values] of [
-  ['missing', []], ['pending', [{...check(), status: 'in_progress', conclusion: null}]],
-  ['failed', [check('failure')]], ['skipped', [check('skipped')]],
-  ['old head', [{...check(), head_sha: 'b'.repeat(40)}]],
-  ['other app', [{...check(), app: {id: 1}}]], ['ambiguous names', [check(), check()]],
-]) test(name + ' checks cannot authorize merge', () => assert.equal(checksReady(values, ['Required'], 'a'.repeat(40)), false));

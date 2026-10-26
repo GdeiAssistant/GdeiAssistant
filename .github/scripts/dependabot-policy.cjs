@@ -58,51 +58,11 @@ function runMetadata() {
   try {dependencies = JSON.parse(process.env.DEPENDABOT_DEPENDENCIES || 'null');} catch {dependencies = null;}
   const safe = files.length === pr.changed_files && eligible({repo, pr, files, commits, dependencies, eventHead: event.pull_request.head.sha});
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `eligible=${safe}\n`);
-  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, safe ? 'A verified patch update is eligible for automatic merge after current CI succeeds.\n' : 'Maintainer review required. Automatic merge is not authorized by this policy.\n');
+  fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, safe ? 'Verified patch metadata passed; maintainer review and current CI are still required.\n' : 'Maintainer review required. This change is outside the verified patch classification.\n');
 }
 
-function mergeArguments(repo, number, sha) {
-  return ['pr', 'merge', String(number), '--repo', repo, '--merge', '--delete-branch', '--match-head-commit', sha];
-}
-
-function checksReady(checks, names, sha) {
-  return names.every(name => {
-    const matching = checks.filter(c => c.name === name && c.app?.id === 15368 && c.head_sha === sha);
-    // Reject ambiguous check names instead of letting an unrelated run satisfy the policy.
-    return matching.length === 1 && matching[0].status === 'completed' && matching[0].conclusion === 'success';
-  });
-}
-
-function runMerge() {
-  const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
-  const run = event.workflow_run;
-  const repo = process.env.GITHUB_REPOSITORY;
-  const config = layouts[repo];
-  if (!config || run?.event !== 'pull_request' || run.conclusion !== 'success' || run.repository?.full_name !== repo) return;
-  let numbers = (run.pull_requests || []).map(p => p.number);
-  if (!numbers.length) numbers = api(`repos/${repo}/commits/${run.head_sha}/pulls`).map(p => p.number);
-  numbers = [...new Set(numbers)];
-  if (numbers.length !== 1 || !Number.isSafeInteger(numbers[0])) return;
-  const number = numbers[0];
-  const pr = api(`repos/${repo}/pulls/${number}`);
-  if (pr.user?.login !== 'dependabot[bot]' || pr.state !== 'open' || pr.draft || pr.base?.ref !== config.branch || pr.base?.repo?.full_name !== repo || pr.head?.repo?.full_name !== repo) return;
-  if (pr.head.sha !== run.head_sha || pr.mergeable !== true || pr.mergeable_state !== 'clean') return;
-  const files = pages(`repos/${repo}/pulls/${number}/files?per_page=100`);
-  if (files.length !== pr.changed_files || !dependencyFilesAllowed(repo, files)) return;
-  const required = (process.env.REQUIRED_CHECKS || '').split('\n').map(s => s.trim()).filter(Boolean);
-  if (!required.includes('Repository hygiene') || !required.includes('Safe dependency update')) throw new Error('Incomplete merge policy');
-  const checkPages = JSON.parse(gh(['api', '--paginate', '--slurp', `repos/${repo}/commits/${pr.head.sha}/check-runs?filter=latest&per_page=100`]));
-  const checks = checkPages.flatMap(p => p.check_runs || []);
-  const failure = new Set(['failure', 'cancelled', 'timed_out', 'action_required', 'stale', 'startup_failure']);
-  if (checks.some(c => failure.has(c.conclusion)) || !checksReady(checks, required, pr.head.sha)) return;
-  // GitHub rejects the merge if the head changes after the preceding API reads.
-  gh(mergeArguments(repo, number, pr.head.sha));
-  console.log(`Merged verified Dependabot PR #${number} at ${pr.head.sha}.`);
-}
-
-module.exports = {eligible, dependencyFilesAllowed, checksReady, mergeArguments};
+module.exports = {eligible, dependencyFilesAllowed};
 if (require.main === module) {
   if (process.argv[2] === 'metadata') runMetadata();
-  else if (process.argv[2] === 'merge') runMerge();
-  else throw new Error('Expected metadata or merge command');
+  else throw new Error('Expected metadata command; merging is maintainer-only');
 }

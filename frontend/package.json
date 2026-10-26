@@ -23,12 +23,12 @@
     "axios": "^1.20.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cropperjs": "^2.3.0",
+    "cropperjs": "^2.3.1",
     "lucide-vue-next": "^1.0.0",
     "radix-vue": "^1.9.17",
     "tailwind-merge": "^3.7.0",
     "vue": "^3.5.44",
-    "vue-i18n": "^11.4.14",
+    "vue-i18n": "^11.4.16",
     "vue-router": "^5.4.0"
   },
   "devDependencies": {
@@ -40,9 +40,9 @@
     "autoprefixer": "^10.6.1",
     "fast-xml-parser": "^5.11.2",
     "jsdom": "^29.1.1",
-    "postcss": "^8.5.30",
+    "postcss": "^8.5.31",
     "tailwindcss": "^4.2.2",
-    "vite": "^8.3.4",
+    "vite": "^8.3.5",
     "vitest": "^5.0.5"
   },
   "overrides": {

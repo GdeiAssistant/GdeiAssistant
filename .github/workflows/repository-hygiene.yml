@@ -38,6 +38,6 @@ jobs:
           tar -xzf "$archive" -C "$RUNNER_TEMP" actionlint
           "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes=
       - name: Verify dependency policy regressions
-        run: node --test .github/scripts/test-dependabot-policy.cjs
+        run: node --test .github/scripts/test-dependabot-policy.cjs .github/scripts/test-maintainer-only.cjs
       - name: Verify frontend scope and failure handling
         run: python .github/scripts/test_frontend_gate.py

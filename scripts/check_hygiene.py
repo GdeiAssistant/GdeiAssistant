@@ -190,6 +190,12 @@ def check_links(root: Path, path: Path) -> None:
         if target.startswith(("http://", "https://", "mailto:", "#", "<")):
             continue
         resolved = (path.parent / urllib.parse.unquote(target.split("#")[0])).resolve()
+        # A link that climbs out of the repository points at a sibling checkout.
+        # CI only has this repository, so the target cannot exist there — that is
+        # a reference this check cannot verify, not a broken link.
+        if not resolved.is_relative_to(root):
+            warn(f"{rel}: cross-repository reference, not checked -> {target}")
+            continue
         if not resolved.exists():
             err(f"{rel}: broken link -> {target}")
 

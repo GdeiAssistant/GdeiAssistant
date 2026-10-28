@@ -34,7 +34,12 @@ jobs:
           --health-retries=10
 
       mongodb:
-        image: mongo:8.0
+        # 8.0 cannot start on Linux 6.19 and newer: it exits with "MongoDB
+        # cannot start: Linux kernel versions 6.19 and newer has a known
+        # incompatibility" (SERVER-121912). Every hosted runner is on 7.0 now,
+        # so the container never comes up and this job fails before checkout.
+        # 8.2 starts and answers ping on the same hosts.
+        image: mongo:8.2
         env:
           MONGO_INITDB_ROOT_USERNAME: synthetic_admin
           MONGO_INITDB_ROOT_PASSWORD: synthetic_ci_only

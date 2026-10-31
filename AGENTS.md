@@ -70,6 +70,13 @@ npm run check:location-names --prefix frontend
 - 不要绕过 `check:location-names`。地点名称有统一来源。
 - 不要在四个客户端之间单方面改接口。服务端、Android、iOS、微信小程序共享同一套契约，改一处要确认另外三处。
 
+<!-- content-boundary:begin -->
+- 公开材料不出现真实资源名与账号：桶写 `gs://<bucket>/...`，账号写 `<account-id>`，示例用合成值。
+- 桶名、账号、主机名从 `vars.*`、环境变量或受保护配置读，不写死在源码、workflow 和文档里。
+- 哈希不是匿名手段：提交号、摘要、截断的 ID 只要能反查到真实对象，就不进公开材料。
+- 判断一次改动是否干净看 `git diff` 和 `git ls-files`；`.gitignore` 只影响未跟踪文件，不能当证据。
+<!-- content-boundary:end -->
+
 ## 提交与 PR
 
 遵循 Conventional Commits，commit 标题原则上使用英文并保持简洁（建议 50 字符以内）；项目有明确不同语言约定时按其约定。类型只用 `feat` `fix` `docs` `refactor` `test` `chore` `perf` `ci`。

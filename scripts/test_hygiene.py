@@ -28,7 +28,8 @@ class AgentInstructionsTest(unittest.TestCase):
         hygiene.warnings.clear()
         self.git("init", "--quiet")
         (self.root / "AGENTS.md").write_text(
-            "\n".join("## " + name for name in hygiene.AGENTS_SECTIONS),
+            "\n".join("## " + name for name in hygiene.AGENTS_SECTIONS)
+            + "\n" + hygiene.CONTENT_BOUNDARY,
             encoding="utf-8",
         )
         (self.root / "CLAUDE.md").write_text("@AGENTS.md\n", encoding="utf-8")
@@ -55,6 +56,15 @@ class AgentInstructionsTest(unittest.TestCase):
         self.git("add", "AGENTS.md")
         hygiene.check_agents(self.root)
         self.assertTrue(any("CLAUDE.md" in e for e in hygiene.errors))
+
+    def test_content_boundary_block_is_required(self):
+        (self.root / "AGENTS.md").write_text(
+            "\n".join("## " + name for name in hygiene.AGENTS_SECTIONS),
+            encoding="utf-8",
+        )
+        self.git("add", "AGENTS.md", "CLAUDE.md")
+        hygiene.check_agents(self.root)
+        self.assertTrue(any("content-boundary" in e for e in hygiene.errors))
 
     def test_git_metadata_is_required(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -65,6 +65,11 @@ FORBIDDEN_DOC_SKIP_DIRS = {"prompts", ".github"}
 
 AGENTS_SECTIONS = ["项目是什么", "技术栈", "目录", "本地验证", "命名与文档", "不要做", "提交与 PR"]
 
+# The block `tools/sync_agents.py` writes. A rule stated only in the guide is
+# read by whoever opens the guide; this one is read by every agent that opens
+# the repository, which is the only point early enough to matter.
+CONTENT_BOUNDARY = "<!-- content-boundary:begin -->"
+
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 LOCALE_RE = re.compile(r"^(?P<stem>.+?)\.(?P<loc>[A-Za-z_-]+)\.md$")
 
@@ -327,6 +332,8 @@ def check_agents(root: Path) -> None:
     missing = [s for s in AGENTS_SECTIONS if f"## {s}" not in text]
     if missing:
         err(f"AGENTS.md is missing sections: {', '.join(missing)}")
+    if CONTENT_BOUNDARY not in text:
+        err("AGENTS.md is missing the content-boundary block, see section 5")
 
     claude = root / "CLAUDE.md"
     if not claude.exists():

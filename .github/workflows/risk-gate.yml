@@ -1,0 +1,99 @@
+name: PR risk gate
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: Existing pull request number to evaluate
+        required: true
+        type: string
+
+# No checkout, PR code execution, secret access, label writes or merge permission.
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  statuses: write
+
+concurrency:
+  group: risk-gate-${{ github.event.pull_request.number || inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  evaluate:
+    name: Evaluate PR governance
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Publish risk-gate and PR template checks on the PR head
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+        with:
+          script: |
+            // Executed only by the trusted base-branch workflow. Never load PR code.
+            const number = context.payload.pull_request?.number || Number(process.env.PR_NUMBER);
+            if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
+            const repo = context.repo;
+            const target = `${context.serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`;
+            let sha;
+            const status = (name, state, description) => github.rest.repos.createCommitStatus({
+              ...repo, sha, context: name, state, description, target_url: target,
+            });
+            function highRisk(path) {
+              const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+              if (p.startsWith('.github/workflows/') || /(^|\/)codeowners$/.test(p)) return true;
+              if (/(^|\/)(docs?|tests?|examples?|fixtures)(\/|$)/.test(p)) return false;
+              if (/(^|\/)\.env(?:[./_-]|$)/.test(p)) return true;
+              if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
+              return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
+                || /\.(?:tf|tfvars)$/.test(p);
+            }
+            function completeTemplate(body) {
+              const text = (body || '').replace(/<!--[\s\S]*?-->/g, '');
+              const sections = [...text.matchAll(/^#{1,6}\s+(.+)\r?\n([\s\S]*?)(?=^#{1,6}\s|$(?![\s\S]))/gm)];
+              const present = pattern => sections.some(([, heading, content]) => pattern.test(heading)
+                && content.replace(/```[\s\S]*?```/g, '').replace(/[-*]\s*\[[ x]\]/g, '').trim().length > 3
+                && !/^\s*(?:TODO|TBD|N\/A|Describe the change.*|Which AI tool.*|List the checks.*)\s*$/i.test(content));
+              return present(/AI|模型|人工智能/i)
+                && present(/what changed|summary|problem|changes|变更|改动/i)
+                && present(/how verified|verif|validat|test(?:ing| plan)?|验证|测试/i);
+            }
+            try {
+              const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
+              sha = pr.head.sha;
+              await status('risk-gate', 'pending', 'Evaluating changed paths and owner approval');
+              await status('pr-template', 'pending', 'Checking AI, change and verification fields');
+              const files = await github.paginate(github.rest.pulls.listFiles, { ...repo, pull_number: number, per_page: 100 });
+              // GitHub caps this API at 3000 files. Incomplete diffs must not pass as low risk.
+              if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
+              const risky = files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
+              let approved = false;
+              if (pr.labels.some(label => label.name === 'owner-approved')) {
+                const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
+                const latest = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
+                  && event.label?.name === 'owner-approved').sort((a, b) => b.id - a.id)[0];
+                // A shared GitHub identity cannot distinguish the owner from their AI agents.
+                approved = latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+              }
+              const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
+              if (current.head.sha !== sha || current.body !== pr.body
+                  || JSON.stringify(current.labels.map(x => x.name).sort()) !== JSON.stringify(pr.labels.map(x => x.name).sort())) {
+                throw new Error('PR changed during evaluation; wait for the latest event');
+              }
+              const allowed = !risky || approved;
+              await status('risk-gate', allowed ? 'success' : 'failure', !risky ? 'Low-risk paths: no owner approval needed'
+                : approved ? 'High-risk paths: owner-approved label verified' : 'High-risk paths: needs-owner-approval; owner must add owner-approved');
+              const templateOK = completeTemplate(pr.body);
+              await status('pr-template', templateOK ? 'success' : 'failure', templateOK
+                ? 'AI, change and verification fields are filled in' : 'Fill in AI assistance, What changed and How verified sections');
+              if (!allowed || !templateOK) core.setFailed('Required PR governance checks did not pass');
+            } catch (error) {
+              if (sha) {
+                await status('risk-gate', 'error', 'Evaluation failed; inspect the trusted workflow run');
+                await status('pr-template', 'error', 'Evaluation failed; inspect the trusted workflow run');
+              }
+              throw error;
+            }

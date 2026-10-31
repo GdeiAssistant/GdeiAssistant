@@ -33,30 +33,82 @@ jobs:
         with:
           script: |
             if (context.eventName === 'workflow_run') {
-              // The review relay is unprivileged. Do not trust its code, output,
-              // artifacts, conclusion or PR association (which can omit forks).
-              // Re-read all open PRs so dismissals and fork reviews are covered.
-              const prs = await github.paginate(github.rest.pulls.list, {
-                ...context.repo, state: 'open', per_page: 100,
-              });
-              if (prs.length > 256) throw new Error('Too many PRs for one matrix; do not truncate');
-              return prs.map(pr => pr.number);
+              // Trust only repository API metadata, never relay code, outputs,
+              // artifacts or conclusion. Commit associations also cover forks.
+              try {
+                const run = context.payload.workflow_run;
+                if (!/^[0-9a-f]{40}$/i.test(run?.head_sha || '')) throw new Error('Unknown review signal head');
+                const associated = await github.paginate(github.rest.repos.listPullRequestsAssociatedWithCommit, {
+                  ...context.repo, commit_sha: run.head_sha, per_page: 100,
+                });
+                const payloadPRs = run.pull_requests || [];
+                const candidates = [...associated, ...payloadPRs];
+                if (candidates.some(pr => !Number.isSafeInteger(pr.number) || pr.number < 1)) {
+                  throw new Error('Unknown PR association');
+                }
+                const numbers = [...new Set(candidates.map(pr => pr.number))];
+                if (numbers.length > 256) throw new Error('Too many associated PRs');
+                const open = [];
+                for (const number of numbers) {
+                  const { data: pr } = await github.rest.pulls.get({ ...context.repo, pull_number: number });
+                  if (pr.number !== number || !['open', 'closed'].includes(pr.state)) throw new Error('Unknown associated PR metadata');
+                  // Payload-only associations need a matching current head; an
+                  // old/missing head cannot reliably identify the affected PRs.
+                  if (!associated.some(item => item.number === number) && pr.head?.sha !== run.head_sha) {
+                    throw new Error('Unverified payload PR association');
+                  }
+                  if (pr.state === 'open') open.push(number);
+                }
+                if (open.length) return open;
+              } catch (error) {
+                core.warning('Unable to resolve review signal reliably; scanning all open PRs');
+              }
+              // A separate serialized scan covers every unresolved signal.
+              return null;
             }
             const number = context.payload.pull_request?.number || Number(process.env.PR_NUMBER);
             if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
             return [number];
+  scan:
+    name: Scan open PRs when review signal resolution is uncertain
+    needs: targets
+    if: needs.targets.outputs.numbers == 'null'
+    permissions:
+      pull-requests: read
+    concurrency:
+      # Pending scans may coalesce: each newer full scan covers all open PRs.
+      group: risk-gate-targets
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      numbers: ${{ steps.scan.outputs.result }}
+    steps:
+      - id: scan
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const prs = await github.paginate(github.rest.pulls.list, {
+              ...context.repo, state: 'open', per_page: 100,
+            });
+            if (prs.length > 256) throw new Error('Too many PRs for one matrix; do not truncate');
+            return prs.map(pr => pr.number);
   evaluate:
     name: Evaluate PR governance
     permissions:
       pull-requests: read
+      issues: read
       statuses: write
-    needs: targets
-    if: needs.targets.outputs.numbers != '[]'
+    needs: [targets, scan]
+    if: >-
+      always() && needs.targets.result == 'success'
+      && (needs.scan.result == 'success' || needs.scan.result == 'skipped')
+      && (needs.targets.outputs.numbers != 'null' || needs.scan.outputs.numbers != '[]')
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
-        pr_number: ${{ fromJSON(needs.targets.outputs.numbers) }}
+        pr_number: ${{ fromJSON(needs.targets.outputs.numbers == 'null' && needs.scan.outputs.numbers || needs.targets.outputs.numbers) }}
     concurrency:
       group: risk-gate-${{ matrix.pr_number }}
       cancel-in-progress: true
@@ -128,7 +180,16 @@ jobs:
               // GitHub caps this API at 3000 files. Incomplete diffs must not pass as low risk.
               if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
               const risky = files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
-              const approved = pr.labels.some(label => label.name === 'owner-approved');
+              let approved = false;
+              if (pr.labels.some(label => label.name === 'owner-approved')) {
+                const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
+                const relevant = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
+                  && event.label?.name === 'owner-approved');
+                if (relevant.some(event => !Number.isSafeInteger(event.id))) throw new Error('Unknown owner-approved event metadata');
+                const latest = relevant.sort((a, b) => b.id - a.id)[0];
+                // A shared GitHub identity cannot distinguish the owner from their AI agents.
+                approved = latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+              }
               let botApproved = false;
               if (risky && !approved) {
                 const latest = await readCodeRabbit();
@@ -147,7 +208,7 @@ jobs:
               }
               const allowed = !risky || approved || botApproved;
               await status('risk-gate', allowed ? 'success' : 'failure', !risky ? 'Low-risk paths: no owner approval needed'
-                : approved ? 'High-risk paths: owner-approved label present'
+                : approved ? 'High-risk paths: owner-approved label verified'
                 : botApproved ? 'High-risk paths: CodeRabbit APPROVED current head'
                   : 'High-risk paths: need current-head CodeRabbit APPROVED or owner-approved');
               const templateOK = completeTemplate(pr.body);

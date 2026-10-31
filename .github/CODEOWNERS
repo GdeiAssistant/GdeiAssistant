@@ -5,3 +5,16 @@
 **/auth/** @Pigbibi
 **/security/** @Pigbibi
 **/deploy* @Pigbibi
+
+# Risk-sensitive changes require the repository owner.
+/.env.template @Pigbibi
+/.github/CODEOWNERS @Pigbibi
+/.github/workflows/ @Pigbibi
+/assets/screenshots/secret.png @Pigbibi
+/db-init/mysql/upgrade-2026-05-11-campus-credential-controls.sql @Pigbibi
+/frontend/public/img/function/secret.png @Pigbibi
+/frontend/public/img/secret/ @Pigbibi
+/frontend/src/mock/campus-credential-handlers.js @Pigbibi
+/frontend/src/views/secret/ @Pigbibi
+/src/main/java/cn/gdeiassistant/common/pojo/entity/Secret.java @Pigbibi
+/src/main/java/cn/gdeiassistant/core/secret/ @Pigbibi

@@ -163,24 +163,26 @@ jobs:
             }
 
   request-review:
-    name: Request CodeRabbit for high-risk PRs below ten stars
-    if: github.event_name == 'pull_request_target' && (github.event.action == 'opened' || github.event.action == 'synchronize')
+    name: Request CodeRabbit for settled high-risk PRs below ten stars
+    if: github.event_name == 'pull_request_target' && contains(fromJSON('["opened","reopened","synchronize","ready_for_review"]'), github.event.action) && !github.event.pull_request.draft
     permissions:
       pull-requests: read
       issues: write
     concurrency:
       group: coderabbit-request-${{ github.event.pull_request.number }}
-      cancel-in-progress: false
+      cancel-in-progress: true
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     steps:
-      - name: Request once per current head using GITHUB_TOKEN
+      - name: Request once per settled current head using GITHUB_TOKEN
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         with:
           script: |
             const repo = context.repo;
             const number = context.payload.pull_request.number;
             const eventSha = context.payload.pull_request.head.sha;
+            const SETTLE_MS = 600000;
+            if (context.payload.pull_request.draft) return;
             function highRisk(path) {
               const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
               if (p.startsWith('.github/workflows/') || /(^|\/)codeowners$/.test(p)) return true;
@@ -190,8 +192,11 @@ jobs:
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
             }
+            const { data: initial } = await github.rest.pulls.get({ ...repo, pull_number: number });
+            if (initial.state !== 'open' || initial.draft || initial.head.sha !== eventSha) return;
+            await new Promise(resolve => setTimeout(resolve, SETTLE_MS));
             const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
-            if (pr.state !== 'open' || pr.head.sha !== eventSha) return;
+            if (pr.state !== 'open' || pr.draft || pr.head.sha !== eventSha) return;
             const files = await github.paginate(github.rest.pulls.listFiles, {
               ...repo, pull_number: number, per_page: 100,
             });
@@ -207,8 +212,10 @@ jobs:
             });
             if (comments.some(comment => comment.user?.login === 'github-actions[bot]'
                 && comment.user?.type === 'Bot' && comment.body?.includes(marker))) return;
+            // The local queue uses this marker; preserve cross-tool head deduplication.
+            if (comments.some(comment => comment.body?.includes(`<!-- coderabbit-queue:${pr.head.sha}:attempt-`))) return;
             const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
-            if (current.state !== 'open' || current.head.sha !== pr.head.sha) return;
+            if (current.state !== 'open' || current.draft || current.head.sha !== pr.head.sha) return;
             await github.rest.issues.createComment({
               ...repo, issue_number: number, body: `@coderabbitai review\n\n${marker}`,
             });

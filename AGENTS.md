@@ -85,13 +85,11 @@ npm run check:location-names --prefix frontend
 
 ## 提交与 PR
 
-遵循 Conventional Commits，commit 标题原则上使用英文并保持简洁（建议 50 字符以内）；项目有明确不同语言约定时按其约定。类型只用 `feat` `fix` `docs` `refactor` `test` `chore` `perf` `ci`。
-
-分支名 `<type>/<主题>`，例如 `docs/normalize-filenames`。不直接推默认分支，不 force push 已 review 的分支。
-
-提交、推送、合并及生产动作按用户已明确授权的范围执行；同范围已有授权不重复确认。
-
-PR 标题和说明原则上使用英文，写清问题、变更后行为和实际验证；项目有明确不同语言约定时按其约定。
+- Commit and PR titles use professional English, imperative Conventional Commits (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `perf`, `ci`) and at most 72 characters. Sentence case is allowed; commitlint ignores merge commits.
+- PR descriptions explain the problem, changes, verification and risk. AI-authored PRs identify the tool and the model when available. Labels and approval or risk summaries use professional English.
+- Use `risk:low` for documentation, tests and ordinary checks; use `risk:high` and `needs-owner-approval` for protected paths. Classification labels describe risk; the path-based `risk-gate` determines whether approval is required.
+- AI-only development uses required automated checks, template validation and independent AI review when available, with zero required human or code-owner approvals. High-risk paths require the owner's `owner-approved` label; agents must never add or remove it.
+- Preserve required checks and branch protection; merge only through normal checks. Use `<type>/<topic>` PR branches; never push directly to the default branch or force-push a reviewed branch. Commit, push, merge and production actions require authorization; existing authorization remains valid within its scope.
 
 ## AI 维护与交付
 

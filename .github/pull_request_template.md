@@ -1,12 +1,12 @@
-## 这个 PR 做了什么
+## What changed
 
-<!-- 一句话说清改了什么 -->
+<!-- Describe the change and resulting behavior. -->
 
-## 不改会怎样
+## Why
 
-<!-- 说明不合并这个改动会出现什么问题，而不只是改了什么 -->
+<!-- Explain the problem this change resolves. -->
 
-## 怎么验证的
+## Verification
 
 ```bash
 ./gradlew test
@@ -15,27 +15,30 @@ cd frontend
 npm ci && npm run build && npm run test:unit
 ```
 
-跑不了的项请说明原因，不要勾上了事。
+Record the commands actually run and their results. Explain any checks that could not run.
 
-## 检查清单
+## Checklist
 
-- [ ] 上面列出的检查已通过，或有说明为什么没跑
-- [ ] 改动涉及的行为变化，已在同一次 PR 里更新对应文档
-- [ ] 没有提交真实账号、密码、验证码、Token、Cookie 或他人个人信息
-- [ ] 没有提交密钥、证书、`local.properties` 或环境配置文件
+- [ ] The checks above passed, or the reason they could not run is recorded.
+- [ ] Documentation is updated for behavior changed by this PR.
+- [ ] The change contains no credentials, verification codes, session data or personal information.
+- [ ] The change contains no private keys, certificates, `local.properties` or private environment files.
 
-## 涉及隐私、权限或数据流的改动
+## Privacy, permissions and data flow
 
 <!--
-如果这个 PR 涉及登录、校园凭证、第三方服务、文件上传、日志内容或数据导出，
-请说明：数据从哪来、存到哪、谁能读到、日志里会不会出现。
-不涉及可以写「不涉及」。
+For changes to login, campus credentials, third-party services, uploads, logging or exports,
+describe the data source, storage, access and log exposure. Write `Not applicable` otherwise.
 -->
 
-## 关联 Issue
+## Related issue
 
 <!-- Closes #123 -->
 
 ## AI assistance
 
 Which AI tool and model were used? Write `None` if no AI was used.
+
+## Risk
+
+<!-- Record the risk tier, affected paths and relevant compatibility or operational impact. -->

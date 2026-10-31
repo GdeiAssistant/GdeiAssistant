@@ -66,6 +66,6 @@ jobs:
           tool="$RUNNER_TEMP/governance-commitlint"
           npm install --prefix "$tool" --ignore-scripts --no-audit --no-fund \
             @commitlint/cli@21.2.4 @commitlint/config-conventional@21.2.4
-          printf '%s\n' "module.exports = {extends: [require.resolve('@commitlint/config-conventional')]};" > "$tool/commitlint.config.cjs"
+          printf '%s\n' "module.exports = {extends: [require.resolve('@commitlint/config-conventional')], defaultIgnores: true, ignores: [(message) => /^Merge /.test(message)], rules: {'subject-case': [0], 'header-max-length': [2, 'always', 72], 'type-enum': [2, 'always', ['feat', 'fix', 'docs', 'refactor', 'test', 'chore', 'perf', 'ci']]}};" > "$tool/commitlint.config.cjs"
           node "$tool/node_modules/@commitlint/cli/cli.js" \
             --config "$tool/commitlint.config.cjs" --from "$PR_BASE" --to "$PR_HEAD" --verbose

@@ -3,6 +3,9 @@ name: PR risk gate
 on:
   pull_request_target:
     types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+  workflow_run:
+    workflows: [PR review signal]
+    types: [completed]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -11,26 +14,59 @@ on:
         type: string
 
 # No checkout, PR code execution, secret access, label writes or merge permission.
-permissions:
-  contents: read
-  pull-requests: read
-  issues: read
-  statuses: write
-
-concurrency:
-  group: risk-gate-${{ github.event.pull_request.number || inputs.pr_number }}
-  cancel-in-progress: true
+permissions: {}
 
 jobs:
+  targets:
+    name: Select PRs from trusted repository metadata
+    permissions:
+      pull-requests: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      numbers: ${{ steps.select.outputs.result }}
+    steps:
+      - id: select
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+        with:
+          script: |
+            if (context.eventName === 'workflow_run') {
+              // The review relay is unprivileged. Do not trust its code, output,
+              // artifacts, conclusion or PR association (which can omit forks).
+              // Re-read all open PRs so dismissals and fork reviews are covered.
+              const prs = await github.paginate(github.rest.pulls.list, {
+                ...context.repo, state: 'open', per_page: 100,
+              });
+              if (prs.length > 256) throw new Error('Too many PRs for one matrix; do not truncate');
+              return prs.map(pr => pr.number);
+            }
+            const number = context.payload.pull_request?.number || Number(process.env.PR_NUMBER);
+            if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
+            return [number];
   evaluate:
     name: Evaluate PR governance
+    permissions:
+      pull-requests: read
+      statuses: write
+    needs: targets
+    if: needs.targets.outputs.numbers != '[]'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        pr_number: ${{ fromJSON(needs.targets.outputs.numbers) }}
+    concurrency:
+      group: risk-gate-${{ matrix.pr_number }}
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Publish risk-gate and PR template checks on the PR head
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
-          PR_NUMBER: ${{ inputs.pr_number }}
+          PR_NUMBER: ${{ matrix.pr_number }}
         with:
           script: |
             // Executed only by the trusted base-branch workflow. Never load PR code.
@@ -51,6 +87,27 @@ jobs:
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
             }
+            function latestCodeRabbit(reviews) {
+              // A later COMMENTED, CHANGES_REQUESTED or DISMISSED review blocks
+              // the bot path even if an earlier review approved the same head.
+              const submitted = reviews.filter(review => review.user?.login === 'coderabbitai[bot]'
+                && review.user?.type === 'Bot' && review.state !== 'PENDING');
+              if (submitted.some(review => !Number.isSafeInteger(review.id)
+                  || !Number.isFinite(Date.parse(review.submitted_at))
+                  || !['APPROVED', 'COMMENTED', 'CHANGES_REQUESTED', 'DISMISSED'].includes(review.state))) {
+                throw new Error('Unknown CodeRabbit review metadata');
+              }
+              return submitted.sort((a, b) => Date.parse(b.submitted_at) - Date.parse(a.submitted_at) || b.id - a.id)[0];
+            }
+            async function readCodeRabbit() {
+              const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                ...repo, pull_number: number, per_page: 100,
+              });
+              return latestCodeRabbit(reviews);
+            }
+            function reviewVersion(review) {
+              return JSON.stringify(review ? [review.id, review.state, review.commit_id] : null);
+            }
             function completeTemplate(body) {
               const text = (body || '').replace(/<!--[\s\S]*?-->/g, '');
               const sections = [...text.matchAll(/^#{1,6}\s+(.+)\r?\n([\s\S]*?)(?=^#{1,6}\s|$(?![\s\S]))/gm)];
@@ -63,29 +120,36 @@ jobs:
             }
             try {
               const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
+              if (pr.state !== 'open') return;
               sha = pr.head.sha;
-              await status('risk-gate', 'pending', 'Evaluating changed paths and owner approval');
+              await status('risk-gate', 'pending', 'Evaluating paths and current approvals');
               await status('pr-template', 'pending', 'Checking AI, change and verification fields');
               const files = await github.paginate(github.rest.pulls.listFiles, { ...repo, pull_number: number, per_page: 100 });
               // GitHub caps this API at 3000 files. Incomplete diffs must not pass as low risk.
               if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
               const risky = files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
-              let approved = false;
-              if (pr.labels.some(label => label.name === 'owner-approved')) {
-                const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
-                const latest = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
-                  && event.label?.name === 'owner-approved').sort((a, b) => b.id - a.id)[0];
-                // A shared GitHub identity cannot distinguish the owner from their AI agents.
-                approved = latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+              const approved = pr.labels.some(label => label.name === 'owner-approved');
+              let botApproved = false;
+              if (risky && !approved) {
+                const latest = await readCodeRabbit();
+                botApproved = latest?.state === 'APPROVED' && latest.commit_id === sha;
+                // Re-read before publishing; never retain an older approval if
+                // the latest review changed during evaluation.
+                const currentReview = await readCodeRabbit();
+                if (reviewVersion(currentReview) !== reviewVersion(latest)) {
+                  throw new Error('Review changed during evaluation; wait for the latest event');
+                }
               }
               const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
-              if (current.head.sha !== sha || current.body !== pr.body
+              if (current.state !== 'open' || current.head.sha !== sha || current.body !== pr.body
                   || JSON.stringify(current.labels.map(x => x.name).sort()) !== JSON.stringify(pr.labels.map(x => x.name).sort())) {
                 throw new Error('PR changed during evaluation; wait for the latest event');
               }
-              const allowed = !risky || approved;
+              const allowed = !risky || approved || botApproved;
               await status('risk-gate', allowed ? 'success' : 'failure', !risky ? 'Low-risk paths: no owner approval needed'
-                : approved ? 'High-risk paths: owner-approved label verified' : 'High-risk paths: needs-owner-approval; owner must add owner-approved');
+                : approved ? 'High-risk paths: owner-approved label present'
+                : botApproved ? 'High-risk paths: CodeRabbit APPROVED current head'
+                  : 'High-risk paths: need current-head CodeRabbit APPROVED or owner-approved');
               const templateOK = completeTemplate(pr.body);
               await status('pr-template', templateOK ? 'success' : 'failure', templateOK
                 ? 'AI, change and verification fields are filled in' : 'Fill in AI assistance, What changed and How verified sections');
@@ -97,3 +161,54 @@ jobs:
               }
               throw error;
             }
+
+  request-review:
+    name: Request CodeRabbit for high-risk PRs below ten stars
+    if: github.event_name == 'pull_request_target' && (github.event.action == 'opened' || github.event.action == 'synchronize')
+    permissions:
+      pull-requests: read
+      issues: write
+    concurrency:
+      group: coderabbit-request-${{ github.event.pull_request.number }}
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request once per current head using GITHUB_TOKEN
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        with:
+          script: |
+            const repo = context.repo;
+            const number = context.payload.pull_request.number;
+            const eventSha = context.payload.pull_request.head.sha;
+            function highRisk(path) {
+              const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
+              if (p.startsWith('.github/workflows/') || /(^|\/)codeowners$/.test(p)) return true;
+              if (/(^|\/)(docs?|tests?|examples?|fixtures)(\/|$)/.test(p)) return false;
+              if (/(^|\/)\.env(?:[./_-]|$)/.test(p)) return true;
+              if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
+              return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
+                || /\.(?:tf|tfvars)$/.test(p);
+            }
+            const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
+            if (pr.state !== 'open' || pr.head.sha !== eventSha) return;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              ...repo, pull_number: number, per_page: 100,
+            });
+            if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
+            if (!files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk))) return;
+            const { data: repository } = await github.rest.repos.get(repo);
+            const stars = repository.stargazers_count;
+            if (!Number.isSafeInteger(stars) || stars < 0) throw new Error('Unknown repository star count');
+            if (stars >= 10) return;
+            const marker = `<!-- coderabbit-review-head:${pr.head.sha} -->`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...repo, issue_number: number, per_page: 100,
+            });
+            if (comments.some(comment => comment.user?.login === 'github-actions[bot]'
+                && comment.user?.type === 'Bot' && comment.body?.includes(marker))) return;
+            const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
+            if (current.state !== 'open' || current.head.sha !== pr.head.sha) return;
+            await github.rest.issues.createComment({
+              ...repo, issue_number: number, body: `@coderabbitai review\n\n${marker}`,
+            });

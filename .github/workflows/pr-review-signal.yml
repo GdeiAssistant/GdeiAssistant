@@ -1,0 +1,15 @@
+name: PR review signal
+
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+
+# No write token, checkout, secrets, artifacts or PR code execution.
+permissions: {}
+
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - run: 'true'

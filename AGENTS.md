@@ -72,6 +72,8 @@ npm run check:location-names --prefix frontend
 
 ## 不要做
 
+- `owner-approved` 仅在标签存在且最新相关事件是 `Pigbibi` 添加（`labeled`）时通过门禁；编码智能体绝不能给自己的 PR 添加该标签。
+
 - 不要手改 `design/` 生成出来的令牌产物。改源文件后重新生成，否则 `check:design-tokens` 会红。
 - 不要绕过 `check:location-names`。地点名称有统一来源。
 - 不要在四个客户端之间单方面改接口。服务端、Android、iOS、微信小程序共享同一套契约，改一处要确认另外三处。

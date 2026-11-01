@@ -40,7 +40,7 @@ regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
 id = "configuration-secret-value"
 description = "Non-placeholder credential in a configuration, log or JUnit XML assignment"
 path = '''(?:\.(?:properties|ya?ml|env|conf|ini|log|txt|xml)$|(?:^|/)\.env(?:\.[^/]+)?$)'''
-regex = '''(?im)(?:^|<!\[CDATA\[)[\t ]*(?:export[\t ]+)?["']?(?:[\w.-]*(?:secret|token|password|passwd|appsecret|jwt)[\w.-]*|(?:[\w.-]*[_.-])?access[_-]?key)["']?[\t ]*[:=][\t ]*["']?([^\s"']{8,}?)(?:["'\t \r\n]|\]\]>|$)'''
+regex = '''(?im)(?:^|<!\[CDATA\[)[\t ]*(?:export[\t ]+)?["']?(?:[\w.-]*(?:secret|token|password|passwd|appsecret|jwt)[\w.-]*|[\w.-]*access[_-]?key)["']?[\t ]*[:=][\t ]*["']?([^\s"']{8,}?)(?:["'\t \r\n]|\]\]>|$)'''
 secretGroup = 1
 
 [[rules.allowlists]]

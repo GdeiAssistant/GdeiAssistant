@@ -50,7 +50,7 @@ class SecretScanTests(unittest.TestCase):
 
     def test_configuration_credentials_are_detected(self):
         for name in ('jwt.secret', 'wechat.appsecret', 'request.validate.token',
-                     'PASSWORD', 'passwd', 'access-key'):
+                     'PASSWORD', 'passwd', 'access-key', 'aliyunAccessKey'):
             with self.subTest(name=name):
                 findings = self.detect(f'{name}={fake_value()}')
                 self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})

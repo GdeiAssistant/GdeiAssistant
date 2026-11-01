@@ -18,3 +18,20 @@
 /frontend/src/views/secret/ @Pigbibi
 /src/main/java/cn/gdeiassistant/common/pojo/entity/Secret.java @Pigbibi
 /src/main/java/cn/gdeiassistant/core/secret/ @Pigbibi
+
+# Dependency-only files do not automatically request a human review.
+# CODEOWNERS is path-based: these exceptions also apply to human PRs.
+/frontend/package.json
+/frontend/package-lock.json
+/build.gradle
+/.github/workflows/azure-static-web-apps-gentle-moss-05e781600.yml
+/.github/workflows/backend-ci.yml
+/.github/workflows/backend-ghcr.yml
+/.github/workflows/cloudflare-pages.yml
+/.github/workflows/codeql.yml
+/.github/workflows/dependabot-auto-merge.yml
+/.github/workflows/dependabot-policy.yml
+/.github/workflows/engineering-governance.yml
+/.github/workflows/frontend-ci.yml
+/.github/workflows/repository-hygiene.yml
+/.github/workflows/risk-gate.yml

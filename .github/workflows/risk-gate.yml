@@ -10,7 +10,7 @@ on:
         required: true
         type: string
 
-# No checkout, PR code execution, secret access, label writes or merge permission.
+# Only trusted default-branch policy is checked out. No PR code, secrets, label writes or merge permission.
 permissions:
   contents: read
   pull-requests: read
@@ -27,13 +27,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Load trusted dependency policy
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - name: Fetch verified Dependabot metadata
+        if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
+        id: dependency
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
+        with:
+          github-token: ${{ github.token }}
       - name: Publish risk-gate and PR template checks on the PR head
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
+          DEPENDABOT_DEPENDENCIES: ${{ steps.dependency.outputs.updated-dependencies-json }}
         with:
           script: |
-            // Executed only by the trusted base-branch workflow. Never load PR code.
+            // Executed only by the trusted base-branch workflow and policy. Never load PR code.
             const number = context.payload.pull_request?.number || Number(process.env.PR_NUMBER);
             if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
             const repo = context.repo;
@@ -69,7 +81,16 @@ jobs:
               const files = await github.paginate(github.rest.pulls.listFiles, { ...repo, pull_number: number, per_page: 100 });
               // GitHub caps this API at 3000 files. Incomplete diffs must not pass as low risk.
               if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
-              const risky = files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
+              const policy = require('./.github/scripts/dependabot-policy.cjs');
+              const config = require('./.github/scripts/dependabot-policy.json');
+              let dependencies;
+              try { dependencies = JSON.parse(process.env.DEPENDABOT_DEPENDENCIES || 'null'); } catch { dependencies = null; }
+              const commits = pr.user.login === 'dependabot[bot]'
+                ? await github.paginate(github.rest.pulls.listCommits, { ...repo, pull_number: number, per_page: 100 }) : [];
+              const repository = `${repo.owner}/${repo.repo}`;
+              const verifiedDependabot = policy.trustedPR(config, repository, pr, sha, commits);
+              const safeDependency = policy.eligible({config, repo: repository, pr, eventHead: sha, dependencies, files, commits});
+              const risky = !safeDependency && files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
               let approved = false;
               if (pr.labels.some(label => label.name === 'owner-approved')) {
                 const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
@@ -84,11 +105,11 @@ jobs:
                 throw new Error('PR changed during evaluation; wait for the latest event');
               }
               const allowed = !risky || approved;
-              await status('risk-gate', allowed ? 'success' : 'failure', !risky ? 'Low-risk paths: no owner approval needed'
+              await status('risk-gate', allowed ? 'success' : 'failure', safeDependency ? 'Verified dependency policy: CI must pass before merge' : !risky ? 'Low-risk paths: no owner approval needed'
                 : approved ? 'High-risk paths: owner-approved label verified' : 'High-risk paths: needs-owner-approval; owner must add owner-approved');
-              const templateOK = completeTemplate(pr.body);
+              const templateOK = verifiedDependabot || completeTemplate(pr.body);
               await status('pr-template', templateOK ? 'success' : 'failure', templateOK
-                ? 'AI, change and verification fields are filled in' : 'Fill in AI assistance, What changed and How verified sections');
+                ? (verifiedDependabot ? 'Verified Dependabot-generated PR description' : 'AI, change and verification fields are filled in') : 'Fill in AI assistance, What changed and How verified sections');
               if (!allowed || !templateOK) core.setFailed('Required PR governance checks did not pass');
             } catch (error) {
               if (sha) {

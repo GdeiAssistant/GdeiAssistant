@@ -1,0 +1,32 @@
+name: Dependabot Auto Merge
+on:
+  workflow_run:
+    workflows: ["Backend CI", "Frontend CI", "CodeQL Security Analysis", "Repository hygiene", "Dependabot update policy", "PR risk gate"]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  group: dependabot-merge-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+jobs:
+  merge:
+    name: Approve and squash verified Dependabot updates
+    if: contains(fromJSON('["pull_request","pull_request_target"]'), github.event.workflow_run.event) && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+      actions: read
+      statuses: read
+    steps:
+      # workflow_run uses only the trusted default branch, never the PR checkout or artifacts.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Merge the verified current head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/dependabot-policy.cjs merge

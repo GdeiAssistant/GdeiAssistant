@@ -85,11 +85,11 @@ npm run check:location-names --prefix frontend
 
 ## 提交与 PR
 
-- Commit and PR titles use professional English, imperative Conventional Commits (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `perf`, `ci`) and at most 72 characters. Sentence case is allowed; commitlint ignores merge commits.
-- PR descriptions explain the problem, changes, verification and risk. AI-authored PRs identify the tool and the model when available. Labels and approval or risk summaries use professional English.
-- Use `risk:low` for documentation, tests and ordinary checks; use `risk:high` and `needs-owner-approval` for protected paths. Classification labels describe risk; the path-based `risk-gate` determines whether approval is required.
-- AI-only development uses required automated checks, template validation and independent AI review when available, with zero required human or code-owner approvals. High-risk paths require the owner's `owner-approved` label; agents must never add or remove it.
-- Preserve required checks and branch protection; merge only through normal checks. Use `<type>/<topic>` PR branches; never push directly to the default branch or force-push a reviewed branch. Commit, push, merge and production actions require authorization; existing authorization remains valid within its scope.
+- Commit 和 PR 标题遵循 Conventional Commits，类型使用英文 `feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`perf`、`ci`，标题不超过 72 字符。Commit 说明可使用中文或英文；英文允许句首大写，commitlint 忽略 merge commits。
+- PR 标题、模板和说明按组织标准使用中文，写清问题、变更、实际验证和风险。AI 编写的 PR 说明使用的工具及可获得的模型信息。标签沿用现有标识符（如 `risk:high`），审批与风险说明使用中文。
+- 文档、测试和普通检查使用 `risk:low`；受保护路径使用 `risk:high` 和 `needs-owner-approval`。分类标签只描述风险，是否需要批准由基于路径的 `risk-gate` 判断。
+- AI 开发使用必需的自动检查、模板校验及可用的独立 AI 审查，不额外要求人工或 CODEOWNER approving review。高风险路径按现行 `risk-gate` 要求取得 `owner-approved`；只有所有者或经所有者明确授权的审查者可以添加该标签，编码智能体绝不能给自己的 PR 添加该标签。
+- 保留必需检查与分支保护，通过正常检查后才能合并。PR 分支使用 `<type>/<topic>`，不直接推默认分支，不 force-push 已审查的分支。提交、推送、合并与生产动作须有授权，同范围已有授权继续有效。
 
 ## AI 维护与交付
 

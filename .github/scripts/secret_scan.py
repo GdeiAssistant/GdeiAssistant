@@ -92,8 +92,11 @@ def artifacts(binary, patterns):
                     for match in glob.glob(pattern.strip(), recursive=True)})
     with tempfile.TemporaryDirectory(prefix='gitleaks-', dir=os.environ.get('RUNNER_TEMP')) as directory:
         for index, path in enumerate(paths):
-            if scan(binary, 'dir', path, Path(directory) / f'{index}.json'):
+            findings = scan(binary, 'dir', path, Path(directory) / f'{index}.json')
+            if findings:
                 print('Artifact scan blocked upload: credential finding(s); values suppressed')
+                for finding in findings:
+                    print(json.dumps({'File': finding['File'], 'RuleID': finding['RuleID']}))
                 return 1
     print(f'Artifact scan passed: {len(paths)} matching upload path(s)')
     return 0

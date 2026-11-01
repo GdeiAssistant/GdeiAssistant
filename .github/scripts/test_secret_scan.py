@@ -1,4 +1,6 @@
 import importlib.util
+import contextlib
+import io
 import json
 import os
 import secrets
@@ -73,8 +75,13 @@ class SecretScanTests(unittest.TestCase):
         self.assertTrue(findings)
 
     def test_artifact_findings_block_upload(self):
-        self.detect('jwt.secret=' + fake_value())
-        self.assertEqual(SCANNER.artifacts(BINARY, str(self.source / '*.properties')), 1)
+        value = fake_value()
+        self.detect('jwt.secret=' + value)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(SCANNER.artifacts(BINARY, str(self.source / '*.properties')), 1)
+        self.assertIn('RuleID', output.getvalue())
+        self.assertNotIn(value, output.getvalue())
 
     def test_empty_artifact_glob_passes_without_scanning_workspace(self):
         self.detect('jwt.secret=' + fake_value())

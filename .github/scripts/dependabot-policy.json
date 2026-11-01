@@ -5,16 +5,7 @@
   "directories": ["/","/frontend"],
   "required_checks": ["Build and Test","Analyze (Java)","Frontend verification","Repository hygiene","Safe dependency update"],
   "action_files": [
-    ".github/workflows/azure-static-web-apps-gentle-moss-05e781600.yml",
     ".github/workflows/backend-ci.yml",
-    ".github/workflows/backend-ghcr.yml",
-    ".github/workflows/cloudflare-pages.yml",
-    ".github/workflows/codeql.yml",
-    ".github/workflows/dependabot-auto-merge.yml",
-    ".github/workflows/dependabot-policy.yml",
-    ".github/workflows/engineering-governance.yml",
-    ".github/workflows/frontend-ci.yml",
-    ".github/workflows/repository-hygiene.yml",
-    ".github/workflows/risk-gate.yml"
+    ".github/workflows/frontend-ci.yml"
   ]
 }

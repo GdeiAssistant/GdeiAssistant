@@ -10,8 +10,11 @@ function dependencyFilesAllowed(config, repo, files) {
   return inScope(config, repo) && files.length > 0 && files.every(f =>
     ['modified'].includes(f.status) && (config.files.includes(f.filename) || actionVersionOnly(config, f)) && !f.previous_filename);
 }
+// Deploy, release and governance workflows carry credentials or enforce policy: updates always need a human.
+const protectedWorkflow = /(deploy|release|publish|ghcr|pages|azure|risk-gate|governance|review-signal|dependabot|codeql|hygiene)/i;
 function actionVersionOnly(config, file) {
   if (!(config.action_files || []).includes(file.filename) || typeof file.patch !== 'string') return false;
+  if (protectedWorkflow.test(path.posix.basename(file.filename))) return false;
   const removed = [], added = [];
   for (const line of file.patch.split('\n')) {
     if (!/^[+-]/.test(line) || /^(---|\+\+\+)/.test(line)) continue;
@@ -27,7 +30,9 @@ function trustedPR(config, repo, pr, head, commits) {
     pr.state === 'open' && !pr.draft && pr.base?.ref === config.branch &&
     pr.base?.repo?.full_name === repo && pr.head?.repo?.full_name === repo && pr.head.sha === head &&
     commits.length > 0 && commits.length === pr.commits && commits.at(-1).sha === head &&
-    commits.every(c => c.author?.login === 'dependabot[bot]' && c.commit?.verification?.verified === true);
+    // Dependabot commits are authored by the bot and committed by GitHub's web-flow key; a human-signed commit with a spoofed author fails.
+    commits.every(c => c.author?.login === 'dependabot[bot]' && c.committer?.login === 'web-flow'
+      && c.commit?.committer?.email === 'noreply@github.com' && c.commit?.verification?.verified === true);
 }
 function eligible({config, repo, pr, eventHead, dependencies, files, commits}) {
   if (!trustedPR(config, repo, pr, eventHead, commits) || files.length !== pr.changed_files || !dependencyFilesAllowed(config, repo, files)) return false;
@@ -62,6 +67,18 @@ function mergeArguments(repo, number, sha) {
 function gh(args) {return execFileSync('gh', args, {encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe']}).trim();}
 function api(route) {return JSON.parse(gh(['api', route]));}
 function pages(route) {return JSON.parse(gh(['api', '--paginate', '--slurp', route])).flat();}
+function sleep(ms) {if (ms > 0) Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);}
+// GitHub computes mergeability lazily, so the first read is often null. Bounded exponential backoff; the caller still fails closed.
+function readPullRequest(route) {
+  const requested = Number(process.env.DEPENDABOT_MERGEABLE_RETRY_MS);
+  const base = Number.isFinite(requested) && requested >= 0 ? Math.min(requested, 2000) : 2000;
+  let pr = api(route);
+  for (let attempt = 0; attempt < 4 && pr.mergeable === null; attempt++) {
+    sleep(base * 2 ** attempt);
+    pr = api(route);
+  }
+  return pr;
+}
 function main(mode) {
   const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'dependabot-policy.json'), 'utf8'));
   const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
@@ -88,7 +105,7 @@ function main(mode) {
   numbers = [...new Set(numbers)];
   if (numbers.length !== 1 || !Number.isSafeInteger(numbers[0])) return;
   const number = numbers[0];
-  const pr = api(`repos/${repo}/pulls/${number}`);
+  const pr = readPullRequest(`repos/${repo}/pulls/${number}`);
   const commits = pages(`repos/${repo}/pulls/${number}/commits?per_page=100`);
   if (!trustedPR(config, repo, pr, run.head_sha, commits) || pr.mergeable !== true || !['clean', 'blocked'].includes(pr.mergeable_state)) return;
   const files = pages(`repos/${repo}/pulls/${number}/files?per_page=100`);
@@ -111,7 +128,12 @@ function main(mode) {
   gh(mergeArguments(repo, number, pr.head.sha));
   console.log(`Merged verified Dependabot PR #${number} at ${pr.head.sha}.`);
 }
-module.exports = {eligible, trustedPR, inScope, dependencyFilesAllowed, actionVersionOnly, checksReady, mergeArguments};
+module.exports = {eligible, trustedPR, inScope, dependencyFilesAllowed, actionVersionOnly, checksReady, mergeArguments, readPullRequest};
 if (require.main === module) {
-  try {main(process.argv[2]);} catch {console.error('Dependency policy failed or outcome is unknown; inspect the PR before retrying.'); process.exitCode = 1;}
+  try {main(process.argv[2]);} catch (error) {
+    // One redacted line so a failed run is diagnosable without leaking a token.
+    const detail = String(error?.stderr || error?.message || error).replace(/\b(gh[pousr]_|github_pat_)\w+/g, '***').replace(/\s+/g, ' ').slice(0, 300);
+    console.error(`Dependency policy failed or outcome is unknown; inspect the PR before retrying. ${detail}`);
+    process.exitCode = 1;
+  }
 }

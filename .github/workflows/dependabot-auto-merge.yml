@@ -1,0 +1,37 @@
+name: Dependabot Auto Merge
+on:
+  workflow_run:
+    workflows: ["Backend CI", "Frontend CI", "CodeQL Security Analysis", "Repository hygiene", "Dependabot update policy", "PR risk gate"]
+    types: [completed]
+permissions:
+  contents: read
+concurrency:
+  # Repository plus branch: a fork cannot reuse a same-repository key and displace a pending merge run.
+  group: dependabot-merge-${{ github.event.workflow_run.head_repository.full_name }}-${{ github.event.workflow_run.head_branch }}
+  cancel-in-progress: false
+jobs:
+  merge:
+    name: Approve and squash verified Dependabot updates
+    # Only same-repository Dependabot branches; fork-triggered runs never start this write-capable job.
+    if: >-
+      contains(fromJSON('["pull_request","pull_request_target"]'), github.event.workflow_run.event)
+      && github.event.workflow_run.conclusion == 'success'
+      && github.event.workflow_run.head_repository.full_name == github.repository
+      && startsWith(github.event.workflow_run.head_branch, 'dependabot/')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # gh pr merge --squash
+      pull-requests: write # APPROVE review bound to the verified head
+      checks: read # read check runs of the head
+      statuses: read # read legacy commit statuses
+    steps:
+      # workflow_run uses only the trusted default branch, never the PR checkout or artifacts.
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Merge the verified current head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/dependabot-policy.cjs merge

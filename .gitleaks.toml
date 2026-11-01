@@ -25,7 +25,7 @@ secretGroup = 1
 [[allowlists]]
 description = "Explicit placeholder values, never a blanket source-path exclusion"
 regexes = [
-  '''(?i)^(?:REDACTED|(?:your[_.-])?(?:secret|token|password|appsecret|access[_.-]?key)(?:[_.-](?:here|example|placeholder))?|change[_.-]?me|replace[_.-]?me|<[^>]+>|\$\{[^}]+\}|x{8,}|0{16,})$''',
+  '''(?i)^(?:REDACTED|(?:your[_.-])?(?:secret|token|password|appsecret|access[_.-]?key)(?:[_.-](?:here|example|placeholder))?|change[_.-]?me|replace[_.-]?me|<[^>]+>|\$\{[^\r\n]*|x{8,}|0{16,})$''',
 ]
 
 [[allowlists]]

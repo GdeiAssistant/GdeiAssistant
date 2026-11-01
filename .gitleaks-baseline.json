@@ -64,109 +64,10 @@
   },
   {
     "RuleID": "configuration-secret-value",
-    "File": "docker-compose-prod.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 19,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-prod.yml:configuration-secret-value:19",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-prod.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 100,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-prod.yml:configuration-secret-value:100",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 21,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose.yml:configuration-secret-value:21",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 110,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose.yml:configuration-secret-value:110",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 119,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose.yml:configuration-secret-value:119",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-staging.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 19,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-staging.yml:configuration-secret-value:19",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-staging.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 100,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-staging.yml:configuration-secret-value:100",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-staging.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 109,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-staging.yml:configuration-secret-value:109",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-staging.yml",
-    "Commit": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173",
-    "StartLine": 110,
-    "Fingerprint": "1f863bb1649b46e749a3ee6ad0b98bfacf09a173:docker-compose-staging.yml:configuration-secret-value:110",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
     "File": ".github/workflows/codeql.yml",
     "Commit": "8759be319c6a4ae8f3991ad544d5f34a5309f0a5",
     "StartLine": 40,
     "Fingerprint": "8759be319c6a4ae8f3991ad544d5f34a5309f0a5:.github/workflows/codeql.yml:configuration-secret-value:40",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-prod.yml",
-    "Commit": "e76588337e9e6db64253113e8d379b40e98991a4",
-    "StartLine": 109,
-    "Fingerprint": "e76588337e9e6db64253113e8d379b40e98991a4:docker-compose-prod.yml:configuration-secret-value:109",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "docker-compose-prod.yml",
-    "Commit": "e76588337e9e6db64253113e8d379b40e98991a4",
-    "StartLine": 110,
-    "Fingerprint": "e76588337e9e6db64253113e8d379b40e98991a4:docker-compose-prod.yml:configuration-secret-value:110",
     "Secret": "REDACTED",
     "Match": "REDACTED"
   },
@@ -216,15 +117,6 @@
     "Match": "REDACTED"
   },
   {
-    "RuleID": "mongodb-userinfo-password",
-    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
-    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
-    "StartLine": 1,
-    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:1",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
     "RuleID": "configuration-secret-value",
     "File": "src/main/resources/config/sql/mysql.properties",
     "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
@@ -239,6 +131,15 @@
     "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
     "StartLine": 19,
     "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/sql/mysql.properties:configuration-secret-value:19",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
+    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
+    "StartLine": 1,
+    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:1",
     "Secret": "REDACTED",
     "Match": "REDACTED"
   },
@@ -270,15 +171,6 @@
     "Match": "REDACTED"
   },
   {
-    "RuleID": "gcp-api-key",
-    "File": "src/main/webapp/js/covid19/index.js",
-    "Commit": "31f79b6d3c24a873bf947fefc347d52748b72f4f",
-    "StartLine": 143,
-    "Fingerprint": "31f79b6d3c24a873bf947fefc347d52748b72f4f:src/main/webapp/js/covid19/index.js:gcp-api-key:143",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
     "RuleID": "generic-api-key",
     "File": "src/main/webapp/js/covid19/index.js",
     "Commit": "31f79b6d3c24a873bf947fefc347d52748b72f4f",
@@ -288,11 +180,29 @@
     "Match": "REDACTED"
   },
   {
+    "RuleID": "gcp-api-key",
+    "File": "src/main/webapp/js/covid19/index.js",
+    "Commit": "31f79b6d3c24a873bf947fefc347d52748b72f4f",
+    "StartLine": 143,
+    "Fingerprint": "31f79b6d3c24a873bf947fefc347d52748b72f4f:src/main/webapp/js/covid19/index.js:gcp-api-key:143",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
     "RuleID": "configuration-secret-value",
     "File": "src/main/resources/config/aliyun/oss_token.properties",
     "Commit": "59878a7470c4d5ea796956d4bb8870a9056f9c94",
     "StartLine": 10,
     "Fingerprint": "59878a7470c4d5ea796956d4bb8870a9056f9c94:src/main/resources/config/aliyun/oss_token.properties:configuration-secret-value:10",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/jwt/secret.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 3,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/jwt/secret.properties:configuration-secret-value:3",
     "Secret": "REDACTED",
     "Match": "REDACTED"
   },
@@ -329,15 +239,6 @@
     "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
     "StartLine": 4,
     "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/wechat/account.properties:configuration-secret-value:4",
-    "Secret": "REDACTED",
-    "Match": "REDACTED"
-  },
-  {
-    "RuleID": "configuration-secret-value",
-    "File": "src/main/resources/config/jwt/secret.properties",
-    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
-    "StartLine": 3,
-    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/jwt/secret.properties:configuration-secret-value:3",
     "Secret": "REDACTED",
     "Match": "REDACTED"
   },

@@ -58,6 +58,7 @@ class SecretScanTests(unittest.TestCase):
 
     def test_clean_placeholders_pass(self):
         self.assertEqual(self.detect('jwt.secret=${JWT_SECRET}\npassword=\n'
+                                     'token=${LONG_TOKEN_VARIABLE:?must be supplied}\n'
                                      'token=your-token-placeholder\npassword=xxxxxxxxxxxxxxxx\n'), [])
 
     def test_punctuation_in_password_is_detected(self):

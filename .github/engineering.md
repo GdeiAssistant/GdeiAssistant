@@ -46,3 +46,15 @@
 - 安全问题走 SECURITY.md 的私密入口。普通问题按复现、版本和影响分类，已关闭历史需求不自动恢复。
 
 完成本次目标及必要验证即可交付。不能把这份约定扩展成每次全量测试、强制新建设计文档、持续 Goal、自动化或多轮审批。
+
+## 凭据泄漏预防
+
+不得提交凭据；使用 GitHub Secrets 或环境变量注入。必需的 `Gitleaks` 检查保留原名，使用 `.gitleaks.toml` 扫描新增提交，补充 MongoDB 带密码 URI、Alibaba AccessKey Secret 和配置赋值规则。测试目录只豁免明确合成的值，不整体跳过测试代码。
+
+每周一 UTC 04:23 和手动触发的 `secret-scan-weekly.yml` 获取所有分支并扫描完整历史。`.gitleaks-baseline.json` 仅保存既有发现的规则、路径、提交、行号、fingerprint 和固定脱敏标记；它不豁免新提交。历史凭据仍须由所有者轮换，baseline 不代表凭据安全。
+
+Gitleaks 8.30.1 的原生 baseline 还比较作者、日期及位置元数据，不能直接使用精简记录。`secret_scan.py` 从本次脱敏扫描中按完整身份匹配已知项，临时补齐原生 baseline，再用 `--baseline-path` 复扫。原始报告和临时文件不上传；摘要仅含路径、规则和短提交号，保留三天。新增或修改 baseline 必须单独核对，不自动扩大历史豁免。
+
+每次上传报告、日志或混合产物前，先用同一配置扫描上传的精确路径；发现凭据或扫描错误则阻止该次上传。缺失路径沿用原上传步骤的缺失文件行为。只含 APK/AAB、已编译模拟器应用 ZIP、IPA/dSYM 的步骤不做无意义的二进制文本扫描；二进制安全仍须独立的制品分析。不要将明文日志或配置加入这些例外。
+
+本地验证：`python3 .github/scripts/test_secret_scan.py`，以及 `python3 .github/scripts/secret_scan.py history --summary /tmp/secret-summary.json`。新规则需要用运行时生成的合成凭据测试；不得把真实值放进测试或终端输出。Gitleaks 安装固定 8.30.1，并按平台校验已固定的 SHA-256。

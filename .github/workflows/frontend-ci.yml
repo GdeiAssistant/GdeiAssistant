@@ -82,10 +82,12 @@ jobs:
         run: npm run test:coverage
 
       - name: Install verified Gitleaks before artifact upload
+        working-directory: ${{ github.workspace }}
         if: ${{ !cancelled() }}
         run: bash .github/scripts/install-gitleaks.sh
 
       - name: Scan exact upload paths for credentials
+        working-directory: ${{ github.workspace }}
         id: artifact_secret_scan_1
         if: ${{ always() }}
         env:
@@ -110,6 +112,7 @@ jobs:
         run: npm run test:e2e
 
       - name: Scan exact upload paths for credentials
+        working-directory: ${{ github.workspace }}
         id: artifact_secret_scan_2
         if: ${{ failure() }}
         env:

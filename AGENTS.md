@@ -87,13 +87,11 @@ npm run check:location-names --prefix frontend
 
 ## 提交与 PR
 
-遵循 Conventional Commits，commit 标题原则上使用英文并保持简洁（建议 50 字符以内）；项目有明确不同语言约定时按其约定。类型只用 `feat` `fix` `docs` `refactor` `test` `chore` `perf` `ci`。
-
-分支名 `<type>/<主题>`，例如 `docs/normalize-filenames`。不直接推默认分支，不 force push 已 review 的分支。
-
-提交、推送、合并及生产动作按用户已明确授权的范围执行；同范围已有授权不重复确认。
-
-PR 标题和说明原则上使用英文，写清问题、变更后行为和实际验证；项目有明确不同语言约定时按其约定。
+- Commit 和 PR 标题遵循 Conventional Commits，类型使用英文 `feat`、`fix`、`docs`、`refactor`、`test`、`chore`、`perf`、`ci`，标题不超过 72 字符。Commit 说明可使用中文或英文；英文允许句首大写，commitlint 使用内置默认忽略规则，不按 `Merge ` 前缀跳过检查。
+- PR 标题、模板和说明按组织标准使用中文，写清问题、变更、实际验证和风险。AI 编写的 PR 说明使用的工具及可获得的模型信息。标签沿用现有标识符（如 `risk:high`），审批与风险说明使用中文。
+- 文档、测试和普通检查使用 `risk:low`；受保护路径使用 `risk:high` 和 `needs-owner-approval`。分类标签只描述风险，是否需要批准由基于路径的 `risk-gate` 判断。
+- AI 开发使用必需的自动检查、模板校验及可用的独立 AI 审查，不额外要求人工或 CODEOWNER approving review。高风险路径按现行 `risk-gate` 要求取得 `owner-approved`；只有所有者或经所有者明确授权的审查者可以添加该标签；现行 gate 只接受所有者账号的标签添加事件，其他审查者的标签不会通过检查。编码智能体绝不能给自己的 PR 添加该标签。
+- 保留必需检查与分支保护，通过正常检查后才能合并。PR 分支使用 `<type>/<topic>`，不直接推默认分支，不 force-push 已审查的分支。提交、推送、合并与生产动作须有授权，同范围已有授权继续有效。
 
 ## AI 维护与交付
 

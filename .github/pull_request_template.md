@@ -1,4 +1,4 @@
-## 这个 PR 做了什么
+## 改动内容
 
 <!-- 一句话说清改了什么 -->
 
@@ -15,7 +15,7 @@ cd frontend
 npm ci && npm run build && npm run test:unit
 ```
 
-跑不了的项请说明原因，不要勾上了事。
+<!-- 记录实际执行的命令和结果；未执行的检查请说明原因。 -->
 
 ## 检查清单
 
@@ -36,6 +36,10 @@ npm ci && npm run build && npm run test:unit
 
 <!-- Closes #123 -->
 
-## AI assistance
+## AI 辅助
 
-Which AI tool and model were used? Write `None` if no AI was used.
+<!-- 请填写使用的 AI 工具和模型；未使用 AI 时写「未使用 AI」。 -->
+
+## 风险
+
+<!-- 说明风险等级、受影响的文件，以及兼容性或运行方面的影响。 -->

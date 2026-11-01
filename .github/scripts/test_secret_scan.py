@@ -42,8 +42,11 @@ class SecretScanTests(unittest.TestCase):
                 self.assertIn('mongodb-userinfo-password', {row['RuleID'] for row in findings})
 
     def test_alibaba_access_key_secret_is_detected(self):
-        findings = self.detect('ALIBABA_ACCESS_KEY_SECRET=' + fake_value(30))
-        self.assertIn('alibaba-access-key-secret', {row['RuleID'] for row in findings})
+        for name in ('ALIBABA_ACCESS_KEY_SECRET', 'accessKeySecret', 'access_key_secret',
+                     'access-key', 'accessKey'):
+            with self.subTest(name=name):
+                findings = self.detect(name + '=' + fake_value(30))
+                self.assertIn('alibaba-access-key-secret', {row['RuleID'] for row in findings})
 
     def test_configuration_credentials_are_detected(self):
         for name in ('jwt.secret', 'wechat.appsecret', 'request.validate.token',
@@ -60,12 +63,126 @@ class SecretScanTests(unittest.TestCase):
 
     def test_clean_placeholders_pass(self):
         self.assertEqual(self.detect('jwt.secret=${JWT_SECRET}\npassword=\n'
-                                     'token=${LONG_TOKEN_VARIABLE:?must be supplied}\n'
+                                     'token=${LONG_TOKEN_VARIABLE}\ntoken=${_TOKEN_1}\n'
                                      'token=your-token-placeholder\npassword=xxxxxxxxxxxxxxxx\n'), [])
 
     def test_punctuation_in_password_is_detected(self):
-        findings = self.detect('password=' + fake_value(16) + '&$*()!')
+        findings = self.detect('password=' + fake_value(16) + '&$*()!<>')
         self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
+
+    def test_placeholder_with_literal_text_is_detected(self):
+        for value in ('${X}' + fake_value(), fake_value() + '${X}',
+                      '${LONG_TOKEN_VARIABLE}' + fake_value(),
+                      '${LONG_TOKEN_VARIABLE};' + fake_value(),
+                      '${LONG_TOKEN_VARIABLE}#' + fake_value(),
+                      '${LONG_TOKEN_VARIABLE:-' + fake_value() + '}',
+                      '${LONG_TOKEN_VARIABLE}${OTHER_VARIABLE}'):
+            findings = self.detect('token=' + value)
+            self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
+
+    def test_alibaba_access_key_id_is_not_a_secret_assignment(self):
+        for name in ('accessKeyId', 'access_key_id', 'ALIBABA_ACCESS_KEY_ID'):
+            with self.subTest(name=name):
+                findings = self.detect(name + '=' + fake_value(30))
+                rules = {row['RuleID'] for row in findings}
+                self.assertNotIn('alibaba-access-key-secret', rules)
+                self.assertNotIn('configuration-secret-value', rules)
+
+    def test_short_low_entropy_password_is_detected(self):
+        for length in (8, 12, 15):
+            with self.subTest(length=length):
+                value = (''.join(secrets.SystemRandom().sample(string.ascii_lowercase, 2)) * length)[:length]
+                findings = self.detect('password=' + value)
+                self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
+
+    def test_junit_xml_credentials_block_artifacts(self):
+        for prefix in ('<system-out><![CDATA[\n', '<system-out><![CDATA[',
+                       '<system-err><![CDATA['):
+            with self.subTest(prefix=prefix):
+                value = ''.join(secrets.SystemRandom().sample(string.ascii_lowercase, 3)) * 8
+                findings = self.detect(prefix + 'password=' + value + ']]></system-out>',
+                                       'TEST-fixture.xml')
+                self.assertIn('configuration-secret-value', {row['RuleID'] for row in findings})
+                output = io.StringIO()
+                with contextlib.redirect_stdout(output):
+                    self.assertEqual(SCANNER.artifacts(BINARY, str(self.source / '*.xml')), 1)
+                self.assertNotIn(value, output.getvalue())
+
+    def test_junit_xml_placeholder_passes(self):
+        self.assertEqual(self.detect('<system-out><![CDATA[token=${TOKEN_VARIABLE}'
+                                     ']]></system-out>', 'TEST-fixture.xml'), [])
+
+    def test_history_baseline_counts_same_identity_findings(self):
+        repository = self.root / 'repository'
+        subprocess.run(['git', 'init', '--quiet', str(repository)], check=True)
+
+        def git(*arguments):
+            return subprocess.run(['git', '-C', str(repository), *arguments], check=True,
+                                  capture_output=True, text=True).stdout.strip()
+
+        git('config', 'user.name', 'Synthetic Test')
+        git('config', 'user.email', 'fixture@example.invalid')
+        shutil.copyfile(SCANNER.ROOT / '.gitleaks.toml', repository / '.gitleaks.toml')
+        # Different matches on the same line receive the same Gitleaks identity.
+        (repository / 'credentials.txt').write_text(' '.join(
+            f'mongodb://fixture:{fake_value()}@example.invalid/db' for _ in range(2)))
+        git('add', '.')
+        git('commit', '--quiet', '-m', 'test: same-line synthetic credentials')
+        baseline = repository / '.gitleaks-baseline.json'
+        summary = self.root / 'summary.json'
+        with patch.object(SCANNER, 'ROOT', repository):
+            findings = SCANNER.scan(BINARY, 'git', repository, self.output)
+            matches = [row for row in findings if row['RuleID'] == 'mongodb-userinfo-password']
+            self.assertEqual(len(matches), 2)
+            self.assertEqual(SCANNER.identity(matches[0]), SCANNER.identity(matches[1]))
+            baseline.write_text(json.dumps([SCANNER.project(row) for row in findings]))
+            self.assertEqual(SCANNER.history(BINARY, baseline, summary), 0)
+            # Simulate a baseline approved before a rule exposed the second match.
+            findings.remove(matches[0])
+            baseline.write_text(json.dumps([SCANNER.project(row) for row in findings]))
+            self.assertEqual(SCANNER.history(BINARY, baseline, summary), 1)
+            rows = json.loads(summary.read_text())
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]['RuleID'], 'mongodb-userinfo-password')
+
+    def test_fixture_directories_still_detect_unapproved_credentials(self):
+        for directory in ('src/test', 'frontend/test', 'frontend/tests'):
+            with self.subTest(directory=directory):
+                repository = self.root / directory.replace('/', '-')
+                repository.mkdir()
+                subprocess.run(['git', 'init', '--quiet', str(repository)], check=True)
+                payload = repository / directory / 'credentials.properties'
+                payload.parent.mkdir(parents=True)
+                payload.write_text('token=fake-' + fake_value() + '\n')
+                shutil.copyfile(SCANNER.ROOT / '.gitleaks.toml', repository / '.gitleaks.toml')
+                with patch.object(SCANNER, 'ROOT', repository):
+                    subprocess.run(['git', '-C', str(repository), 'add', '.'], check=True)
+                    subprocess.run(['git', '-C', str(repository), '-c', 'user.name=Synthetic Test',
+                                    '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet',
+                                    '-m', 'test: approved synthetic fixture'], check=True)
+                    self.assertEqual(SCANNER.scan(BINARY, 'git', repository, self.output), [])
+                    payload.write_text('token=fake-' + fake_value() + '\n'
+                                       'token=${X}' + fake_value() + '\n'
+                                       'mongodb://fixture:' + fake_value() + '@example.invalid/db\n'
+                                       'ALIBABA_ACCESS_KEY_SECRET=' + fake_value(30) + '\n'
+                                       'api_key=' + fake_value() + '\n')
+                    subprocess.run(['git', '-C', str(repository), 'add', '.'], check=True)
+                    subprocess.run(['git', '-C', str(repository), '-c', 'user.name=Synthetic Test',
+                                    '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet',
+                                    '-m', 'test: unapproved synthetic credentials'], check=True)
+                    findings = SCANNER.scan(BINARY, 'git', repository, self.output)
+                    expected = {'configuration-secret-value', 'mongodb-userinfo-password',
+                                'alibaba-access-key-secret', 'generic-api-key'}
+                    self.assertTrue(expected <= {row['RuleID'] for row in findings})
+                    # Directory scanning traverses relative paths before checking values.
+                    result = subprocess.run(
+                        [BINARY, 'dir', '.', '--config', str(repository / '.gitleaks.toml'),
+                         '--redact', '--no-banner', '--report-format', 'json',
+                         '--report-path', str(self.output)],
+                        cwd=repository, capture_output=True, check=False)
+                    self.assertEqual(result.returncode, 1)
+                    findings = json.loads(self.output.read_text())
+                    self.assertTrue(expected <= {row['RuleID'] for row in findings})
 
     def test_clean_directory_passes(self):
         self.assertEqual(SCANNER.scan(BINARY, 'dir', self.source, self.output), [])

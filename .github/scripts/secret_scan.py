@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import glob
 import json
 import os
@@ -75,13 +76,15 @@ def history(binary, baseline_path, summary, create=False):
             if baseline_path.exists():
                 raise ValueError('Refusing to replace an existing history baseline')
             baseline_path.write_text(json.dumps([project(finding) for finding in findings], indent=2) + '\n')
-        known = {identity(finding) for finding in load_baseline(baseline_path)}
-        native = temporary / 'native-baseline.json'
-        native.write_text(json.dumps([
-            {**finding, 'Secret': 'REDACTED', 'Match': 'REDACTED'}
-            for finding in findings if identity(finding) in known
-        ]))
-        new_findings = scan(binary, 'git', ROOT, temporary / 'new.json', native)
+        known = Counter(identity(finding) for finding in load_baseline(baseline_path))
+        remaining = known.copy()
+        new_findings = []
+        for finding in findings:
+            key = identity(finding)
+            if remaining[key] > 0:
+                remaining[key] -= 1
+            else:
+                new_findings.append(finding)
         write_summary(summary, new_findings)
         print(f'History scan: {len(new_findings)} new finding(s); {len(known)} baseline identities')
         return int(bool(new_findings))

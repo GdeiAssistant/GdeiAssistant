@@ -9,27 +9,53 @@ description = "MongoDB URI containing a userinfo password"
 regex = '''(?i)mongodb(?:\+srv)?://[^\s:/@]+:([^\s/@]+)@'''
 secretGroup = 1
 
+[[rules.allowlists]]
+description = "Synthetic values in established test fixture directories only"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
+regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
+
 [[rules]]
 id = "alibaba-access-key-secret"
 description = "Alibaba Cloud AccessKey Secret assignment"
-regex = '''(?i)(?:access[_-]?key(?:[_-]?secret)?)[\w .-]*["']?\s*[:=]\s*["']?([a-z0-9]{30})(?:["'\s,;]|$)'''
+regex = '''(?i)access[_-]?key(?:[_-]?secret)?["']?\s*[:=]\s*["']?([a-z0-9]{30})(?:["'\s,;]|$)'''
 secretGroup = 1
+
+[[rules.allowlists]]
+description = "Synthetic values in established test fixture directories only"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
+regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
 
 [[rules]]
 id = "configuration-secret-value"
-description = "Non-placeholder credential in a properties, YAML or environment assignment"
-path = '''(?:\.(?:properties|ya?ml|env|conf|ini|log|txt)$|(?:^|/)\.env(?:\.[^/]+)?$)'''
-regex = '''(?im)^[\t ]*(?:export[\t ]+)?["']?[\w.-]*(?:secret|token|password|passwd|appsecret|access[_-]?key|jwt)[\w.-]*["']?[\t ]*[:=][\t ]*["']?([^\s"']{16,})(?:["'\t \r\n;#]|$)'''
+description = "Non-placeholder credential in a configuration, log or JUnit XML assignment"
+path = '''(?:\.(?:properties|ya?ml|env|conf|ini|log|txt|xml)$|(?:^|/)\.env(?:\.[^/]+)?$)'''
+regex = '''(?im)(?:^|<!\[CDATA\[)[\t ]*(?:export[\t ]+)?["']?(?:[\w.-]*(?:secret|token|password|passwd|appsecret|jwt)[\w.-]*|(?:[\w.-]*[_.-])?access[_-]?key)["']?[\t ]*[:=][\t ]*["']?([^\s"']{8,}?)(?:["'\t \r\n]|\]\]>|$)'''
 secretGroup = 1
+
+[[rules.allowlists]]
+description = "Synthetic values in established test fixture directories only"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
+regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
 
 [[allowlists]]
 description = "Explicit placeholder values, never a blanket source-path exclusion"
+regexTarget = "secret"
 regexes = [
-  '''(?i)^(?:REDACTED|(?:your[_.-])?(?:secret|token|password|appsecret|access[_.-]?key)(?:[_.-](?:here|example|placeholder))?|change[_.-]?me|replace[_.-]?me|<[^>]+>|\$\{[^\r\n]*|x{8,}|0{16,})$''',
+  '''(?i)^(?:REDACTED|(?:your[_.-])?(?:secret|token|password|appsecret|access[_.-]?key)(?:[_.-](?:here|example|placeholder))?|change[_.-]?me|replace[_.-]?me|<[^>]+>|\$\{[A-Za-z_][A-Za-z0-9_]*\}|x{8,}|0{16,})$''',
 ]
 
-[[allowlists]]
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
 description = "Synthetic values in established test fixture directories only"
 condition = "AND"
+regexTarget = "secret"
 paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
 regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']

@@ -16,6 +16,13 @@ regexTarget = "secret"
 paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
 regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
 
+[[rules.allowlists]]
+description = "Runtime-generated URI expression in the scanner regression source"
+condition = "AND"
+regexTarget = "secret"
+paths = ['''(?:^|/)\.github/scripts/test_secret_scan\.py$''']
+regexes = ['''^\{fake_value\(\)\}$''']
+
 [[rules]]
 id = "alibaba-access-key-secret"
 description = "Alibaba Cloud AccessKey Secret assignment"

@@ -151,13 +151,13 @@ class SpareRoomServiceTest {
                 .fetchSpareRoomInitialDocument(anyString(), any());
         assertThrows(
                 NetWorkTimeoutException.class, () -> service.querySpareRoom("session", query(0)));
-        doThrow(new TimeStampIncorrectException("synthetic"))
+        doThrow(new TimeStampIncorrectException("REDACTED"))
                 .when(upstream)
                 .fetchSpareRoomInitialDocument(anyString(), any());
         assertThrows(
                 TimeStampIncorrectException.class,
                 () -> service.querySpareRoom("session", query(0)));
-        doThrow(new PasswordIncorrectException("synthetic"))
+        doThrow(new PasswordIncorrectException("REDACTED"))
                 .when(upstream)
                 .fetchSpareRoomInitialDocument(anyString(), any());
         assertThrows(

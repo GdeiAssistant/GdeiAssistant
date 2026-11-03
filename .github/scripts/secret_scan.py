@@ -57,8 +57,18 @@ def load_baseline(path):
 
 
 def scan(binary, mode, target, report, baseline=None):
+    # Gitleaks also loads a source-root ignore file regardless of its CLI flag.
+    # Refuse it rather than silently accepting content-authorized exemptions.
+    try:
+        (Path(target) / '.gitleaksignore').lstat()
+    except FileNotFoundError:
+        pass
+    else:
+        raise RuntimeError('Source ignore files are forbidden for this scan')
     command = [binary, mode, str(target), '--config', str(ROOT / '.gitleaks.toml'),
-               '--redact', '--no-banner', '--report-format', 'json', '--report-path', str(report)]
+               '--redact', '--no-banner', '--ignore-gitleaks-allow',
+               '--gitleaks-ignore-path', os.devnull,
+               '--report-format', 'json', '--report-path', str(report)]
     if mode == 'git':
         command.append('--log-opts=--all')
     if baseline is not None:

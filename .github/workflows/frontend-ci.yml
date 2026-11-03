@@ -92,7 +92,7 @@ jobs:
         if: ${{ always() }}
         env:
           ARTIFACT_PATHS: |
-            frontend/coverage/
+            frontend/coverage/coverage-summary.json
         run: >-
           python3 .github/scripts/secret_scan.py artifacts
           --gitleaks "$RUNNER_TEMP/gitleaks-bin/gitleaks"
@@ -102,7 +102,7 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: frontend-coverage
-          path: frontend/coverage/
+          path: frontend/coverage/coverage-summary.json
           retention-days: 7
 
       - name: Install Playwright browser

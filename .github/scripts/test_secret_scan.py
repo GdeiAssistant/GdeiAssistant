@@ -204,6 +204,40 @@ class SecretScanTests(unittest.TestCase):
         findings = self.detect(expression, 'other.py')
         self.assertIn('mongodb-userinfo-password', {row['RuleID'] for row in findings})
 
+    def test_inline_allow_cannot_suppress_history(self):
+        repository = self.root / 'repository'
+        repository.mkdir()
+        subprocess.run(['git', 'init', '--quiet', str(repository)], check=True)
+        (repository / 'payload.txt').write_text(
+            'mongodb://fixture:' + fake_value() + '@example.invalid/db # gitleaks:allow')
+        subprocess.run(['git', '-C', str(repository), 'add', '.'], check=True)
+        subprocess.run(['git', '-C', str(repository), '-c', 'user.name=Synthetic Test',
+                        '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet',
+                        '-m', 'test: runtime fixture'], check=True)
+        with contextlib.chdir(repository):
+            self.assertTrue(SCANNER.scan(BINARY, 'git', repository, self.output))
+
+    def test_source_ignore_file_cannot_suppress_directory_or_history(self):
+        repository = self.root / 'repository'
+        repository.mkdir()
+        subprocess.run(['git', 'init', '--quiet', str(repository)], check=True)
+        (repository / 'payload.txt').write_text(
+            'mongodb://fixture:' + fake_value() + '@example.invalid/db')
+        subprocess.run(['git', '-C', str(repository), 'add', '.'], check=True)
+        subprocess.run(['git', '-C', str(repository), '-c', 'user.name=Synthetic Test',
+                        '-c', 'user.email=fixture@example.invalid', 'commit', '--quiet',
+                        '-m', 'test: runtime fixture'], check=True)
+        with contextlib.chdir(repository):
+            for mode in ('dir', 'git'):
+                with self.subTest(mode=mode):
+                    findings = SCANNER.scan(BINARY, mode, repository, self.output)
+                    self.assertTrue(findings)
+                    (repository / '.gitleaksignore').write_text(
+                        '\n'.join(row['Fingerprint'] for row in findings) + '\n')
+                    with self.assertRaises(RuntimeError):
+                        SCANNER.scan(BINARY, mode, repository, self.output)
+                    (repository / '.gitleaksignore').unlink()
+
     def test_clean_directory_passes(self):
         self.assertEqual(SCANNER.scan(BINARY, 'dir', self.source, self.output), [])
 
@@ -292,8 +326,70 @@ class ArtifactArchiveTests(unittest.TestCase):
                 status = SCANNER.artifacts(BINARY, str(self.root))
             except (OSError, ValueError, RuntimeError, zipfile.BadZipFile):
                 status = 2
-        self.assertNotIn(self.payload, output.getvalue())
+        self.assertFalse(self.payload in output.getvalue(), 'Fixture value leaked')
         return status
+
+    def inline_archive(self, region):
+        payload = (self.payload + ' # gitleaks:allow').encode()
+        member = zipfile.ZipInfo('0-trace.network')
+        member.compress_type = zipfile.ZIP_DEFLATED
+        content = payload if region == 'data' else b'clean'
+        if region == 'name':
+            member.filename = payload.decode()
+        if region == 'member_comment':
+            member.comment = payload
+        if region == 'extra':
+            member.extra = b'\xfe\xca' + len(payload).to_bytes(2, 'little') + payload
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            archive.writestr(member, content)
+            if region == 'archive_comment':
+                archive.comment = payload
+        data = buffer.getvalue()
+        if region == 'prefix':
+            data = payload + b'\n' + data
+        if region == 'suffix':
+            data += b'\n' + payload + b'\n'
+        return data
+
+    def test_inline_allow_in_zip_data_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('data'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_name_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('name'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_member_comment_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('member_comment'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_archive_comment_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('archive_comment'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_extra_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('extra'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_prefix_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('prefix'))
+        self.assertEqual(self.status(), 1)
+
+    def test_inline_allow_in_zip_suffix_cannot_suppress(self):
+        (self.root / 'trace.zip').write_bytes(self.inline_archive('suffix'))
+        self.assertEqual(self.status(), 1)
+
+    def test_nested_inline_allow_cannot_suppress(self):
+        for region in ('data', 'name', 'member_comment', 'archive_comment', 'extra', 'prefix', 'suffix'):
+            with self.subTest(region=region):
+                (self.root / 'trace.zip').write_bytes(
+                    self.zip_bytes(self.inline_archive(region), name='trace.zip'))
+                self.assertEqual(self.status(), 1)
+
+    def test_clean_inline_allow_marker_passes(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('clean # gitleaks:allow'))
+        self.assertEqual(self.status(), 0)
 
     def test_compressed_trace_credential_blocks(self):
         (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.payload))

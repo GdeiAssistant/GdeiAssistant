@@ -70,3 +70,24 @@ Playwright diagnostic ZIPs are inspected through at most two archive levels.
 The artifact gate limits each input or expanded member to 32 MiB, cumulative input plus expanded bytes to 256 MiB, and filesystem plus archive entries to 10,000 per invocation. Corrupt, encrypted, unsupported archives, links, and exceeded limits block upload.
 
 Original ZIP bytes (including headers, extra fields, and prepended or trailing bytes), archive/member comments, decoded member names, and expanded member contents are scanned with neutral names so source-path allowlists cannot hide diagnostic credentials. Missing upload paths keep their existing behavior; these limits do not apply to history scans.
+
+Inline `gitleaks:allow` comments and source `.gitleaksignore` files never grant
+scan exemptions, including history scans. Artifact findings remain suppressed.
+
+Frontend coverage uploads contain `coverage-summary.json` metrics only. Rendered
+source HTML stays local: it duplicates source code and can reinterpret mock
+values or JavaScript expressions as configuration credentials after neutral
+staging.
+
+The exact uploaded metrics still pass the unchanged credential gate;
+Playwright diagnostic ZIP scanning and success-only upload conditions remain.
+
+Backend coverage uploads contain the JaCoCo XML metrics instead of source HTML
+and renderer scripts. Failure reports retain both HTML and JUnit XML, with the
+same exact-path gate.
+
+Exception-type fixtures use explicit synthetic placeholders rather than
+credential-shaped sentinel assignments; exception assertions remain.
+
+Source-root `.gitleaksignore` inputs fail closed because the pinned scanner loads
+them automatically even with an explicit CLI ignore path.

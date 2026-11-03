@@ -61,6 +61,15 @@ GdeiAssistant 统一使用以下三套环境语义：
 - 演示 / 生产建议改用各自独立的环境变量配置，不要和本地开发共用同一份真实凭据，也不要直接把本地 `.env` 上传到部署平台。
 - 当前 MySQL 仍按三套 schema（`DB_NAME` / `DB_NAME_LOG` / `DB_NAME_DATA`）组织；外部数据库也需要准备对应 schema，或者自行调整初始化策略。
 
+### Free-tier probes and cold starts
+
+- `/actuator/health/liveness` 只检查应用自身的存活状态，不访问 MySQL、MongoDB 或 Redis。仅判断进程是否存活的外部监控使用此端点，建议每 15 分钟最多请求一次，不用高频请求模拟 Always On。
+- `/actuator/health` 保留完整的依赖健康检查。需要判断业务依赖是否可用时继续使用它；存活检查成功不能替代数据库连通性验收。`/actuator/health/readiness` 默认也不包含外部依赖，不能用它代替完整检查。
+- Azure Health Check 的请求间隔由平台决定。若用于流量路由，继续检查关键依赖，不因减少探测开销而改成只检查存活。
+- F1 不支持 Always On，允许空闲卸载。若启动或退出反复发生，先检查容器日志和计划级 `WPStopRequests` 配额，不要靠持续 ping 或重启处理 `QuotaExceeded`。
+- JVM 容器可通过环境变量 `JAVA_TOOL_OPTIONS=-XX:TieredStopAtLevel=1` 减少启动阶段的 JIT 编译开销。先在低流量环境验证；该选项可能降低长时间运行时的吞吐量。现有 `java -jar` 入口由 JVM 自动读取 `JAVA_TOOL_OPTIONS`，不读取 `JAVA_OPTS`。已有选项须保留，回滚时恢复原值；原本未设置则移除该变量。
+- 不直接缩小堆或全局启用 lazy initialization：先测量启动峰值和业务请求，避免 OOM 或把配置错误推迟到首次访问。修改 App Settings 会触发重启；不修改 plan、SKU、区域或网络配置，部署前后核对出站 IP。
+
 ## 当前演示环境核验（2026-10-07）
 
 当前 Azure 演示后端使用外置 TiDB Cloud、MongoDB Atlas 和 Redis Cloud；本地开发与 CI 使用隔离 Docker 服务（MySQL 8.4、MongoDB 8.0、Redis 8.2）。测试端口由 `GDEI_UPGRADE_TEST_JDBC_BASE`、`GDEI_MONGO_TEST_PORT`、`GDEI_REDIS_TEST_PORT` 显式提供，合成 fixture 不与演示数据共用。

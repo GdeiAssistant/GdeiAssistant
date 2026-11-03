@@ -1,6 +1,8 @@
 import importlib.util
 import contextlib
 import io
+import gzip
+import zipfile
 import json
 import os
 import secrets
@@ -264,6 +266,141 @@ class SecretScanTests(unittest.TestCase):
         self.assertTrue(rows)
         self.assertTrue(all(set(row) == {'File', 'RuleID', 'Commit'} for row in rows))
 
+
+
+class ArtifactArchiveTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temporary.cleanup)
+        self.root = Path(self.temporary.name)
+        self.payload = 'mongodb://fixture:' + fake_value() + '@example.invalid/db'
+
+    def zip_bytes(self, content, name='0-trace.network'):
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr(name, content)
+        return buffer.getvalue()
+
+    def status(self):
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            try:
+                status = SCANNER.artifacts(BINARY, str(self.root))
+            except (OSError, ValueError, RuntimeError, zipfile.BadZipFile):
+                status = 2
+        self.assertNotIn(self.payload, output.getvalue())
+        return status
+
+    def test_compressed_trace_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.payload))
+        self.assertEqual(self.status(), 1)
+
+    def test_clean_compressed_trace_passes(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('synthetic clean trace'))
+        self.assertEqual(self.status(), 0)
+
+    def test_nested_trace_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.zip_bytes(self.payload), 'inner.zip'))
+        self.assertEqual(self.status(), 1)
+
+    def test_archive_disguised_as_resource_blocks(self):
+        (self.root / 'resource.dat').write_bytes(self.zip_bytes(self.payload))
+        self.assertEqual(self.status(), 1)
+
+    def test_depth_limit_fails_closed(self):
+        data = self.zip_bytes('clean')
+        for _ in range(2):
+            data = self.zip_bytes(data, 'inner.zip')
+        (self.root / 'trace.zip').write_bytes(data)
+        self.assertNotEqual(self.status(), 0)
+
+    def test_entry_limit_fails_closed(self):
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, 'w') as archive:
+            for index in range(4):
+                archive.writestr(str(index), 'clean')
+        (self.root / 'trace.zip').write_bytes(buffer.getvalue())
+        with patch.object(SCANNER, 'MAX_ARTIFACT_ENTRIES', 3, create=True):
+            self.assertNotEqual(self.status(), 0)
+
+    def test_expanded_size_limit_fails_closed(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('x' * 4096))
+        with patch.object(SCANNER, 'MAX_ARTIFACT_BYTES', 2048, create=True):
+            self.assertNotEqual(self.status(), 0)
+
+    def test_member_size_limit_fails_closed(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('x' * 4096))
+        with patch.object(SCANNER, 'MAX_ARTIFACT_FILE_BYTES', 2048, create=True):
+            self.assertNotEqual(self.status(), 0)
+
+    def test_invalid_zip_fails_closed(self):
+        (self.root / 'trace.zip').write_bytes(b'not a zip')
+        self.assertNotEqual(self.status(), 0)
+
+    def test_unsupported_archive_fails_closed(self):
+        (self.root / 'trace.gz').write_bytes(gzip.compress(self.payload.encode()))
+        self.assertNotEqual(self.status(), 0)
+
+    def test_symlink_fails_closed(self):
+        (self.root / 'link').symlink_to(self.root / 'absent')
+        self.assertNotEqual(self.status(), 0)
+
+    def test_zip_symlink_fails_closed(self):
+        info = zipfile.ZipInfo('link')
+        info.create_system = 3
+        info.external_attr = 0o120777 << 16
+        with zipfile.ZipFile(self.root / 'trace.zip', 'w') as archive:
+            archive.writestr(info, 'elsewhere')
+        self.assertNotEqual(self.status(), 0)
+
+    def test_member_allowlist_path_cannot_hide_credential(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.payload, 'node_modules/payload.txt'))
+        self.assertEqual(self.status(), 1)
+
+    def test_directory_entry_payload_cannot_hide_credential(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.payload, 'directory/'))
+        self.assertEqual(self.status(), 1)
+
+    def test_invalid_archive_cli_fails_without_raw_diagnostics(self):
+        value = fake_value()
+        (self.root / (value + '.zip')).write_bytes(b'invalid')
+        result = subprocess.run(
+            [os.sys.executable, str(Path(SCANNER.__file__)), 'artifacts', '--gitleaks', BINARY],
+            env={**os.environ, 'ARTIFACT_PATHS': str(self.root)}, capture_output=True, text=True)
+        self.assertEqual(result.returncode, 2)
+        self.assertIn('failed safely', result.stdout)
+        self.assertNotIn(value, result.stdout + result.stderr)
+        self.assertEqual(result.stderr, '')
+
+    def test_encrypted_archive_fails_closed(self):
+        data = bytearray(self.zip_bytes('clean'))
+        data[6] |= 1
+        offset = data.index(b'PK\x01\x02')
+        data[offset + 8] |= 1
+        (self.root / 'trace.zip').write_bytes(data)
+        self.assertNotEqual(self.status(), 0)
+
+    def test_archive_member_path_is_never_extracted(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('clean', '../escaped.txt'))
+        self.assertEqual(self.status(), 0)
+        self.assertFalse((self.root.parent / 'escaped.txt').exists())
+
+    def test_sensitive_artifact_filename_is_suppressed(self):
+        value = fake_value()
+        (self.root / (value + '.txt')).write_text(self.payload)
+        output = io.StringIO()
+        with contextlib.redirect_stdout(output):
+            self.assertEqual(SCANNER.artifacts(BINARY, str(self.root)), 1)
+        self.assertNotIn(value, output.getvalue())
+        self.assertNotIn(self.payload, output.getvalue())
+
+    def test_corrupt_member_fails_closed(self):
+        data = bytearray(self.zip_bytes('clean'))
+        # Corrupt the stored CRC in the central directory.
+        offset = data.index(b'PK\x01\x02')
+        data[offset + 16] ^= 1
+        (self.root / 'trace.zip').write_bytes(data)
+        self.assertNotEqual(self.status(), 0)
 
 if __name__ == '__main__':
     unittest.main()

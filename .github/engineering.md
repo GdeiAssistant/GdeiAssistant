@@ -64,3 +64,9 @@ Gitleaks 的原生 baseline 无法按次数限制同一身份的发现。`secret
 配置赋值规则检查至少 8 个字符的非占位凭据，不依赖熵值；不足 8 个字符仍可能漏检，不能据扫描通过判断凭据安全。公开的 AccessKey ID 不属于自定义 Secret 赋值规则。JUnit XML 同时检查普通行首和紧接 CDATA 标记的首行，上传门禁使用同一规则。
 
 测试合成值的路径与值条件放在规则级 allowlist，覆盖自定义规则和 `generic-api-key`；测试文件中的其他值仍会被扫描。
+
+Playwright diagnostic ZIPs are inspected through at most two archive levels.
+
+The artifact gate limits each input or expanded member to 32 MiB, cumulative input plus expanded bytes to 256 MiB, and filesystem plus archive entries to 10,000 per invocation. Corrupt, encrypted, unsupported archives, links, and exceeded limits block upload.
+
+Archive members are scanned with neutral names so source-path allowlists cannot hide diagnostic credentials. Missing upload paths keep their existing behavior; these limits do not apply to history scans.

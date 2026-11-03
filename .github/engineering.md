@@ -46,3 +46,48 @@
 - 安全问题走 SECURITY.md 的私密入口。普通问题按复现、版本和影响分类，已关闭历史需求不自动恢复。
 
 完成本次目标及必要验证即可交付。不能把这份约定扩展成每次全量测试、强制新建设计文档、持续 Goal、自动化或多轮审批。
+
+## 凭据泄漏预防
+
+不得提交凭据；使用 GitHub Secrets 或环境变量注入。必需的 `Gitleaks` 检查保留原名，使用 `.gitleaks.toml` 扫描新增提交，补充 MongoDB 带密码 URI、Alibaba AccessKey Secret 和配置赋值规则。测试目录只豁免明确合成的值，不整体跳过测试代码。
+
+每周一 UTC 04:23 和手动触发的 `secret-scan-weekly.yml` 获取所有分支并扫描完整历史。`.gitleaks-baseline.json` 仅保存既有发现的规则、路径、提交、行号、fingerprint 和固定脱敏标记；它不豁免新提交。历史凭据仍须由所有者轮换，baseline 不代表凭据安全。
+
+Gitleaks 的原生 baseline 无法按次数限制同一身份的发现。`secret_scan.py` 直接对脱敏扫描按规则、路径、提交、行号和 fingerprint 计数，每条 baseline 记录只允许一个发现；同一身份超出记录次数也会失败。原始报告和临时文件不上传；摘要仅含路径、规则和短提交号，保留三天。新增或修改 baseline 必须单独核对，不自动扩大历史豁免。
+
+每次上传报告、日志或混合产物前，先用同一配置扫描上传的精确路径；发现凭据或扫描错误则阻止该次上传。缺失路径沿用原上传步骤的缺失文件行为。只含 APK/AAB、已编译模拟器应用 ZIP、IPA/dSYM 的步骤不做无意义的二进制文本扫描；二进制安全仍须独立的制品分析。不要将明文日志或配置加入这些例外。
+
+本地验证：`python3 .github/scripts/test_secret_scan.py`，以及 `python3 .github/scripts/secret_scan.py history --summary /tmp/secret-summary.json`。新规则需要用运行时生成的合成凭据测试；不得把真实值放进测试或终端输出。Gitleaks 安装固定 8.30.1，并按平台校验已固定的 SHA-256。
+
+占位符只豁免完整的 `${VARIABLE}`（变量名使用字母、数字和下划线，首字符不能是数字），不豁免前后拼接的字面值。含 shell 默认值或错误消息的插值不属于此豁免。
+
+配置赋值规则检查至少 8 个字符的非占位凭据，不依赖熵值；不足 8 个字符仍可能漏检，不能据扫描通过判断凭据安全。公开的 AccessKey ID 不属于自定义 Secret 赋值规则。JUnit XML 同时检查普通行首和紧接 CDATA 标记的首行，上传门禁使用同一规则。
+
+测试合成值的路径与值条件放在规则级 allowlist，覆盖自定义规则和 `generic-api-key`；测试文件中的其他值仍会被扫描。
+
+Playwright diagnostic ZIPs are inspected through at most two archive levels.
+
+The artifact gate limits each input or expanded member to 32 MiB, cumulative input plus expanded bytes to 256 MiB, and filesystem plus archive entries to 10,000 per invocation. Corrupt, encrypted, unsupported archives, links, and exceeded limits block upload.
+
+Original ZIP bytes (including headers, extra fields, and prepended or trailing bytes), archive/member comments, decoded member names, and expanded member contents are scanned with neutral names so source-path allowlists cannot hide diagnostic credentials. Missing upload paths keep their existing behavior; these limits do not apply to history scans.
+
+Inline `gitleaks:allow` comments and source `.gitleaksignore` files never grant
+scan exemptions, including history scans. Artifact findings remain suppressed.
+
+Frontend coverage uploads contain `coverage-summary.json` metrics only. Rendered
+source HTML stays local: it duplicates source code and can reinterpret mock
+values or JavaScript expressions as configuration credentials after neutral
+staging.
+
+The exact uploaded metrics still pass the unchanged credential gate;
+Playwright diagnostic ZIP scanning and success-only upload conditions remain.
+
+Backend coverage uploads contain the JaCoCo XML metrics instead of source HTML
+and renderer scripts. Failure reports retain both HTML and JUnit XML, with the
+same exact-path gate.
+
+Exception-type fixtures use explicit synthetic placeholders rather than
+credential-shaped sentinel assignments; exception assertions remain.
+
+Source-root `.gitleaksignore` inputs fail closed because the pinned scanner loads
+them automatically even with an explicit CLI ignore path.

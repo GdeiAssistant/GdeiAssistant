@@ -75,6 +75,7 @@ jobs:
             }
             try {
               const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
+              if (pr.state !== 'open') return;
               sha = pr.head.sha;
               await status('risk-gate', 'pending', 'Evaluating changed paths and owner approval');
               await status('pr-template', 'pending', 'Checking AI, change and verification fields');
@@ -94,13 +95,15 @@ jobs:
               let approved = false;
               if (pr.labels.some(label => label.name === 'owner-approved')) {
                 const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
-                const latest = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
-                  && event.label?.name === 'owner-approved').sort((a, b) => b.id - a.id)[0];
+                const relevant = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
+                  && event.label?.name === 'owner-approved');
+                if (relevant.some(event => !Number.isSafeInteger(event.id))) throw new Error('Unknown owner-approved event metadata');
+                const latest = relevant.sort((a, b) => b.id - a.id)[0];
                 // A shared GitHub identity cannot distinguish the owner from their AI agents.
                 approved = latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
               }
               const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
-              if (current.head.sha !== sha || current.body !== pr.body
+              if (current.state !== 'open' || current.head.sha !== sha || current.body !== pr.body
                   || JSON.stringify(current.labels.map(x => x.name).sort()) !== JSON.stringify(pr.labels.map(x => x.name).sort())) {
                 throw new Error('PR changed during evaluation; wait for the latest event');
               }

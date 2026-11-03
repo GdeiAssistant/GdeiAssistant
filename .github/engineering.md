@@ -69,4 +69,4 @@ Playwright diagnostic ZIPs are inspected through at most two archive levels.
 
 The artifact gate limits each input or expanded member to 32 MiB, cumulative input plus expanded bytes to 256 MiB, and filesystem plus archive entries to 10,000 per invocation. Corrupt, encrypted, unsupported archives, links, and exceeded limits block upload.
 
-Archive members are scanned with neutral names so source-path allowlists cannot hide diagnostic credentials. Missing upload paths keep their existing behavior; these limits do not apply to history scans.
+Original ZIP bytes (including headers, extra fields, and prepended or trailing bytes), archive/member comments, decoded member names, and expanded member contents are scanned with neutral names so source-path allowlists cannot hide diagnostic credentials. Missing upload paths keep their existing behavior; these limits do not apply to history scans.

@@ -275,10 +275,14 @@ class ArtifactArchiveTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.payload = 'mongodb://fixture:' + fake_value() + '@example.invalid/db'
 
-    def zip_bytes(self, content, name='0-trace.network'):
+    def zip_bytes(self, content, name='0-trace.network', comment=b'', member_comment=b''):
         buffer = io.BytesIO()
         with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
-            archive.writestr(name, content)
+            member = zipfile.ZipInfo(name)
+            member.compress_type = zipfile.ZIP_DEFLATED
+            member.comment = member_comment
+            archive.writestr(member, content)
+            archive.comment = comment
         return buffer.getvalue()
 
     def status(self):
@@ -298,6 +302,53 @@ class ArtifactArchiveTests(unittest.TestCase):
     def test_clean_compressed_trace_passes(self):
         (self.root / 'trace.zip').write_bytes(self.zip_bytes('synthetic clean trace'))
         self.assertEqual(self.status(), 0)
+
+    def test_zip_archive_comment_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(
+            self.zip_bytes('clean', comment=self.payload.encode()))
+        self.assertEqual(self.status(), 1)
+
+    def test_zip_member_comment_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(
+            self.zip_bytes('clean', member_comment=self.payload.encode()))
+        self.assertEqual(self.status(), 1)
+
+    def test_zip_member_filename_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes('clean', name=self.payload))
+        self.assertEqual(self.status(), 1)
+
+    def test_zip_prepended_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(
+            self.payload.encode() + b'\n' + self.zip_bytes('clean'))
+        self.assertEqual(self.status(), 1)
+
+    def test_zip_trailing_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(
+            self.zip_bytes('clean') + b'\n' + self.payload.encode() + b'\n')
+        self.assertEqual(self.status(), 1)
+
+    def test_zip_extra_field_credential_blocks(self):
+        member = zipfile.ZipInfo('clean.txt')
+        # Valid unknown extra field: a tag and little-endian length precede data.
+        member.extra = b'\xfe\xca' + len(self.payload).to_bytes(2, 'little') + self.payload.encode()
+        with zipfile.ZipFile(self.root / 'trace.zip', 'w') as archive:
+            archive.writestr(member, 'clean')
+        self.assertEqual(self.status(), 1)
+
+    def test_outer_member_comment_survives_nested_archive_staging(self):
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(
+            self.zip_bytes('clean'), name='inner.zip', member_comment=self.payload.encode()))
+        self.assertEqual(self.status(), 1)
+
+    def test_empty_directory_metadata_credential_blocks(self):
+        (self.root / 'trace.zip').write_bytes(
+            self.zip_bytes('', name='directory/', member_comment=self.payload.encode()))
+        self.assertEqual(self.status(), 1)
+
+    def test_nested_zip_trailing_credential_blocks(self):
+        inner = self.zip_bytes('clean') + b'\n' + self.payload.encode() + b'\n'
+        (self.root / 'trace.zip').write_bytes(self.zip_bytes(inner, name='inner.zip'))
+        self.assertEqual(self.status(), 1)
 
     def test_nested_trace_credential_blocks(self):
         (self.root / 'trace.zip').write_bytes(self.zip_bytes(self.zip_bytes(self.payload), 'inner.zip'))

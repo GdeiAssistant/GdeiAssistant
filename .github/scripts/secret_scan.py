@@ -126,9 +126,20 @@ def stage_artifacts(paths, destination):
         if zipfile.is_zipfile(stream):
             if depth >= MAX_ARCHIVE_DEPTH:
                 raise ValueError('Artifact archive depth exceeded')
+            # Preserve every original byte, including headers, extra fields and
+            # any prefix/suffix accepted by zipfile, under a neutral text path.
+            # A newline prevents Gitleaks' ZIP magic detection from replacing
+            # this byte scan with another member-only archive traversal.
+            (destination / f'{entries}-archive.txt').write_bytes(b'\n' + data)
             with zipfile.ZipFile(stream) as archive:
+                (destination / f'{entries}-archive-comment.txt').write_bytes(archive.comment)
                 for member in archive.infolist():
                     count_entry()
+                    # Scan decoded names and isolated comments as well: binary
+                    # ZIP headers must not hide text or provide regex boundaries.
+                    (destination / f'{entries}-name.txt').write_text(
+                        member.filename, encoding='utf-8')
+                    (destination / f'{entries}-member-comment.txt').write_bytes(member.comment)
                     if member.flag_bits & 1 or stat.S_ISLNK(member.external_attr >> 16):
                         raise ValueError('Encrypted or linked artifact member')
                     if member.is_dir() and member.file_size == 0:

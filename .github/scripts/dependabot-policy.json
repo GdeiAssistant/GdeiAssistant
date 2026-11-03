@@ -1,0 +1,11 @@
+{
+  "repo": "GdeiAssistant/GdeiAssistant",
+  "branch": "master",
+  "files": ["frontend/package.json","frontend/package-lock.json","build.gradle"],
+  "directories": ["/","/frontend"],
+  "required_checks": ["Build and Test","Analyze (Java)","Frontend verification","Repository hygiene","Safe dependency update"],
+  "action_files": [
+    ".github/workflows/backend-ci.yml",
+    ".github/workflows/frontend-ci.yml"
+  ]
+}

@@ -149,3 +149,10 @@ docs/superpowers/
 # Local Python validation artifacts
 __pycache__/
 *.py[cod]
+
+# Working notes are drafts, not documentation. Ignoring them is the only layer
+# that acts before the note is committed — the other two only notice afterwards.
+.local/
+ops-notes/
+*.local.md
+*.internal.md

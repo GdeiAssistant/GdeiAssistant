@@ -1,0 +1,299 @@
+[
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/test/java/cn/gdeiassistant/core/userprofile/controller/ProfileHttpContractTest.java",
+    "Commit": "343cb6df65a062ccd106ce48dfa78dcf1e18fa17",
+    "StartLine": 100,
+    "Fingerprint": "343cb6df65a062ccd106ce48dfa78dcf1e18fa17:src/test/java/cn/gdeiassistant/core/userprofile/controller/ProfileHttpContractTest.java:generic-api-key:100",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".github/workflows/backend-ci.yml",
+    "Commit": "a41cdc147798760978d75d7da5154c707b4b174e",
+    "StartLine": 37,
+    "Fingerprint": "a41cdc147798760978d75d7da5154c707b4b174e:.github/workflows/backend-ci.yml:configuration-secret-value:37",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/test/java/cn/gdeiassistant/core/schedule/repository/CustomScheduleConcurrencyTest.java",
+    "Commit": "73dccc1c9a8720c34989f7084867446597523ffc",
+    "StartLine": 17,
+    "Fingerprint": "73dccc1c9a8720c34989f7084867446597523ffc:src/test/java/cn/gdeiassistant/core/schedule/repository/CustomScheduleConcurrencyTest.java:mongodb-userinfo-password:17",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".github/workflows/backend-ci.yml",
+    "Commit": "22aa5d8d7a37c66c5edb7194ba80fcc057635018",
+    "StartLine": 24,
+    "Fingerprint": "22aa5d8d7a37c66c5edb7194ba80fcc057635018:.github/workflows/backend-ci.yml:configuration-secret-value:24",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".github/workflows/backend-ci.yml",
+    "Commit": "22aa5d8d7a37c66c5edb7194ba80fcc057635018",
+    "StartLine": 64,
+    "Fingerprint": "22aa5d8d7a37c66c5edb7194ba80fcc057635018:.github/workflows/backend-ci.yml:configuration-secret-value:64",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/test/java/cn/gdeiassistant/core/chargerequest/controller/ChargeRequestControllerTest.java",
+    "Commit": "87602d4c47f08ffa015da62d81ccc39c6fd4592a",
+    "StartLine": 215,
+    "Fingerprint": "87602d4c47f08ffa015da62d81ccc39c6fd4592a:src/test/java/cn/gdeiassistant/core/chargerequest/controller/ChargeRequestControllerTest.java:generic-api-key:215",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/test/java/cn/gdeiassistant/core/chargerequest/controller/ChargeRequestControllerTest.java",
+    "Commit": "87602d4c47f08ffa015da62d81ccc39c6fd4592a",
+    "StartLine": 223,
+    "Fingerprint": "87602d4c47f08ffa015da62d81ccc39c6fd4592a:src/test/java/cn/gdeiassistant/core/chargerequest/controller/ChargeRequestControllerTest.java:generic-api-key:223",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".github/workflows/codeql.yml",
+    "Commit": "8759be319c6a4ae8f3991ad544d5f34a5309f0a5",
+    "StartLine": 40,
+    "Fingerprint": "8759be319c6a4ae8f3991ad544d5f34a5309f0a5:.github/workflows/codeql.yml:configuration-secret-value:40",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".env.template",
+    "Commit": "0d8c3b34a5f447d08303d9ee5d4d0f87f1c44569",
+    "StartLine": 30,
+    "Fingerprint": "0d8c3b34a5f447d08303d9ee5d4d0f87f1c44569:.env.template:configuration-secret-value:30",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".env.template",
+    "Commit": "0464b4474feb2cb9a462656014022c37b577c947",
+    "StartLine": 12,
+    "Fingerprint": "0464b4474feb2cb9a462656014022c37b577c947:.env.template:configuration-secret-value:12",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".env.template",
+    "Commit": "0464b4474feb2cb9a462656014022c37b577c947",
+    "StartLine": 28,
+    "Fingerprint": "0464b4474feb2cb9a462656014022c37b577c947:.env.template:configuration-secret-value:28",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".env.template",
+    "Commit": "ff2781d3abd269e08a7261d675f3b5088b027080",
+    "StartLine": 12,
+    "Fingerprint": "ff2781d3abd269e08a7261d675f3b5088b027080:.env.template:configuration-secret-value:12",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": ".env.template",
+    "Commit": "ff2781d3abd269e08a7261d675f3b5088b027080",
+    "StartLine": 28,
+    "Fingerprint": "ff2781d3abd269e08a7261d675f3b5088b027080:.env.template:configuration-secret-value:28",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/sql/mysql.properties",
+    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
+    "StartLine": 7,
+    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/sql/mysql.properties:configuration-secret-value:7",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/sql/mysql.properties",
+    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
+    "StartLine": 19,
+    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/sql/mysql.properties:configuration-secret-value:19",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
+    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
+    "StartLine": 1,
+    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:1",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/sql/mysql.properties",
+    "Commit": "a31a236df41da16373b715f12adb0add0eda9b01",
+    "StartLine": 31,
+    "Fingerprint": "a31a236df41da16373b715f12adb0add0eda9b01:src/main/resources/config/sql/mysql.properties:configuration-secret-value:31",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
+    "Commit": "2d06b7b8b4d758007dbf8196e9e3c8bf40713def",
+    "StartLine": 2,
+    "Fingerprint": "2d06b7b8b4d758007dbf8196e9e3c8bf40713def:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:2",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
+    "Commit": "2d06b7b8b4d758007dbf8196e9e3c8bf40713def",
+    "StartLine": 3,
+    "Fingerprint": "2d06b7b8b4d758007dbf8196e9e3c8bf40713def:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:3",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/main/webapp/js/covid19/index.js",
+    "Commit": "31f79b6d3c24a873bf947fefc347d52748b72f4f",
+    "StartLine": 106,
+    "Fingerprint": "31f79b6d3c24a873bf947fefc347d52748b72f4f:src/main/webapp/js/covid19/index.js:generic-api-key:106",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "gcp-api-key",
+    "File": "src/main/webapp/js/covid19/index.js",
+    "Commit": "31f79b6d3c24a873bf947fefc347d52748b72f4f",
+    "StartLine": 143,
+    "Fingerprint": "31f79b6d3c24a873bf947fefc347d52748b72f4f:src/main/webapp/js/covid19/index.js:gcp-api-key:143",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/aliyun/oss_token.properties",
+    "Commit": "59878a7470c4d5ea796956d4bb8870a9056f9c94",
+    "StartLine": 10,
+    "Fingerprint": "59878a7470c4d5ea796956d4bb8870a9056f9c94:src/main/resources/config/aliyun/oss_token.properties:configuration-secret-value:10",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/jwt/secret.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 3,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/jwt/secret.properties:configuration-secret-value:3",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/email/email.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 8,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/email/email.properties:configuration-secret-value:8",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/validate/token.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 3,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/validate/token.properties:configuration-secret-value:3",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/wechat/app.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 4,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/wechat/app.properties:configuration-secret-value:4",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/wechat/account.properties",
+    "Commit": "9392bca9b09a9da29a1cc3156b0bccf70933fffc",
+    "StartLine": 4,
+    "Fingerprint": "9392bca9b09a9da29a1cc3156b0bccf70933fffc:src/main/resources/config/wechat/account.properties:configuration-secret-value:4",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "mongodb-userinfo-password",
+    "File": "src/main/resources/config/mongodb/mongodb-config.properties",
+    "Commit": "91b29526ec501033345421bbfd62f63f3b7c2390",
+    "StartLine": 2,
+    "Fingerprint": "91b29526ec501033345421bbfd62f63f3b7c2390:src/main/resources/config/mongodb/mongodb-config.properties:mongodb-userinfo-password:2",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/main/java/cn/gdeiassistant/Pojo/Config/AliyunConfig.java",
+    "Commit": "01b75f163ae81c64591b73a946de919464b21618",
+    "StartLine": 62,
+    "Fingerprint": "01b75f163ae81c64591b73a946de919464b21618:src/main/java/cn/gdeiassistant/Pojo/Config/AliyunConfig.java:generic-api-key:62",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java",
+    "Commit": "e2f33a027b9cfee7ad0ccc62977006621e8cf66d",
+    "StartLine": 62,
+    "Fingerprint": "e2f33a027b9cfee7ad0ccc62977006621e8cf66d:src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java:generic-api-key:62",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java",
+    "Commit": "19a1db1ea3527ad364030d9c055a13c61aaced29",
+    "StartLine": 50,
+    "Fingerprint": "19a1db1ea3527ad364030d9c055a13c61aaced29:src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java:generic-api-key:50",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "generic-api-key",
+    "File": "src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java",
+    "Commit": "19a1db1ea3527ad364030d9c055a13c61aaced29",
+    "StartLine": 55,
+    "Fingerprint": "19a1db1ea3527ad364030d9c055a13c61aaced29:src/main/java/edu/gdei/gdeiassistant/Service/CloudAPI/AliYunService.java:generic-api-key:55",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  },
+  {
+    "RuleID": "configuration-secret-value",
+    "File": "src/main/resources/config/oss/token.properties",
+    "Commit": "b5e8dd0959cf4c6177696bcf15da485dec86a98c",
+    "StartLine": 10,
+    "Fingerprint": "b5e8dd0959cf4c6177696bcf15da485dec86a98c:src/main/resources/config/oss/token.properties:configuration-secret-value:10",
+    "Secret": "REDACTED",
+    "Match": "REDACTED"
+  }
+]

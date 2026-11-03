@@ -101,16 +101,41 @@ jobs:
           LOG_LEVEL_IBATIS: "WARN"
           LOG_LEVEL_MYBATIS: "WARN"
 
+      - name: Install verified Gitleaks before artifact upload
+        if: ${{ !cancelled() }}
+        run: bash .github/scripts/install-gitleaks.sh
+
+      - name: Scan exact upload paths for credentials
+        id: artifact_secret_scan_1
+        if: ${{ always() }}
+        env:
+          ARTIFACT_PATHS: |
+            build/reports/jacoco/test/jacocoTestReport.xml
+        run: >-
+          python3 .github/scripts/secret_scan.py artifacts
+          --gitleaks "$RUNNER_TEMP/gitleaks-bin/gitleaks"
+
       - name: Upload full coverage report
-        if: always()
+        if: ${{ always() && steps.artifact_secret_scan_1.outcome == 'success' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: backend-coverage
-          path: build/reports/jacoco/test/
+          path: build/reports/jacoco/test/jacocoTestReport.xml
           retention-days: 7
 
+      - name: Scan exact upload paths for credentials
+        id: artifact_secret_scan_2
+        if: ${{ failure() }}
+        env:
+          ARTIFACT_PATHS: |
+            build/reports/tests/
+            build/test-results/
+        run: >-
+          python3 .github/scripts/secret_scan.py artifacts
+          --gitleaks "$RUNNER_TEMP/gitleaks-bin/gitleaks"
+
       - name: Upload test reports on failure
-        if: failure()
+        if: ${{ failure() && steps.artifact_secret_scan_2.outcome == 'success' }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: test-reports

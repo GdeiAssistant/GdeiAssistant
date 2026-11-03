@@ -79,9 +79,9 @@ class EvaluateServiceTest {
         verify(client, never()).submitSpareRoomForm(anyString(), any(), anyString(), anyList());
     }
     @Test void upstreamErrorsRetainTheirMeaning() throws Exception {
-        when(client.fetchEduMainPage(eq("session"), any())).thenThrow(new IOException("synthetic"),
-                new TimeStampIncorrectException("synthetic"), new PasswordIncorrectException("synthetic"),
-                new IllegalStateException("synthetic"));
+        when(client.fetchEduMainPage(eq("session"), any())).thenThrow(new IOException("REDACTED"),
+                new TimeStampIncorrectException("REDACTED"), new PasswordIncorrectException("REDACTED"),
+                new IllegalStateException("REDACTED"));
         assertThrows(NetWorkTimeoutException.class, () -> service.teacherEvaluate("session", false));
         assertThrows(TimeStampIncorrectException.class, () -> service.teacherEvaluate("session", false));
         assertThrows(PasswordIncorrectException.class, () -> service.teacherEvaluate("session", false));

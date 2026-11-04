@@ -3,6 +3,14 @@ name: PR risk gate
 on:
   pull_request_target:
     types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+  # Codex publishes and refreshes its review receipt as a PR comment, which
+  # raises no pull_request event. Only that bot can re-trigger the evaluation.
+  issue_comment:
+    types: [created, edited, deleted]
+  # A merge to the base branch can invalidate a review that already passed and
+  # raises no PR event, so the gate re-sweeps the open pull requests.
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       pr_number:
@@ -10,58 +18,115 @@ on:
         required: true
         type: string
 
-# Only trusted default-branch policy is checked out. No PR code, secrets, label writes or merge permission.
+# No checkout, PR code execution, secret access, label writes or merge permission.
+# `actions: write` is only used to dispatch a per-PR evaluation after a base push.
 permissions:
   contents: read
   pull-requests: read
   issues: read
   statuses: write
-
-concurrency:
-  group: risk-gate-${{ github.event.pull_request.number || inputs.pr_number }}
-  cancel-in-progress: true
+  actions: write
 
 jobs:
   evaluate:
     name: Evaluate PR governance
+    if: github.event_name != 'issue_comment' || (github.event.issue.pull_request && (github.event.comment.user.login == 'chatgpt-codex-connector[bot]' || github.event.comment.user.login == 'chatgpt-codex-connector'))
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    # Job-level, so a comment from anyone else skips the job without cancelling
+    # an evaluation already running for this PR.
+    concurrency:
+      group: risk-gate-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr_number }}
+      cancel-in-progress: true
     steps:
-      - name: Load trusted dependency policy
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-        with:
-          ref: ${{ github.event.repository.default_branch }}
-          persist-credentials: false
-      - name: Fetch verified Dependabot metadata
-        if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
-        id: dependency
-        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
-        with:
-          github-token: ${{ github.token }}
-      - name: Publish risk-gate and PR template checks on the PR head
+      - name: Publish risk-gate, AI review and PR template checks on the PR head
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
-          DEPENDABOT_DEPENDENCIES: ${{ steps.dependency.outputs.updated-dependencies-json }}
         with:
           script: |
-            // Executed only by the trusted base-branch workflow and policy. Never load PR code.
-            const number = context.payload.pull_request?.number || Number(process.env.PR_NUMBER);
-            if (!Number.isSafeInteger(number) || number < 1) throw new Error('Invalid PR number');
+            // Executed only by the trusted base-branch workflow. Never load PR code.
+            const eventName = context.eventName;
+            // A push to the base branch has no single PR; it re-evaluates them all.
+            const single = eventName !== 'push';
+            const number = context.payload.pull_request?.number
+              || context.payload.issue?.number
+              || Number(process.env.PR_NUMBER);
+            if (single && (!Number.isSafeInteger(number) || number < 1)) throw new Error('Invalid PR number');
             const repo = context.repo;
             const target = `${context.serverUrl}/${repo.owner}/${repo.repo}/actions/runs/${context.runId}`;
-            let sha;
-            const status = (name, state, description) => github.rest.repos.createCommitStatus({
-              ...repo, sha, context: name, state, description, target_url: target,
-            });
+            // Definitions that decide what passes cannot be relaxed by a PR.
+            const ALWAYS_RISK_WORKFLOWS = new Set([
+              '.github/workflows/risk-gate.yml',
+              '.github/workflows/offline-submission-regression.yml',
+              '.github/workflows/repository-hygiene.yml',
+              '.github/workflows/engineering-governance.yml',
+              '.github/workflows/dependabot-policy.yml',
+            ]);
+            const WORKFLOW_PRIVILEGE = [
+              /^\s*permissions\s*:/,
+              // Any granted scope, quoted or trailed by a comment, including scopes
+              // GitHub adds later. An unknown key still fails closed here.
+              /^\s*["']?[a-z][a-z0-9-]*["']?\s*:\s*["']?write["']?\s*(?:#.*)?$/,
+              /\bsecrets\b/,
+              /\b(?:GH_TOKEN|GITHUB_TOKEN|github\.token)\b/,
+              /\bpull_request_target\b/,
+              /\bworkflow_run\b/,
+              // Events an unprivileged user can raise against a write-capable workflow.
+              /\bissue_comment\b/,
+              /\bpull_request_review_comment\b/,
+              /\bdiscussion_comment\b/,
+              /\brepository_dispatch\b/,
+            ];
+            const STEP_COMMAND = /^\s*-?\s*(?:run|uses)\s*:/;
+            // Scheduling and prose carry no behaviour; anything else in a
+            // credential-bearing workflow is a logic change. Dispatch input
+            // fields are excluded on purpose: `default` and `required` change
+            // what a manual run does.
+            const COSMETIC = /^\s*(?:#|(?:-\s*)?(?:cron|schedule|timeout-minutes|name|retention-days)\s*:)/;
+            const isWorkflow = path => path.startsWith('.github/workflows/');
             function highRisk(path) {
               const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
-              if (p.startsWith('.github/workflows/') || /(^|\/)codeowners$/.test(p)) return true;
+              if (/(^|\/)codeowners$/.test(p)) return true;
               if (/(^|\/)(docs?|tests?|examples?|fixtures)(\/|$)/.test(p)) return false;
               if (/(^|\/)\.env(?:[./_-]|$)/.test(p)) return true;
               if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
+            }
+            // A workflow that can write, read credentials or touch the host is
+            // authority-bearing: its logic cannot change without owner approval.
+            // Persistent self-hosted runners and sudo count as host authority.
+            async function authorityBearing(path, ref) {
+              try {
+                const { data } = await github.rest.repos.getContent({ ...repo, path, ref });
+                if (!data || Array.isArray(data) || typeof data.content !== 'string') return true;
+                const text = Buffer.from(data.content, 'base64').toString('utf8');
+                return /\bsecrets\b/.test(text)
+                  || /^\s*["']?[a-z][a-z0-9-]*["']?\s*:\s*["']?write["']?\s*(?:#.*)?$/m.test(text)
+                  || /\bself-hosted\b/.test(text)
+                  || /\bsudo\b/.test(text);
+              } catch {
+                return true;
+              }
+            }
+            async function workflowHighRisk(file, ref) {
+              // A rename must not slip a protected definition past the check.
+              if (ALWAYS_RISK_WORKFLOWS.has(file.filename) || ALWAYS_RISK_WORKFLOWS.has(file.previous_filename)) return true;
+              // Without a readable diff the change cannot be proven benign.
+              if (typeof file.patch !== 'string') return true;
+              const changed = file.patch.split('\n')
+                .filter(line => /^[+-]/.test(line) && !/^(?:\+\+\+|---)/.test(line))
+                .map(line => ({ sign: line[0], text: line.slice(1) }));
+              if (changed.some(entry => WORKFLOW_PRIVILEGE.some(pattern => pattern.test(entry.text)))) return true;
+              // Deleting a step removes verification or behaviour. Rewriting one
+              // does the same while keeping the counts equal, which is how
+              // `npm test` becomes `echo "Tests skipped"`. Any removed step
+              // command is therefore R2; only a pure addition stays cheap.
+              const removed = changed.filter(entry => entry.sign === '-' && STEP_COMMAND.test(entry.text)).length;
+              if (removed > 0) return true;
+              if (!changed.some(entry => !COSMETIC.test(entry.text))) return false;
+              return authorityBearing(file.filename, ref);
             }
             function completeTemplate(body) {
               const text = (body || '').replace(/<!--[\s\S]*?-->/g, '');
@@ -73,51 +138,175 @@ jobs:
                 && present(/what changed|summary|problem|changes|变更|改动/i)
                 && present(/how verified|verif|validat|test(?:ing| plan)?|验证|测试/i);
             }
-            try {
-              const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
-              if (pr.state !== 'open') return;
+            // REST and GraphQL disagree on the bot suffix, so accept both forms.
+            const CODEX_LOGIN = /^chatgpt-codex-connector(?:\[bot\])?$/;
+            // The receipt is a single JSON object closed just before the HTML
+            // comment terminator, so the capture must stay greedy.
+            const REVIEW_RECEIPT = /<!--\s*codex-review-state:v1\s*(\{[\s\S]*\})\s*-->/;
+            // A receipt names only the head it reviewed, and commit dates are author
+            // metadata rather than the time a branch moved, so an old review can
+            // outlive a base push. Git ancestry is the authenticated evidence: the
+            // reviewed head must contain the current base head, which GitHub
+            // resolves from the object graph. pr.base.sha lags the live branch, so
+            // comparing it would miss the same drift.
+            async function headContainsBase(baseRef, headSha) {
+              const { data } = await github.rest.repos.getBranch({ ...repo, branch: baseRef });
+              const baseHead = data.commit.sha;
+              const { data: cmp } = await github.rest.repos.compareCommits({ ...repo, base: baseHead, head: headSha });
+              return cmp.merge_base_commit?.sha === baseHead;
+            }
+            // A Dependabot skip only holds for a head Dependabot itself wrote.
+            async function dependabotHead(ref) {
+              const { data } = await github.rest.repos.getCommit({ ...repo, ref });
+              // The author name is free text: anyone can commit as "dependabot[bot]".
+              // Only the linked account is authenticated, so the name is not a signal.
+              // An unlinked commit falls through to the normal review path.
+              return data.author?.login === 'dependabot[bot]';
+            }
+            // Codex publishes a machine-readable receipt in its rolling summary
+            // comment. Only a completed review of the current head with no
+            // unresolved finding counts as a pass; anything else blocks the gate.
+            async function aiReview(prNumber, headSha, baseContained) {
+              // A review cannot outlive a base push. Re-requesting a review on the
+              // same head does not clear this: the merge would still combine that
+              // head with a base the review never saw, so the branch comes first.
+              if (!baseContained) {
+                return { state: 'failure', description: 'Base branch advanced since this head was built; update the branch then comment @codex review' };
+              }
+              const comments = await github.paginate(github.rest.issues.listComments, { ...repo, issue_number: prNumber, per_page: 100 });
+              const receipts = comments
+                .filter(comment => CODEX_LOGIN.test(comment.user?.login || ''))
+                .map(comment => ({ comment, match: REVIEW_RECEIPT.exec(comment.body || '') }))
+                .filter(entry => entry.match)
+                .sort((a, b) => new Date(b.comment.updated_at) - new Date(a.comment.updated_at));
+              if (!receipts.length) return { state: 'pending', description: 'No Codex review yet; comment @codex review to start one' };
+              let receipt;
+              try {
+                receipt = JSON.parse(receipts[0].match[1]);
+              } catch {
+                return { state: 'error', description: 'Codex review receipt is not valid JSON' };
+              }
+              const review = receipt?.code_review || {};
+              if (review.status !== 'completed') {
+                return { state: 'pending', description: `Codex review ${review.status || 'not finished'}; comment @codex review to restart it` };
+              }
+              const reviewed = typeof review.commit_sha === 'string' ? review.commit_sha : '';
+              if (reviewed !== headSha) {
+                return { state: 'failure', description: `Codex reviewed ${reviewed.slice(0, 7) || 'another commit'}, not this head; comment @codex review` };
+              }
+              if (review.has_unresolved_findings !== false) {
+                return { state: 'failure', description: 'Codex review still has unresolved findings on this head' };
+              }
+              return { state: 'success', description: 'Codex reviewed this head with no unresolved findings' };
+            }
+            // Returns true when the gate passes for this PR. Errors are rethrown
+            // after the statuses are marked, so the caller decides how loud to be.
+            async function evaluate(number) {
+              let sha;
+              const status = (name, state, description) => github.rest.repos.createCommitStatus({
+                ...repo, sha, context: name, state, description: String(description).slice(0, 140), target_url: target,
+              });
+              try {
+                const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
               sha = pr.head.sha;
-              await status('risk-gate', 'pending', 'Evaluating changed paths and owner approval');
+              // Dependabot bodies use their own template; the risk-gate path check still applies below.
+              // The exemption follows the head commit, not the PR author: a human
+              // pushing onto a bot branch must not inherit the skip.
+              const isDependabot = pr.user?.login === 'dependabot[bot]' && await dependabotHead(pr.head.sha);
+              await status('risk-gate', 'pending', 'Evaluating changed paths, owner approval and AI review');
               await status('pr-template', 'pending', 'Checking AI, change and verification fields');
+              await status('ai-review', 'pending', 'Reading the Codex review receipt');
               const files = await github.paginate(github.rest.pulls.listFiles, { ...repo, pull_number: number, per_page: 100 });
               // GitHub caps this API at 3000 files. Incomplete diffs must not pass as low risk.
               if (files.length !== pr.changed_files || files.length >= 3000) throw new Error('Incomplete PR file list');
-              const policy = require('./.github/scripts/dependabot-policy.cjs');
-              const config = require('./.github/scripts/dependabot-policy.json');
-              let dependencies;
-              try { dependencies = JSON.parse(process.env.DEPENDABOT_DEPENDENCIES || 'null'); } catch { dependencies = null; }
-              const commits = pr.user.login === 'dependabot[bot]'
-                ? await github.paginate(github.rest.pulls.listCommits, { ...repo, pull_number: number, per_page: 100 }) : [];
-              const repository = `${repo.owner}/${repo.repo}`;
-              const verifiedDependabot = policy.trustedPR(config, repository, pr, sha, commits);
-              const safeDependency = policy.eligible({config, repo: repository, pr, eventHead: sha, dependencies, files, commits});
-              const risky = !safeDependency && files.some(file => [file.filename, file.previous_filename].filter(Boolean).some(highRisk));
-              let approved = false;
-              if (pr.labels.some(label => label.name === 'owner-approved')) {
+              let risky = false;
+              for (const file of files) {
+                const names = [file.filename, file.previous_filename].filter(Boolean);
+                risky = names.some(isWorkflow) ? await workflowHighRisk(file, sha) : names.some(highRisk);
+                if (risky) break;
+              }
+              // Two labels, two different claims. The owner and their agents share
+              // one GitHub login, so the event actor cannot tell them apart; the
+              // label name is the only honest signal left. owner-approved claims a
+              // human confirmed it, agent-approved claims an agent did. The status
+              // description always names which one applied, so an agent-cleared
+              // high-risk merge is visible instead of passing as a human review.
+              const APPROVAL_LABELS = ['owner-approved', 'agent-approved'];
+              let approval = null;
+              if (pr.labels.some(label => APPROVAL_LABELS.includes(label.name))) {
                 const events = await github.paginate(github.rest.issues.listEvents, { ...repo, issue_number: number, per_page: 100 });
-                const relevant = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
-                  && event.label?.name === 'owner-approved');
-                if (relevant.some(event => !Number.isSafeInteger(event.id))) throw new Error('Unknown owner-approved event metadata');
-                const latest = relevant.sort((a, b) => b.id - a.id)[0];
-                // A shared GitHub identity cannot distinguish the owner from their AI agents.
-                approved = latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+                const liveLabel = name => {
+                  const latest = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
+                    && event.label?.name === name).sort((a, b) => b.id - a.id)[0];
+                  return latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+                };
+                // A human confirmation outranks an agent's when both are present.
+                if (liveLabel('owner-approved')) approval = 'owner';
+                else if (liveLabel('agent-approved')) approval = 'agent';
               }
               const { data: current } = await github.rest.pulls.get({ ...repo, pull_number: number });
-              if (current.state !== 'open' || current.head.sha !== sha || current.body !== pr.body
+              if (current.head.sha !== sha || current.body !== pr.body
                   || JSON.stringify(current.labels.map(x => x.name).sort()) !== JSON.stringify(pr.labels.map(x => x.name).sort())) {
                 throw new Error('PR changed during evaluation; wait for the latest event');
               }
-              const allowed = !risky || approved;
-              await status('risk-gate', allowed ? 'success' : 'failure', safeDependency ? 'Verified dependency policy: CI must pass before merge' : !risky ? 'Low-risk paths: no owner approval needed'
-                : approved ? 'High-risk paths: owner-approved label verified' : 'High-risk paths: needs-owner-approval; owner must add owner-approved');
-              const templateOK = verifiedDependabot || completeTemplate(pr.body);
-              await status('pr-template', templateOK ? 'success' : 'failure', templateOK
-                ? (verifiedDependabot ? 'Verified Dependabot-generated PR description' : 'AI, change and verification fields are filled in') : 'Fill in AI assistance, What changed and How verified sections');
-              if (!allowed || !templateOK) core.setFailed('Required PR governance checks did not pass');
-            } catch (error) {
-              if (sha) {
-                await status('risk-gate', 'error', 'Evaluation failed; inspect the trusted workflow run');
-                await status('pr-template', 'error', 'Evaluation failed; inspect the trusted workflow run');
+              const review = isDependabot
+                ? { state: 'success', description: 'Automated dependency update: Codex review not required' }
+                : await aiReview(number, sha, await headContainsBase(pr.base.ref, sha));
+              await status('ai-review', review.state, review.description);
+              const tierOK = !risky || approval !== null;
+              const tierNote = !risky ? 'Low-risk paths: no owner approval needed'
+                : approval === 'owner' ? 'High-risk paths: owner-approved label verified'
+                : approval === 'agent' ? 'High-risk paths: cleared by agent-approved, NOT confirmed by the owner'
+                : 'High-risk paths: needs-owner-approval; owner must add owner-approved';
+              let gateState;
+              let gateNote;
+              if (!tierOK) {
+                gateState = 'failure';
+                gateNote = tierNote;
+              } else if (review.state === 'success') {
+                gateState = 'success';
+                gateNote = `${tierNote}; AI review passed`;
+              } else if (review.state === 'pending') {
+                // An unfinished review is neither a pass nor a failure.
+                gateState = 'pending';
+                gateNote = `${tierNote}; waiting for AI review`;
+              } else {
+                gateState = 'failure';
+                gateNote = `${tierNote}; ${review.description}`;
               }
-              throw error;
+              await status('risk-gate', gateState, gateNote);
+              const templateOK = isDependabot ? true : completeTemplate(pr.body);
+              await status('pr-template', templateOK ? 'success' : 'failure', isDependabot
+                ? 'Automated dependency update: PR template not required'
+                : templateOK ? 'AI, change and verification fields are filled in' : 'Fill in AI assistance, What changed and How verified sections');
+              return gateState !== 'failure' && templateOK;
+              } catch (error) {
+                if (sha) {
+                  await status('risk-gate', 'error', 'Evaluation failed; inspect the trusted workflow run');
+                  await status('pr-template', 'error', 'Evaluation failed; inspect the trusted workflow run');
+                  await status('ai-review', 'error', 'Evaluation failed; inspect the trusted workflow run');
+                }
+                throw error;
+              }
+            }
+              if (single) {
+                const passed = await evaluate(number);
+                // A dispatched run only refreshes statuses after the base moved, and
+                // the verdict already lives on the PR's commit status. Failing the run
+                // here would paint every merge red for open PRs that are legitimately
+                // not ready, which buries a real evaluation error. Event-driven runs
+                // keep failing loudly.
+                if (!passed && eventName !== 'workflow_dispatch') core.setFailed('Required PR governance checks did not pass');
+              } else {
+              // Merging moves the base without raising a PR event. Dispatch a normal
+              // per-PR evaluation for each open PR instead of evaluating inline, so
+              // each one joins that PR's concurrency group and cannot race an
+              // event-driven run into publishing a stale status.
+              const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              for (const item of open) {
+                await github.rest.actions.createWorkflowDispatch({
+                  ...repo, workflow_id: 'risk-gate.yml', ref: 'main', inputs: { pr_number: String(item.number) },
+                });
+              }
+              core.info(`Dispatched ${open.length} pull request evaluations after the base branch moved.`);
             }

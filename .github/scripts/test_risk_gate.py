@@ -227,9 +227,15 @@ class ScriptTests(unittest.TestCase):
         self.assert_blocked(self.fixture(labels=False,
                                          files=[workflow_file('+          token: ${{ secrets.TOKEN }}')]))
 
-    def test_comment_only_change_stays_low_risk(self):
+    def test_comment_only_change_is_high_risk(self):
+        # A `#` line inside `run: |` is shell text, and GitHub expands `${{ }}`
+        # before Bash parses the comment, so no comment is provably inert.
         files = [workflow_file('-  # old note\n+  # clearer note')]
-        self.assert_passes(self.fixture(labels=False, files=files))
+        self.assert_blocked(self.fixture(labels=False, files=files))
+
+    def test_comment_with_an_expanded_expression_is_high_risk(self):
+        files = [workflow_file('+  # ${{ fromJSON(\'"\\nexit 0"\') }}')]
+        self.assert_blocked(self.fixture(labels=False, files=files))
 
     def test_workflow_name_change_is_high_risk(self):
         files = [workflow_file('-name: CI\n+name: Build')]

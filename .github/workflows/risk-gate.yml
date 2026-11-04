@@ -98,12 +98,6 @@ jobs:
             // does not hard-code an account. An empty value matches nobody, so
             // a missing variable blocks high-risk merges instead of widening.
             const APPROVAL_OWNER = process.env.APPROVAL_OWNER || '';
-            // Only a comment is provably inert. Every key, including `name:`,
-            // `cron:` and `timeout-minutes`, has behavioural meaning somewhere,
-            // and a line inside a `run: |` block is shell text that only looks
-            // like YAML. Treating any of it as prose lets a shell line such as
-            // `- name: $(...)` through, so the whole file takes one tier.
-            const COSMETIC = /^\s*#/;
             const isWorkflow = path => path.startsWith('.github/workflows/');
             function highRisk(path) {
               const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
@@ -150,12 +144,14 @@ jobs:
               const pinned = changed.filter(entry => ACTION_PIN.test(entry.text));
               if (isDependabot && actionFiles?.has(file.filename)
                   && pinned.length === changed.length && sameAction(pinned)) return false;
-              if (!changed.some(entry => !COSMETIC.test(entry.text))) return false;
               // Every remaining edit can change what CI verifies: a removed
-              // assertion, a multiline body, an added `if: false`, a
-              // `continue-on-error`. Nothing below prose is provably harmless,
-              // and a workflow that publishes a required status is exactly where
-              // guessing is most expensive, so this tier needs a clearing label.
+              // assertion, an added `if: false`, a `continue-on-error`. Even a
+              // `#` line is not provably inert, because inside a `run:` block it
+              // is shell text that GitHub still expands `${{ }}` into before
+              // Bash sees it, and a comment after a backslash continuation cuts
+              // the command short. A workflow that publishes a required status
+              // is exactly where guessing is most expensive, so this tier needs
+              // a clearing label.
               return true;
             }
             function completeTemplate(body) {

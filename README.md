@@ -154,7 +154,7 @@ npm run test:e2e
 
 ## 多端契约
 
-[`docs/openapi.yaml`](docs/openapi.yaml) 是从 Controller 请求/响应类型生成的 OpenAPI，作为 Android、iOS、小程序与后端之间的统一参考。
+[`docs/openapi.yaml`](docs/openapi.yaml) 是从 Controller 请求/响应类型生成的 OpenAPI，作为 Android、iOS、小程序与后端之间的统一参考。鉴权、返回信封、错误语义、分页和命名约定见 [`docs/api-conventions.md`](docs/api-conventions.md)。
 
 更新方式：
 

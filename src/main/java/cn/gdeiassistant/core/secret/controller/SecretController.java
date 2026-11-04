@@ -36,14 +36,14 @@ public class SecretController {
         return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
-    @RequestMapping(value = "/api/secret/id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/secret/{id}", "/api/secret/id/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<SecretVO> getSecretDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         SecretVO vo = secretService.getSecretDetailInfo(id, sessionId);
         return new DataJsonResult<>(true, vo);
     }
 
-    @RequestMapping(value = "/api/secret/id/{id}/comments", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/secret/{id}/comments", "/api/secret/id/{id}/comments"}, method = RequestMethod.GET)
     public DataJsonResult<List<SecretCommentVO>> getSecretComments(@PathVariable("id") int id) throws Exception {
         if (!secretService.checkSecretInfoExist(id)) {
             throw new DataNotExistException("查询的校园树洞信息不存在");
@@ -108,7 +108,7 @@ public class SecretController {
         }
     }
 
-    @RequestMapping(value = "/api/secret/id/{id}/comment", method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/secret/{id}/comment", "/api/secret/id/{id}/comment"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
@@ -120,7 +120,7 @@ public class SecretController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/secret/id/{id}/like", method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/secret/{id}/like", "/api/secret/id/{id}/like"}, method = RequestMethod.POST)
     public JsonResult updateSecretLikeState(HttpServletRequest request
             , @PathVariable("id") int id, @Validated @Range(min = 0, max = 1) int like) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

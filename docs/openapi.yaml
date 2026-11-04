@@ -6427,6 +6427,7 @@
     },
     "/api/dating/pick/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "DatingController_getRoommatePickDetail_get__api_dating_pick_id__id_",
         "parameters": [
           {
@@ -6512,6 +6513,7 @@
         ]
       },
       "post": {
+        "deprecated": true,
         "operationId": "DatingController_updateRoommatePickState_post__api_dating_pick_id__id_",
         "parameters": [
           {
@@ -6764,6 +6766,193 @@
         ]
       }
     },
+    "/api/dating/pick/{id}": {
+      "get": {
+        "operationId": "DatingController_getRoommatePickDetail_get__api_dating_pick__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_dating_pojo_vo_DatingPickVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getRoommatePickDetail",
+        "tags": [
+          "Dating"
+        ]
+      },
+      "post": {
+        "operationId": "DatingController_updateRoommatePickState_post__api_dating_pick__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "state": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateRoommatePickState",
+        "tags": [
+          "Dating"
+        ]
+      }
+    },
     "/api/dating/profile": {
       "post": {
         "operationId": "DatingController_addRoommateProfile_post__api_dating_profile",
@@ -7006,6 +7195,7 @@
     },
     "/api/dating/profile/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "DatingController_getRoommateProfileDetail_get__api_dating_profile_id__id_",
         "parameters": [
           {
@@ -7093,6 +7283,7 @@
     },
     "/api/dating/profile/id/{id}/picture": {
       "get": {
+        "deprecated": true,
         "operationId": "DatingController_getRoommateProfilePicture_get__api_dating_profile_id__id__picture",
         "parameters": [
           {
@@ -7180,6 +7371,7 @@
     },
     "/api/dating/profile/id/{id}/state": {
       "post": {
+        "deprecated": true,
         "operationId": "DatingController_updateMyRoommateProfileState_post__api_dating_profile_id__id__state",
         "parameters": [
           {
@@ -7351,6 +7543,282 @@
           }
         ],
         "summary": "getMyRoommateProfiles",
+        "tags": [
+          "Dating"
+        ]
+      }
+    },
+    "/api/dating/profile/{id}": {
+      "get": {
+        "operationId": "DatingController_getRoommateProfileDetail_get__api_dating_profile__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_Map_java_lang_String__java_lang_Object_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getRoommateProfileDetail",
+        "tags": [
+          "Dating"
+        ]
+      }
+    },
+    "/api/dating/profile/{id}/picture": {
+      "get": {
+        "operationId": "DatingController_getRoommateProfilePicture_get__api_dating_profile__id__picture",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_String"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getRoommateProfilePicture",
+        "tags": [
+          "Dating"
+        ]
+      }
+    },
+    "/api/dating/profile/{id}/state": {
+      "post": {
+        "operationId": "DatingController_updateMyRoommateProfileState_post__api_dating_profile__id__state",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "state": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateMyRoommateProfileState",
         "tags": [
           "Dating"
         ]
@@ -7607,6 +8075,7 @@
     },
     "/api/delivery/order/id/{id}": {
       "delete": {
+        "deprecated": true,
         "operationId": "DeliveryController_deleteOrder_delete__api_delivery_order_id__id_",
         "parameters": [
           {
@@ -7692,6 +8161,7 @@
         ]
       },
       "get": {
+        "deprecated": true,
         "operationId": "DeliveryController_getDeliveryOrderDetail_get__api_delivery_order_id__id_",
         "parameters": [
           {
@@ -7873,9 +8343,269 @@
         ]
       }
     },
+    "/api/delivery/order/{id}": {
+      "delete": {
+        "operationId": "DeliveryController_deleteOrder_delete__api_delivery_order__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "删除订单",
+        "tags": [
+          "Delivery"
+        ]
+      },
+      "get": {
+        "operationId": "DeliveryController_getDeliveryOrderDetail_get__api_delivery_order__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_delivery_controller_DeliveryController_DeliveryDetailResponse"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "订单详情（含 detailType；已接单时含 trade）。GET /api/delivery/order/id/{id}",
+        "tags": [
+          "Delivery"
+        ]
+      }
+    },
     "/api/delivery/trade/id/{id}/finishtrade": {
       "post": {
+        "deprecated": true,
         "operationId": "DeliveryController_finishTrade_post__api_delivery_trade_id__id__finishtrade",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "更新订单状态，确认已交付快递",
+        "tags": [
+          "Delivery"
+        ]
+      }
+    },
+    "/api/delivery/trade/{id}/finishtrade": {
+      "post": {
+        "operationId": "DeliveryController_finishTrade_post__api_delivery_trade__id__finishtrade",
         "parameters": [
           {
             "in": "path",
@@ -8510,6 +9240,7 @@
     },
     "/api/express/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "ExpressController_getExpressDetail_get__api_express_id__id_",
         "parameters": [
           {
@@ -8597,6 +9328,7 @@
     },
     "/api/express/id/{id}/comment": {
       "get": {
+        "deprecated": true,
         "operationId": "ExpressController_queryExpressComment_get__api_express_id__id__comment",
         "parameters": [
           {
@@ -8682,6 +9414,7 @@
         ]
       },
       "post": {
+        "deprecated": true,
         "operationId": "ExpressController_addExpressComment_post__api_express_id__id__comment",
         "parameters": [
           {
@@ -8783,6 +9516,7 @@
     },
     "/api/express/id/{id}/guess": {
       "post": {
+        "deprecated": true,
         "operationId": "ExpressController_guessExpress_post__api_express_id__id__guess",
         "parameters": [
           {
@@ -8884,6 +9618,7 @@
     },
     "/api/express/id/{id}/like": {
       "post": {
+        "deprecated": true,
         "operationId": "ExpressController_likeExpress_post__api_express_id__id__like",
         "parameters": [
           {
@@ -9260,6 +9995,467 @@
           }
         ],
         "summary": "queryExpressPage",
+        "tags": [
+          "Express"
+        ]
+      }
+    },
+    "/api/express/{id}": {
+      "get": {
+        "operationId": "ExpressController_getExpressDetail_get__api_express__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_express_pojo_vo_ExpressVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getExpressDetail",
+        "tags": [
+          "Express"
+        ]
+      }
+    },
+    "/api/express/{id}/comment": {
+      "get": {
+        "operationId": "ExpressController_queryExpressComment_get__api_express__id__comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_core_express_pojo_vo_ExpressCommentVO_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "queryExpressComment",
+        "tags": [
+          "Express"
+        ]
+      },
+      "post": {
+        "operationId": "ExpressController_addExpressComment_post__api_express__id__comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "添加表白评论",
+        "tags": [
+          "Express"
+        ]
+      }
+    },
+    "/api/express/{id}/guess": {
+      "post": {
+        "operationId": "ExpressController_guessExpress_post__api_express__id__guess",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_Boolean"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "guessExpress",
+        "tags": [
+          "Express"
+        ]
+      }
+    },
+    "/api/express/{id}/like": {
+      "post": {
+        "operationId": "ExpressController_likeExpress_post__api_express__id__like",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "likeExpress",
         "tags": [
           "Express"
         ]
@@ -9992,6 +11188,7 @@
     },
     "/api/information/announcement/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "AnnouncementController_queryAnnouncementDetail_get__api_information_announcement_id__id_",
         "parameters": [
           {
@@ -10079,6 +11276,7 @@
     },
     "/api/information/announcement/id/{id}/read": {
       "post": {
+        "deprecated": true,
         "operationId": "AnnouncementReadController_read_post__api_information_announcement_id__id__read",
         "parameters": [
           {
@@ -10336,6 +11534,180 @@
         ]
       }
     },
+    "/api/information/announcement/{id}": {
+      "get": {
+        "operationId": "AnnouncementController_queryAnnouncementDetail_get__api_information_announcement__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_information_pojo_vo_AnnouncementVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "queryAnnouncementDetail",
+        "tags": [
+          "Information"
+        ]
+      }
+    },
+    "/api/information/announcement/{id}/read": {
+      "post": {
+        "operationId": "AnnouncementReadController_read_post__api_information_announcement__id__read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "read",
+        "tags": [
+          "Information"
+        ]
+      }
+    },
     "/api/information/message/categories/unread": {
       "get": {
         "operationId": "MessageCategoryController_unread_get__api_information_message_categories_unread",
@@ -10586,6 +11958,7 @@
     },
     "/api/information/message/id/{id}/read": {
       "post": {
+        "deprecated": true,
         "operationId": "MessageController_readInteractionMessage_post__api_information_message_id__id__read",
         "parameters": [
           {
@@ -11090,8 +12463,95 @@
         ]
       }
     },
+    "/api/information/message/{id}/read": {
+      "post": {
+        "operationId": "MessageController_readInteractionMessage_post__api_information_message__id__read",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "readInteractionMessage",
+        "tags": [
+          "Information"
+        ]
+      }
+    },
     "/api/information/news/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "SchoolNewsController_queryNewsItemDetail_get__api_information_news_id__id_",
         "parameters": [
           {
@@ -11170,7 +12630,7 @@
             "bearerAuth": []
           }
         ],
-        "summary": "获取新闻详情。GET /api/information/news/id/{id}",
+        "summary": "获取新闻详情。GET /api/information/news/{id}",
         "tags": [
           "Information"
         ]
@@ -11276,6 +12736,92 @@
           }
         ],
         "summary": "分页获取新闻列表。GET /api/information/news/type/{type}/start/{start}/size/{size}",
+        "tags": [
+          "Information"
+        ]
+      }
+    },
+    "/api/information/news/{id}": {
+      "get": {
+        "operationId": "SchoolNewsController_queryNewsItemDetail_get__api_information_news__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_common_pojo_entity_NewsItem"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "获取新闻详情。GET /api/information/news/{id}",
         "tags": [
           "Information"
         ]
@@ -12392,6 +13938,7 @@
     },
     "/api/lostandfound/item/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "LostAndFoundController_getLostAndFoundItemDetail_get__api_lostandfound_item_id__id_",
         "parameters": [
           {
@@ -12477,6 +14024,7 @@
         ]
       },
       "post": {
+        "deprecated": true,
         "operationId": "LostAndFoundController_updateLostAndFoundInfo_post__api_lostandfound_item_id__id_",
         "parameters": [
           {
@@ -12624,6 +14172,7 @@
     },
     "/api/lostandfound/item/id/{id}/didfound": {
       "post": {
+        "deprecated": true,
         "operationId": "LostAndFoundController_didFoundItem_post__api_lostandfound_item_id__id__didfound",
         "parameters": [
           {
@@ -12711,7 +14260,414 @@
     },
     "/api/lostandfound/item/id/{id}/preview": {
       "get": {
+        "deprecated": true,
         "operationId": "LostAndFoundController_getLostAndFoundItemPreviewImage_get__api_lostandfound_item_id__id__preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_String"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getLostAndFoundItemPreviewImage",
+        "tags": [
+          "LostAndFound"
+        ]
+      }
+    },
+    "/api/lostandfound/item/{id}": {
+      "get": {
+        "operationId": "LostAndFoundController_getLostAndFoundItemDetail_get__api_lostandfound_item__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_lostandfound_pojo_vo_LostAndFoundDetailVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getLostAndFoundItemDetail",
+        "tags": [
+          "LostAndFound"
+        ]
+      },
+      "post": {
+        "operationId": "LostAndFoundController_updateLostAndFoundInfo_post__api_lostandfound_item__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "description": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "itemType": {
+                    "format": "int32",
+                    "maximum": 11,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "location": {
+                    "maxLength": 30,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "lostType": {
+                    "format": "int32",
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "maxLength": 25,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "phone": {
+                    "maxLength": 11,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "qq": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "wechat": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "description",
+                  "itemType",
+                  "location",
+                  "lostType",
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateLostAndFoundInfo",
+        "tags": [
+          "LostAndFound"
+        ]
+      }
+    },
+    "/api/lostandfound/item/{id}/didfound": {
+      "post": {
+        "operationId": "LostAndFoundController_didFoundItem_post__api_lostandfound_item__id__didfound",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "didFoundItem",
+        "tags": [
+          "LostAndFound"
+        ]
+      }
+    },
+    "/api/lostandfound/item/{id}/preview": {
+      "get": {
+        "operationId": "LostAndFoundController_getLostAndFoundItemPreviewImage_get__api_lostandfound_item__id__preview",
         "parameters": [
           {
             "in": "path",
@@ -13233,6 +15189,7 @@
     },
     "/api/marketplace/item/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "MarketplaceController_getItemDetail_get__api_marketplace_item_id__id_",
         "parameters": [
           {
@@ -13318,6 +15275,7 @@
         ]
       },
       "post": {
+        "deprecated": true,
         "operationId": "MarketplaceController_updateItem_post__api_marketplace_item_id__id_",
         "parameters": [
           {
@@ -13457,6 +15415,7 @@
     },
     "/api/marketplace/item/id/{id}/preview": {
       "get": {
+        "deprecated": true,
         "operationId": "MarketplaceController_getItemPreviewImage_get__api_marketplace_item_id__id__preview",
         "parameters": [
           {
@@ -13631,7 +15590,110 @@
     },
     "/api/marketplace/item/state/id/{id}": {
       "post": {
+        "deprecated": true,
         "operationId": "MarketplaceController_updateItemState_post__api_marketplace_item_state_id__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "state": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateItemState",
+        "tags": [
+          "Marketplace"
+        ]
+      }
+    },
+    "/api/marketplace/item/state/{id}": {
+      "post": {
+        "operationId": "MarketplaceController_updateItemState_post__api_marketplace_item_state__id_",
         "parameters": [
           {
             "in": "path",
@@ -13822,6 +15884,317 @@
           }
         ],
         "summary": "getItemByType",
+        "tags": [
+          "Marketplace"
+        ]
+      }
+    },
+    "/api/marketplace/item/{id}": {
+      "get": {
+        "operationId": "MarketplaceController_getItemDetail_get__api_marketplace_item__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_marketplace_controller_MarketplaceController_MarketplaceDetailResponse"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getItemDetail",
+        "tags": [
+          "Marketplace"
+        ]
+      },
+      "post": {
+        "operationId": "MarketplaceController_updateItem_post__api_marketplace_item__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "description": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "location": {
+                    "maxLength": 30,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "name": {
+                    "maxLength": 25,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "phone": {
+                    "maxLength": 11,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number"
+                  },
+                  "qq": {
+                    "maxLength": 20,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "type": {
+                    "format": "int32",
+                    "maximum": 11,
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "description",
+                  "location",
+                  "name",
+                  "price",
+                  "type"
+                ],
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateItem",
+        "tags": [
+          "Marketplace"
+        ]
+      }
+    },
+    "/api/marketplace/item/{id}/preview": {
+      "get": {
+        "operationId": "MarketplaceController_getItemPreviewImage_get__api_marketplace_item__id__preview",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_String"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getItemPreviewImage",
         "tags": [
           "Marketplace"
         ]
@@ -14787,6 +17160,7 @@
     },
     "/api/photograph/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "PhotographController_getPhotographDetail_get__api_photograph_id__id_",
         "parameters": [
           {
@@ -14874,6 +17248,7 @@
     },
     "/api/photograph/id/{id}/comment": {
       "get": {
+        "deprecated": true,
         "operationId": "PhotographController_queryPhotographCommentList_get__api_photograph_id__id__comment",
         "parameters": [
           {
@@ -14959,6 +17334,7 @@
         ]
       },
       "post": {
+        "deprecated": true,
         "operationId": "PhotographController_addPhotographComment_post__api_photograph_id__id__comment",
         "parameters": [
           {
@@ -15060,6 +17436,7 @@
     },
     "/api/photograph/id/{id}/index/{index}/image": {
       "get": {
+        "deprecated": true,
         "operationId": "PhotographController_getPhotographItemImage_get__api_photograph_id__id__index__index__image",
         "parameters": [
           {
@@ -15156,6 +17533,7 @@
     },
     "/api/photograph/id/{id}/like": {
       "post": {
+        "deprecated": true,
         "operationId": "PhotographController_likePhotograph_post__api_photograph_id__id__like",
         "parameters": [
           {
@@ -15665,6 +18043,462 @@
           }
         ],
         "summary": "queryPhotographList",
+        "tags": [
+          "Photograph"
+        ]
+      }
+    },
+    "/api/photograph/{id}": {
+      "get": {
+        "operationId": "PhotographController_getPhotographDetail_get__api_photograph__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_photograph_pojo_vo_PhotographVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getPhotographDetail",
+        "tags": [
+          "Photograph"
+        ]
+      }
+    },
+    "/api/photograph/{id}/comment": {
+      "get": {
+        "operationId": "PhotographController_queryPhotographCommentList_get__api_photograph__id__comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_core_photograph_pojo_vo_PhotographCommentVO_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "queryPhotographCommentList",
+        "tags": [
+          "Photograph"
+        ]
+      },
+      "post": {
+        "operationId": "PhotographController_addPhotographComment_post__api_photograph__id__comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "addPhotographComment",
+        "tags": [
+          "Photograph"
+        ]
+      }
+    },
+    "/api/photograph/{id}/index/{index}/image": {
+      "get": {
+        "operationId": "PhotographController_getPhotographItemImage_get__api_photograph__id__index__index__image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "index",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_String"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getPhotographItemImage",
+        "tags": [
+          "Photograph"
+        ]
+      }
+    },
+    "/api/photograph/{id}/like": {
+      "post": {
+        "operationId": "PhotographController_likePhotograph_post__api_photograph__id__like",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "likePhotograph",
         "tags": [
           "Photograph"
         ]
@@ -17433,6 +20267,7 @@
     },
     "/api/secret/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "SecretController_getSecretDetail_get__api_secret_id__id_",
         "parameters": [
           {
@@ -17520,6 +20355,7 @@
     },
     "/api/secret/id/{id}/comment": {
       "post": {
+        "deprecated": true,
         "operationId": "SecretController_addSecretComment_post__api_secret_id__id__comment",
         "parameters": [
           {
@@ -17621,6 +20457,7 @@
     },
     "/api/secret/id/{id}/comments": {
       "get": {
+        "deprecated": true,
         "operationId": "SecretController_getSecretComments_get__api_secret_id__id__comments",
         "parameters": [
           {
@@ -17708,6 +20545,7 @@
     },
     "/api/secret/id/{id}/like": {
       "post": {
+        "deprecated": true,
         "operationId": "SecretController_updateSecretLikeState_post__api_secret_id__id__like",
         "parameters": [
           {
@@ -18199,6 +21037,383 @@
           }
         ],
         "summary": "getMySecrets",
+        "tags": [
+          "Secret"
+        ]
+      }
+    },
+    "/api/secret/{id}": {
+      "get": {
+        "operationId": "SecretController_getSecretDetail_get__api_secret__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_secret_pojo_vo_SecretVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getSecretDetail",
+        "tags": [
+          "Secret"
+        ]
+      }
+    },
+    "/api/secret/{id}/comment": {
+      "post": {
+        "operationId": "SecretController_addSecretComment_post__api_secret__id__comment",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "comment": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "addSecretComment",
+        "tags": [
+          "Secret"
+        ]
+      }
+    },
+    "/api/secret/{id}/comments": {
+      "get": {
+        "operationId": "SecretController_getSecretComments_get__api_secret__id__comments",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_util_List_core_secret_pojo_vo_SecretCommentVO_"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getSecretComments",
+        "tags": [
+          "Secret"
+        ]
+      }
+    },
+    "/api/secret/{id}/like": {
+      "post": {
+        "operationId": "SecretController_updateSecretLikeState_post__api_secret__id__like",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "properties": {
+                  "like": {
+                    "format": "int32",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "updateSecretLikeState",
         "tags": [
           "Secret"
         ]
@@ -20329,6 +23544,7 @@
     },
     "/api/topic/id/{id}": {
       "get": {
+        "deprecated": true,
         "operationId": "TopicController_getTopicDetail_get__api_topic_id__id_",
         "parameters": [
           {
@@ -20416,6 +23632,7 @@
     },
     "/api/topic/id/{id}/index/{index}/image": {
       "get": {
+        "deprecated": true,
         "operationId": "TopicController_getTopicImage_get__api_topic_id__id__index__index__image",
         "parameters": [
           {
@@ -20512,6 +23729,7 @@
     },
     "/api/topic/id/{id}/like": {
       "post": {
+        "deprecated": true,
         "operationId": "TopicController_likeTopic_post__api_topic_id__id__like",
         "parameters": [
           {
@@ -20888,6 +24106,276 @@
           }
         ],
         "summary": "queryTopic",
+        "tags": [
+          "Topic"
+        ]
+      }
+    },
+    "/api/topic/{id}": {
+      "get": {
+        "operationId": "TopicController_getTopicDetail_get__api_topic__id_",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_core_topic_pojo_vo_TopicVO"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getTopicDetail",
+        "tags": [
+          "Topic"
+        ]
+      }
+    },
+    "/api/topic/{id}/index/{index}/image": {
+      "get": {
+        "operationId": "TopicController_getTopicImage_get__api_topic__id__index__index__image",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "index",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_DataJsonResult_java_lang_String"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "getTopicImage",
+        "tags": [
+          "Topic"
+        ]
+      }
+    },
+    "/api/topic/{id}/like": {
+      "post": {
+        "operationId": "TopicController_likeTopic_post__api_topic__id__like",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "int32",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Request validation failure; legacy endpoints may still return HTTP 200 with success=false"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Missing, expired or invalid bearer token"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Forbidden or privacy restriction"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Rate limited"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/common_pojo_result_JsonResult"
+                }
+              }
+            },
+            "description": "Server failure; legacy endpoints may still return HTTP 200 with success=false"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "likeTopic",
         "tags": [
           "Topic"
         ]

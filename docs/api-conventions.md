@@ -45,7 +45,7 @@
 ## 命名
 
 - 路径段使用小写 kebab-case，例如 `/api/campus-credential`、`/api/graduate-exam`。
-- 资源使用复数名词；单个资源使用 `/{id}`，不要新增 `/资源/id/{id}` 形式。
+- 资源使用复数名词；单个资源使用 `/{id}`。旧的 `/资源/id/{id}` 仍映射但已弃用，只保留一个发布周期；新客户端必须使用 `/{id}`。
 - 读操作使用 GET，创建使用 POST，全量替换使用 PUT，局部更新使用 PATCH，删除使用 DELETE。
 - 非 CRUD 动作可以使用子资源或动作段，例如 `/conversations/{id}/read`、`/card/lost`，但同一模块内保持一致。
 - JSON 字段使用 lowerCamelCase。

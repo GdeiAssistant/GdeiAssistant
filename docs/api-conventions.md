@@ -22,7 +22,7 @@
 
 - 纯状态：`JsonResult`，字段为 `code`、`success`、`message`，需要时带 `errorCode`。
 - 带数据：`DataJsonResult<T>`，在上述字段之外增加 `data`。
-- 成功：`success=true`，`code=200`。
+- 成功：以 `success=true` 为准。部分历史接口构造 `JsonResult(true)` 时 `code` 为空，不要要求 `code=200`。
 - 失败：`success=false`，`message` 是可展示文本，`errorCode` 是稳定的机器码。
 - 头像、图片等二进制响应直接返回字节流，不使用信封。
 

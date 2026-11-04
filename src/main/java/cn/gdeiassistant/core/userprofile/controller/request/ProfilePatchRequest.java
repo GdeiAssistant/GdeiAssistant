@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.userprofile.controller.request;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -15,14 +16,24 @@ import java.util.Set;
  */
 public class ProfilePatchRequest {
 
+    @JsonDeserialize(using = StrictStringDeserializer.class)
     private String nickname;
+    @Nullable
+    @JsonDeserialize(using = StrictStringDeserializer.class)
     private String introduction;
+    @Nullable
     @JsonDeserialize(using = StrictIntegerDeserializer.class)
     private Integer enrollment;
     @JsonDeserialize(using = StrictIntegerDeserializer.class)
-    private Integer faculty;    private String major;
+    private Integer faculty;
+    @Nullable
+    @JsonDeserialize(using = StrictStringDeserializer.class)
+    private String major;
+    @Nullable
     private BirthdayPatch birthday;
+    @Nullable
     private LocationPatch location;
+    @Nullable
     private LocationPatch hometown;
 
     @JsonIgnore
@@ -174,8 +185,13 @@ public class ProfilePatchRequest {
     }
 
     public static class LocationPatch {
+        @JsonDeserialize(using = StrictStringDeserializer.class)
         private String region;
+        @Nullable
+        @JsonDeserialize(using = StrictStringDeserializer.class)
         private String state;
+        @Nullable
+        @JsonDeserialize(using = StrictStringDeserializer.class)
         private String city;
 
         public String getRegion() {

@@ -244,6 +244,13 @@ public final class GenerateOpenApi {
             var min=field.getAnnotation(Min.class);var max=field.getAnnotation(Max.class);var dmin=field.getAnnotation(DecimalMin.class);var dmax=field.getAnnotation(DecimalMax.class);
             if(min!=null)shape.put("minimum",min.value());if(max!=null)shape.put("maximum",max.value());if(dmin!=null)shape.put("minimum",new java.math.BigDecimal(dmin.value()));if(dmax!=null)shape.put("maximum",new java.math.BigDecimal(dmax.value()));
             var pattern=field.getAnnotation(Pattern.class);if(pattern!=null)shape.put("pattern",pattern.regexp());
+            boolean nullable=field.isAnnotationPresent(org.jspecify.annotations.Nullable.class)
+                    || field.getAnnotatedType().isAnnotationPresent(org.jspecify.annotations.Nullable.class);
+            if(nullable) {
+                Object ref=shape.remove("$ref");
+                if(ref!=null)shape.put("allOf",List.of(Map.of("$ref",ref)));
+                shape.put("nullable",true);
+            }
             result.put(name,shape);
         }
         return result;

@@ -89,4 +89,16 @@ class ProfilePatchRequestTest {
         assertThrows(JsonMappingException.class,
                 () -> mapper.readValue("{\"birthday\":{\"year\":\"2000\",\"month\":1,\"date\":2}}", ProfilePatchRequest.class));
     }
+
+    @Test
+    void nonStringTokensAreRejectedInsteadOfCoerced() {
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"nickname\":123}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"introduction\":false}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"major\":42}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"location\":{\"region\":\"CN\",\"state\":44}}", ProfilePatchRequest.class));
+    }
 }

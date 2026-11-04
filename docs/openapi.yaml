@@ -4053,10 +4053,16 @@
       "core_userprofile_controller_request_ProfilePatchRequest": {
         "properties": {
           "birthday": {
-            "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_BirthdayPatch"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_BirthdayPatch"
+              }
+            ],
+            "nullable": true
           },
           "enrollment": {
             "format": "int32",
+            "nullable": true,
             "type": "integer"
           },
           "faculty": {
@@ -4064,15 +4070,27 @@
             "type": "integer"
           },
           "hometown": {
-            "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_LocationPatch"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_LocationPatch"
+              }
+            ],
+            "nullable": true
           },
           "introduction": {
+            "nullable": true,
             "type": "string"
           },
           "location": {
-            "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_LocationPatch"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/core_userprofile_controller_request_ProfilePatchRequest_LocationPatch"
+              }
+            ],
+            "nullable": true
           },
           "major": {
+            "nullable": true,
             "type": "string"
           },
           "nickname": {
@@ -4101,12 +4119,14 @@
       "core_userprofile_controller_request_ProfilePatchRequest_LocationPatch": {
         "properties": {
           "city": {
+            "nullable": true,
             "type": "string"
           },
           "region": {
             "type": "string"
           },
           "state": {
+            "nullable": true,
             "type": "string"
           }
         },

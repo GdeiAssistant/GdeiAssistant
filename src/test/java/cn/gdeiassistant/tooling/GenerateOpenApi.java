@@ -82,7 +82,6 @@ public final class GenerateOpenApi {
         usedTags.add(tag);
         result.put("tags",List.of(tag));
         result.put("summary",summary(controller,method));
-        if(path.contains("/id/{"))result.put("deprecated",true);
         List<Object> parameters=new ArrayList<>();Map<String,Object> form=new TreeMap<>();List<String> required=new ArrayList<>();
         Object body=null;boolean multipart=false;
         for(Parameter parameter:method.getParameters()) {

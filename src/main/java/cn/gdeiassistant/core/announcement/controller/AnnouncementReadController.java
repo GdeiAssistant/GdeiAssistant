@@ -23,7 +23,7 @@ public class AnnouncementReadController {
     public DataJsonResult<Integer> unread(HttpServletRequest request) throws Exception {
         return new DataJsonResult<>(true, announcements.countUnread(username(request)));
     }
-    @PostMapping({"/{id}/read", "/id/{id}/read"})
+    @PostMapping({"/{id}/read"})
     public JsonResult read(HttpServletRequest request, @PathVariable int id) throws Exception {
         String username = username(request);
         if (announcements.queryAnnouncementById(id) == null) return new JsonResult(false, "公告不存在或已删除");

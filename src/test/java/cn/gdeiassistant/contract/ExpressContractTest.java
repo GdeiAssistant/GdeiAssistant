@@ -78,7 +78,7 @@ class ExpressContractTest {
         when(expressService.queryExpressById(1, "test-session"))
                 .thenReturn(mockExpressVO());
 
-        mockMvc.perform(get("/api/express/id/1")
+        mockMvc.perform(get("/api/express/1")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -97,7 +97,7 @@ class ExpressContractTest {
         when(expressService.queryExpressComment(1))
                 .thenReturn(List.of(mockExpressComment()));
 
-        mockMvc.perform(get("/api/express/id/1/comment")
+        mockMvc.perform(get("/api/express/1/comment")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -110,13 +110,13 @@ class ExpressContractTest {
 
     @Test
     void commentEndpointRejectsBlankOrOverlongComment() throws Exception {
-        mockMvc.perform(post("/api/express/id/1/comment")
+        mockMvc.perform(post("/api/express/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/express/id/1/comment")
+        mockMvc.perform(post("/api/express/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", "x".repeat(51)))
                 .andExpect(status().isOk())
@@ -127,13 +127,13 @@ class ExpressContractTest {
 
     @Test
     void guessEndpointRejectsBlankOrOverlongName() throws Exception {
-        mockMvc.perform(post("/api/express/id/1/guess")
+        mockMvc.perform(post("/api/express/1/guess")
                         .requestAttr("sessionId", "test-session")
                         .param("name", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/express/id/1/guess")
+        mockMvc.perform(post("/api/express/1/guess")
                         .requestAttr("sessionId", "test-session")
                         .param("name", "x".repeat(11)))
                 .andExpect(status().isOk())

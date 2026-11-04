@@ -115,7 +115,7 @@ class DeliveryContractTest {
 
     @Test
     void deleteOrderAcceptsValidOrderId() throws Exception {
-        mockMvc.perform(delete("/api/delivery/order/id/10")
+        mockMvc.perform(delete("/api/delivery/order/10")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -125,7 +125,7 @@ class DeliveryContractTest {
 
     @Test
     void deleteOrderRejectsInvalidOrderIdBeforeService() throws Exception {
-        mockMvc.perform(delete("/api/delivery/order/id/0")
+        mockMvc.perform(delete("/api/delivery/order/0")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -135,7 +135,7 @@ class DeliveryContractTest {
 
     @Test
     void finishTradeAcceptsValidTradeId() throws Exception {
-        mockMvc.perform(post("/api/delivery/trade/id/10/finishtrade")
+        mockMvc.perform(post("/api/delivery/trade/10/finishtrade")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -145,7 +145,7 @@ class DeliveryContractTest {
 
     @Test
     void finishTradeRejectsInvalidTradeIdBeforeService() throws Exception {
-        mockMvc.perform(post("/api/delivery/trade/id/0/finishtrade")
+        mockMvc.perform(post("/api/delivery/trade/0/finishtrade")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -155,7 +155,7 @@ class DeliveryContractTest {
 
     @Test
     void detailEndpointRejectsInvalidOrderIdBeforeService() throws Exception {
-        mockMvc.perform(get("/api/delivery/order/id/0")
+        mockMvc.perform(get("/api/delivery/order/0")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -235,7 +235,7 @@ class DeliveryContractTest {
         when(deliveryService.queryDeliveryOrderByOrderId(1)).thenReturn(order);
         when(deliveryService.queryDeliveryOrderDetailType("test-session", 1)).thenReturn(0);
 
-        mockMvc.perform(get("/api/delivery/order/id/1")
+        mockMvc.perform(get("/api/delivery/order/1")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -254,7 +254,7 @@ class DeliveryContractTest {
         when(deliveryService.queryDeliveryOrderByOrderId(1)).thenReturn(order);
         when(deliveryService.queryDeliveryOrderDetailType("test-session", 1)).thenReturn(1);
 
-        mockMvc.perform(get("/api/delivery/order/id/1")
+        mockMvc.perform(get("/api/delivery/order/1")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -269,7 +269,7 @@ class DeliveryContractTest {
     @Test
     void acceptedOrderIsNotReadableByThirdParty() throws Exception {
         when(deliveryService.queryDeliveryOrderDetailType("test-session", 1)).thenReturn(2);
-        mockMvc.perform(get("/api/delivery/order/id/1").requestAttr("sessionId", "test-session"))
+        mockMvc.perform(get("/api/delivery/order/1").requestAttr("sessionId", "test-session"))
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.data").doesNotExist());
         org.mockito.Mockito.verify(deliveryService, org.mockito.Mockito.never()).queryDeliveryOrderByOrderId(1);

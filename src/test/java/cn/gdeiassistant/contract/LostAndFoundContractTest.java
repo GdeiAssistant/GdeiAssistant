@@ -111,7 +111,7 @@ class LostAndFoundContractTest {
 
         when(lostAndFoundService.queryLostAndFoundInfoByID(1)).thenReturn(detail);
 
-        mockMvc.perform(get("/api/lostandfound/item/id/1"))
+        mockMvc.perform(get("/api/lostandfound/item/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.item.id").value(1))
@@ -123,7 +123,7 @@ class LostAndFoundContractTest {
     void previewEndpointReturnsFailureWhenNoPictures() throws Exception {
         when(lostAndFoundService.getLostAndFoundItemPictureURL(99)).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/lostandfound/item/id/99/preview"))
+        mockMvc.perform(get("/api/lostandfound/item/99/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
     }

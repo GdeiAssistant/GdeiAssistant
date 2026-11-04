@@ -72,28 +72,28 @@ public class PhotographController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = {"/api/photograph/{id}", "/api/photograph/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/photograph/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<PhotographVO> getPhotographDetail(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         String sessionId = (String) request.getAttribute("sessionId");
         PhotographVO vo = photographService.getPhotographById(id, sessionId);
         return new DataJsonResult<>(true, vo);
     }
 
-    @RequestMapping(value = {"/api/photograph/{id}/index/{index}/image", "/api/photograph/id/{id}/index/{index}/image"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/photograph/{id}/index/{index}/image"}, method = RequestMethod.GET)
     public DataJsonResult<String> getPhotographItemImage(HttpServletRequest request
             , @PathVariable("id") int id, @PathVariable("index") int index) {
         String url = photographService.getPhotographItemPictureURL(id, index);
         return new DataJsonResult<>(true, url);
     }
 
-    @RequestMapping(value = {"/api/photograph/{id}/comment", "/api/photograph/id/{id}/comment"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/photograph/{id}/comment"}, method = RequestMethod.GET)
     public DataJsonResult<List<PhotographCommentVO>> queryPhotographCommentList(HttpServletRequest request
             , @PathVariable("id") int id) {
         List<PhotographCommentVO> list = photographService.queryPhotographCommentList(id);
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = {"/api/photograph/{id}/comment", "/api/photograph/id/{id}/comment"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/photograph/{id}/comment"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addPhotographComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException {
@@ -164,7 +164,7 @@ public class PhotographController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/photograph/{id}/like", "/api/photograph/id/{id}/like"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/photograph/{id}/like"}, method = RequestMethod.POST)
     public JsonResult likePhotograph(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         photographService.likePhotograph(id, (String) request.getAttribute("sessionId"));
         return new JsonResult(true);

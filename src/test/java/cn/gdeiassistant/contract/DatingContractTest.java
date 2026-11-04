@@ -84,7 +84,7 @@ class DatingContractTest {
 
     @Test
     void updatePickStateAcceptsValidState() throws Exception {
-        mockMvc.perform(post("/api/dating/pick/id/3")
+        mockMvc.perform(post("/api/dating/pick/3")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "1"))
                 .andExpect(status().isOk())
@@ -96,7 +96,7 @@ class DatingContractTest {
 
     @Test
     void updatePickStateRejectsInvalidStateBeforeService() throws Exception {
-        mockMvc.perform(post("/api/dating/pick/id/3")
+        mockMvc.perform(post("/api/dating/pick/3")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "0"))
                 .andExpect(status().isOk())
@@ -107,7 +107,7 @@ class DatingContractTest {
 
     @Test
     void updatePickStateRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(post("/api/dating/pick/id/0")
+        mockMvc.perform(post("/api/dating/pick/0")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "1"))
                 .andExpect(status().isOk())
@@ -118,7 +118,7 @@ class DatingContractTest {
 
     @Test
     void updateProfileStateAcceptsValidState() throws Exception {
-        mockMvc.perform(post("/api/dating/profile/id/4/state")
+        mockMvc.perform(post("/api/dating/profile/4/state")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "1"))
                 .andExpect(status().isOk())
@@ -130,7 +130,7 @@ class DatingContractTest {
 
     @Test
     void updateProfileStateRejectsInvalidStateBeforeService() throws Exception {
-        mockMvc.perform(post("/api/dating/profile/id/4/state")
+        mockMvc.perform(post("/api/dating/profile/4/state")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "2"))
                 .andExpect(status().isOk())
@@ -141,7 +141,7 @@ class DatingContractTest {
 
     @Test
     void updateProfileStateRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(post("/api/dating/profile/id/0/state")
+        mockMvc.perform(post("/api/dating/profile/0/state")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "1"))
                 .andExpect(status().isOk())
@@ -161,7 +161,7 @@ class DatingContractTest {
         when(datingService.getRoommateProfilePictureURL(1)).thenReturn("https://r2.example.com/dating/1.jpg");
         when(datingService.queryRoommatePick(eq(1), any())).thenReturn(null);
 
-        mockMvc.perform(get("/api/dating/profile/id/1"))
+        mockMvc.perform(get("/api/dating/profile/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.profile.profileId").value(1))
@@ -174,7 +174,7 @@ class DatingContractTest {
 
     @Test
     void getProfileByIdRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(get("/api/dating/profile/id/0"))
+        mockMvc.perform(get("/api/dating/profile/0"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -183,7 +183,7 @@ class DatingContractTest {
 
     @Test
     void getProfilePictureRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(get("/api/dating/profile/id/0/picture"))
+        mockMvc.perform(get("/api/dating/profile/0/picture"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
@@ -192,7 +192,7 @@ class DatingContractTest {
 
     @Test
     void getPickDetailRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(get("/api/dating/pick/id/0")
+        mockMvc.perform(get("/api/dating/pick/0")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -205,7 +205,7 @@ class DatingContractTest {
         when(datingService.queryDatingProfile(Integer.valueOf(99)))
                 .thenThrow(new DataNotExistException("该卖室友信息不存在"));
 
-        mockMvc.perform(get("/api/dating/profile/id/99"))
+        mockMvc.perform(get("/api/dating/profile/99"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false))
                 .andExpect(jsonPath("$.code").value(40401));

@@ -39,7 +39,7 @@ public class AnnouncementController {
         return new DataJsonResult<>(true, announcementService.queryAnnouncementPage(start, size));
     }
 
-    @RequestMapping(value = {"/{id}", "/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<AnnouncementVO> queryAnnouncementDetail(@PathVariable("id") Integer id) {
         return new DataJsonResult<>(true, announcementService.queryAnnouncementDetail(id));
     }

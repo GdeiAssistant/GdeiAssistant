@@ -85,7 +85,7 @@ class TopicContractTest {
         when(topicService.queryTopicById(1, "test-session"))
                 .thenReturn(mockTopicVO());
 
-        mockMvc.perform(get("/api/topic/id/1")
+        mockMvc.perform(get("/api/topic/1")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -163,7 +163,7 @@ class TopicContractTest {
 
     @Test
     void detailEndpointRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(get("/api/topic/id/0")
+        mockMvc.perform(get("/api/topic/0")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -173,7 +173,7 @@ class TopicContractTest {
 
     @Test
     void likeEndpointAcceptsValidId() throws Exception {
-        mockMvc.perform(post("/api/topic/id/5/like")
+        mockMvc.perform(post("/api/topic/5/like")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
@@ -183,7 +183,7 @@ class TopicContractTest {
 
     @Test
     void likeEndpointRejectsInvalidIdBeforeService() throws Exception {
-        mockMvc.perform(post("/api/topic/id/0/like")
+        mockMvc.perform(post("/api/topic/0/like")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
@@ -195,7 +195,7 @@ class TopicContractTest {
     void imageEndpointReturnsUrlForValidIndex() throws Exception {
         when(topicService.downloadTopicItemPicture(5, 1)).thenReturn("https://example.com/topic/5/1.jpg");
 
-        mockMvc.perform(get("/api/topic/id/5/index/1/image")
+        mockMvc.perform(get("/api/topic/5/index/1/image")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -206,17 +206,17 @@ class TopicContractTest {
 
     @Test
     void imageEndpointRejectsInvalidIdOrIndexBeforeService() throws Exception {
-        mockMvc.perform(get("/api/topic/id/0/index/1/image")
+        mockMvc.perform(get("/api/topic/0/index/1/image")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(get("/api/topic/id/5/index/0/image")
+        mockMvc.perform(get("/api/topic/5/index/0/image")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(get("/api/topic/id/5/index/10/image")
+        mockMvc.perform(get("/api/topic/5/index/10/image")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));

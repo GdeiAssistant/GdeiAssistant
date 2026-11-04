@@ -177,7 +177,7 @@ class InformationCenterContractTest {
         when(schoolNewsService.queryNewsDetail("news-missing"))
                 .thenThrow(new DataNotExistException("没有对应的新闻通知信息"));
 
-        mockMvc.perform(get("/api/information/news/id/news-missing"))
+        mockMvc.perform(get("/api/information/news/news-missing"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         ContractResourceSupport.loadJson("contracts/information-news-detail.not-found.json")

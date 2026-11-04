@@ -45,7 +45,7 @@ public class SchoolNewsController {
     /**
      * 获取新闻详情。GET /api/information/news/{id}
      */
-    @RequestMapping(value = {"/{id}", "/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<NewsItem> queryNewsItemDetail(@PathVariable("id") String id) {
         try {
             return new DataJsonResult<>(true, schoolNewsService.queryNewsDetail(id));

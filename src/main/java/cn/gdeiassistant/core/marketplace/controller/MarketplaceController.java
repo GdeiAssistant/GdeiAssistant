@@ -161,7 +161,7 @@ public class MarketplaceController {
         return new DataJsonResult<>(true, list.stream().map(this::response).toList());
     }
 
-    @RequestMapping(value = {"/api/marketplace/item/{id}/preview", "/api/marketplace/item/id/{id}/preview"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/marketplace/item/{id}/preview"}, method = RequestMethod.GET)
     public DataJsonResult<String> getItemPreviewImage(HttpServletRequest request, @PathVariable("id") int id) {
         List<String> list = marketplaceService.getItemPictureURL(id);
         if (list != null && !list.isEmpty()) {
@@ -170,7 +170,7 @@ public class MarketplaceController {
         return new DataJsonResult<>(false, localize(request, "获取二手交易商品预览图失败"));
     }
 
-    @RequestMapping(value = {"/api/marketplace/item/{id}", "/api/marketplace/item/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/marketplace/item/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<MarketplaceDetailResponse> getItemDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         MarketplaceItemVO vo = marketplaceService.queryDetailById(id);
         if (vo.getMarketplaceItem().getState().equals(0)) {
@@ -197,7 +197,7 @@ public class MarketplaceController {
         return new DataJsonResult<>(true, list.stream().map(this::response).toList());
     }
 
-    @RequestMapping(value = {"/api/marketplace/item/{id}", "/api/marketplace/item/id/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/marketplace/item/{id}"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult updateItem(HttpServletRequest request, @Validated MarketplacePublishDTO dto,
             @PathVariable("id") int id) throws Exception {
@@ -209,7 +209,7 @@ public class MarketplaceController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/marketplace/item/state/{id}", "/api/marketplace/item/state/id/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/marketplace/item/state/{id}"}, method = RequestMethod.POST)
     public JsonResult updateItemState(HttpServletRequest request, @PathVariable("id") int id,
             @Validated @Range(min = 0, max = 2) int state) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");

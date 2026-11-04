@@ -118,7 +118,7 @@ class SecretContractTest {
         when(secretService.getSecretDetailInfo(1, "test-session"))
                 .thenReturn(mockSecretVO());
 
-        mockMvc.perform(get("/api/secret/id/1")
+        mockMvc.perform(get("/api/secret/1")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -139,7 +139,7 @@ class SecretContractTest {
         when(secretService.getSecretComments(1))
                 .thenReturn(List.of(mockSecretCommentVO()));
 
-        mockMvc.perform(get("/api/secret/id/1/comments")
+        mockMvc.perform(get("/api/secret/1/comments")
                         .requestAttr("sessionId", "test-session"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
@@ -184,13 +184,13 @@ class SecretContractTest {
 
     @Test
     void commentEndpointRejectsBlankOrOverlongComment() throws Exception {
-        mockMvc.perform(post("/api/secret/id/1/comment")
+        mockMvc.perform(post("/api/secret/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/secret/id/1/comment")
+        mockMvc.perform(post("/api/secret/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", "x".repeat(51)))
                 .andExpect(status().isOk())
@@ -201,7 +201,7 @@ class SecretContractTest {
 
     @Test
     void likeEndpointRejectsInvalidLikeState() throws Exception {
-        mockMvc.perform(post("/api/secret/id/1/like")
+        mockMvc.perform(post("/api/secret/1/like")
                         .requestAttr("sessionId", "test-session")
                         .param("like", "2"))
                 .andExpect(status().isOk())

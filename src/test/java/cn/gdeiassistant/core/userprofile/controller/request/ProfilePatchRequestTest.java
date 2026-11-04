@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.userprofile.controller.request;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -67,5 +68,25 @@ class ProfilePatchRequestTest {
         assertEquals(Map.of("region", "CN", "state", "44", "city", "1"), patch.get("location"));
         assertTrue(patch.containsKey("hometown"));
         assertNull(patch.get("hometown"));
+    }
+
+    @Test
+    void fractionalNumbersAreRejectedInsteadOfTruncated() {
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"enrollment\":2024.9}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"faculty\":1.5}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"birthday\":{\"year\":2000.5,\"month\":1,\"date\":2}}", ProfilePatchRequest.class));
+    }
+
+    @Test
+    void nonIntegerTokensAreRejectedInsteadOfCoerced() {
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"enrollment\":\"2024\"}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"enrollment\":\"\"}", ProfilePatchRequest.class));
+        assertThrows(JsonMappingException.class,
+                () -> mapper.readValue("{\"birthday\":{\"year\":\"2000\",\"month\":1,\"date\":2}}", ProfilePatchRequest.class));
     }
 }

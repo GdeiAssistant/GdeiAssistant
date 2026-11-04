@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.userprofile.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -16,9 +17,10 @@ public class ProfilePatchRequest {
 
     private String nickname;
     private String introduction;
+    @JsonDeserialize(using = StrictIntegerDeserializer.class)
     private Integer enrollment;
-    private Integer faculty;
-    private String major;
+    @JsonDeserialize(using = StrictIntegerDeserializer.class)
+    private Integer faculty;    private String major;
     private BirthdayPatch birthday;
     private LocationPatch location;
     private LocationPatch hometown;
@@ -131,8 +133,11 @@ public class ProfilePatchRequest {
     }
 
     public static class BirthdayPatch {
+        @JsonDeserialize(using = StrictIntegerDeserializer.class)
         private Integer year;
+        @JsonDeserialize(using = StrictIntegerDeserializer.class)
         private Integer month;
+        @JsonDeserialize(using = StrictIntegerDeserializer.class)
         private Integer date;
 
         public Integer getYear() {

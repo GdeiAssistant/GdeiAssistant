@@ -14,8 +14,13 @@ import java.util.*;
 
 /** Generate the checked contract from compiled controller signatures, not a second route list. */
 public final class GenerateOpenApi {
+    /** Contract revision date; bump when the generated API surface changes. */
+    private static final String CONTRACT_VERSION="2026.11.05";
+    private static final String CONVENTIONS_PATH="docs/api-conventions.md";
     private final Map<String,Object> schemas=new TreeMap<>();
     private final Map<String,Object> paths=new TreeMap<>();
+    private final Map<Class<?>,String> sources=new HashMap<>();
+    private final Set<String> usedTags=new TreeSet<>();
 
     public static void main(String[] args) throws Exception {
         var generator=new GenerateOpenApi();
@@ -54,22 +59,29 @@ public final class GenerateOpenApi {
                     if(!path.startsWith("/api/"))continue;
                     @SuppressWarnings("unchecked") Map<String,Object> operations=(Map<String,Object>)paths.computeIfAbsent(path,p->new TreeMap<>());
                     String key=verb.name().toLowerCase(Locale.ROOT);
-                    Map<String,Object> operation=operation(controller,method,mapping,verb);
+                    Map<String,Object> operation=operation(controller,method,mapping,verb,path);
                     if (Arrays.stream(cn.gdeiassistant.common.constant.SettingConstantUtils.LOGIN_INTERCEPTOR_EXCEPTION_LIST).anyMatch(path::startsWith) || path.startsWith("/api/social/users/") && path.endsWith("/avatar")) operation.put("security", List.of());
                     operation.put("operationId",controller.getSimpleName()+"_"+method.getName()+"_"+key+"_"+path.replaceAll("[^a-zA-Z0-9]","_"));
                     if(operations.putIfAbsent(key,operation)!=null)throw new IllegalStateException("Duplicate API operation: "+key+" "+path);
                 }
             }
         }
-        return Map.of("openapi","3.0.3","info",Map.of("title","GdeiAssistant API","version","2026.10.07"),
-                "servers",List.of(Map.of("url","/")),"paths",paths,
+        return Map.of("openapi","3.0.3",
+                "info",Map.of("title","GdeiAssistant API","version",CONTRACT_VERSION,
+                        "description","GdeiAssistant 后端 REST 契约，由 Controller 请求/响应类型生成；接口约定见 "+CONVENTIONS_PATH+"。"),
+                "externalDocs",Map.of("description","API conventions","url",CONVENTIONS_PATH),
+                "servers",List.of(Map.of("url","/")),
+                "tags",usedTags.stream().map(tag->Map.of("name",tag)).toList(),
+                "paths",paths,
                 "components",Map.of("schemas",schemas,"securitySchemes",Map.of("bearerAuth",Map.of("type","http","scheme","bearer","bearerFormat","JWT"))));
     }
 
-    private Map<String,Object> operation(Class<?> controller,Method method,RequestMapping mapping,RequestMethod verb) {
+    private Map<String,Object> operation(Class<?> controller,Method method,RequestMapping mapping,RequestMethod verb,String path) {
         Map<String,Object> result=new LinkedHashMap<>();
-        result.put("tags",List.of(controller.getSimpleName().replace("Controller","")));
-        result.put("summary",method.getName());
+        String tag=tag(path);
+        usedTags.add(tag);
+        result.put("tags",List.of(tag));
+        result.put("summary",summary(controller,method));
         List<Object> parameters=new ArrayList<>();Map<String,Object> form=new TreeMap<>();List<String> required=new ArrayList<>();
         Object body=null;boolean multipart=false;
         for(Parameter parameter:method.getParameters()) {
@@ -109,8 +121,15 @@ public final class GenerateOpenApi {
         if(responseType instanceof ParameterizedType p && p.getRawType().getTypeName().equals("org.springframework.http.ResponseEntity"))responseType=p.getActualTypeArguments()[0];
         Object responseSchema=schema(responseType,Map.of());
         String media=mapping.produces().length>0?mapping.produces()[0]:"application/json";
-        Map<String,Object> responses=new TreeMap<>();responses.put("200",Map.of("description","Successful HTTP response; inspect success/errorCode in the envelope","content",Map.of(media,Map.of("schema",responseSchema))));
-        for(String status:List.of("400","401","403","429","500"))responses.put(status,Map.of("description","Request, authentication, authorization, rate-limit or server failure","content",Map.of("application/json",Map.of("schema",schema(cn.gdeiassistant.common.pojo.result.JsonResult.class,Map.of())))));
+        Map<String,Object> responses=new TreeMap<>();
+        responses.put("200",Map.of("description","Successful HTTP response; legacy business endpoints may return success=false in this envelope, while social endpoints use matching 4xx/5xx statuses","content",Map.of(media,Map.of("schema",responseSchema))));
+        Map<String,String> errorDescriptions=Map.of(
+                "400","Request validation failure; legacy endpoints may still return HTTP 200 with success=false",
+                "401","Missing, expired or invalid bearer token",
+                "403","Forbidden or privacy restriction",
+                "429","Rate limited",
+                "500","Server failure; legacy endpoints may still return HTTP 200 with success=false");
+        for(Map.Entry<String,String> error:errorDescriptions.entrySet())responses.put(error.getKey(),Map.of("description",error.getValue(),"content",Map.of("application/json",Map.of("schema",schema(cn.gdeiassistant.common.pojo.result.JsonResult.class,Map.of())))));
         if(method.getDeclaringClass()==cn.gdeiassistant.core.userlogin.controller.AuthController.class && method.getName().equals("login")) {
             responses.put("409",Map.of("description","Previous account deletion cleanup is in progress (code "+cn.gdeiassistant.common.constant.ErrorConstantUtils.ACCOUNT_CLEANUP_PENDING+"); no sign-in token is issued",
                     "content",Map.of("application/json",Map.of("schema",responseSchema))));
@@ -121,6 +140,59 @@ public final class GenerateOpenApi {
     }
 
     private String named(String value,String name,Parameter parameter){return !value.isEmpty()?value:!name.isEmpty()?name:parameter.getName();}
+
+    /** Group operations by business area instead of controller class fragments. */
+    private String tag(String path) {
+        String[] parts=path.split("/");
+        String segment=parts.length>2 && !parts[2].isEmpty()?parts[2]:"api";
+        return switch(segment) {
+            case "campus-credential" -> "CampusCredential";
+            case "lostandfound" -> "LostAndFound";
+            case "graduate-exam" -> "GraduateExam";
+            case "ip" -> "IPAddress";
+            case "userdata" -> "UserData";
+            case "cet" -> "CET";
+            case "close" -> "AccountDeletion";
+            case "spare" -> "SpareRoom";
+            case "authentication" -> "RealNameVerification";
+            case "user", "introduction" -> "Profile";
+            default -> pascal(segment);
+        };
+    }
+
+    private String pascal(String segment) {
+        StringBuilder name=new StringBuilder();
+        for(String token:segment.split("-")) {
+            if(token.isEmpty())continue;
+            name.append(Character.toUpperCase(token.charAt(0))).append(token.substring(1));
+        }
+        return name.toString();
+    }
+
+    /** Use the first Javadoc line as the operation summary when one exists. */
+    private String summary(Class<?> controller,Method method) {
+        String source=sources.computeIfAbsent(controller,this::source);
+        if(source!=null) {
+            java.util.regex.Pattern pattern=java.util.regex.Pattern.compile("(?s)/\\*\\*((?:(?!\\*/).)*)\\*/\\s*(?:@[\\w.]+(?:\\([^)]*\\))?\\s*)*(?:public|protected|private)\\s+[^;{]*?\\b"+java.util.regex.Pattern.quote(method.getName())+"\\s*\\(");
+            java.util.regex.Matcher matcher=pattern.matcher(source);
+            if(matcher.find()) {
+                for(String line:matcher.group(1).split("\\R")) {
+                    String text=line.replaceFirst("^\\s*\\*\\s?","").trim();
+                    if(!text.isEmpty() && !text.startsWith("@")) return text;
+                }
+            }
+        }
+        return method.getName();
+    }
+
+    private String source(Class<?> controller) {
+        try {
+            Path file=Path.of("src/main/java/"+controller.getName().replace('.','/')+".java");
+            return Files.exists(file)?Files.readString(file):null;
+        } catch(Exception e) {
+            return null;
+        }
+    }
     private Object schema(Type type,Map<TypeVariable<?>,Type> bindings) {
         if(type instanceof TypeVariable<?> t)return schema(bindings.getOrDefault(t,Object.class),bindings);
         if(type instanceof WildcardType)return Map.of("type","object");
@@ -172,6 +244,13 @@ public final class GenerateOpenApi {
             var min=field.getAnnotation(Min.class);var max=field.getAnnotation(Max.class);var dmin=field.getAnnotation(DecimalMin.class);var dmax=field.getAnnotation(DecimalMax.class);
             if(min!=null)shape.put("minimum",min.value());if(max!=null)shape.put("maximum",max.value());if(dmin!=null)shape.put("minimum",new java.math.BigDecimal(dmin.value()));if(dmax!=null)shape.put("maximum",new java.math.BigDecimal(dmax.value()));
             var pattern=field.getAnnotation(Pattern.class);if(pattern!=null)shape.put("pattern",pattern.regexp());
+            boolean nullable=field.isAnnotationPresent(org.jspecify.annotations.Nullable.class)
+                    || field.getAnnotatedType().isAnnotationPresent(org.jspecify.annotations.Nullable.class);
+            if(nullable) {
+                Object ref=shape.remove("$ref");
+                if(ref!=null)shape.put("allOf",List.of(Map.of("$ref",ref)));
+                shape.put("nullable",true);
+            }
             result.put(name,shape);
         }
         return result;

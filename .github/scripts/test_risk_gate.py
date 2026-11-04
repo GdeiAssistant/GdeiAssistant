@@ -2,7 +2,6 @@
 """Exercise the trusted risk-gate JavaScript offline with synthetic API fixtures."""
 import json
 import os
-import re
 import subprocess
 import unittest
 from pathlib import Path
@@ -45,6 +44,11 @@ bind('issues.listComments', async () => ({data: f.comments || []}));
 bind('repos.getBranch', async () => ({data: {commit: {sha: f.baseHead ?? (f.pr || {}).head?.sha}}}));
 bind('repos.compareCommits', async args => ({data: {merge_base_commit: {sha: f.mergeBase ?? args.base}}}));
 bind('pulls.listCommits', async () => ({data: f.commits || []}));
+bind('repos.getContent', async () => {
+  if (f.policyError) throw new Error('Synthetic policy read failure');
+  const policy = f.policy || {action_files: ['.github/workflows/build.yml']};
+  return {data: {type: 'file', content: Buffer.from(JSON.stringify(policy)).toString('base64')}};
+});
 bind('repos.createCommitStatus', async args => {
   statuses.push(args);
   return {data: {}};
@@ -101,8 +105,8 @@ class ScriptTests(unittest.TestCase):
         script = next(s['with']['script'] for s in WORKFLOW['jobs']['evaluate']['steps']
                       if 'script' in s.get('with', {}))
         # Substitute only the fixed owner comparator in the offline double; never copy the owner into fixtures.
-        script = re.sub(r"(latest\.actor\?\.login === )'[^']+'", r"\1'synthetic-owner'", script)
-        env = {'PATH': os.environ['PATH'], 'PR_NUMBER': fixture.get('prNumber', '7')}
+        env = {'PATH': os.environ['PATH'], 'PR_NUMBER': fixture.get('prNumber', '7'),
+               'APPROVAL_OWNER': fixture.get('approvalOwner', 'synthetic-owner')}
         result = subprocess.run(['node', '-e', HARNESS], input=json.dumps({
             'fixture': fixture, 'script': script,
         }), capture_output=True, text=True, check=True, timeout=10, cwd=ROOT, env=env)
@@ -177,6 +181,12 @@ class ScriptTests(unittest.TestCase):
         self.assert_blocked(self.fixture(files=[workflow_file('-      - run: npm test')],
                                          events=[label_event(actor='other')]))
 
+    def test_missing_approval_owner_blocks_high_risk(self):
+        # Without the configured account nobody matches, so the label cannot be
+        # trusted even when the actor name happens to look right.
+        self.assert_blocked(self.fixture(files=[workflow_file('-      - run: npm test')],
+                                         approvalOwner=''))
+
     def test_latest_unlabel_revokes_approval(self):
         self.assert_blocked(self.fixture(files=[workflow_file('-      - run: npm test')],
                                          events=[label_event(9, event='unlabeled'), label_event(3)]))
@@ -219,6 +229,30 @@ class ScriptTests(unittest.TestCase):
     def test_cosmetic_only_change_stays_low_risk(self):
         files = [workflow_file('-  timeout-minutes: 5\n+  timeout-minutes: 10')]
         self.assert_passes(self.fixture(labels=False, files=files))
+
+    def test_top_level_name_and_step_label_stay_low_risk(self):
+        files = [workflow_file('-name: CI\n+name: Build\n'
+                               '+      - name: Install dependencies')]
+        self.assert_passes(self.fixture(labels=False, files=files))
+
+    def test_job_name_change_is_high_risk(self):
+        # A job-level name is the required status context; renaming it can drop
+        # the check the branch protection still waits for.
+        self.assert_blocked(self.fixture(labels=False,
+                                         files=[workflow_file('+    name: Renamed tests')]))
+
+    def test_moving_a_workflow_out_of_the_directory_is_high_risk(self):
+        files = [{'filename': 'docs/ci.yml', 'previous_filename': '.github/workflows/ci.yml',
+                  'status': 'renamed', 'patch': '@@ -1 +1 @@\n-name: CI\n+name: CI'}]
+        self.assert_blocked(self.fixture(labels=False, files=files))
+
+    def test_runtime_configuration_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False,
+                                         files=[{'filename': 'kuangmo_sms_cluster/config.py',
+                                                 'status': 'modified'}]))
+        self.assert_passes(self.fixture(labels=False,
+                                        files=[{'filename': 'docs/configuration.md',
+                                                'status': 'modified'}]))
 
     def test_workflow_logic_change_is_high_risk(self):
         self.assert_blocked(self.fixture(labels=False,
@@ -367,6 +401,22 @@ class ScriptTests(unittest.TestCase):
                                '- uses: actions/setup-node@' + 'a' * 40 + '\n'
                                '+ uses: actions/checkout@' + 'b' * 40)]
         fixture = self.dependabot_fixture()
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_blocked(fixture)
+
+    def test_dependabot_repin_outside_the_policy_allowlist_needs_approval(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '+ uses: actions/checkout@' + 'b' * 40)]
+        fixture = self.dependabot_fixture(policy={'action_files': ['.github/workflows/other.yml']})
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_blocked(fixture)
+
+    def test_dependabot_repin_with_unreadable_policy_needs_approval(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '+ uses: actions/checkout@' + 'b' * 40)]
+        fixture = self.dependabot_fixture(policyError=True)
         fixture['files'] = files
         fixture['pr']['changed_files'] = 1
         self.assert_blocked(fixture)

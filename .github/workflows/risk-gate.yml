@@ -47,6 +47,10 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
+          # The approver is repository configuration, not a literal in the
+          # workflow: repos that keep accounts out of source can change the
+          # owner without editing the gate. Unset means no label is accepted.
+          APPROVAL_OWNER: ${{ vars.RISK_GATE_OWNER }}
         with:
           script: |
             // Executed only by the trusted base-branch workflow. Never load PR code.
@@ -84,17 +88,25 @@ jobs:
             ];
             const ACTION_PIN = /^\s*-?\s*uses\s*:/;
             const ACTION_TARGET = /^\s*-?\s*uses\s*:\s*["']?([^@"'\s]+)@/;
-            // Scheduling and prose carry no behaviour; anything else in a
-            // credential-bearing workflow is a logic change. Dispatch input
-            // fields are excluded on purpose: `default` and `required` change
-            // what a manual run does.
-            const COSMETIC = /^\s*(?:#|(?:-\s*)?(?:cron|schedule|timeout-minutes|name|retention-days)\s*:)/;
+            // The owner login comes from repository configuration so the gate
+            // does not hard-code an account. An empty value matches nobody, so
+            // a missing variable blocks high-risk merges instead of widening.
+            const APPROVAL_OWNER = process.env.APPROVAL_OWNER || '';
+            // Scheduling, comments and step labels carry no behaviour; anything
+            // else in a credential-bearing workflow is a logic change. A
+            // job-level `name:` defines the required check identity, so only the
+            // top-level workflow name and `- name:` step labels stay cosmetic.
+            // Dispatch input fields are excluded on purpose: `default` and
+            // `required` change what a manual run does.
+            const COSMETIC = /^(?:\s*#|name\s*:|\s+-\s*name\s*:|\s*(?:-\s*)?(?:cron|schedule|timeout-minutes|retention-days)\s*:)/;
             const isWorkflow = path => path.startsWith('.github/workflows/');
             function highRisk(path) {
               const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
               if (/(^|\/)codeowners$/.test(p)) return true;
               if (/(^|\/)(docs?|tests?|examples?|fixtures)(\/|$)/.test(p)) return false;
               if (/(^|\/)\.env(?:[./_-]|$)/.test(p)) return true;
+              // Runtime configuration decides behaviour the diff does not show.
+              if (/(^|[\/_.-])(config|configuration|settings)([\/_.-]|$)/.test(p)) return true;
               if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
@@ -109,9 +121,13 @@ jobs:
               return removed.length > 0 && removed.length === added.length
                 && removed.every((target, index) => target === added[index]);
             }
-            async function workflowHighRisk(file, isDependabot) {
+            async function workflowHighRisk(file, isDependabot, actionFiles) {
               // A rename must not slip a protected definition past the check.
               if (ALWAYS_RISK_WORKFLOWS.has(file.filename) || ALWAYS_RISK_WORKFLOWS.has(file.previous_filename)) return true;
+              // Moving a live workflow out of the directory disables the checks it
+              // published, whatever else the patch says.
+              if (file.previous_filename && isWorkflow(file.previous_filename)
+                  && !isWorkflow(file.filename)) return true;
               // Without a readable diff the change cannot be proven benign.
               if (typeof file.patch !== 'string') return true;
               const changed = file.patch.split('\n')
@@ -119,10 +135,12 @@ jobs:
                 .map(line => ({ sign: line[0], text: line.slice(1) }));
               if (changed.some(entry => WORKFLOW_PRIVILEGE.some(pattern => pattern.test(entry.text)))) return true;
               // A verified Dependabot update only repins action versions, so the
-              // change is nothing but one `uses:` line replaced by another. Any
-              // other edit in a bot PR takes the normal path.
+              // change is nothing but one `uses:` line replaced by another. The
+              // base-branch dependency policy names the workflows whose action
+              // updates are eligible; anything else takes the normal path.
               const pinned = changed.filter(entry => ACTION_PIN.test(entry.text));
-              if (isDependabot && pinned.length === changed.length && sameAction(pinned)) return false;
+              if (isDependabot && actionFiles?.has(file.filename)
+                  && pinned.length === changed.length && sameAction(pinned)) return false;
               if (!changed.some(entry => !COSMETIC.test(entry.text))) return false;
               // Every remaining edit can change what CI verifies: a removed
               // assertion, a multiline body, an added `if: false`, a
@@ -172,6 +190,22 @@ jobs:
               return commits.every(commit => commit.author?.login === 'dependabot[bot]'
                 && commit.committer?.login === 'web-flow'
                 && commit.commit?.verification?.verified === true);
+            }
+            // The dependency policy names the workflows whose action updates may
+            // merge unattended. It is read from the base branch, so a PR cannot
+            // grant itself the exemption by editing the policy it is judged by.
+            async function eligibleActionFiles(baseRef) {
+              try {
+                const { data } = await github.rest.repos.getContent({
+                  ...repo, path: '.github/scripts/dependabot-policy.json', ref: baseRef,
+                });
+                if (data.type !== 'file' || typeof data.content !== 'string') return null;
+                const policy = JSON.parse(Buffer.from(data.content, 'base64').toString('utf8'));
+                return new Set(Array.isArray(policy.action_files) ? policy.action_files : []);
+              } catch {
+                // An unreadable or missing policy grants no exemption.
+                return null;
+              }
             }
             // Codex publishes a machine-readable receipt in its rolling summary
             // comment. Only a completed review of the current head with no
@@ -223,6 +257,7 @@ jobs:
               // The exemption follows the head commit, not the PR author: a human
               // pushing onto a bot branch must not inherit the skip.
               const isDependabot = pr.user?.login === 'dependabot[bot]' && await dependabotHead(number);
+              const actionFiles = isDependabot ? await eligibleActionFiles(pr.base.ref) : null;
               await status('risk-gate', 'pending', 'Evaluating changed paths, owner approval and AI review');
               await status('pr-template', 'pending', 'Checking AI, change and verification fields');
               await status('ai-review', 'pending', 'Reading the Codex review receipt');
@@ -232,7 +267,7 @@ jobs:
               let risky = false;
               for (const file of files) {
                 const names = [file.filename, file.previous_filename].filter(Boolean);
-                risky = names.some(isWorkflow) ? await workflowHighRisk(file, isDependabot) : names.some(highRisk);
+                risky = names.some(isWorkflow) ? await workflowHighRisk(file, isDependabot, actionFiles) : names.some(highRisk);
                 if (risky) break;
               }
               // Two labels, two different claims. The owner and their agents share
@@ -248,7 +283,8 @@ jobs:
                 const liveLabel = name => {
                   const latest = events.filter(event => ['labeled', 'unlabeled'].includes(event.event)
                     && event.label?.name === name).sort((a, b) => b.id - a.id)[0];
-                  return latest?.event === 'labeled' && latest.actor?.login === 'Pigbibi';
+                  return latest?.event === 'labeled' && APPROVAL_OWNER !== ''
+                    && latest.actor?.login === APPROVAL_OWNER;
                 };
                 // A human confirmation outranks an agent's when both are present.
                 if (liveLabel('owner-approved')) approval = 'owner';

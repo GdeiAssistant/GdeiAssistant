@@ -2,7 +2,7 @@ package cn.gdeiassistant.core.userprofile.controller.request;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonDeserialize;
 import org.jspecify.annotations.Nullable;
 
 import java.util.LinkedHashMap;

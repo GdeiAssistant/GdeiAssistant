@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.userprofile.controller.request;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProfilePatchRequestTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonMapper mapper = new JsonMapper();
 
     @Test
     void absentFieldsAreNotIncluded() throws Exception {
@@ -72,33 +72,33 @@ class ProfilePatchRequestTest {
 
     @Test
     void fractionalNumbersAreRejectedInsteadOfTruncated() {
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"enrollment\":2024.9}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"faculty\":1.5}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"birthday\":{\"year\":2000.5,\"month\":1,\"date\":2}}", ProfilePatchRequest.class));
     }
 
     @Test
     void nonIntegerTokensAreRejectedInsteadOfCoerced() {
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"enrollment\":\"2024\"}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"enrollment\":\"\"}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"birthday\":{\"year\":\"2000\",\"month\":1,\"date\":2}}", ProfilePatchRequest.class));
     }
 
     @Test
     void nonStringTokensAreRejectedInsteadOfCoerced() {
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"nickname\":123}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"introduction\":false}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"major\":42}", ProfilePatchRequest.class));
-        assertThrows(JsonMappingException.class,
+        assertThrows(DatabindException.class,
                 () -> mapper.readValue("{\"location\":{\"region\":\"CN\",\"state\":44}}", ProfilePatchRequest.class));
     }
 }

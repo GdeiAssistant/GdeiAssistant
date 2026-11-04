@@ -1,20 +1,19 @@
 package cn.gdeiassistant.core.userprofile.controller.request;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.JsonToken;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.ValueDeserializer;
 
-import java.io.IOException;
-
-public class StrictStringDeserializer extends JsonDeserializer<String> {
+public class StrictStringDeserializer extends ValueDeserializer<String> {
 
     @Override
-    public String deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+    public String deserialize(JsonParser parser, DeserializationContext context) throws JacksonException {
         if (parser.hasToken(JsonToken.VALUE_NULL)) return null;
         if (!parser.hasToken(JsonToken.VALUE_STRING)) {
             return (String) context.handleUnexpectedToken(String.class, parser);
         }
-        return parser.getText();
+        return parser.getString();
     }
 }

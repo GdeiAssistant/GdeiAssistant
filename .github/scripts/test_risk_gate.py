@@ -68,6 +68,7 @@ const context = {
   runId: 1,
   eventName: f.eventName || 'pull_request_target',
   payload: {
+    action: f.action || undefined,
     pull_request: f.pr || undefined,
     issue: f.issue || undefined,
     repository: {default_branch: f.defaultBranch || 'master'},
@@ -226,20 +227,29 @@ class ScriptTests(unittest.TestCase):
         self.assert_blocked(self.fixture(labels=False,
                                          files=[workflow_file('+          token: ${{ secrets.TOKEN }}')]))
 
-    def test_cosmetic_only_change_stays_low_risk(self):
-        files = [workflow_file('-  timeout-minutes: 5\n+  timeout-minutes: 10')]
+    def test_comment_only_change_stays_low_risk(self):
+        files = [workflow_file('-  # old note\n+  # clearer note')]
         self.assert_passes(self.fixture(labels=False, files=files))
 
-    def test_top_level_name_and_step_label_stay_low_risk(self):
-        files = [workflow_file('-name: CI\n+name: Build\n'
-                               '+      - name: Install dependencies')]
-        self.assert_passes(self.fixture(labels=False, files=files))
+    def test_workflow_name_change_is_high_risk(self):
+        files = [workflow_file('-name: CI\n+name: Build')]
+        self.assert_blocked(self.fixture(labels=False, files=files))
 
     def test_job_name_change_is_high_risk(self):
         # A job-level name is the required status context; renaming it can drop
         # the check the branch protection still waits for.
         self.assert_blocked(self.fixture(labels=False,
                                          files=[workflow_file('+    name: Renamed tests')]))
+
+    def test_shell_line_that_looks_like_a_step_label_is_high_risk(self):
+        # Inside `run: |` this is shell text, not a YAML step label; matching it
+        # as prose would let command substitution run unreviewed.
+        self.assert_blocked(self.fixture(labels=False, files=[workflow_file(
+            '+      - name: $(printf executed >&2) || true')]))
+
+    def test_schedule_removal_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False, files=[workflow_file(
+            '-  schedule:\n-    - cron: \'0 0 * * *\'')]))
 
     def test_moving_a_workflow_out_of_the_directory_is_high_risk(self):
         files = [{'filename': 'docs/ci.yml', 'previous_filename': '.github/workflows/ci.yml',
@@ -295,6 +305,28 @@ class ScriptTests(unittest.TestCase):
         # Commit statuses are scoped to the SHA, so two PRs on one head would
         # overwrite each other's verdicts.
         self.assert_blocked(self.fixture(open=[{'number': 8, 'head': {'sha': SHA}}]))
+
+    def test_closed_pr_publishes_no_statuses(self):
+        fixture = self.fixture(labels=False)
+        fixture['pr']['state'] = 'closed'
+        fixture['eventName'] = 'issue_comment'
+        fixture['issue'] = {'number': 7, 'pull_request': {}}
+        result = self.run_script(fixture)
+        self.assertFalse(result.get('error'), result)
+        self.assertFalse(result['statuses'], result)
+
+    def test_closing_a_pr_reevaluates_open_prs(self):
+        fixture = self.fixture(labels=False)
+        fixture['pr']['state'] = 'closed'
+        fixture['eventName'] = 'pull_request_target'
+        fixture['action'] = 'closed'
+        fixture['open'] = [{'number': 4}]
+        result = self.run_script(fixture)
+        self.assertFalse(result.get('error'), result)
+        self.assertFalse(result['statuses'], result)
+        dispatched = [a['inputs']['pr_number'] for n, a in result['calls']
+                      if n == 'actions.createWorkflowDispatch']
+        self.assertEqual(dispatched, ['4'])
 
     def test_pr_mutation_during_evaluation_fails_closed(self):
         for change in ({'head': {'sha': OTHER}}, {'body': 'edited'}, {'labels': []}):

@@ -2,7 +2,7 @@ name: PR risk gate
 
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review]
+    types: [opened, reopened, synchronize, edited, labeled, unlabeled, ready_for_review, closed]
   # Codex publishes and refreshes its review receipt as a PR comment, which
   # raises no pull_request event. Only that bot can re-trigger the evaluation.
   issue_comment:
@@ -47,16 +47,22 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
-          # The approver is repository configuration, not a literal in the
-          # workflow: repos that keep accounts out of source can change the
-          # owner without editing the gate. Unset means no label is accepted.
+          # Required setup: set the RISK_GATE_OWNER repository variable to the
+          # approver's login (for example, <account-id>). The approver is
+          # repository configuration, not a literal, so the owner can change
+          # without editing the gate. Unset accepts no label and leaves
+          # high-risk merges blocked.
           APPROVAL_OWNER: ${{ vars.RISK_GATE_OWNER }}
         with:
           script: |
             // Executed only by the trusted base-branch workflow. Never load PR code.
             const eventName = context.eventName;
-            // A push or a scheduled sweep has no single PR; both re-evaluate them all.
-            const single = !['push', 'schedule'].includes(eventName);
+            // A push or a scheduled sweep has no single PR; both re-evaluate
+            // them all. Closing a PR can end a shared-head collision, so it
+            // re-evaluates the remaining open PRs instead of the closed one.
+            const sweep = ['push', 'schedule'].includes(eventName)
+              || (eventName === 'pull_request_target' && context.payload.action === 'closed');
+            const single = !sweep;
             const number = context.payload.pull_request?.number
               || context.payload.issue?.number
               || Number(process.env.PR_NUMBER);
@@ -92,13 +98,12 @@ jobs:
             // does not hard-code an account. An empty value matches nobody, so
             // a missing variable blocks high-risk merges instead of widening.
             const APPROVAL_OWNER = process.env.APPROVAL_OWNER || '';
-            // Scheduling, comments and step labels carry no behaviour; anything
-            // else in a credential-bearing workflow is a logic change. A
-            // job-level `name:` defines the required check identity, so only the
-            // top-level workflow name and `- name:` step labels stay cosmetic.
-            // Dispatch input fields are excluded on purpose: `default` and
-            // `required` change what a manual run does.
-            const COSMETIC = /^(?:\s*#|name\s*:|\s+-\s*name\s*:|\s*(?:-\s*)?(?:cron|schedule|timeout-minutes|retention-days)\s*:)/;
+            // Only a comment is provably inert. Every key, including `name:`,
+            // `cron:` and `timeout-minutes`, has behavioural meaning somewhere,
+            // and a line inside a `run: |` block is shell text that only looks
+            // like YAML. Treating any of it as prose lets a shell line such as
+            // `- name: $(...)` through, so the whole file takes one tier.
+            const COSMETIC = /^\s*#/;
             const isWorkflow = path => path.startsWith('.github/workflows/');
             function highRisk(path) {
               const p = path.replace(/([a-z0-9])([A-Z])/g, '$1_$2').toLowerCase();
@@ -256,6 +261,9 @@ jobs:
               });
               try {
                 const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
+              // A closed PR keeps no authority over its head: publishing on it
+              // could overwrite a live PR that now uses the same commit.
+              if (pr.state !== 'open') return true;
               sha = pr.head.sha;
               // Commit statuses are keyed by SHA, not by PR. A second open PR on
               // the same head would share these contexts, and one verdict could

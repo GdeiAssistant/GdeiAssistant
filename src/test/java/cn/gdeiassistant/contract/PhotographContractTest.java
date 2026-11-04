@@ -103,7 +103,7 @@ class PhotographContractTest {
 
         when(photographService.getPhotographById(eq(1), any())).thenReturn(vo);
 
-        mockMvc.perform(get("/api/photograph/id/1"))
+        mockMvc.perform(get("/api/photograph/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.id").value(1))
@@ -123,7 +123,7 @@ class PhotographContractTest {
 
         when(photographService.queryPhotographCommentList(1)).thenReturn(List.of(comment));
 
-        mockMvc.perform(get("/api/photograph/id/1/comment"))
+        mockMvc.perform(get("/api/photograph/1/comment"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data[0].commentId").value(10))
@@ -133,7 +133,7 @@ class PhotographContractTest {
 
     @Test
     void addPhotographCommentAcceptsValidComment() throws Exception {
-        mockMvc.perform(post("/api/photograph/id/1/comment")
+        mockMvc.perform(post("/api/photograph/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", "great shot"))
                 .andExpect(status().isOk())
@@ -144,13 +144,13 @@ class PhotographContractTest {
 
     @Test
     void addPhotographCommentRejectsBlankOrOverlongComment() throws Exception {
-        mockMvc.perform(post("/api/photograph/id/1/comment")
+        mockMvc.perform(post("/api/photograph/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", ""))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
-        mockMvc.perform(post("/api/photograph/id/1/comment")
+        mockMvc.perform(post("/api/photograph/1/comment")
                         .requestAttr("sessionId", "test-session")
                         .param("comment", "x".repeat(51)))
                 .andExpect(status().isOk())

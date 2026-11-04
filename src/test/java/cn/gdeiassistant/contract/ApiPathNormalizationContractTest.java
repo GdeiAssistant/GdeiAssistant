@@ -40,22 +40,19 @@ class ApiPathNormalizationContractTest {
     };
 
     @Test
-    void legacyIdPathsKeepACanonicalAlias() {
-        List<String> missing = new ArrayList<>();
+    void legacyIdPathsAreNotMapped() {
+        List<String> legacy = new ArrayList<>();
         for (Class<?> controller : CONTROLLERS) {
             for (Method method : controller.getDeclaredMethods()) {
                 RequestMapping mapping = AnnotatedElementUtils.findMergedAnnotation(method, RequestMapping.class);
                 if (mapping == null) continue;
-                List<String> paths = List.of(mapping.value());
-                for (String path : paths) {
-                    if (!path.contains("/id/{")) continue;
-                    String canonical = path.replace("/id/{", "/{");
-                    if (!paths.contains(canonical)) {
-                        missing.add(controller.getSimpleName() + "#" + method.getName() + " -> " + path);
+                for (String path : mapping.value()) {
+                    if (path.contains("/id/{")) {
+                        legacy.add(controller.getSimpleName() + "#" + method.getName() + " -> " + path);
                     }
                 }
             }
         }
-        assertTrue(missing.isEmpty(), "Legacy id paths without canonical alias: " + missing);
+        assertTrue(legacy.isEmpty(), "Legacy id paths must not be mapped: " + legacy);
     }
 }

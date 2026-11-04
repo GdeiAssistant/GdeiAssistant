@@ -57,11 +57,11 @@ async function login(data = {}) {
 describe('mock smoke', () => {
   it('hides anonymous authors in responses while preserving private mock ownership', async () => {
     const token = await login()
-    const secret = (await request('/api/secret/id/301', { token })).data
+    const secret = (await request('/api/secret/301', { token })).data
     expect(secret.username).toBe('匿名用户')
     expect(secret).not.toHaveProperty('owner')
     expect(secret).not.toHaveProperty('likedUsers')
-    const express = (await request('/api/express/id/401', { token })).data
+    const express = (await request('/api/express/401', { token })).data
     expect(express.username).toBeNull()
     expect(express.realname).toBeNull()
     expect(express.canGuess).toBe(true)
@@ -247,13 +247,13 @@ describe('mock smoke', () => {
     const announcements = await request('/api/information/announcement/start/0/size/10', { token })
     expect(announcements.data.length).toBeGreaterThan(0)
 
-    const announcementDetail = await request(`/api/information/announcement/id/${announcements.data[0].id}`, { token })
+    const announcementDetail = await request(`/api/information/announcement/${announcements.data[0].id}`, { token })
     expect(announcementDetail.data.title).toBeTruthy()
 
     const news = await request('/api/information/news/type/1/start/0/size/10')
     expect(news.data.length).toBeGreaterThan(0)
 
-    const newsDetail = await request(`/api/information/news/id/${news.data[0].id}`)
+    const newsDetail = await request(`/api/information/news/${news.data[0].id}`)
     expect(newsDetail.data.title).toBeTruthy()
 
     const interactions = await request('/api/information/message/interaction/start/0/size/10', { token })
@@ -262,7 +262,7 @@ describe('mock smoke', () => {
     const unread = await request('/api/information/message/unread', { token })
     expect(unread.data).toBeGreaterThanOrEqual(0)
 
-    const readOne = await request(`/api/information/message/id/${interactions.data[0].id}/read`, {
+    const readOne = await request(`/api/information/message/${interactions.data[0].id}/read`, {
       method: 'POST',
       token,
     })
@@ -280,45 +280,45 @@ describe('mock smoke', () => {
 
     const marketplace = await request('/api/marketplace/item/start/0', { token })
     expect(marketplace.data.length).toBeGreaterThan(0)
-    const marketplaceDetail = await request(`/api/marketplace/item/id/${marketplace.data[0].id}`, { token })
+    const marketplaceDetail = await request(`/api/marketplace/item/${marketplace.data[0].id}`, { token })
     expect(marketplaceDetail.data.item.id).toBe(marketplace.data[0].id)
     const marketplaceProfile = await request('/api/marketplace/profile', { token })
     expect(marketplaceProfile.data).toHaveProperty('doing')
 
     const lostFound = await request('/api/lostandfound/lostitem/start/0', { token })
     expect(lostFound.data.length).toBeGreaterThan(0)
-    const lostFoundDetail = await request(`/api/lostandfound/item/id/${lostFound.data[0].id}`, { token })
+    const lostFoundDetail = await request(`/api/lostandfound/item/${lostFound.data[0].id}`, { token })
     expect(lostFoundDetail.data.item.id).toBe(lostFound.data[0].id)
 
     const secret = await request('/api/secret/info/start/0/size/10', { token })
     expect(secret.data.length).toBeGreaterThan(0)
-    const secretDetail = await request(`/api/secret/id/${secret.data[0].id}`, { token })
+    const secretDetail = await request(`/api/secret/${secret.data[0].id}`, { token })
     expect(secretDetail.data.id).toBe(secret.data[0].id)
-    const secretComments = await request(`/api/secret/id/${secret.data[0].id}/comments`, { token })
+    const secretComments = await request(`/api/secret/${secret.data[0].id}/comments`, { token })
     expect(Array.isArray(secretComments.data)).toBe(true)
 
     const dating = await request('/api/dating/profile/area/0/start/0', { token })
     expect(dating.data.length).toBeGreaterThan(0)
-    const datingDetail = await request(`/api/dating/profile/id/${dating.data[0].profileId}`, { token })
+    const datingDetail = await request(`/api/dating/profile/${dating.data[0].profileId}`, { token })
     expect(datingDetail.data.profile.profileId).toBe(dating.data[0].profileId)
     const datingMine = await request('/api/dating/profile/my', { token })
     expect(Array.isArray(datingMine.data)).toBe(true)
 
     const express = await request('/api/express/start/0/size/10', { token })
     expect(express.data.length).toBeGreaterThan(0)
-    const expressDetail = await request(`/api/express/id/${express.data[0].id}`, { token })
+    const expressDetail = await request(`/api/express/${express.data[0].id}`, { token })
     expect(expressDetail.data.id).toBe(express.data[0].id)
-    const expressComments = await request(`/api/express/id/${express.data[0].id}/comment`, { token })
+    const expressComments = await request(`/api/express/${express.data[0].id}/comment`, { token })
     expect(Array.isArray(expressComments.data)).toBe(true)
 
     const topic = await request('/api/topic/start/0/size/10', { token })
     expect(topic.data.length).toBeGreaterThan(0)
-    const topicDetail = await request(`/api/topic/id/${topic.data[0].id}`, { token })
+    const topicDetail = await request(`/api/topic/${topic.data[0].id}`, { token })
     expect(topicDetail.data.id).toBe(topic.data[0].id)
 
     const delivery = await request('/api/delivery/order/start/0/size/10', { token })
     expect(delivery.data.length).toBeGreaterThan(0)
-    const deliveryDetail = await request(`/api/delivery/order/id/${delivery.data[0].orderId}`, { token })
+    const deliveryDetail = await request(`/api/delivery/order/${delivery.data[0].orderId}`, { token })
     expect(deliveryDetail.data.order.orderId).toBe(delivery.data[0].orderId)
     const deliveryMine = await request('/api/delivery/mine', { token })
     expect(deliveryMine.data).toHaveProperty('published')
@@ -332,9 +332,9 @@ describe('mock smoke', () => {
 
     const photographs = await request('/api/photograph/type/0/start/0/size/10', { token })
     expect(photographs.data.length).toBeGreaterThan(0)
-    const photographDetail = await request(`/api/photograph/id/${photographs.data[0].id}`, { token })
+    const photographDetail = await request(`/api/photograph/${photographs.data[0].id}`, { token })
     expect(photographDetail.data.id).toBe(photographs.data[0].id)
-    const photographComments = await request(`/api/photograph/id/${photographs.data[0].id}/comment`, { token })
+    const photographComments = await request(`/api/photograph/${photographs.data[0].id}/comment`, { token })
     expect(Array.isArray(photographComments.data)).toBe(true)
   })
 })
@@ -344,8 +344,8 @@ it('persists announcement reads and keeps message categories disjoint', async ()
  const initial = (await request('/api/information/announcement/unread', { token })).data
  const notices = (await request('/api/information/announcement/start/0/size/3', { token })).data
  const id = notices[0].id
- await request(`/api/information/announcement/id/${id}/read`, { token, method: 'POST' })
- await request(`/api/information/announcement/id/${id}/read`, { token, method: 'POST' })
+ await request(`/api/information/announcement/${id}/read`, { token, method: 'POST' })
+ await request(`/api/information/announcement/${id}/read`, { token, method: 'POST' })
  expect((await request('/api/information/announcement/unread', { token })).data).toBe(initial - 1)
  const categories = (await request('/api/information/message/categories/unread', { token })).data
  const legacy = (await request('/api/information/message/unread', { token })).data

@@ -131,7 +131,7 @@ class MarketplaceContractTest {
 
         when(marketplaceService.queryDetailById(1)).thenReturn(vo);
 
-        mockMvc.perform(get("/api/marketplace/item/id/1"))
+        mockMvc.perform(get("/api/marketplace/item/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.item.id").value(1))
@@ -144,7 +144,7 @@ class MarketplaceContractTest {
     void previewEndpointReturnsSingleUrl() throws Exception {
         when(marketplaceService.getItemPictureURL(1)).thenReturn(List.of("https://example.com/pic1.jpg"));
 
-        mockMvc.perform(get("/api/marketplace/item/id/1/preview"))
+        mockMvc.perform(get("/api/marketplace/item/1/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data").value("https://example.com/pic1.jpg"));
@@ -154,14 +154,14 @@ class MarketplaceContractTest {
     void previewEndpointReturnsFailureWhenNoPictures() throws Exception {
         when(marketplaceService.getItemPictureURL(99)).thenReturn(List.of());
 
-        mockMvc.perform(get("/api/marketplace/item/id/99/preview"))
+        mockMvc.perform(get("/api/marketplace/item/99/preview"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
     }
 
     @Test
     void stateEndpointUpdatesValidState() throws Exception {
-        mockMvc.perform(post("/api/marketplace/item/state/id/101")
+        mockMvc.perform(post("/api/marketplace/item/state/101")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "2"))
                 .andExpect(status().isOk())
@@ -172,7 +172,7 @@ class MarketplaceContractTest {
 
     @Test
     void stateEndpointRejectsInvalidStateBeforeService() throws Exception {
-        mockMvc.perform(post("/api/marketplace/item/state/id/101")
+        mockMvc.perform(post("/api/marketplace/item/state/101")
                         .requestAttr("sessionId", "test-session")
                         .param("state", "3"))
                 .andExpect(status().isOk())

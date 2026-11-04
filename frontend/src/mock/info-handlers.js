@@ -14,7 +14,7 @@ export function handleNews(path, utils) {
 }
 
 export function handleNewsDetail(path, utils) {
-  const matched = /^\/api\/information\/news\/id\/(.+)$/.exec(path)
+  const matched = /^\/api\/information\/news\/(.+)$/.exec(path)
   if (!matched) {
     return utils.rejectWithMessage('未匹配到新闻详情接口')
   }

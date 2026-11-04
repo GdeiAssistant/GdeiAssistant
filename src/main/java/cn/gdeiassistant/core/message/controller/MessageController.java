@@ -48,7 +48,7 @@ public class MessageController {
         return new DataJsonResult<>(true, messageService.queryInteractionUnreadCount(sessionId));
     }
 
-    @RequestMapping(value = {"/{id}/read", "/id/{id}/read"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/{id}/read"}, method = RequestMethod.POST)
     public JsonResult readInteractionMessage(HttpServletRequest request, @PathVariable("id") String id) {
         String sessionId = (String) request.getAttribute("sessionId");
         messageService.markInteractionMessageRead(sessionId, id);

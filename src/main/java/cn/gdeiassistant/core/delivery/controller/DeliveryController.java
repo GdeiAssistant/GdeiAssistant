@@ -36,9 +36,9 @@ public class DeliveryController {
     }
 
     /**
-     * 订单详情（含 detailType；已接单时含 trade）。GET /api/delivery/order/id/{id}
+     * 订单详情（含 detailType；已接单时含 trade）。GET /api/delivery/order/{id}
      */
-    @RequestMapping(value = {"/api/delivery/order/{id}", "/api/delivery/order/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/delivery/order/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<DeliveryDetailResponse> getDeliveryOrderDetail(HttpServletRequest request, @PathVariable("id") @Min(1) Integer id) throws DataNotExistException {
         id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -111,7 +111,7 @@ public class DeliveryController {
      * @throws DataNotExistException
      * @throws DeliveryOrderStateUpdatedException
      */
-    @RequestMapping(value = {"/api/delivery/order/{id}", "/api/delivery/order/id/{id}"}, method = RequestMethod.DELETE)
+    @RequestMapping(value = {"/api/delivery/order/{id}"}, method = RequestMethod.DELETE)
     public JsonResult deleteOrder(HttpServletRequest request, @PathVariable("id") @Min(1) Integer orderId) throws NoAccessUpdatingException, DataNotExistException, DeliveryOrderStateUpdatedException {
         orderId = requirePositiveId(orderId);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -128,7 +128,7 @@ public class DeliveryController {
      * @throws DataNotExistException
      * @throws NoAccessUpdatingException
      */
-    @RequestMapping(value = {"/api/delivery/trade/{id}/finishtrade", "/api/delivery/trade/id/{id}/finishtrade"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/delivery/trade/{id}/finishtrade"}, method = RequestMethod.POST)
     public JsonResult finishTrade(HttpServletRequest request, @PathVariable("id") @Min(1) Integer tradeId) throws DataNotExistException, NoAccessUpdatingException {
         tradeId = requirePositiveId(tradeId);
         String sessionId = (String) request.getAttribute("sessionId");

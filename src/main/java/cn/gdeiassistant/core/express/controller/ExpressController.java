@@ -43,7 +43,7 @@ public class ExpressController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = {"/api/express/{id}", "/api/express/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/express/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<ExpressVO> getExpressDetail(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         String sessionId = (String) request.getAttribute("sessionId");
         ExpressVO vo = expressService.queryExpressById(id, sessionId);
@@ -77,7 +77,7 @@ public class ExpressController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/express/{id}/comment", "/api/express/id/{id}/comment"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/express/{id}/comment"}, method = RequestMethod.GET)
     public DataJsonResult<List<ExpressCommentVO>> queryExpressComment(@PathVariable("id") Integer id) {
         List<ExpressCommentVO> list = expressService.queryExpressComment(id);
         return new DataJsonResult<>(true, list);
@@ -92,7 +92,7 @@ public class ExpressController {
      * @return
      * @throws DataNotExistException
      */
-    @RequestMapping(value = {"/api/express/{id}/comment", "/api/express/id/{id}/comment"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/express/{id}/comment"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult addExpressComment(HttpServletRequest request, @PathVariable("id") Integer id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws DataNotExistException {
@@ -101,7 +101,7 @@ public class ExpressController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/express/{id}/guess", "/api/express/id/{id}/guess"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/express/{id}/guess"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public DataJsonResult<Boolean> guessExpress(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 10) String name) throws DataNotExistException, NoRealNameException, CorrectRecordException {
@@ -110,7 +110,7 @@ public class ExpressController {
         return new DataJsonResult<>(true, result);
     }
 
-    @RequestMapping(value = {"/api/express/{id}/like", "/api/express/id/{id}/like"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/express/{id}/like"}, method = RequestMethod.POST)
     public JsonResult likeExpress(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         String sessionId = (String) request.getAttribute("sessionId");
         expressService.likeExpress(id, sessionId);

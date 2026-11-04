@@ -52,7 +52,7 @@ public class DatingController {
         return id;
     }
 
-    @RequestMapping(value = {"/api/dating/profile/{id}", "/api/dating/profile/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/dating/profile/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<Map<String, Object>> getRoommateProfileDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException {
         id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -89,7 +89,7 @@ public class DatingController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = {"/api/dating/profile/{id}/picture", "/api/dating/profile/id/{id}/picture"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/dating/profile/{id}/picture"}, method = RequestMethod.GET)
     public DataJsonResult<String> getRoommateProfilePicture(@PathVariable("id") Integer id) {
         id = requirePositiveId(id);
         String url = datingService.getRoommateProfilePictureURL(id);
@@ -129,7 +129,7 @@ public class DatingController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/dating/pick/{id}", "/api/dating/pick/id/{id}"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/dating/pick/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<DatingPickVO> getRoommatePickDetail(HttpServletRequest request, @PathVariable("id") Integer id) throws DataNotExistException, NoAccessException {
         id = requirePositiveId(id);
         datingService.verifyRoommatePickViewAccess((String) request.getAttribute("sessionId"), id);
@@ -137,7 +137,7 @@ public class DatingController {
         return new DataJsonResult<>(true, vo);
     }
 
-    @RequestMapping(value = {"/api/dating/pick/{id}", "/api/dating/pick/id/{id}"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/dating/pick/{id}"}, method = RequestMethod.POST)
     public JsonResult updateRoommatePickState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
         id = requirePositiveId(id);
         if (state == null || (!state.equals(-1) && !state.equals(1))) return failure(request, "请求参数不合法");
@@ -159,7 +159,7 @@ public class DatingController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = {"/api/dating/profile/{id}/state", "/api/dating/profile/id/{id}/state"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/dating/profile/{id}/state"}, method = RequestMethod.POST)
     public JsonResult updateMyRoommateProfileState(HttpServletRequest request, @PathVariable("id") Integer id, Integer state) throws DataNotExistException, NoAccessException {
         id = requirePositiveId(id);
         if (state == null || (!state.equals(0) && !state.equals(1))) return failure(request, "请求参数不合法");

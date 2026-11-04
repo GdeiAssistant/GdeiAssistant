@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.cardquery.controller;
 import cn.gdeiassistant.common.annotation.RestQueryLogPersistence;
 import cn.gdeiassistant.core.cardquery.pojo.CardQuery;
 import cn.gdeiassistant.core.cardquery.pojo.CardQueryResult;
+import cn.gdeiassistant.core.cardquery.pojo.dto.CardLostDTO;
 import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
@@ -12,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
-
-import java.util.Map;
 
 @RestController
 public class CardController {
@@ -42,8 +41,8 @@ public class CardController {
      */
     @PostMapping("/api/card/lost")
     public JsonResult cardLost(HttpServletRequest request,
-                               @Validated @RequestBody Map<String, String> body) throws Exception {
-        String cardPassword = body.get("cardPassword");
+                               @Validated @RequestBody CardLostDTO body) throws Exception {
+        String cardPassword = body == null ? null : body.getCardPassword();
         if (cardPassword == null || !cardPassword.matches("^[0-9]*$")) {
             throw new IllegalArgumentException("cardPassword must be numeric");
         }

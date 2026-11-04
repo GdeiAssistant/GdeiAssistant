@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.cardquery.controller;
 
 import cn.gdeiassistant.common.pojo.result.JsonResult;
+import cn.gdeiassistant.core.cardquery.pojo.dto.CardLostDTO;
 import cn.gdeiassistant.core.cardquery.service.CardQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
-
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
@@ -34,7 +33,7 @@ class CardControllerTest {
 
     @Test
     void shouldAcceptCardPasswordInRequestBody() throws Exception {
-        Map<String, String> body = Map.of("cardPassword", "123456");
+        CardLostDTO body = body("123456");
 
         JsonResult result = controller.cardLost(request, body);
 
@@ -44,14 +43,14 @@ class CardControllerTest {
 
     @Test
     void shouldRejectNullCardPassword() {
-        Map<String, String> body = Map.of();
+        CardLostDTO body = body(null);
 
         assertThrows(IllegalArgumentException.class, () -> controller.cardLost(request, body));
     }
 
     @Test
     void shouldRejectNonNumericCardPassword() {
-        Map<String, String> body = Map.of("cardPassword", "abc123");
+        CardLostDTO body = body("abc123");
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
                 () -> controller.cardLost(request, body));
@@ -61,7 +60,7 @@ class CardControllerTest {
     @Test
     void shouldAcceptEmptyNumericPassword() throws Exception {
         // 空字符串匹配 ^[0-9]*$（* 允许零次匹配）
-        Map<String, String> body = Map.of("cardPassword", "");
+        CardLostDTO body = body("");
 
         JsonResult result = controller.cardLost(request, body);
 
@@ -71,7 +70,7 @@ class CardControllerTest {
 
     @Test
     void shouldAcceptAllDigitsPassword() throws Exception {
-        Map<String, String> body = Map.of("cardPassword", "000000");
+        CardLostDTO body = body("000000");
 
         JsonResult result = controller.cardLost(request, body);
 
@@ -81,8 +80,14 @@ class CardControllerTest {
 
     @Test
     void shouldRejectPasswordWithSpecialChars() {
-        Map<String, String> body = Map.of("cardPassword", "123!@#");
+        CardLostDTO body = body("123!@#");
 
         assertThrows(IllegalArgumentException.class, () -> controller.cardLost(request, body));
+    }
+
+    private CardLostDTO body(String password) {
+        CardLostDTO body = new CardLostDTO();
+        body.setCardPassword(password);
+        return body;
     }
 }

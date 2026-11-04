@@ -93,13 +93,13 @@ public class LostAndFoundController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = "/api/lostandfound/item/id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/lostandfound/item/{id}", "/api/lostandfound/item/id/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<LostAndFoundDetailVO> getLostAndFoundItemDetail(@PathVariable("id") int id) throws Exception {
         LostAndFoundDetailVO info = lostAndFoundService.queryLostAndFoundInfoByID(id);
         return new DataJsonResult<>(true, info);
     }
 
-    @RequestMapping(value = "/api/lostandfound/item/id/{id}/preview", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/lostandfound/item/{id}/preview", "/api/lostandfound/item/id/{id}/preview"}, method = RequestMethod.GET)
     public DataJsonResult<String> getLostAndFoundItemPreviewImage(HttpServletRequest request, @PathVariable("id") int id) {
         List<String> list = lostAndFoundService.getLostAndFoundItemPictureURL(id);
         if (list != null && !list.isEmpty()) {
@@ -119,7 +119,7 @@ public class LostAndFoundController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = "/api/lostandfound/item/id/{id}/didfound", method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/lostandfound/item/{id}/didfound", "/api/lostandfound/item/id/{id}/didfound"}, method = RequestMethod.POST)
     public JsonResult didFoundItem(HttpServletRequest request, @PathVariable("id") Integer id) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         lostAndFoundService.verifyLostAndFoundInfoEditAccess(sessionId, id);
@@ -127,7 +127,7 @@ public class LostAndFoundController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/lostandfound/item/id/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/lostandfound/item/{id}", "/api/lostandfound/item/id/{id}"}, method = RequestMethod.POST)
     @RecordIPAddress(type = IPAddressEnum.POST)
     public JsonResult updateLostAndFoundInfo(HttpServletRequest request, @PathVariable("id") Integer id,
             @Validated LostAndFoundPublishDTO dto) throws Exception {

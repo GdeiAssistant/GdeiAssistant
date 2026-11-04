@@ -55,7 +55,7 @@ public class TopicController {
         return new DataJsonResult<>(true, list);
     }
 
-    @RequestMapping(value = "/api/topic/id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/topic/{id}", "/api/topic/id/{id}"}, method = RequestMethod.GET)
     public DataJsonResult<TopicVO> getTopicDetail(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -115,7 +115,7 @@ public class TopicController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/topic/id/{id}/like", method = RequestMethod.POST)
+    @RequestMapping(value = {"/api/topic/{id}/like", "/api/topic/id/{id}/like"}, method = RequestMethod.POST)
     public JsonResult likeTopic(HttpServletRequest request, @PathVariable("id") int id) throws DataNotExistException {
         id = requirePositiveId(id);
         String sessionId = (String) request.getAttribute("sessionId");
@@ -123,7 +123,7 @@ public class TopicController {
         return new JsonResult(true);
     }
 
-    @RequestMapping(value = "/api/topic/id/{id}/index/{index}/image", method = RequestMethod.GET)
+    @RequestMapping(value = {"/api/topic/{id}/index/{index}/image", "/api/topic/id/{id}/index/{index}/image"}, method = RequestMethod.GET)
     public DataJsonResult<String> getTopicImage(HttpServletRequest request, @PathVariable("id") int id, @PathVariable("index") int index) {
         id = requirePositiveId(id);
         index = requireImageIndex(index);

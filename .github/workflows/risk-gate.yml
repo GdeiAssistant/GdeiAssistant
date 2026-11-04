@@ -147,7 +147,7 @@ jobs:
               // Every remaining edit can change what CI verifies: a removed
               // assertion, an added `if: false`, a `continue-on-error`. Even a
               // `#` line is not provably inert, because inside a `run:` block it
-              // is shell text that GitHub still expands `${{ }}` into before
+              // is shell text that GitHub still expands expressions in before
               // Bash sees it, and a comment after a backslash continuation cuts
               // the command short. A workflow that publishes a required status
               // is exactly where guessing is most expensive, so this tier needs
@@ -266,7 +266,12 @@ jobs:
               // overwrite the other, so no status is proof while that is true.
               const siblings = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
               if (siblings.some(item => item.number !== number && item.head?.sha === sha)) {
-                throw new Error('Another open pull request shares this head; statuses would collide');
+                // The description is the marker the synchronize refresh below
+                // looks for, so the collision must be named, not folded into
+                // the generic failure text.
+                const collision = new Error('Another open pull request shares this head; statuses would collide');
+                collision.code = 'SHARED_HEAD';
+                throw collision;
               }
               // Dependabot bodies use their own template; the risk-gate path check still applies below.
               // The exemption follows the head commit, not the PR author: a human
@@ -343,15 +348,40 @@ jobs:
               return gateState !== 'failure' && templateOK;
               } catch (error) {
                 if (sha) {
-                  await status('risk-gate', 'error', 'Evaluation failed; inspect the trusted workflow run');
-                  await status('pr-template', 'error', 'Evaluation failed; inspect the trusted workflow run');
-                  await status('ai-review', 'error', 'Evaluation failed; inspect the trusted workflow run');
+                  const detail = error?.code === 'SHARED_HEAD'
+                    ? 'Another open pull request shares this head; statuses would collide'
+                    : 'Evaluation failed; inspect the trusted workflow run';
+                  await status('risk-gate', 'error', detail);
+                  await status('pr-template', 'error', detail);
+                  await status('ai-review', 'error', detail);
                 }
                 throw error;
               }
             }
+              // A synchronize moves one pull request off a shared head. The other
+              // pull request that shared it still carries the collision error and
+              // would otherwise keep it until its own event or the sweep, so
+              // re-dispatch only the siblings still showing that verdict. Other
+              // errors are not collateral: an evaluation that failed for its own
+              // reasons must not be re-run by an unrelated push.
+              async function refreshCollidedSiblings() {
+                if (eventName !== 'pull_request_target' || context.payload.action !== 'synchronize') return;
+                const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+                for (const item of open) {
+                  if (item.number === number) continue;
+                  const { data: combined } = await github.rest.repos.getCombinedStatusForRef({ ...repo, ref: item.head.sha });
+                  const gate = (combined.statuses || []).find(entry => entry.context === 'risk-gate');
+                  if (gate?.state === 'error' && /shares this head/.test(gate.description || '')) {
+                    await github.rest.actions.createWorkflowDispatch({
+                      ...repo, workflow_id: 'risk-gate.yml', ref: context.payload.repository.default_branch,
+                      inputs: { pr_number: String(item.number) },
+                    });
+                  }
+                }
+              }
               if (single) {
                 const passed = await evaluate(number);
+                await refreshCollidedSiblings();
                 // A dispatched run only refreshes statuses after the base moved, and
                 // the verdict already lives on the PR's commit status. Failing the run
                 // here would paint every merge red for open PRs that are legitimately

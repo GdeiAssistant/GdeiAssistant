@@ -43,6 +43,7 @@ bind('issues.listEvents', async () => ({data: f.events || []}));
 bind('issues.listComments', async () => ({data: f.comments || []}));
 bind('repos.getBranch', async () => ({data: {commit: {sha: f.baseHead ?? (f.pr || {}).head?.sha}}}));
 bind('repos.compareCommits', async args => ({data: {merge_base_commit: {sha: f.mergeBase ?? args.base}}}));
+bind('repos.getCombinedStatusForRef', async () => ({data: {statuses: f.combined || []}}));
 bind('pulls.listCommits', async () => ({data: f.commits || []}));
 bind('repos.getContent', async () => {
   if (f.policyError) throw new Error('Synthetic policy read failure');
@@ -333,6 +334,32 @@ class ScriptTests(unittest.TestCase):
         dispatched = [a['inputs']['pr_number'] for n, a in result['calls']
                       if n == 'actions.createWorkflowDispatch']
         self.assertEqual(dispatched, ['4'])
+
+    def test_synchronize_reevaluates_a_sibling_left_with_the_collision_error(self):
+        # Moving one PR off a shared head resolves the collision for the other,
+        # but only the moved PR receives an event.
+        fixture = self.fixture()
+        fixture['action'] = 'synchronize'
+        fixture['open'] = [{'number': 7, 'head': {'sha': SHA}},
+                           {'number': 8, 'head': {'sha': OTHER}}]
+        fixture['combined'] = [{'context': 'risk-gate', 'state': 'error',
+                                'description': 'Another open pull request shares this head; statuses would collide'}]
+        result = self.run_script(fixture)
+        self.assertFalse(result.get('error'), result)
+        dispatched = [a['inputs']['pr_number'] for n, a in result['calls']
+                      if n == 'actions.createWorkflowDispatch']
+        self.assertEqual(dispatched, ['8'])
+
+    def test_synchronize_leaves_unrelated_errors_alone(self):
+        fixture = self.fixture()
+        fixture['action'] = 'synchronize'
+        fixture['open'] = [{'number': 7, 'head': {'sha': SHA}},
+                           {'number': 8, 'head': {'sha': OTHER}}]
+        fixture['combined'] = [{'context': 'risk-gate', 'state': 'error',
+                                'description': 'Evaluation failed; inspect the trusted workflow run'}]
+        result = self.run_script(fixture)
+        dispatched = [a for n, a in result['calls'] if n == 'actions.createWorkflowDispatch']
+        self.assertEqual(dispatched, [])
 
     def test_pr_mutation_during_evaluation_fails_closed(self):
         for change in ({'head': {'sha': OTHER}}, {'body': 'edited'}, {'labels': []}):

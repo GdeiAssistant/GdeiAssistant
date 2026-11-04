@@ -536,8 +536,8 @@ function handleSecondhand(path, method, data, token, utils) {
     }))
   }
 
-  if (/^\/api\/marketplace\/item\/id\/\d+$/.test(path) && method === 'GET') {
-    const matched = /^\/api\/marketplace\/item\/id\/(\d+)$/.exec(path)
+  if (/^\/api\/marketplace\/item\/\d+$/.test(path) && method === 'GET') {
+    const matched = /^\/api\/marketplace\/item\/(\d+)$/.exec(path)
     const item = findById(communityState.items, 'id', matched[1])
     if (!item) {
       return utils.rejectWithMessage('商品不存在')
@@ -574,8 +574,8 @@ function handleSecondhand(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/marketplace\/item\/id\/\d+$/.test(path) && method === 'POST') {
-    const matched = /^\/api\/marketplace\/item\/id\/(\d+)$/.exec(path)
+  if (/^\/api\/marketplace\/item\/\d+$/.test(path) && method === 'POST') {
+    const matched = /^\/api\/marketplace\/item\/(\d+)$/.exec(path)
     const item = findById(communityState.items, 'id', matched[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限编辑该商品')
@@ -600,8 +600,8 @@ function handleSecondhand(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/marketplace\/item\/state\/id\/\d+$/.test(path) && method === 'POST') {
-    const matched = /^\/api\/marketplace\/item\/state\/id\/(\d+)$/.exec(path)
+  if (/^\/api\/marketplace\/item\/state\/\d+$/.test(path) && method === 'POST') {
+    const matched = /^\/api\/marketplace\/item\/state\/(\d+)$/.exec(path)
     const item = findById(communityState.items, 'id', matched[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限操作该商品')
@@ -666,8 +666,8 @@ function handleLostAndFound(path, method, data, token, utils) {
     }))
   }
 
-  if (/^\/api\/lostandfound\/item\/id\/\d+$/.test(path) && method === 'GET') {
-    const item = findById(communityState.lostAndFoundItems, 'id', /^\/api\/lostandfound\/item\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/lostandfound\/item\/\d+$/.test(path) && method === 'GET') {
+    const item = findById(communityState.lostAndFoundItems, 'id', /^\/api\/lostandfound\/item\/(\d+)$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('信息不存在')
     }
@@ -701,8 +701,8 @@ function handleLostAndFound(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/lostandfound\/item\/id\/\d+$/.test(path) && method === 'POST') {
-    const matched = /^\/api\/lostandfound\/item\/id\/(\d+)$/.exec(path)
+  if (/^\/api\/lostandfound\/item\/\d+$/.test(path) && method === 'POST') {
+    const matched = /^\/api\/lostandfound\/item\/(\d+)$/.exec(path)
     const item = findById(communityState.lostAndFoundItems, 'id', matched[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限编辑该信息')
@@ -728,8 +728,8 @@ function handleLostAndFound(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/lostandfound\/item\/id\/\d+\/didfound$/.test(path) && method === 'POST') {
-    const item = findById(communityState.lostAndFoundItems, 'id', /^\/api\/lostandfound\/item\/id\/(\d+)\/didfound$/.exec(path)[1])
+  if (/^\/api\/lostandfound\/item\/\d+\/didfound$/.test(path) && method === 'POST') {
+    const item = findById(communityState.lostAndFoundItems, 'id', /^\/api\/lostandfound\/item\/(\d+)\/didfound$/.exec(path)[1])
     if (!item || item.owner !== username) {
       return utils.rejectWithMessage('没有权限操作该信息')
     }
@@ -776,8 +776,8 @@ function handleSecret(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/secret\/id\/\d+$/.test(path) && method === 'GET') {
-    const secretId = /^\/api\/secret\/id\/(\d+)$/.exec(path)[1]
+  if (/^\/api\/secret\/\d+$/.test(path) && method === 'GET') {
+    const secretId = /^\/api\/secret\/(\d+)$/.exec(path)[1]
     const item = findById(communityState.secrets, 'id', secretId)
     if (!item) {
       return utils.rejectWithMessage('树洞不存在')
@@ -785,13 +785,13 @@ function handleSecret(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(buildSecretPayload(item, username, communityState.secretComments[item.id] || [])))
   }
 
-  if (/^\/api\/secret\/id\/\d+\/comments$/.test(path) && method === 'GET') {
-    const secretId = Number(/^\/api\/secret\/id\/(\d+)\/comments$/.exec(path)[1])
+  if (/^\/api\/secret\/\d+\/comments$/.test(path) && method === 'GET') {
+    const secretId = Number(/^\/api\/secret\/(\d+)\/comments$/.exec(path)[1])
     return utils.resolveWithDelay(utils.buildSuccess((communityState.secretComments[secretId] || []).slice()))
   }
 
-  if (/^\/api\/secret\/id\/\d+\/comment$/.test(path) && method === 'POST') {
-    const secretId = Number(/^\/api\/secret\/id\/(\d+)\/comment$/.exec(path)[1])
+  if (/^\/api\/secret\/\d+\/comment$/.test(path) && method === 'POST') {
+    const secretId = Number(/^\/api\/secret\/(\d+)\/comment$/.exec(path)[1])
     const item = findById(communityState.secrets, 'id', secretId)
     if (!item) {
       return utils.rejectWithMessage('树洞不存在')
@@ -807,8 +807,8 @@ function handleSecret(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/secret\/id\/\d+\/like$/.test(path) && method === 'POST') {
-    const secretId = Number(/^\/api\/secret\/id\/(\d+)\/like$/.exec(path)[1])
+  if (/^\/api\/secret\/\d+\/like$/.test(path) && method === 'POST') {
+    const secretId = Number(/^\/api\/secret\/(\d+)\/like$/.exec(path)[1])
     const item = findById(communityState.secrets, 'id', secretId)
     if (!item) {
       return utils.rejectWithMessage('树洞不存在')
@@ -907,21 +907,21 @@ function handleExpress(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/express\/id\/\d+$/.test(path) && method === 'GET') {
-    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/express\/\d+$/.test(path) && method === 'GET') {
+    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/(\d+)$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('表白信息不存在')
     }
     return utils.resolveWithDelay(utils.buildSuccess(buildExpressPayload(item, username, communityState.expressComments[item.id] || [])))
   }
 
-  if (/^\/api\/express\/id\/\d+\/comment$/.test(path) && method === 'GET') {
-    const expressId = Number(/^\/api\/express\/id\/(\d+)\/comment$/.exec(path)[1])
+  if (/^\/api\/express\/\d+\/comment$/.test(path) && method === 'GET') {
+    const expressId = Number(/^\/api\/express\/(\d+)\/comment$/.exec(path)[1])
     return utils.resolveWithDelay(utils.buildSuccess((communityState.expressComments[expressId] || []).slice()))
   }
 
-  if (/^\/api\/express\/id\/\d+\/comment$/.test(path) && method === 'POST') {
-    const expressId = Number(/^\/api\/express\/id\/(\d+)\/comment$/.exec(path)[1])
+  if (/^\/api\/express\/\d+\/comment$/.test(path) && method === 'POST') {
+    const expressId = Number(/^\/api\/express\/(\d+)\/comment$/.exec(path)[1])
     const item = findById(communityState.expressItems, 'id', expressId)
     const comment = String(data.comment || '').trim()
     if (!item || !comment) {
@@ -934,8 +934,8 @@ function handleExpress(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/express\/id\/\d+\/like$/.test(path) && method === 'POST') {
-    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/id\/(\d+)\/like$/.exec(path)[1])
+  if (/^\/api\/express\/\d+\/like$/.test(path) && method === 'POST') {
+    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/(\d+)\/like$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('表白信息不存在')
     }
@@ -947,8 +947,8 @@ function handleExpress(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/express\/id\/\d+\/guess$/.test(path) && method === 'POST') {
-    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/id\/(\d+)\/guess$/.exec(path)[1])
+  if (/^\/api\/express\/\d+\/guess$/.test(path) && method === 'POST') {
+    const item = findById(communityState.expressItems, 'id', /^\/api\/express\/(\d+)\/guess$/.exec(path)[1])
     const guessedName = String(data.name || '').trim().toLowerCase()
     if (!item || !item.realname) {
       return utils.rejectWithMessage('该表白不支持猜名字')
@@ -1037,16 +1037,16 @@ function handleTopic(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/topic\/id\/\d+$/.test(path) && method === 'GET') {
-    const item = findById(communityState.topics, 'id', /^\/api\/topic\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/topic\/\d+$/.test(path) && method === 'GET') {
+    const item = findById(communityState.topics, 'id', /^\/api\/topic\/(\d+)$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('话题不存在')
     }
     return utils.resolveWithDelay(utils.buildSuccess(buildTopicPayload(item, username)))
   }
 
-  if (/^\/api\/topic\/id\/\d+\/like$/.test(path) && method === 'POST') {
-    const item = findById(communityState.topics, 'id', /^\/api\/topic\/id\/(\d+)\/like$/.exec(path)[1])
+  if (/^\/api\/topic\/\d+\/like$/.test(path) && method === 'POST') {
+    const item = findById(communityState.topics, 'id', /^\/api\/topic\/(\d+)\/like$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('话题不存在')
     }
@@ -1101,8 +1101,8 @@ function handleDelivery(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(communityState.deliveryOrders.filter((order) => order.state === 0).slice(start, start + size).map((order) => deliveryResponse(order, false))))
   }
 
-  if (/^\/api\/delivery\/order\/id\/\d+$/.test(path) && method === 'GET') {
-    const order = findById(communityState.deliveryOrders, 'orderId', /^\/api\/delivery\/order\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/delivery\/order\/\d+$/.test(path) && method === 'GET') {
+    const order = findById(communityState.deliveryOrders, 'orderId', /^\/api\/delivery\/order\/(\d+)$/.exec(path)[1])
     if (!order) {
       return utils.rejectWithMessage('订单不存在')
     }
@@ -1147,8 +1147,8 @@ function handleDelivery(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/delivery\/trade\/id\/\d+\/finishtrade$/.test(path) && method === 'POST') {
-    const tradeId = Number(/^\/api\/delivery\/trade\/id\/(\d+)\/finishtrade$/.exec(path)[1])
+  if (/^\/api\/delivery\/trade\/\d+\/finishtrade$/.test(path) && method === 'POST') {
+    const tradeId = Number(/^\/api\/delivery\/trade\/(\d+)\/finishtrade$/.exec(path)[1])
     const order = communityState.deliveryOrders.filter(function(item) {
       return Number(item.tradeId) === tradeId
     })[0]
@@ -1213,8 +1213,8 @@ function handleDating(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/dating\/profile\/id\/\d+$/.test(path) && method === 'GET') {
-    const profile = findById(communityState.datingProfiles, 'profileId', /^\/api\/dating\/profile\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/dating\/profile\/\d+$/.test(path) && method === 'GET') {
+    const profile = findById(communityState.datingProfiles, 'profileId', /^\/api\/dating\/profile\/(\d+)$/.exec(path)[1])
     if (!profile) {
       return utils.rejectWithMessage('信息不存在')
     }
@@ -1303,8 +1303,8 @@ function handleDating(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/dating\/pick\/id\/\d+$/.test(path) && method === 'POST') {
-    const pick = findById(communityState.datingPicks, 'pickId', /^\/api\/dating\/pick\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/dating\/pick\/\d+$/.test(path) && method === 'POST') {
+    const pick = findById(communityState.datingPicks, 'pickId', /^\/api\/dating\/pick\/(\d+)$/.exec(path)[1])
     if (!pick) {
       return utils.rejectWithMessage('请求不存在')
     }
@@ -1317,8 +1317,8 @@ function handleDating(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/dating\/profile\/id\/\d+\/state$/.test(path) && method === 'POST') {
-    const profile = findById(communityState.datingProfiles, 'profileId', /^\/api\/dating\/profile\/id\/(\d+)\/state$/.exec(path)[1])
+  if (/^\/api\/dating\/profile\/\d+\/state$/.test(path) && method === 'POST') {
+    const profile = findById(communityState.datingProfiles, 'profileId', /^\/api\/dating\/profile\/(\d+)\/state$/.exec(path)[1])
     if (!profile || profile.owner !== username) {
       return utils.rejectWithMessage('没有权限操作该信息')
     }
@@ -1372,21 +1372,21 @@ function handlePhotograph(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(list))
   }
 
-  if (/^\/api\/photograph\/id\/\d+$/.test(path) && method === 'GET') {
-    const item = findById(communityState.photographs, 'id', /^\/api\/photograph\/id\/(\d+)$/.exec(path)[1])
+  if (/^\/api\/photograph\/\d+$/.test(path) && method === 'GET') {
+    const item = findById(communityState.photographs, 'id', /^\/api\/photograph\/(\d+)$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('作品不存在')
     }
     return utils.resolveWithDelay(utils.buildSuccess(buildPhotographPayload(item, username, communityState.photographComments[item.id] || [])))
   }
 
-  if (/^\/api\/photograph\/id\/\d+\/comment$/.test(path) && method === 'GET') {
-    const photoId = Number(/^\/api\/photograph\/id\/(\d+)\/comment$/.exec(path)[1])
+  if (/^\/api\/photograph\/\d+\/comment$/.test(path) && method === 'GET') {
+    const photoId = Number(/^\/api\/photograph\/(\d+)\/comment$/.exec(path)[1])
     return utils.resolveWithDelay(utils.buildSuccess((communityState.photographComments[photoId] || []).slice()))
   }
 
-  if (/^\/api\/photograph\/id\/\d+\/comment$/.test(path) && method === 'POST') {
-    const photoId = Number(/^\/api\/photograph\/id\/(\d+)\/comment$/.exec(path)[1])
+  if (/^\/api\/photograph\/\d+\/comment$/.test(path) && method === 'POST') {
+    const photoId = Number(/^\/api\/photograph\/(\d+)\/comment$/.exec(path)[1])
     const item = findById(communityState.photographs, 'id', photoId)
     const comment = String(data.comment || '').trim()
     if (!item || !comment) {
@@ -1434,8 +1434,8 @@ function handlePhotograph(path, method, data, token, utils) {
     return utils.resolveWithDelay(utils.buildSuccess(null))
   }
 
-  if (/^\/api\/photograph\/id\/\d+\/like$/.test(path) && method === 'POST') {
-    const item = findById(communityState.photographs, 'id', /^\/api\/photograph\/id\/(\d+)\/like$/.exec(path)[1])
+  if (/^\/api\/photograph\/\d+\/like$/.test(path) && method === 'POST') {
+    const item = findById(communityState.photographs, 'id', /^\/api\/photograph\/(\d+)\/like$/.exec(path)[1])
     if (!item) {
       return utils.rejectWithMessage('作品不存在')
     }

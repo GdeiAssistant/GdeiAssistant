@@ -237,7 +237,7 @@ export function handleRequest(options) {
   // --- Profile ---
   if (path === '/api/profile' && (method === 'POST' || method === 'PATCH')) return profileHandlers.handleProfilePatch(token, payload, localizedUtils)
   if (path === '/api/information/message/categories/unread' && method === 'GET' || /^\/api\/information\/message\/(community|service)\/start\/\d+\/size\/\d+$/.test(path) && method === 'GET' || /^\/api\/information\/message\/(community|service)\/readall$/.test(path) && method === 'POST') return messageHandlers.handleCategories(token, path, method, localizedUtils)
-  if (path === '/api/information/announcement/unread' && method === 'GET' || /^\/api\/information\/announcement\/id\/[^/]+\/read$/.test(path) && method === 'POST') return messageHandlers.handleAnnouncementRead(token, path, method, localizedUtils)
+  if (path === '/api/information/announcement/unread' && method === 'GET' || /^\/api\/information\/announcement\/[^/]+\/read$/.test(path) && method === 'POST') return messageHandlers.handleAnnouncementRead(token, path, method, localizedUtils)
 
   if (path === '/api/profile/avatar' && method === 'GET') {
     return profileHandlers.handleAvatar(token, localizedUtils)
@@ -399,7 +399,7 @@ export function handleRequest(options) {
     return infoHandlers.handleNews(path, localizedUtils)
   }
 
-  if (/^\/api\/information\/news\/id\/.+$/.test(path) && method === 'GET') {
+  if (/^\/api\/information\/news\/.+$/.test(path) && method === 'GET') {
     return infoHandlers.handleNewsDetail(path, localizedUtils)
   }
 
@@ -420,7 +420,7 @@ export function handleRequest(options) {
     return messageHandlers.handleAnnouncementList(token, path, localizedUtils)
   }
 
-  if (/^\/api\/information\/announcement\/id\/.+$/.test(path) && method === 'GET') {
+  if (/^\/api\/information\/announcement\/.+$/.test(path) && method === 'GET') {
     return messageHandlers.handleAnnouncementDetail(token, path, localizedUtils)
   }
 
@@ -432,7 +432,7 @@ export function handleRequest(options) {
     return messageHandlers.handleUnreadCount(token, localizedUtils)
   }
 
-  if (/^\/api\/information\/message\/id\/.+\/read$/.test(path) && method === 'POST') {
+  if (/^\/api\/information\/message\/.+\/read$/.test(path) && method === 'POST') {
     return messageHandlers.handleMessageRead(token, path, localizedUtils)
   }
 

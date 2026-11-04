@@ -18,7 +18,7 @@ export function handleAnnouncementDetail(token, path, utils) {
     return authError
   }
 
-  const matched = /^\/api\/information\/announcement\/id\/(.+)$/.exec(path)
+  const matched = /^\/api\/information\/announcement\/(.+)$/.exec(path)
   const targetId = matched ? matched[1] : ''
   const detail = data.ANNOUNCEMENT_LIST.filter(function(item) {
     return item.id === targetId
@@ -63,7 +63,7 @@ export function handleMessageRead(token, path, utils) {
     return authError
   }
 
-  const messageId = /^\/api\/information\/message\/id\/(.+)\/read$/.exec(path)
+  const messageId = /^\/api\/information\/message\/(.+)\/read$/.exec(path)
   if (!messageId) {
     return utils.rejectWithMessage('消息不存在')
   }
@@ -120,7 +120,7 @@ export function handleAnnouncementRead(token, path, method, utils) {
   const read = state.announcementReadIds || []
   const announcements = data.ANNOUNCEMENT_LIST
   if (method === 'GET') return utils.resolveWithDelay(utils.buildSuccess(announcements.filter(item => !read.includes(String(item.id))).length))
-  const id = /announcement\/id\/([^/]+)\/read/.exec(path)[1]
+  const id = /announcement\/([^/]+)\/read/.exec(path)[1]
   if (!announcements.some(item => String(item.id) === id)) return utils.rejectWithMessage('公告不存在或已删除')
   state.announcementReadIds = Array.from(new Set(read.concat(id)))
   utils.writeState(state)

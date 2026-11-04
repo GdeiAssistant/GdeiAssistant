@@ -38,7 +38,7 @@ onMounted(async () => {
     const res = await getInformationAnnouncementById(route.params.id)
     if (res?.success && res.data) {
       item.value = res.data
-      const receipt = await request.post(`/information/announcement/id/${route.params.id}/read`)
+      const receipt = await request.post(`/information/announcement/${route.params.id}/read`)
       if (!receipt?.success) throw new Error()
       await refreshMessageUnread()
     }

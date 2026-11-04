@@ -305,7 +305,8 @@ jobs:
               const open = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
               for (const item of open) {
                 await github.rest.actions.createWorkflowDispatch({
-                  ...repo, workflow_id: 'risk-gate.yml', ref: 'main', inputs: { pr_number: String(item.number) },
+                  ...repo, workflow_id: 'risk-gate.yml', ref: context.payload.repository.default_branch,
+                  inputs: { pr_number: String(item.number) },
                 });
               }
               core.info(`Dispatched ${open.length} pull request evaluations after the base branch moved.`);

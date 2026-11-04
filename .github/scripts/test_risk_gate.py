@@ -246,6 +246,17 @@ class ScriptTests(unittest.TestCase):
                   'status': 'renamed', 'patch': '@@ -1 +1 @@\n-name: CI\n+name: CI'}]
         self.assert_blocked(self.fixture(labels=False, files=files))
 
+    def test_disabling_a_workflow_by_rename_is_high_risk(self):
+        files = [{'filename': '.github/workflows/ci.yml.disabled',
+                  'previous_filename': '.github/workflows/ci.yml',
+                  'status': 'renamed', 'patch': '@@ -1 +1 @@\n-name: CI\n+name: CI'}]
+        self.assert_blocked(self.fixture(labels=False, files=files))
+
+    def test_dependency_policy_scripts_are_high_risk(self):
+        for name in '.github/scripts/dependabot-policy.cjs', '.github/scripts/dependabot-policy.json':
+            with self.subTest(name=name):
+                self.assert_blocked(self.fixture(labels=False, files=[{'filename': name, 'status': 'modified'}]))
+
     def test_runtime_configuration_is_high_risk(self):
         self.assert_blocked(self.fixture(labels=False,
                                          files=[{'filename': 'kuangmo_sms_cluster/config.py',
@@ -279,6 +290,11 @@ class ScriptTests(unittest.TestCase):
 
     def test_file_api_error_fails_closed(self):
         self.assert_blocked(self.fixture(errors=['pulls.listFiles']))
+
+    def test_shared_head_with_another_open_pr_fails_closed(self):
+        # Commit statuses are scoped to the SHA, so two PRs on one head would
+        # overwrite each other's verdicts.
+        self.assert_blocked(self.fixture(open=[{'number': 8, 'head': {'sha': SHA}}]))
 
     def test_pr_mutation_during_evaluation_fails_closed(self):
         for change in ({'head': {'sha': OTHER}}, {'body': 'edited'}, {'labels': []}):

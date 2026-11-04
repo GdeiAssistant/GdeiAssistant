@@ -107,6 +107,9 @@ jobs:
               if (/(^|\/)\.env(?:[./_-]|$)/.test(p)) return true;
               // Runtime configuration decides behaviour the diff does not show.
               if (/(^|[\/_.-])(config|configuration|settings)([\/_.-]|$)/.test(p)) return true;
+              // The dependency policy decides what merges unattended; the PR it
+              // judges must not be able to relax it.
+              if (/^\.github\/scripts\/dependabot-policy\.[^/]+$/.test(path)) return true;
               if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
@@ -124,10 +127,11 @@ jobs:
             async function workflowHighRisk(file, isDependabot, actionFiles) {
               // A rename must not slip a protected definition past the check.
               if (ALWAYS_RISK_WORKFLOWS.has(file.filename) || ALWAYS_RISK_WORKFLOWS.has(file.previous_filename)) return true;
-              // Moving a live workflow out of the directory disables the checks it
-              // published, whatever else the patch says.
-              if (file.previous_filename && isWorkflow(file.previous_filename)
-                  && !isWorkflow(file.filename)) return true;
+              // Renaming a workflow changes the file GitHub discovers, and moving
+              // it out of the directory disables the checks it published. A
+              // `.yml.disabled` suffix is still inside the directory but no
+              // longer a workflow, so any path change takes the protected tier.
+              if (file.previous_filename && file.previous_filename !== file.filename) return true;
               // Without a readable diff the change cannot be proven benign.
               if (typeof file.patch !== 'string') return true;
               const changed = file.patch.split('\n')
@@ -253,6 +257,13 @@ jobs:
               try {
                 const { data: pr } = await github.rest.pulls.get({ ...repo, pull_number: number });
               sha = pr.head.sha;
+              // Commit statuses are keyed by SHA, not by PR. A second open PR on
+              // the same head would share these contexts, and one verdict could
+              // overwrite the other, so no status is proof while that is true.
+              const siblings = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              if (siblings.some(item => item.number !== number && item.head?.sha === sha)) {
+                throw new Error('Another open pull request shares this head; statuses would collide');
+              }
               // Dependabot bodies use their own template; the risk-gate path check still applies below.
               // The exemption follows the head commit, not the PR author: a human
               // pushing onto a bot branch must not inherit the skip.

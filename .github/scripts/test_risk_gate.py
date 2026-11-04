@@ -275,6 +275,19 @@ class ScriptTests(unittest.TestCase):
             with self.subTest(name=name):
                 self.assert_blocked(self.fixture(labels=False, files=[{'filename': name, 'status': 'modified'}]))
 
+    def test_workflow_check_scripts_are_high_risk(self):
+        # A trusted workflow runs these to publish required checks, so editing
+        # one disables the check without changing a workflow file.
+        for name in '.github/scripts/check_workflows.py', 'scripts/check_hygiene.py':
+            with self.subTest(name=name):
+                self.assert_blocked(self.fixture(labels=False,
+                                                 files=[{'filename': name, 'status': 'modified'}]))
+
+    def test_script_that_is_not_a_check_stays_low_risk(self):
+        self.assert_passes(self.fixture(labels=False,
+                                        files=[{'filename': 'scripts/export_report.py',
+                                                'status': 'modified'}]))
+
     def test_runtime_configuration_is_high_risk(self):
         self.assert_blocked(self.fixture(labels=False,
                                          files=[{'filename': 'kuangmo_sms_cluster/config.py',

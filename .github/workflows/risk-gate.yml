@@ -107,8 +107,12 @@ jobs:
               // Runtime configuration decides behaviour the diff does not show.
               if (/(^|[\/_.-])(config|configuration|settings)([\/_.-]|$)/.test(p)) return true;
               // The dependency policy decides what merges unattended; the PR it
-              // judges must not be able to relax it.
-              if (/^\.github\/scripts\/dependabot-policy\.[^/]+$/.test(path)) return true;
+              // judges must not be able to relax it. The same applies to any
+              // other script a trusted workflow runs to publish a required
+              // check: editing the script disables the check without touching a
+              // workflow file, and a diff alone cannot show who calls it.
+              if (/^\.github\/scripts\//.test(path)) return true;
+              if (/^scripts\/[^/]*(?:check|verify|validate|hygiene|lint)[^/]*\.(?:py|sh|js|cjs|mjs|ts)$/.test(p)) return true;
               if (/(^|[\/_.-])(trad(?:e|es|ing)|execution|executors?|orders?|brokers?|risk|deploy(?:ment)?|secrets?|credentials?|iam|runtime|strateg(?:y|ies))([\/_.-]|$)/.test(p)) return true;
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);

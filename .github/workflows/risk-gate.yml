@@ -318,6 +318,17 @@ jobs:
               const review = isDependabot
                 ? { state: 'success', description: 'Automated dependency update: Codex review not required' }
                 : await aiReview(number, sha, await headContainsBase(pr.base.ref, sha));
+              // The opening snapshot cannot see a pull request that appeared on
+              // this head while the evaluation ran. Publishing a verdict now
+              // would overwrite the collision error that the newcomer is about
+              // to write, leaving two open PRs sharing a passing status, so the
+              // condition is rechecked immediately before any status is written.
+              const lateSiblings = await github.paginate(github.rest.pulls.list, { ...repo, state: 'open', per_page: 100 });
+              if (lateSiblings.some(item => item.number !== number && item.head?.sha === sha)) {
+                const collision = new Error('Another open pull request shares this head; statuses would collide');
+                collision.code = 'SHARED_HEAD';
+                throw collision;
+              }
               await status('ai-review', review.state, review.description);
               const tierOK = !risky || approval !== null;
               const tierNote = !risky ? 'Low-risk paths: no owner approval needed'

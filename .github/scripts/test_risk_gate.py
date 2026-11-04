@@ -38,7 +38,8 @@ bind('pulls.get', async () => {
   return {data: ++reads > 1 && f.current ? f.current : f.pr};
 });
 bind('pulls.listFiles', async () => ({data: f.files || []}));
-bind('pulls.list', async () => ({data: f.open || []}));
+let openCalls = 0;
+bind('pulls.list', async () => ({data: (++openCalls > 1 && f.openAfter) ? f.openAfter : (f.open || [])}));
 bind('issues.listEvents', async () => ({data: f.events || []}));
 bind('issues.listComments', async () => ({data: f.comments || []}));
 bind('repos.getBranch', async () => ({data: {commit: {sha: f.baseHead ?? (f.pr || {}).head?.sha}}}));
@@ -312,6 +313,15 @@ class ScriptTests(unittest.TestCase):
         # Commit statuses are scoped to the SHA, so two PRs on one head would
         # overwrite each other's verdicts.
         self.assert_blocked(self.fixture(open=[{'number': 8, 'head': {'sha': SHA}}]))
+
+    def test_sibling_opening_during_evaluation_fails_closed(self):
+        # The opening snapshot cannot see a PR that appears mid-run; a verdict
+        # written then would overwrite the collision error the newcomer writes.
+        fixture = self.fixture()
+        fixture['open'] = []
+        fixture['openAfter'] = [{'number': 9, 'head': {'sha': SHA}}]
+        states = self.assert_blocked(fixture)
+        self.assertIn('shares this head', states['risk-gate']['description'])
 
     def test_closed_pr_publishes_no_statuses(self):
         fixture = self.fixture(labels=False)

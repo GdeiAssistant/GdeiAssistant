@@ -10,7 +10,11 @@ on:
   # A merge to the base branch can invalidate a review that already passed and
   # raises no PR event, so the gate re-sweeps the open pull requests.
   push:
-    branches: [main]
+    branches: [main, master]
+  # A merge made with `GITHUB_TOKEN` (the Dependabot auto-merge path) raises no
+  # push event, so a periodic sweep catches the base moves no event reports.
+  schedule:
+    - cron: '17 */6 * * *'
   workflow_dispatch:
     inputs:
       pr_number:
@@ -47,8 +51,8 @@ jobs:
           script: |
             // Executed only by the trusted base-branch workflow. Never load PR code.
             const eventName = context.eventName;
-            // A push to the base branch has no single PR; it re-evaluates them all.
-            const single = eventName !== 'push';
+            // A push or a scheduled sweep has no single PR; both re-evaluate them all.
+            const single = !['push', 'schedule'].includes(eventName);
             const number = context.payload.pull_request?.number
               || context.payload.issue?.number
               || Number(process.env.PR_NUMBER);
@@ -78,7 +82,8 @@ jobs:
               /\bdiscussion_comment\b/,
               /\brepository_dispatch\b/,
             ];
-            const STEP_COMMAND = /^\s*-?\s*(?:run|uses)\s*:/;
+            const ACTION_PIN = /^\s*-?\s*uses\s*:/;
+            const ACTION_TARGET = /^\s*-?\s*uses\s*:\s*["']?([^@"'\s]+)@/;
             // Scheduling and prose carry no behaviour; anything else in a
             // credential-bearing workflow is a logic change. Dispatch input
             // fields are excluded on purpose: `default` and `required` change
@@ -94,23 +99,17 @@ jobs:
               return /(^|\/)(dockerfile(?:\..*)?|docker-compose[^/]*|compose\.ya?ml|vercel\.json|wrangler\.(?:toml|jsonc?)|firebase\.json)$/.test(p)
                 || /\.(?:tf|tfvars)$/.test(p);
             }
-            // A workflow that can write, read credentials or touch the host is
-            // authority-bearing: its logic cannot change without owner approval.
-            // Persistent self-hosted runners and sudo count as host authority.
-            async function authorityBearing(path, ref) {
-              try {
-                const { data } = await github.rest.repos.getContent({ ...repo, path, ref });
-                if (!data || Array.isArray(data) || typeof data.content !== 'string') return true;
-                const text = Buffer.from(data.content, 'base64').toString('utf8');
-                return /\bsecrets\b/.test(text)
-                  || /^\s*["']?[a-z][a-z0-9-]*["']?\s*:\s*["']?write["']?\s*(?:#.*)?$/m.test(text)
-                  || /\bself-hosted\b/.test(text)
-                  || /\bsudo\b/.test(text);
-              } catch {
-                return true;
-              }
+            // A repin keeps the action and changes only its ref. Swapping in a
+            // different action is a different change and takes the normal tier.
+            function sameAction(entries) {
+              const targets = sign => entries.filter(entry => entry.sign === sign)
+                .map(entry => (ACTION_TARGET.exec(entry.text) || [])[1]);
+              const removed = targets('-');
+              const added = targets('+');
+              return removed.length > 0 && removed.length === added.length
+                && removed.every((target, index) => target === added[index]);
             }
-            async function workflowHighRisk(file, ref) {
+            async function workflowHighRisk(file, isDependabot) {
               // A rename must not slip a protected definition past the check.
               if (ALWAYS_RISK_WORKFLOWS.has(file.filename) || ALWAYS_RISK_WORKFLOWS.has(file.previous_filename)) return true;
               // Without a readable diff the change cannot be proven benign.
@@ -119,14 +118,18 @@ jobs:
                 .filter(line => /^[+-]/.test(line) && !/^(?:\+\+\+|---)/.test(line))
                 .map(line => ({ sign: line[0], text: line.slice(1) }));
               if (changed.some(entry => WORKFLOW_PRIVILEGE.some(pattern => pattern.test(entry.text)))) return true;
-              // Deleting a step removes verification or behaviour. Rewriting one
-              // does the same while keeping the counts equal, which is how
-              // `npm test` becomes `echo "Tests skipped"`. Any removed step
-              // command is therefore R2; only a pure addition stays cheap.
-              const removed = changed.filter(entry => entry.sign === '-' && STEP_COMMAND.test(entry.text)).length;
-              if (removed > 0) return true;
+              // A verified Dependabot update only repins action versions, so the
+              // change is nothing but one `uses:` line replaced by another. Any
+              // other edit in a bot PR takes the normal path.
+              const pinned = changed.filter(entry => ACTION_PIN.test(entry.text));
+              if (isDependabot && pinned.length === changed.length && sameAction(pinned)) return false;
               if (!changed.some(entry => !COSMETIC.test(entry.text))) return false;
-              return authorityBearing(file.filename, ref);
+              // Every remaining edit can change what CI verifies: a removed
+              // assertion, a multiline body, an added `if: false`, a
+              // `continue-on-error`. Nothing below prose is provably harmless,
+              // and a workflow that publishes a required status is exactly where
+              // guessing is most expensive, so this tier needs a clearing label.
+              return true;
             }
             function completeTemplate(body) {
               const text = (body || '').replace(/<!--[\s\S]*?-->/g, '');
@@ -155,13 +158,20 @@ jobs:
               const { data: cmp } = await github.rest.repos.compareCommits({ ...repo, base: baseHead, head: headSha });
               return cmp.merge_base_commit?.sha === baseHead;
             }
-            // A Dependabot skip only holds for a head Dependabot itself wrote.
-            async function dependabotHead(ref) {
-              const { data } = await github.rest.repos.getCommit({ ...repo, ref });
-              // The author name is free text: anyone can commit as "dependabot[bot]".
-              // Only the linked account is authenticated, so the name is not a signal.
-              // An unlinked commit falls through to the normal review path.
-              return data.author?.login === 'dependabot[bot]';
+            // A Dependabot skip only holds for commits Dependabot itself wrote.
+            async function dependabotHead(prNumber) {
+              const commits = await github.paginate(github.rest.pulls.listCommits, { ...repo, pull_number: prNumber, per_page: 100 });
+              // The API truncates at 250 entries; an incomplete history cannot
+              // prove the bot wrote every commit in the head.
+              if (!commits.length || commits.length >= 250) return false;
+              // `author.login` is the account GitHub links from the commit email,
+              // and the author name is free text; a human can set either. A
+              // verified signature only proves some key signed it, so the
+              // committer must be GitHub itself. One commit outside that shape
+              // sends the PR down the normal review path.
+              return commits.every(commit => commit.author?.login === 'dependabot[bot]'
+                && commit.committer?.login === 'web-flow'
+                && commit.commit?.verification?.verified === true);
             }
             // Codex publishes a machine-readable receipt in its rolling summary
             // comment. Only a completed review of the current head with no
@@ -212,7 +222,7 @@ jobs:
               // Dependabot bodies use their own template; the risk-gate path check still applies below.
               // The exemption follows the head commit, not the PR author: a human
               // pushing onto a bot branch must not inherit the skip.
-              const isDependabot = pr.user?.login === 'dependabot[bot]' && await dependabotHead(pr.head.sha);
+              const isDependabot = pr.user?.login === 'dependabot[bot]' && await dependabotHead(number);
               await status('risk-gate', 'pending', 'Evaluating changed paths, owner approval and AI review');
               await status('pr-template', 'pending', 'Checking AI, change and verification fields');
               await status('ai-review', 'pending', 'Reading the Codex review receipt');
@@ -222,7 +232,7 @@ jobs:
               let risky = false;
               for (const file of files) {
                 const names = [file.filename, file.previous_filename].filter(Boolean);
-                risky = names.some(isWorkflow) ? await workflowHighRisk(file, sha) : names.some(highRisk);
+                risky = names.some(isWorkflow) ? await workflowHighRisk(file, isDependabot) : names.some(highRisk);
                 if (risky) break;
               }
               // Two labels, two different claims. The owner and their agents share

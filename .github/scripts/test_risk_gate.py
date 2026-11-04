@@ -44,16 +44,7 @@ bind('issues.listEvents', async () => ({data: f.events || []}));
 bind('issues.listComments', async () => ({data: f.comments || []}));
 bind('repos.getBranch', async () => ({data: {commit: {sha: f.baseHead ?? (f.pr || {}).head?.sha}}}));
 bind('repos.compareCommits', async args => ({data: {merge_base_commit: {sha: f.mergeBase ?? args.base}}}));
-bind('repos.getCommit', async () => ({data: {
-  author: f.headAuthor === null ? null : {login: f.headAuthor ?? 'synthetic-author'},
-  commit: {author: {name: f.headAuthorName ?? 'Synthetic Author'}},
-}}));
-bind('repos.getContent', async args => {
-  if (f.contents && Object.hasOwn(f.contents, args.path)) {
-    return {data: {content: Buffer.from(f.contents[args.path]).toString('base64')}};
-  }
-  throw new Error('Not Found');
-});
+bind('pulls.listCommits', async () => ({data: f.commits || []}));
 bind('repos.createCommitStatus', async args => {
   statuses.push(args);
   return {data: {}};
@@ -212,11 +203,11 @@ class ScriptTests(unittest.TestCase):
                                '+      - run: npm test')]
         self.assert_blocked(self.fixture(labels=False, files=files))
 
-    def test_pure_addition_in_a_plain_workflow_stays_low_risk(self):
-        files = [workflow_file('+      - run: echo hello')]
-        fixture = self.fixture(labels=False, files=files, contents={files[0]['filename']: 'name: build\non: push\n'})
-        states = self.assert_passes(fixture)
-        self.assertIn('Low-risk paths', states['risk-gate']['description'])
+    def test_added_step_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False, files=[workflow_file('+      - run: echo hello')]))
+
+    def test_added_verification_switch_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False, files=[workflow_file('+        if: false')]))
 
     def test_added_permissions_block_is_high_risk(self):
         self.assert_blocked(self.fixture(labels=False, files=[workflow_file('+permissions: write-all')]))
@@ -225,27 +216,25 @@ class ScriptTests(unittest.TestCase):
         self.assert_blocked(self.fixture(labels=False,
                                          files=[workflow_file('+          token: ${{ secrets.TOKEN }}')]))
 
-    def test_cosmetic_only_change_does_not_read_workflow_content(self):
+    def test_cosmetic_only_change_stays_low_risk(self):
         files = [workflow_file('-  timeout-minutes: 5\n+  timeout-minutes: 10')]
-        result = self.run_script(self.fixture(labels=False, files=files))
-        states = {s['context']: s['state'] for s in result['statuses']}
-        self.assertEqual(states['risk-gate'], 'success', result)
-        self.assertNotIn('repos.getContent', [name for name, _ in result['calls']])
+        self.assert_passes(self.fixture(labels=False, files=files))
 
-    def test_logic_change_in_a_credential_workflow_is_high_risk(self):
-        files = [workflow_file('+      env:\n+        NODE_ENV: test')]
-        content = ('name: build\non: push\njobs:\n  test:\n    steps:\n'
-                   '      - run: curl -H "Authorization: ${{ secrets.TOKEN }}"\n')
-        self.assert_blocked(self.fixture(labels=False, files=files,
-                                         contents={files[0]['filename']: content}))
+    def test_workflow_logic_change_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False,
+                                         files=[workflow_file('+      env:\n+        NODE_ENV: test')]))
 
-    def test_logic_change_in_a_plain_workflow_stays_low_risk(self):
-        files = [workflow_file('+      env:\n+        NODE_ENV: test')]
-        self.assert_passes(self.fixture(labels=False, files=files,
-                                        contents={files[0]['filename']: 'name: build\non: push\n'}))
+    def test_removed_line_inside_a_multiline_run_is_high_risk(self):
+        matches = ['-        test "$CHECK_RESULT" = "success"', '-        true', '+        true']
+        self.assert_blocked(self.fixture(labels=False, files=[workflow_file('\n'.join(matches))]))
 
-    def test_unreadable_workflow_content_fails_closed(self):
-        self.assert_blocked(self.fixture(labels=False, files=[workflow_file('+      env:\n+        A: b')]))
+    def test_removed_non_step_setting_is_high_risk(self):
+        self.assert_blocked(self.fixture(labels=False,
+                                         files=[workflow_file('-          persist-credentials: false')]))
+
+    def test_unreadable_workflow_diff_fails_closed(self):
+        self.assert_blocked(self.fixture(labels=False,
+                                         files=[{'filename': '.github/workflows/build.yml', 'status': 'modified'}]))
 
     # Diff completeness and races -----------------------------------------
 
@@ -307,7 +296,9 @@ class ScriptTests(unittest.TestCase):
     def dependabot_fixture(self, **extra):
         fixture = self.fixture(labels=False, files=[{'filename': 'package-lock.json', 'status': 'modified'}])
         fixture['pr'].update(user={'login': 'dependabot[bot]'}, body='Dependabot generated description')
-        fixture.update({'headAuthor': 'dependabot[bot]', 'headAuthorName': 'dependabot[bot]'})
+        fixture['commits'] = [{'sha': SHA, 'author': {'login': 'dependabot[bot]'},
+                               'committer': {'login': 'web-flow'},
+                               'commit': {'verification': {'verified': True}}}]
         fixture.update(extra)
         return fixture
 
@@ -316,17 +307,78 @@ class ScriptTests(unittest.TestCase):
         self.assertIn('Codex review not required', states['ai-review']['description'])
         self.assertEqual(states['pr-template']['state'], 'success')
 
-    def test_human_push_onto_a_dependabot_branch_is_reviewed(self):
-        fixture = self.dependabot_fixture(headAuthor='synthetic-author')
+    def reviewed(self, fixture):
         fixture['pr']['body'] = TEMPLATE
         states = self.assert_passes(fixture)
         self.assertIn('Codex reviewed this head', states['ai-review']['description'])
 
+    def test_human_push_onto_a_dependabot_branch_is_reviewed(self):
+        fixture = self.dependabot_fixture()
+        fixture['commits'].append({'sha': OTHER, 'author': {'login': 'synthetic-author'},
+                                   'commit': {'verification': {'verified': True}}})
+        self.reviewed(fixture)
+
+    def test_unsigned_dependabot_commit_does_not_skip_the_review(self):
+        fixture = self.dependabot_fixture()
+        fixture['commits'][0]['commit']['verification']['verified'] = False
+        self.reviewed(fixture)
+
+    def test_signature_from_a_human_committer_does_not_skip_the_review(self):
+        # A verified signature only proves some key signed; the committer must
+        # be GitHub itself, otherwise an author who can set the bot's email and
+        # sign with their own key would inherit the exemption.
+        fixture = self.dependabot_fixture()
+        fixture['commits'][0]['committer'] = {'login': 'synthetic-author'}
+        self.reviewed(fixture)
+
+    def test_missing_committer_does_not_skip_the_review(self):
+        fixture = self.dependabot_fixture()
+        fixture['commits'][0]['committer'] = None
+        self.reviewed(fixture)
+
     def test_free_text_dependabot_name_is_not_trusted(self):
-        fixture = self.dependabot_fixture(headAuthor=None)
-        fixture['pr']['body'] = TEMPLATE
-        states = self.assert_passes(fixture)
-        self.assertIn('Codex reviewed this head', states['ai-review']['description'])
+        fixture = self.dependabot_fixture()
+        fixture['commits'][0]['author'] = None
+        self.reviewed(fixture)
+
+    def test_dependabot_with_no_commits_is_not_trusted(self):
+        fixture = self.dependabot_fixture()
+        fixture['commits'] = []
+        self.reviewed(fixture)
+
+    def test_verified_dependabot_action_repin_stays_low_risk(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '+ uses: actions/checkout@' + 'b' * 40)]
+        fixture = self.dependabot_fixture()
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_passes(fixture)
+
+    def test_repin_swapping_in_a_different_action_needs_approval(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '+ uses: evil/cache@' + 'b' * 40)]
+        fixture = self.dependabot_fixture()
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_blocked(fixture)
+
+    def test_repin_with_mismatched_pairs_needs_approval(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '- uses: actions/setup-node@' + 'a' * 40 + '\n'
+                               '+ uses: actions/checkout@' + 'b' * 40)]
+        fixture = self.dependabot_fixture()
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_blocked(fixture)
+
+    def test_dependabot_workflow_edit_beyond_a_repin_needs_approval(self):
+        files = [workflow_file('- uses: actions/checkout@' + 'a' * 40 + '\n'
+                               '+ uses: actions/checkout@' + 'b' * 40 + '\n'
+                               '+ env:\n+   A: b')]
+        fixture = self.dependabot_fixture()
+        fixture['files'] = files
+        fixture['pr']['changed_files'] = 1
+        self.assert_blocked(fixture)
 
     # Template ------------------------------------------------------------
 
@@ -359,6 +411,11 @@ class ScriptTests(unittest.TestCase):
         steps = WORKFLOW['jobs']['evaluate']['steps']
         self.assertEqual(len(steps), 1)
         self.assertTrue(all(step.get('uses', '').startswith('actions/github-script@') for step in steps))
+
+    def test_schedule_sweep_dispatches_each_open_pull_request(self):
+        result = self.run_script({'eventName': 'schedule', 'open': [{'number': 3}]})
+        dispatch = [args for name, args in result['calls'] if name == 'actions.createWorkflowDispatch']
+        self.assertEqual([d['inputs']['pr_number'] for d in dispatch], ['3'])
 
     def test_push_sweep_dispatches_each_open_pull_request(self):
         result = self.run_script({'eventName': 'push', 'open': [{'number': 1}, {'number': 2}]})

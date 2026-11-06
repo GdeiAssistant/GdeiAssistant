@@ -7,7 +7,7 @@ import cn.gdeiassistant.core.cetquery.controller.CetQueryController;
 import cn.gdeiassistant.core.library.controller.LibraryController;
 import cn.gdeiassistant.core.message.controller.MessageController;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
-import cn.gdeiassistant.core.message.service.MessageService;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +36,7 @@ class LocalizedApiMessageContractTest {
 
     @BeforeEach
     void setUp() {
-        MessageService messageService = mock(MessageService.class);
+        InteractionNotificationService interactionNotificationService = mock(InteractionNotificationService.class);
 
         InteractionMessageVO message = new InteractionMessageVO();
         message.setId("message-1");
@@ -50,11 +50,11 @@ class LocalizedApiMessageContractTest {
         message.setTargetId("301");
         message.setTargetSubId("1");
 
-        when(messageService.queryInteractionMessages("session-1", 0, 20))
+        when(interactionNotificationService.queryInteractionMessages("session-1", 0, 20))
                 .thenReturn(List.of(message));
 
         MessageController messageController = new MessageController();
-        ReflectionTestUtils.setField(messageController, "messageService", messageService);
+        ReflectionTestUtils.setField(messageController, "interactionNotificationService", interactionNotificationService);
 
         messageMockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
     }

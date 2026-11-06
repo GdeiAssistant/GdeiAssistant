@@ -31,6 +31,7 @@ public class DataJsonResult<T> extends JsonResult {
             setCode(jsonResult.getCode());
             setSuccess(jsonResult.isSuccess());
             setMessage(jsonResult.getMessage());
+            setErrorCode(jsonResult.getErrorCode());
         }
     }
 }

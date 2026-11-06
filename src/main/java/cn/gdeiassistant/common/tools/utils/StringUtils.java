@@ -49,16 +49,6 @@ public class StringUtils {
     }
 
     /**
-     * 判断字符串是否为布尔值
-     *
-     * @param string
-     * @return
-     */
-    public static boolean isBoolean(String string) {
-        return "true".equalsIgnoreCase(string) || "false".equalsIgnoreCase(string);
-    }
-
-    /**
      * 将空引用字符串转变为空字符串
      *
      * @param string

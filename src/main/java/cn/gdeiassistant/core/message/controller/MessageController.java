@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.i18n.ApiLanguageResolver;
 import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
-import cn.gdeiassistant.core.message.service.MessageService;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +22,7 @@ import java.util.List;
 public class MessageController {
 
     @Autowired
-    private MessageService messageService;
+    private InteractionNotificationService interactionNotificationService;
 
     @RequestMapping(value = "/interaction/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<InteractionMessageVO>> getInteractionMessages(HttpServletRequest request,
@@ -31,7 +31,7 @@ public class MessageController {
         size = PageUtils.normalizePageSize(start, size);
         String sessionId = (String) request.getAttribute("sessionId");
         String language = ApiLanguageResolver.normalizeLanguage(request.getHeader("Accept-Language"));
-        List<InteractionMessageVO> messages = messageService.queryInteractionMessages(sessionId, start, size);
+        List<InteractionMessageVO> messages = interactionNotificationService.queryInteractionMessages(sessionId, start, size);
         if (messages == null || messages.isEmpty() || ApiLanguageResolver.isSimplifiedChinese(language)) {
             return new DataJsonResult<>(true, messages);
         }
@@ -45,20 +45,20 @@ public class MessageController {
     @RequestMapping(value = "/unread", method = RequestMethod.GET)
     public DataJsonResult<Integer> getInteractionUnreadCount(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        return new DataJsonResult<>(true, messageService.queryInteractionUnreadCount(sessionId));
+        return new DataJsonResult<>(true, interactionNotificationService.queryInteractionUnreadCount(sessionId));
     }
 
     @RequestMapping(value = {"/{id}/read"}, method = RequestMethod.POST)
     public JsonResult readInteractionMessage(HttpServletRequest request, @PathVariable("id") String id) {
         String sessionId = (String) request.getAttribute("sessionId");
-        messageService.markInteractionMessageRead(sessionId, id);
+        interactionNotificationService.markInteractionNotificationRead(sessionId, id);
         return new JsonResult(true);
     }
 
     @RequestMapping(value = "/readall", method = RequestMethod.POST)
     public JsonResult readAllInteractionMessages(HttpServletRequest request) {
         String sessionId = (String) request.getAttribute("sessionId");
-        messageService.markAllInteractionMessagesRead(sessionId);
+        interactionNotificationService.markAllInteractionNotificationsRead(sessionId);
         return new JsonResult(true);
     }
 }

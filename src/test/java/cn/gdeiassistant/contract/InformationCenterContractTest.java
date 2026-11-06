@@ -8,7 +8,7 @@ import cn.gdeiassistant.core.information.service.announcement.AnnouncementServic
 import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsService;
 import cn.gdeiassistant.core.message.controller.MessageController;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
-import cn.gdeiassistant.core.message.service.MessageService;
+import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.schoolnews.controller.SchoolNewsController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,13 +32,13 @@ class InformationCenterContractTest {
     private MockMvc mockMvc;
     private SchoolNewsService schoolNewsService;
     private AnnouncementService announcementService;
-    private MessageService messageService;
+    private InteractionNotificationService interactionNotificationService;
 
     @BeforeEach
     void setUp() {
         schoolNewsService = mock(SchoolNewsService.class);
         announcementService = mock(AnnouncementService.class);
-        messageService = mock(MessageService.class);
+        interactionNotificationService = mock(InteractionNotificationService.class);
 
         SchoolNewsController schoolNewsController = new SchoolNewsController();
         ReflectionTestUtils.setField(schoolNewsController, "schoolNewsService", schoolNewsService);
@@ -47,7 +47,7 @@ class InformationCenterContractTest {
         ReflectionTestUtils.setField(announcementController, "announcementService", announcementService);
 
         MessageController messageController = new MessageController();
-        ReflectionTestUtils.setField(messageController, "messageService", messageService);
+        ReflectionTestUtils.setField(messageController, "interactionNotificationService", interactionNotificationService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(
                 schoolNewsController,
@@ -111,7 +111,7 @@ class InformationCenterContractTest {
 
     @Test
     void unreadCountReturnsCanonicalPayload() throws Exception {
-        when(messageService.queryInteractionUnreadCount("session-1")).thenReturn(3);
+        when(interactionNotificationService.queryInteractionUnreadCount("session-1")).thenReturn(3);
 
         mockMvc.perform(get("/api/information/message/unread")
                         .requestAttr("sessionId", "session-1"))
@@ -135,7 +135,7 @@ class InformationCenterContractTest {
         message.setTargetId("marketplace-post-1");
         message.setTargetSubId("comment-1");
 
-        when(messageService.queryInteractionMessages("session-1", 0, 20))
+        when(interactionNotificationService.queryInteractionMessages("session-1", 0, 20))
                 .thenReturn(List.of(message));
 
         mockMvc.perform(get("/api/information/message/interaction/start/0/size/20")
@@ -148,7 +148,7 @@ class InformationCenterContractTest {
 
     @Test
     void interactionMessagesCapPageSizeAtFifty() throws Exception {
-        when(messageService.queryInteractionMessages("session-1", 0, 50))
+        when(interactionNotificationService.queryInteractionMessages("session-1", 0, 50))
                 .thenReturn(List.of());
 
         mockMvc.perform(get("/api/information/message/interaction/start/0/size/100")
@@ -156,12 +156,12 @@ class InformationCenterContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        verify(messageService).queryInteractionMessages("session-1", 0, 50);
+        verify(interactionNotificationService).queryInteractionMessages("session-1", 0, 50);
     }
 
     @Test
     void interactionMessagesReturnStableEmptyPayload() throws Exception {
-        when(messageService.queryInteractionMessages("session-1", 20, 20))
+        when(interactionNotificationService.queryInteractionMessages("session-1", 20, 20))
                 .thenReturn(List.of());
 
         mockMvc.perform(get("/api/information/message/interaction/start/20/size/20")

@@ -9,7 +9,7 @@ import cn.gdeiassistant.core.phone.pojo.dto.PhoneBindDTO;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.core.verificationcode.service.VerificationCodeService;
+import cn.gdeiassistant.core.capability.sms.SmsVerificationSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class PhoneService {
     private UserCertificateService userCertificateService;
 
     @Autowired
-    private VerificationCodeService verificationCodeService;
+    private SmsVerificationSender smsVerificationSender;
 
     /**
      * 查询用户绑定的手机号信息（返回 VO，手机号脱敏）
@@ -62,10 +62,10 @@ public class PhoneService {
         try {
         if (code == 86) {
             //国内手机号
-            verificationCodeService.sendChinaPhoneVerificationCodeSms(randomCode, phone);
+            smsVerificationSender.sendChina(randomCode, phone);
         } else {
             //国际/港澳台手机号
-            verificationCodeService.sendGlobalPhoneVerificationCodeSms(randomCode, code, phone);
+            smsVerificationSender.sendGlobal(randomCode, code, phone);
         }
         } catch (SendSMSException e) {
             verificationCodeDao.consumePhoneVerificationCode(code, phone, randomCode);

@@ -117,7 +117,9 @@ class CampusHttpFixtureTest {
         assertArrayEquals("image".getBytes(StandardCharsets.UTF_8), chsi.fetchPostgraduateCaptchaImage(base + "/captcha"));
         reply("POST", "/graduate/cjcxAction.do", 200, "<title>result</title>");
         assertEquals("result", chsi.submitPostgraduateQuery("a & b", "exam", "synthetic-id", "1234").title());
-        assertTrue(seen.get(seen.size()-1).body().contains("xm=a%20%26%20b"));
+        // OkHttp 5 表单体把空格编码为 '+'，4.x 为 %20；两者在 application/x-www-form-urlencoded 下等价。
+        String postedForm = seen.get(seen.size() - 1).body();
+        assertTrue(postedForm.contains("xm=a+%26+b") || postedForm.contains("xm=a%20%26%20b"));
         assertTrue(seen.get(seen.size()-1).body().contains("checkcode=1234"));
         chsi.submitPostgraduateQuery("synthetic", "exam", "synthetic-id", "");
         assertFalse(seen.get(seen.size()-1).body().contains("checkcode="));

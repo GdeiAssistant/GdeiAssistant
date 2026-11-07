@@ -1,4 +1,4 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a.
+# Shared governance action: GdeiAssistant/.github/pr-governance@432b04be379fe47e6f77a2f528181cd34a20379f.
 # Keep the job names; they are required status check contexts.
 
 on:
@@ -20,6 +20,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Scan added commits
-        uses: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a
+        uses: GdeiAssistant/.github/pr-governance@432b04be379fe47e6f77a2f528181cd34a20379f
         with:
           mode: scan

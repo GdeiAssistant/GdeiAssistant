@@ -56,7 +56,6 @@ jobs:
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
         with:
           mode: gate
-          record-label: 'false'
           record-label: 'true'
 
   evaluate:
@@ -90,3 +89,4 @@ jobs:
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
         with:
           mode: gate
+          record-label: 'false'

@@ -44,7 +44,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Publish risk-gate, AI review and PR template checks on the PR head
-        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           PR_NUMBER: ${{ inputs.pr_number }}
           # Required setup: set the RISK_GATE_OWNER repository variable to the

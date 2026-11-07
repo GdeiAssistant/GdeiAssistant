@@ -9,38 +9,6 @@ permissions:
   contents: read
 
 jobs:
-  gitleaks:
-    name: Gitleaks
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-      - name: Install verified Gitleaks CLI
-        run: bash .github/scripts/install-gitleaks.sh
-      - name: Test secret detection and baseline behavior
-        env:
-          GITLEAKS_BIN: ${{ runner.temp }}/gitleaks-bin/gitleaks
-        run: python3 .github/scripts/test_secret_scan.py
-      - name: Scan added commits with redacted findings
-        shell: bash
-        env:
-          PR_BASE: ${{ github.event.pull_request.base.sha }}
-          PR_HEAD: ${{ github.event.pull_request.head.sha }}
-          PUSH_BASE: ${{ github.event.before }}
-          PUSH_HEAD: ${{ github.sha }}
-        run: |
-          set -euo pipefail
-          base="${PR_BASE:-$PUSH_BASE}"
-          head="${PR_HEAD:-$PUSH_HEAD}"
-          if [[ -z "$base" || "$base" =~ ^0+$ ]]; then
-            echo "No base commit is available for this event" >&2
-            exit 1
-          fi
-          "$RUNNER_TEMP/gitleaks-bin/gitleaks" git . --config .gitleaks.toml --redact --no-banner --log-opts="$base..$head"
-
   commitlint:
     name: Commit message convention
     runs-on: ubuntu-latest

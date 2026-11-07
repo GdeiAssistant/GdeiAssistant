@@ -1,0 +1,27 @@
+# Shared governance action: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a.
+# Keep the job names; they are required status check contexts.
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+
+concurrency:
+  group: review-request
+  cancel-in-progress: false
+
+jobs:
+  nudge:
+    name: Request a review
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request
+        uses: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a
+        with:
+          mode: nudge

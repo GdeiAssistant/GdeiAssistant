@@ -1,0 +1,25 @@
+# Shared governance action: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a.
+# Keep the job names; they are required status check contexts.
+
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: read
+
+jobs:
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scan added commits
+        uses: GdeiAssistant/.github/pr-governance@b02a689c27b1821bd71bf7ae33c73ea5f31e4a4a
+        with:
+          mode: scan

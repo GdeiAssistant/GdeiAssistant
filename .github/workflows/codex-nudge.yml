@@ -1,6 +1,8 @@
 # Shared governance action: GdeiAssistant/.github/pr-governance@432b04be379fe47e6f77a2f528181cd34a20379f.
 # Keep the job names; they are required status check contexts.
 
+name: Review request
+
 on:
   schedule:
     - cron: '*/30 * * * *'

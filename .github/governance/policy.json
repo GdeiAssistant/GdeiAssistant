@@ -7,10 +7,6 @@
     "user_id": 199175422,
     "login": "chatgpt-codex-connector[bot]"
   },
-  "owner": {
-    "user_id": 20649888,
-    "login": "Pigbibi"
-  },
   "r0_paths": [],
   "r2_paths": [],
   "dependabot_template_exemption": true,

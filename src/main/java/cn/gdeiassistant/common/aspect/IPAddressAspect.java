@@ -3,8 +3,8 @@ package cn.gdeiassistant.common.aspect;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.entity.User;
-import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
-import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.common.spi.IPAddressRecorder;
+import cn.gdeiassistant.common.spi.SessionCertificateProvider;
 import cn.gdeiassistant.common.tools.utils.IPAddressUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -21,10 +21,10 @@ import jakarta.servlet.http.HttpServletRequest;
 public class IPAddressAspect {
 
     @Autowired
-    private IPAddressService ipAddressService;
+    private IPAddressRecorder ipAddressService;
 
     @Autowired
-    private UserCertificateService userCertificateService;
+    private SessionCertificateProvider userCertificateService;
 
     @After("@annotation(annotation)")
     public void saveLoginIPAddress(JoinPoint joinPoint, RecordIPAddress annotation) {

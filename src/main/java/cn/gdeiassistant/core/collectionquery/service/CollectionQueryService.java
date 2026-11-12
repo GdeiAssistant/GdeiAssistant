@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class CollectionQueryService {
@@ -48,7 +49,7 @@ public class CollectionQueryService {
             }
             sumPage = Integer.valueOf(pagenum.select("option").first().text().split("/")[1]);
             if (currentPage < 1 || currentPage > sumPage) {
-                throw new ErrorQueryConditionException("查询页数超过总页数");
+                throw new ErrorQueryConditionException(Messages.get("collectionquery.pageOutOfRange"));
             }
             collectionQueryResult.setSumPage(sumPage);
             List<Collection> collectionList = new ArrayList<>();
@@ -76,10 +77,10 @@ public class CollectionQueryService {
             logger.error("查询馆藏图书异常：", e);
             throw e;
         } catch (java.io.IOException e) {
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("查询馆藏图书异常：", e);
-            throw new ServerErrorException("图书馆系统异常");
+            throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
         }
     }
 
@@ -167,10 +168,10 @@ public class CollectionQueryService {
             collectionDetail.setCollectionDistributionList(collectionDistributionList);
             return collectionDetail;
         } catch (java.io.IOException e) {
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("查询馆藏图书详细信息异常：", e);
-            throw new ServerErrorException("图书馆系统异常");
+            throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
         }
     }
 }

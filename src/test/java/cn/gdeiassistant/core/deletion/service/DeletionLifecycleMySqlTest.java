@@ -5,8 +5,12 @@ import cn.gdeiassistant.common.typehandler.MybatisEncryptionTypeHandler;
 import cn.gdeiassistant.core.close.mapper.CloseMapper;
 import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
+import cn.gdeiassistant.core.grade.service.GradeAccountContributor;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
+import cn.gdeiassistant.core.schedule.service.ScheduleAccountContributor;
+import cn.gdeiassistant.core.announcement.service.AnnouncementAccountContributor;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
+import cn.gdeiassistant.core.profile.service.ProfileAccountContributor;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
@@ -53,11 +57,10 @@ class DeletionLifecycleMySqlTest {
         ReflectionTestUtils.setField(target,"profileMapper",mock(ProfileMapper.class));ReflectionTestUtils.setField(target,"privacyMapper",mock(PrivacyMapper.class));
         var proxy=new ProxyFactory(target);proxy.addAdvice(new TransactionInterceptor(transactions,new AnnotationTransactionAttributeSource()));data=(UserDataService)proxy.getProxy();
         certificates=mock(UserCertificateService.class);grades=mock(GradeDao.class);schedules=mock(ScheduleDao.class);profiles=mock(UserProfileService.class);
-        worker=new DeletionCleanupWorker();ReflectionTestUtils.setField(worker,"mapper",cleanup);ReflectionTestUtils.setField(worker,"userMapper",users);ReflectionTestUtils.setField(worker,"transactions",transactions);
-        ReflectionTestUtils.setField(worker,"gradeDao",grades);ReflectionTestUtils.setField(worker,"scheduleDao",schedules);
-        ReflectionTestUtils.setField(worker,"profileService",profiles);ReflectionTestUtils.setField(worker,"certificateService",certificates);
-        ReflectionTestUtils.setField(worker,"closeMapper",mock(CloseMapper.class));
-        ReflectionTestUtils.setField(worker,"announcements",mock(cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper.class));
+        worker=new DeletionCleanupWorker(cleanup,users,transactions,certificates,mock(CloseMapper.class),List.of(
+                new GradeAccountContributor(grades),new ScheduleAccountContributor(schedules),
+                new ProfileAccountContributor(mock(ProfileMapper.class),profiles),
+                new AnnouncementAccountContributor(mock(cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper.class))));
         login=new UserLoginService();ReflectionTestUtils.setField(login,"userCertificateService",certificates);ReflectionTestUtils.setField(login,"userDataService",data);
         executor=Executors.newFixedThreadPool(3);
     }

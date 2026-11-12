@@ -2,7 +2,7 @@ package cn.gdeiassistant.core.social.controller;
 
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.pojo.dto.ChatMessageDTO;
 import cn.gdeiassistant.core.social.pojo.dto.ConversationDTO;
@@ -27,6 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 @RequestMapping("/api/social")
@@ -46,7 +47,7 @@ public class SocialController {
         response.setStatus(ex.getHttpStatus());
         DataJsonResult<Void> result = new DataJsonResult<>(false, null);
         result.setCode(ex.getHttpStatus());
-        result.setMessage(BackendTextLocalizer.localizeMessage(ex.getMessage(), request.getHeader("Accept-Language")));
+        result.setMessage(MessageCatalog.localizeMessage(ex.getMessage(), request.getHeader("Accept-Language")));
         result.setErrorCode(ex.getErrorCode());
         return result;
     }
@@ -61,7 +62,7 @@ public class SocialController {
         response.setStatus(HttpStatus.BAD_REQUEST.value());
         DataJsonResult<Void> result = new DataJsonResult<>(false, null);
         result.setCode(400);
-        result.setMessage(BackendTextLocalizer.localizeMessage("请求参数不合法", request.getHeader("Accept-Language")));
+        result.setMessage(Messages.forLanguage("request.invalid", request.getHeader("Accept-Language")));
         result.setErrorCode("INVALID_REQUEST");
         return result;
     }

@@ -1,7 +1,7 @@
 package cn.gdeiassistant.common.redis.usercertificate;
 
 import cn.gdeiassistant.common.pojo.entity.User;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Repository
 public class UserCertificateDaoImpl implements UserCertificateDao {
@@ -68,7 +69,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             user.setPassword(decryptPassword(map.get("password")));
             return user;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Redis 登录凭证反序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.loginCredentialDeserializeFailed"), e);
         }
     }
 
@@ -81,7 +82,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("登录凭证序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.loginCredentialSerializeFailed"), e);
         }
     }
 
@@ -104,7 +105,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
                     return user;
                 }
             } catch (Exception e) {
-                throw new RuntimeException("Redis 读取登录凭证失败", e);
+                throw new RuntimeException(Messages.get("common.redis.loginCredentialReadFailed"), e);
             }
         }
         return null;
@@ -145,7 +146,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         try {
             redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map), java.time.Duration.ofHours(1));
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("登录凭证序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.loginCredentialSerializeFailed"), e);
         }
     }
 
@@ -166,7 +167,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
             entity.setTimestamp(Long.valueOf(map.get("timestamp")));
             return entity;
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Redis 会话凭证反序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.sessionCredentialDeserializeFailed"), e);
         }
     }
 
@@ -182,7 +183,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 10, TimeUnit.MINUTES);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("会话凭证序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.sessionCredentialSerializeFailed"), e);
         }
     }
 
@@ -201,7 +202,7 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
                     deleteCredentialEntryIfMatches(username, requireSessionShape, key);
                 }
             } catch (Exception e) {
-                throw new RuntimeException("Redis 扫描凭证缓存失败", e);
+                throw new RuntimeException(Messages.get("common.redis.credentialScanFailed"), e);
             }
             return null;
         });

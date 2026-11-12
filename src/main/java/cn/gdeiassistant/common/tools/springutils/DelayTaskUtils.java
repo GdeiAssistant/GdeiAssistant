@@ -1,8 +1,8 @@
 package cn.gdeiassistant.common.tools.springutils;
 
-import cn.gdeiassistant.core.delaytask.pojo.DelayTask;
-import cn.gdeiassistant.core.delaytask.pojo.DelayTaskElement;
-import cn.gdeiassistant.core.delaytask.pojo.SessionAttributeExpireDelayTaskElement;
+import cn.gdeiassistant.common.pojo.delaytask.DelayTask;
+import cn.gdeiassistant.common.pojo.delaytask.DelayTaskElement;
+import cn.gdeiassistant.common.pojo.delaytask.SessionAttributeExpireDelayTaskElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.lostandfound.controller;
 
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
 import cn.gdeiassistant.common.annotation.RecordIPAddress;
@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 @Validated
@@ -84,7 +85,7 @@ public class LostAndFoundController {
             @PathVariable("start") @Min(0) Integer start,
             @Validated @NotBlank @Length(min = 1, max = 50) @RequestParam("keyword") String keywords) throws Exception {
         if (lostType == null || (lostType != 0 && lostType != 1)) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostType.equals(0)
@@ -112,7 +113,7 @@ public class LostAndFoundController {
     public DataJsonResult<List<LostAndFoundItemVO>> searchFoundInfoByType(HttpServletRequest request, @PathVariable("type") Integer type,
             @PathVariable("start") Integer start) throws Exception {
         if (type == null || type < 0 || type > 11) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         start = PageUtils.requireNonNegativeStart(start);
         List<LostAndFoundItemVO> list = lostAndFoundService.queryFoundItemsByType(type, start);
@@ -172,7 +173,7 @@ public class LostAndFoundController {
         try {
             lostAndFoundService.publishItem(dto, sessionId, images, imageKeys);
         } catch (Exception failure) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("上传失败", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("upload.failed", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

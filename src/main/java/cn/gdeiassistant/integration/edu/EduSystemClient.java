@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 教务系统网络防腐层：专职处理对 jwgl.gdei.edu.cn 的 HTTP 请求，返回解析好的 Document 或数据，供 core 业务层使用。
@@ -65,19 +66,19 @@ public class EduSystemClient {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.toString().contains("您登陆的系统已经很长时间没有操作了")
                         && document.toString().contains("为安全起见请重新登录后再进行操作！")) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xscj_gc.aspx?xh=" + credential.getNumber());
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             }
@@ -85,11 +86,11 @@ public class EduSystemClient {
                 String location = httpResponse.getFirstHeader("Location") != null
                         ? httpResponse.getFirstHeader("Location").getValue() : "";
                 if ("/loginTs/loginTs_yzsb.html".equals(location)) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
-                throw new PasswordIncorrectException("账号密码错误");
+                throw new PasswordIncorrectException(Messages.get("userlogin.credentialsIncorrect"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } finally {
             closeResponse(httpResponse);
             closeHttpClient(httpClient);
@@ -126,7 +127,7 @@ public class EduSystemClient {
             httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -160,24 +161,24 @@ public class EduSystemClient {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.text().contains("您登陆的系统已经很长时间没有操作了")
                         && document.text().contains("为安全起见请重新登录后再进行操作！")) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xskbcx.aspx?xh=" + credential.getNumber());
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 Element xqdElement = document.getElementsByAttributeValue("name", "xqd").first();
                 if (xqdElement == null) {
-                    throw new ServerErrorException("教务系统页面结构异常，未找到学期下拉框");
+                    throw new ServerErrorException(Messages.get("edu.pageStructure.termSelectMissing"));
                 }
                 Elements xqdOptions = xqdElement.select("option");
                 int defaultTerm = 0;
@@ -189,7 +190,7 @@ public class EduSystemClient {
                 }
                 Element xndElement = document.getElementsByAttributeValue("name", "xnd").first();
                 if (xndElement == null) {
-                    throw new ServerErrorException("教务系统页面结构异常，未找到学年下拉框");
+                    throw new ServerErrorException(Messages.get("integration.edu.yearSelectMissing"));
                 }
                 Elements xndOptions = xndElement.select("option");
                 int defaultYear = 0;
@@ -202,24 +203,24 @@ public class EduSystemClient {
                 if (defaultYear != WeekUtils.getCurrentYear() || defaultTerm != WeekUtils.getCurrentTerm()) {
                     Element viewStateElement = document.getElementsByAttributeValue("name", "__VIEWSTATE").first();
                     if (viewStateElement == null) {
-                        throw new ServerErrorException("教务系统页面结构异常，未找到 __VIEWSTATE");
+                        throw new ServerErrorException(Messages.get("integration.edu.viewStateMissing"));
                     }
                     Element xndFormElement = document.getElementsByAttributeValue("name", "xnd").first();
                     if (xndFormElement == null) {
-                        throw new ServerErrorException("教务系统页面结构异常，未找到学年下拉框");
+                        throw new ServerErrorException(Messages.get("integration.edu.yearSelectMissing"));
                     }
                     Element xndFirstOption = xndFormElement.select("option").first();
                     if (xndFirstOption == null) {
-                        throw new ServerErrorException("教务系统页面结构异常，学年下拉框无选项");
+                        throw new ServerErrorException(Messages.get("integration.edu.yearOptionsEmpty"));
                     }
                     Element xqdFormElement = document.getElementsByAttributeValue("name", "xqd").first();
                     if (xqdFormElement == null) {
-                        throw new ServerErrorException("教务系统页面结构异常，未找到学期下拉框");
+                        throw new ServerErrorException(Messages.get("edu.pageStructure.termSelectMissing"));
                     }
                     Elements xqdFormOptions = xqdFormElement.select("option");
                     int termIndex = WeekUtils.getCurrentTerm() - 1;
                     if (termIndex < 0 || termIndex >= xqdFormOptions.size()) {
-                        throw new ServerErrorException("教务系统页面结构异常，学期选项索引越界");
+                        throw new ServerErrorException(Messages.get("integration.edu.termIndexOutOfRange"));
                     }
                     HttpPost httpPost = new HttpPost(JWGL_BASE + "/xskbcx.aspx?xh=" + credential.getNumber());
                     List<BasicNameValuePair> form = new ArrayList<>();
@@ -233,7 +234,7 @@ public class EduSystemClient {
                     httpResponse = httpClient.execute(httpPost);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()).replace("<br>", "$info$"));
                     if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                        throw new ServerErrorException("教务系统异常");
+                        throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                     }
                 }
                 return document;
@@ -242,11 +243,11 @@ public class EduSystemClient {
                 String location = httpResponse.getFirstHeader("Location") != null
                         ? httpResponse.getFirstHeader("Location").getValue() : "";
                 if ("/loginTs/loginTs_yzsb.html".equals(location)) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
-                throw new PasswordIncorrectException("账号密码错误");
+                throw new PasswordIncorrectException(Messages.get("userlogin.credentialsIncorrect"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } finally {
             closeResponse(httpResponse);
             closeHttpClient(httpClient);
@@ -274,19 +275,19 @@ public class EduSystemClient {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.text().contains("您登陆的系统已经很长时间没有操作了")
                         && document.text().contains("为安全起见请重新登录后再进行操作！")) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber() + "&type=1");
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xxjsjy.aspx?xh=" + credential.getNumber());
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             }
@@ -294,11 +295,11 @@ public class EduSystemClient {
                 String location = httpResponse.getFirstHeader("Location") != null
                         ? httpResponse.getFirstHeader("Location").getValue() : "";
                 if ("/loginTs/loginTs_yzsb.html".equals(location)) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
-                throw new PasswordIncorrectException("账号密码错误");
+                throw new PasswordIncorrectException(Messages.get("userlogin.credentialsIncorrect"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } finally {
             closeResponse(httpResponse);
             closeHttpClient(httpClient);
@@ -327,7 +328,7 @@ public class EduSystemClient {
             httpPost.setEntity(new UrlEncodedFormEntity(formParams, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -357,13 +358,13 @@ public class EduSystemClient {
                 Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (document.text().contains("您登陆的系统已经很长时间没有操作了")
                         && document.text().contains("为安全起见请重新登录后再进行操作！")) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
                 httpGet = new HttpGet(JWGL_BASE + "/xs_main.aspx?xh=" + credential.getNumber());
                 closeResponse(httpResponse);
                 httpResponse = httpClient.execute(httpGet);
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 }
                 return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             }
@@ -371,11 +372,11 @@ public class EduSystemClient {
                 String location = httpResponse.getFirstHeader("Location") != null
                         ? httpResponse.getFirstHeader("Location").getValue() : "";
                 if ("/loginTs/loginTs_yzsb.html".equals(location)) {
-                    throw new TimeStampIncorrectException("时间戳校验失败");
+                    throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
                 }
-                throw new PasswordIncorrectException("账号密码错误");
+                throw new PasswordIncorrectException(Messages.get("userlogin.credentialsIncorrect"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } finally {
             closeResponse(httpResponse);
             closeHttpClient(httpClient);
@@ -402,7 +403,7 @@ public class EduSystemClient {
             HttpGet httpGet = new HttpGet(JWGL_BASE + "/" + path);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -437,13 +438,13 @@ public class EduSystemClient {
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             if (document.title().equals("欢迎使用正方教务管理系统！请登录")) {
-                throw new ServerErrorException("需要重新登录");
+                throw new ServerErrorException(Messages.get("integration.edu.reloginRequired"));
             }
             if (!document.title().equals("正方教务管理系统")) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             httpGet = new HttpGet(JWGL_BASE + "/jstjkbcx.aspx?zgh=" + teacherUsername);
             httpGet.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.146 Safari/537.36");
@@ -452,7 +453,7 @@ public class EduSystemClient {
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("进入教师个人课表查询页面异常");
+                throw new ServerErrorException(Messages.get("integration.edu.teacherTimetablePageFailed"));
             }
             if (teacherName != null && !teacherName.trim().isEmpty()) {
                 HttpPost httpPost = new HttpPost(JWGL_BASE + "/jstjkbcx.aspx?zgh=" + teacherUsername);
@@ -463,7 +464,7 @@ public class EduSystemClient {
                 Elements eventArgumentElements = document.getElementsByAttributeValue("name", "__EVENTARGUMENT");
                 Elements viewStateElements = document.getElementsByAttributeValue("name", "__VIEWSTATE");
                 if (viewStateElements.isEmpty()) {
-                    throw new ServerErrorException("教务系统页面结构异常，未找到 __VIEWSTATE");
+                    throw new ServerErrorException(Messages.get("integration.edu.viewStateMissing"));
                 }
                 form.add(new BasicNameValuePair("__EVENTTARGET", eventTargetElements.val()));
                 form.add(new BasicNameValuePair("__EVENTARGUMENT", eventArgumentElements.val()));
@@ -479,7 +480,7 @@ public class EduSystemClient {
                 httpResponse = httpClient.execute(httpPost);
                 document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                 if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("提交课表查询请求异常");
+                    throw new ServerErrorException(Messages.get("integration.edu.timetableQueryFailed"));
                 }
             }
             return document;
@@ -516,29 +517,29 @@ public class EduSystemClient {
 
     private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
                                        Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.edu.systemUnavailable"));
     }
 
     private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
                                        String viewState, String yearOptionValue,
                                        Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.edu.systemUnavailable"));
     }
 
     private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
                                        String formAction, List<BasicNameValuePair> formParams,
                                        Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.edu.systemUnavailable"));
     }
 
     private Document eduSystemFallback(String sessionId, EduSessionCredential credential,
                                        String relativePath, Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.edu.systemUnavailable"));
     }
 
     private Document eduSystemFallback(String sessionId, String teacherUsername, String teacherName,
                                        String year, String term,
                                        Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("教务系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.edu.systemUnavailable"));
     }
 }

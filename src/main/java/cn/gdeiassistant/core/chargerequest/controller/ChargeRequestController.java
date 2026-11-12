@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class ChargeRequestController {
@@ -55,7 +56,7 @@ public class ChargeRequestController {
         // 1. 设备绑定校验：充值操作必须携带设备标识
         String deviceId = request.getHeader("X-Device-ID");
         if (deviceId == null || deviceId.trim().isEmpty()) {
-            throw new ServerErrorException("充值请求必须携带设备标识");
+            throw new ServerErrorException(Messages.get("chargerequest.deviceIdRequired"));
         }
 
         // 2. Legacy Android/iOS clients may still submit signature fields during migration.

@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class TopicService {
@@ -111,7 +112,7 @@ public class TopicService {
     public TopicVO queryTopicById(int id, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         TopicEntity entity = topicMapper.selectTopicById(id, user.getUsername());
-        if (entity == null) throw new DataNotExistException("该话题信息不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("topic.topicMissing"));
         if (entity.getCount() != null && entity.getCount() > 0) {
             List<String> urls = new ArrayList<>();
             for (int i = 1; i <= entity.getCount(); i++) {
@@ -126,7 +127,7 @@ public class TopicService {
     public void likeTopic(int id, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         TopicEntity entity = topicMapper.selectTopicById(id, user.getUsername());
-        if (entity == null) throw new DataNotExistException("该话题信息不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("topic.topicMissing"));
         TopicLikeEntity like = topicMapper.selectTopicLike(id, user.getUsername());
         if (like == null) {
             int inserted = topicMapper.insertTopicLike(id, user.getUsername());
@@ -167,7 +168,7 @@ public class TopicService {
             storedAssets.uploadObject("topic/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传话题图片失败，id={}，index={}", id, index, e);
-            throw new RuntimeException("话题图片上传失败", e);
+            throw new RuntimeException(Messages.get("topic.imageUpload.failed"), e);
         } finally {
             if (inputStream != null) {
                 try {

@@ -1,263 +1,116 @@
 package cn.gdeiassistant.core.deletion.service;
 
+import cn.gdeiassistant.common.account.AccountClosure;
+import cn.gdeiassistant.common.account.AccountCloseBlocker;
+import cn.gdeiassistant.common.account.AccountLifecycleContributor;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
-import cn.gdeiassistant.common.pojo.entity.*;
+import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
-import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.cet.mapper.CetMapper;
-import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
-import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
-import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
-import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
-import cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper;
-import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
-import cn.gdeiassistant.core.lostandfound.mapper.LostAndFoundMapper;
-import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
-import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
-import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
-import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
+import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
-import cn.gdeiassistant.core.close.mapper.CloseMapper;
-import cn.gdeiassistant.core.dating.mapper.DatingMapper;
-import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import cn.gdeiassistant.common.i18n.Messages;
 
+/**
+ * Orchestrates account closure: validate, lock, let every domain erase its own data,
+ * close the account and enqueue cross-store cleanup. Which rows count as this user's
+ * data is decided by each domain through {@link AccountLifecycleContributor}.
+ */
 @Service
 public class AccountDeletionService {
 
+    private static final String ANONYMIZED_PREFIX = "del_";
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final List<AccountLifecycleContributor> contributors;
+    private final UserCertificateService userCertificateService;
+    private final UserMapper userMapper;
+    private final DeletionCleanupMapper cleanupMapper;
+    private final ApplicationEventPublisher events;
 
-
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private MarketplaceMapper marketplaceMapper;
-
-    @Autowired
-    private LostAndFoundMapper lostAndFoundMapper;
-
-    @Autowired
-    private DeliveryMapper deliveryMapper;
-
-    @Autowired
-    private CetMapper cetMapper;
-
-    @Autowired
-    private PhoneMapper phoneMapper;
-
-    @Autowired
-    private ProfileMapper profileMapper;
-
-    @Autowired
-    private PrivacyMapper privacyMapper;
-
-
-    @Autowired(required = false)
-    private DatingMapper datingMapper;
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.topic.mapper.TopicMapper topicMapper;
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.secret.mapper.SecretMapper secretMapper;
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.photograph.mapper.PhotographMapper photographMapper;
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper interactionNotificationMapper;
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.express.mapper.ExpressMapper expressMapper;
-
-
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.social.mapper.SocialRelationMapper socialRelationMapper;
-
-    @Autowired
-    private cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper cleanupMapper;
-    @Autowired
-    private org.springframework.context.ApplicationEventPublisher events;
-
-    /**
-     * 关闭待处理的社区功能信息
-     */
-    @Transactional(value="appTransactionManager", rollbackFor=Exception.class)
-    public void closeSocialDataState(String username) throws Exception {
-        List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
-                .selectOwnerItemStates(username);
-        for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
-            if (secondhandItem.getState().equals(1)) {
-                marketplaceMapper.updateItemState(secondhandItem.getId(), 3);
-            }
-        }
-        List<LostAndFoundItemEntity> lostAndFoundItemList = lostAndFoundMapper
-                .selectOwnerItemStates(username);
-        for (LostAndFoundItemEntity lostAndFoundItem : lostAndFoundItemList) {
-            if (lostAndFoundItem.getState().equals(0)) {
-                lostAndFoundMapper.updateItemState(lostAndFoundItem.getId(), 2);
-            }
-        }
-        List<DeliveryOrderEntity> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(username);
-        for (DeliveryOrderEntity deliveryOrder : deliveryOrderList) {
-            if (deliveryOrder.getState().equals(0)) {
-                deliveryMapper.updateOrderState(deliveryOrder.getOrderId(), 3);
-            } else if (deliveryOrder.getState().equals(1)) {
-                DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
-                if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
-                    deliveryMapper.updateTradeState(deliveryTrade.getTradeId(), 0, 2);
-                }
-            }
-        }
-        //隐藏用户的交友资料
-        if (datingMapper != null) {
-            datingMapper.hideDatingProfilesByUsername(username);
-        }
+    public AccountDeletionService(List<AccountLifecycleContributor> contributors,
+                                  UserCertificateService userCertificateService,
+                                  UserMapper userMapper,
+                                  DeletionCleanupMapper cleanupMapper,
+                                  ApplicationEventPublisher events) {
+        this.contributors = contributors;
+        this.userCertificateService = userCertificateService;
+        this.userMapper = userMapper;
+        this.cleanupMapper = cleanupMapper;
+        this.events = events;
     }
 
     /**
-     * 检查账号是否符合删除条件，若不符合，则输出所有不符合的条件，若符合则通过
-     *
-     * @param sessionId
-     * @param password
-     * @return
+     * Check whether the account may be closed; returns each domain's reasons and advice.
      */
     public DataJsonResult<Map<String, String>> checkAccountDeletability(String sessionId, String password)
             throws Exception {
-        Map<String, String> map = new HashMap<>();
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        //检查用户账号状态
         CampusAccountView queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser == null) {
-            //若账号不存在，则抛出异常
-            throw new UserNotExistException("用户账号不存在");
+            throw new UserNotExistException(Messages.get("deletion.userMissing"));
         }
         if (password == null || password.isBlank()) {
-            throw new PasswordIncorrectException("请输入当前校园密码");
+            throw new PasswordIncorrectException(Messages.get("deletion.campusPasswordRequired"));
         }
-        // Fresh authentication works even when credentials were never persisted.
         userCertificateService.verifyCurrentPassword(user.getUsername(), password);
-        //检查有无待处理的社区功能信息
-        List<MarketplaceItemEntity> secondhandItemList = marketplaceMapper
-                .selectOwnerItemStates(user.getUsername());
-        for (MarketplaceItemEntity secondhandItem : secondhandItemList) {
-            if (secondhandItem.getState().equals(1)) {
-                map.put("二手交易平台存在未交易完成的物品", "请下架或确认出售账号下的所有二手交易物品");
+        Map<String, String> blockers = new LinkedHashMap<>();
+        for (AccountLifecycleContributor contributor : contributors) {
+            for (AccountCloseBlocker blocker : contributor.blockers(user.getUsername())) {
+                blockers.put(blocker.reason(), blocker.advice());
             }
         }
-        List<LostAndFoundItemEntity> lostAndFoundItemList = lostAndFoundMapper
-                .selectOwnerItemStates(user.getUsername());
-        for (LostAndFoundItemEntity lostAndFoundItem : lostAndFoundItemList) {
-            if (lostAndFoundItem.getState().equals(0)) {
-                map.put("失物招领平台存在未确认状态的物品", "请确认寻回账号下的所有失物招领物品");
-            }
-        }
-        //检查有无待处理的全民快递订单和交易
-        List<DeliveryOrderEntity> deliveryOrderList = deliveryMapper
-                .selectDeliveryOrderByUsername(user.getUsername());
-        for (DeliveryOrderEntity deliveryOrder : deliveryOrderList) {
-            if (deliveryOrder.getState().equals(0)) {
-                map.put("全民快递平台存在未删除的订单信息", "请删除账号下的所有快递代收订单信息");
-            } else if (deliveryOrder.getState().equals(1)) {
-                DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByOrderId(deliveryOrder.getOrderId());
-                if (deliveryTrade != null && deliveryTrade.getState().equals(0)) {
-                    map.put("全民快递平台存在未确认交易的订单信息", "请删除账号下的所有快递代收订单信息");
-                }
-            }
-        }
-        if (map.isEmpty()) {
+        if (blockers.isEmpty()) {
             return new DataJsonResult<>(true);
         }
-        return new DataJsonResult<>(false, map);
+        return new DataJsonResult<>(false, blockers);
     }
 
     /**
-     * 删除用户账号
-     *
-     * @param sessionId
-     * @throws Exception
+     * Close the user account.
      */
-    @Transactional(value="appTransactionManager", rollbackFor=Exception.class)
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void deleteAccount(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         CampusAccountView existing = userMapper.selectUser(user.getUsername());
-        // 与发信/关注同一把有序 app_user 行锁，关闭后发送侧锁后重查会得到 CONTACT_UNAVAILABLE
+        // Same ordered app_user row lock that sending and following take: once closed,
+        // the sending side re-reads under the lock and gets CONTACT_UNAVAILABLE.
         if (existing != null && existing.getId() != null) {
             userMapper.selectUserByIdForUpdate(existing.getId());
-            if (socialRelationMapper != null) {
-                socialRelationMapper.deleteAllFollowsForUser(existing.getId());
-                socialRelationMapper.deleteAllBlocksForUser(existing.getId());
-            }
         }
-        //开始进行账号关闭事务
-
-        //删除四六级准考证号
-        CetNumber cetNumber = cetMapper.selectNumber(user.getUsername());
-        if (cetNumber != null) {
-            cetMapper.updateNumber(user.getUsername(), null);
+        AccountClosure closure = new AccountClosure(
+                user.getUsername(),
+                nextAnonymizedName(user.getUsername()),
+                existing == null ? null : existing.getId());
+        for (AccountLifecycleContributor contributor : contributors) {
+            contributor.purge(closure);
         }
-        //删除绑定的手机号
-        PhoneEntity phone = phoneMapper.selectPhone(user.getUsername());
-        if (phone != null) {
-            phoneMapper.deletePhone(user.getUsername());
+        if (closure.userId() != null) {
+            userMapper.closeAppUser(closure.userId());
         }
-        //删除教务缓存信息
-        //隐藏用户的交友资料
-        if (datingMapper != null) {
-            datingMapper.hideDatingProfilesByUsername(user.getUsername());
-        }
-        //删除用户资料信息
-        profileMapper.resetUserProfile(user.getUsername(), "已注销");
-        profileMapper.resetUserIntroduction(user.getUsername());
-        //重置用户隐私配置
-        privacyMapper.resetPrivacy(user.getUsername());
-        //删除用户头像
-        //删除用户账号信息
-        Integer count = userMapper.selectDeletedUserCount("del_"
-                + StringEncryptUtils.sha1HexString(user.getUsername()).substring(0, 15));
-        count = count == null ? 0 : count;
-        String deletedUsername = "del_" + StringEncryptUtils.sha1HexString(user.getUsername())
-                .substring(0, 15) + "_" + count;
-        //匿名化社区内容的 username
-        if (topicMapper != null) {
-            topicMapper.anonymizeUsername(user.getUsername(), deletedUsername);
-        }
-        if (secretMapper != null) {
-            secretMapper.anonymizeUsername(user.getUsername(), deletedUsername);
-        }
-        if (photographMapper != null) {
-            photographMapper.anonymizeUsername(user.getUsername(), deletedUsername);
-        }
-        if (interactionNotificationMapper != null) {
-            interactionNotificationMapper.anonymizeActorUsername(user.getUsername(), deletedUsername, "已注销用户");
-        }
-        if (expressMapper != null) {
-            expressMapper.anonymizeByUsername(user.getUsername(), deletedUsername);
-            expressMapper.anonymizeCommentsByUsername(user.getUsername(), deletedUsername);
-        }
-        if (existing != null && existing.getId() != null) {
-            userMapper.closeAppUser(existing.getId());
-        }
-        userMapper.closeUser(deletedUsername, user.getUsername());
-        String cleanupId = java.util.UUID.randomUUID().toString();
-        cleanupMapper.enqueue(cleanupId, user.getUsername(), deletedUsername, existing == null ? null : existing.getId());
+        userMapper.closeUser(closure.anonymizedName(), closure.username());
+        String cleanupId = UUID.randomUUID().toString();
+        cleanupMapper.enqueue(cleanupId, closure.username(), closure.anonymizedName(), closure.userId());
         events.publishEvent(new DeletionCleanupWorker.CleanupRequested(cleanupId));
     }
 
+    /**
+     * Login name used for anonymized community content: del_ + 15 hex chars + reuse count.
+     */
+    private String nextAnonymizedName(String username) {
+        String hashed = StringEncryptUtils.sha1HexString(username).substring(0, 15);
+        Integer count = userMapper.selectDeletedUserCount(ANONYMIZED_PREFIX + hashed);
+        int suffix = count == null ? 0 : count;
+        return ANONYMIZED_PREFIX + hashed + "_" + suffix;
+    }
 }

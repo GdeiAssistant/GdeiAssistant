@@ -7,7 +7,7 @@ import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userprofile.controller.ProfileController;
-import cn.gdeiassistant.core.userprofile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.core.userprofile.controller.support.ProfileResponseMapper;
 import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
 import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import org.junit.jupiter.api.BeforeEach;

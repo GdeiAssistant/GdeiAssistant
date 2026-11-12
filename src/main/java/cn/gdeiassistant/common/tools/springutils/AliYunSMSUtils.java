@@ -15,6 +15,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class AliYunSMSUtils {
@@ -29,7 +30,7 @@ public class AliYunSMSUtils {
         if (aliyunSMSConfig == null || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeyId())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeySecret())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunChinaTemplateCode())) {
-            throw new FeatureNotEnabledException("短信功能未开启");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.smsDisabled"));
         }
         DefaultProfile profile = DefaultProfile.getProfile("default", aliyunSMSConfig.getSmsAliyunAccessKeyId()
                 , aliyunSMSConfig.getSmsAliyunAccessKeySecret());
@@ -75,7 +76,7 @@ public class AliYunSMSUtils {
         if (aliyunSMSConfig == null || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeyId())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunAccessKeySecret())
                 || StringUtils.isBlank(aliyunSMSConfig.getSmsAliyunGlobalTemplateCode())) {
-            throw new FeatureNotEnabledException("短信功能未开启");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.smsDisabled"));
         }
         DefaultProfile profile = DefaultProfile.getProfile("default", aliyunSMSConfig.getSmsAliyunAccessKeyId()
                 , aliyunSMSConfig.getSmsAliyunAccessKeySecret());

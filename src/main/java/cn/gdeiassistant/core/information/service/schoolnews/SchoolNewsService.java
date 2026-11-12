@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class SchoolNewsService {
@@ -27,7 +28,7 @@ public class SchoolNewsService {
         if (newInfoList != null && !newInfoList.isEmpty()) {
             return newInfoList;
         }
-        throw new DataNotExistException("没有更多的新闻通知信息");
+        throw new DataNotExistException(Messages.get("information.noMoreNews"));
     }
 
     /**
@@ -41,6 +42,6 @@ public class SchoolNewsService {
         if (newInfo != null) {
             return newInfo;
         }
-        throw new DataNotExistException("没有对应的新闻通知信息");
+        throw new DataNotExistException(Messages.get("information.newsMissing"));
     }
 }

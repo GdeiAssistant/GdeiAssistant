@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Repository
 public class ScheduleDaoImpl implements ScheduleDao {
@@ -78,7 +79,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
         if (mongoTemplate != null) {
             var documents = mongoTemplate.find(new Query(Criteria.where("username").is(username)).limit(2),
                     CustomScheduleDocument.class, "customSchedule");
-            if (documents.size() > 1) throw new IllegalStateException("自定义课表存在重复用户记录，需要核对后再更新");
+            if (documents.size() > 1) throw new IllegalStateException(Messages.get("schedule.duplicateUserRows"));
             return documents.isEmpty() ? null : documents.get(0);
         }
         return null;
@@ -117,7 +118,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
             }
             Map<String, Schedule> courses = new LinkedHashMap<>(document.getScheduleMap() == null ? Map.of() : document.getScheduleMap());
             long count = courses.values().stream().filter(course -> java.util.Objects.equals(course.getPosition(), schedule.getPosition())).count();
-            if (count >= MAX_CUSTOM_COURSES_PER_POSITION) throw new CountOverLimitException("最多可以保存五个自定义课表");
+            if (count >= MAX_CUSTOM_COURSES_PER_POSITION) throw new CountOverLimitException(Messages.get("schedule.maxFiveTimetables"));
             courses.put(schedule.getId(), schedule);
             if (replaceCourses(document, courses)) return;
         }
@@ -140,7 +141,7 @@ public class ScheduleDaoImpl implements ScheduleDao {
                     java.util.Objects.equals(position, entry.getValue().getPosition())
                     && (courseId == null || courseId.equals(entry.getKey()))).toList();
             if (matches.isEmpty()) return false;
-            if (matches.size() != 1) throw new IllegalArgumentException("请选择需要删除的课程");
+            if (matches.size() != 1) throw new IllegalArgumentException(Messages.get("schedule.selectCourseToDelete"));
             courses.remove(matches.get(0).getKey());
             if (replaceCourses(document, courses)) return true;
         }

@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 图书馆网络防腐层：agentdockingopac.featurelib.libsou.com、m.5read.com / mc.m.5read.com，
@@ -72,13 +73,10 @@ public class LibraryClient {
                     + sn + "&code=" + code + "&schoolId=705");
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             JSONObject jsonObject = JSON.parseObject(EntityUtils.toString(httpResponse.getEntity()));
-            LibraryRenewResult result = new LibraryRenewResult();
-            result.setResult(jsonObject.getIntValue("result"));
-            result.setMessage(jsonObject.getString("msg"));
-            return result;
+            return LibraryRenewResult.fromOpac(jsonObject.getIntValue("result"), jsonObject.getString("msg"));
         } finally {
             closeResponse(httpResponse);
             closeHttpClient(httpClient);
@@ -106,14 +104,14 @@ public class LibraryClient {
             HttpGet httpGet = new HttpGet(FIVEREAD_M + "/705");
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             httpGet = new HttpGet(FIVEREAD_MC + "/user/login/showLogin.jspx?backurl=/user/uc/showUserCenter.jspx");
             closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() != 200 || !document.title().equals("移动图书馆服务登录")) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             HttpPost httpPost = new HttpPost(FIVEREAD_MC + "/irdUser/login/opac/opacLogin.jspx");
             List<BasicNameValuePair> form = new ArrayList<>();
@@ -126,23 +124,23 @@ public class LibraryClient {
             closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 302) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
             closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("移动图书馆服务登录")) {
-                throw new PasswordIncorrectException("图书馆查询密码错误");
+                throw new PasswordIncorrectException(Messages.get("bookquery.passwordIncorrect"));
             }
             if (httpResponse.getStatusLine().getStatusCode() != 200 || !document.title().equals("个人中心")) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             httpGet = new HttpGet(FIVEREAD_MC + "/cmpt/opac/opacLink.jspx?stype=1");
             closeResponse(httpResponse);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("图书馆系统异常");
+                throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -213,7 +211,7 @@ public class LibraryClient {
     private static Document parseSuccessfulResponse(Response response) throws IOException, ServerErrorException {
         ResponseBody responseBody = response.body();
         if (!response.isSuccessful() || responseBody == null) {
-            throw new ServerErrorException("移动图书馆系统异常");
+            throw new ServerErrorException(Messages.get("integration.library.mobileSystemError"));
         }
         return Jsoup.parse(responseBody.string());
     }

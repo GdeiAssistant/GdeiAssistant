@@ -173,7 +173,7 @@ class CampusHttpFixtureTest {
         ReflectionTestUtils.setField(service, "cardBaseUrl", base);
         ReflectionTestUtils.setField(service, "paymentBaseUrl", base + "/payment");
         ReflectionTestUtils.setField(service, "alipayGatewayUrl", base + "/gateway");
-        var certificate = new cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity();
+        var certificate = new cn.gdeiassistant.common.pojo.entity.UserCertificateEntity();
         certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic", "synthetic-password"));
         when(certificates.getUserSessionCertificate("session")).thenReturn(certificate);
         reply("GET", "/cas/login", 200, "<div class='pcclient'></div><input id='tokens' value='t'><input id='stamp' value='s'>");

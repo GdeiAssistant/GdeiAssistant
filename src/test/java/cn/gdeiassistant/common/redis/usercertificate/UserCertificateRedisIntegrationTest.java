@@ -7,7 +7,7 @@ import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

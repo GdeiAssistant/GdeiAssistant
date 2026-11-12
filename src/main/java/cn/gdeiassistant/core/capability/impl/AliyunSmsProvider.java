@@ -9,6 +9,7 @@ import cn.gdeiassistant.core.capability.ServiceProvider;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class AliyunSmsProvider implements ServiceProvider<SmsRequest, Void> {
@@ -39,7 +40,7 @@ public class AliyunSmsProvider implements ServiceProvider<SmsRequest, Void> {
             }
             return null;
         } catch (ClientException | SendSMSException e) {
-            throw new ProviderException("阿里云短信发送失败", e);
+            throw new ProviderException(Messages.get("capability.aliyunSmsSendFailed"), e);
         }
     }
 

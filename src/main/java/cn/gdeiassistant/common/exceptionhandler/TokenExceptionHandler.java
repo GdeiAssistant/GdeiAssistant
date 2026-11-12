@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredExcepti
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenServerException;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestControllerAdvice(annotations = {RestController.class, Aspect.class})
 @Order(value = 0)
@@ -35,7 +36,7 @@ public class TokenExceptionHandler {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_EXPIRED_EXCEPTION, false,
-                        BackendTextLocalizer.localizeMessage("登录凭证已过期，请重新登录", request.getHeader("Accept-Language"))));
+                        Messages.forLanguage("token.expired", request.getHeader("Accept-Language"))));
     }
 
     /**
@@ -48,7 +49,7 @@ public class TokenExceptionHandler {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.UNUSUAL_LOCATION_EXCEPTION, false,
-                        BackendTextLocalizer.localizeMessage("可疑的登录请求，请退出账号并重新登录进行身份验证", request.getHeader("Accept-Language"))));
+                        Messages.forLanguage("token.suspicious", request.getHeader("Accept-Language"))));
     }
 
     /**
@@ -61,7 +62,7 @@ public class TokenExceptionHandler {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_NOT_MATCHING, false,
-                        BackendTextLocalizer.localizeMessage("没有对应的登录凭证记录，请尝试重新登录", request.getHeader("Accept-Language"))));
+                        Messages.forLanguage("token.notFound", request.getHeader("Accept-Language"))));
     }
 
     /**
@@ -74,6 +75,6 @@ public class TokenExceptionHandler {
         logger.error("TokenExceptionHandler：", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(new JsonResult(ErrorConstantUtils.TOKEN_SERVER_ERROR, false,
-                        BackendTextLocalizer.localizeMessage("登录凭证校验服务异常，请联系管理员", request.getHeader("Accept-Language"))));
+                        Messages.forLanguage("token.serviceError", request.getHeader("Accept-Language"))));
     }
 }

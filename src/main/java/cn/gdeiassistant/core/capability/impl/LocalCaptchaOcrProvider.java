@@ -6,6 +6,7 @@ import cn.gdeiassistant.core.capability.ServiceProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 @Order(5)
@@ -34,7 +35,7 @@ public class LocalCaptchaOcrProvider implements ServiceProvider<OcrRequest, Stri
                 return localTemplateOcrEngine.recognizeNumbers(request.getImageBase64());
             }
         } catch (RecognitionException e) {
-            throw new ProviderException("本地OCR识别失败", e);
+            throw new ProviderException(Messages.get("capability.localOcrFailed"), e);
         }
     }
 

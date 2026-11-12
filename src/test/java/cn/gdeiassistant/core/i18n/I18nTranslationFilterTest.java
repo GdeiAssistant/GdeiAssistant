@@ -3,6 +3,7 @@ package cn.gdeiassistant.core.i18n;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import cn.gdeiassistant.common.i18n.ApiLanguageResolver;
 
 class I18nTranslationFilterTest {
 

@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.ipaddress.service;
 
+import cn.gdeiassistant.common.spi.IPAddressRecorder;
 import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.entity.User;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class IPAddressService {
+public class IPAddressService implements IPAddressRecorder {
 
     @Autowired
     private IPLocationResolver ipLocationResolver;

@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.pojo.entity.Feedback;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.feedback.pojo.dto.FeedbackSubmitDTO;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +19,7 @@ import cn.gdeiassistant.common.exception.verificationexception.SendEmailExceptio
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class FeedbackController {
@@ -38,7 +39,7 @@ public class FeedbackController {
     public JsonResult postFeedback(HttpServletRequest request, @RequestBody @Validated FeedbackSubmitDTO body) {
         String sessionId = (String) request.getAttribute("sessionId");
         feedbackService.submitFeedback(sessionId, body);
-        return new JsonResult(true, BackendTextLocalizer.localizeMessage("感谢您的反馈", request.getHeader("Accept-Language")));
+        return new JsonResult(true, Messages.forLanguage("feedback.received", request.getHeader("Accept-Language")));
     }
 
     /**

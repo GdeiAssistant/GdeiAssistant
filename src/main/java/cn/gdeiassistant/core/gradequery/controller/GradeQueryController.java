@@ -3,7 +3,7 @@ package cn.gdeiassistant.core.gradequery.controller;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.gradequery.service.GradeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class GradeQueryController {
@@ -49,6 +50,6 @@ public class GradeQueryController {
     public JsonResult updateGradeCache(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         gradeService.updateGradeCache(sessionId);
-        return new JsonResult(true, BackendTextLocalizer.localizeMessage("成绩数据更新成功", request.getHeader("Accept-Language")));
+        return new JsonResult(true, Messages.forLanguage("grade.cache.updated", request.getHeader("Accept-Language")));
     }
 }

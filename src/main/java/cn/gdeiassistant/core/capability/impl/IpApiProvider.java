@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
@@ -48,11 +49,11 @@ public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
                 normalize(record);
                 return record;
             }
-            throw new ProviderException("ip-api.com 查询失败：status 不为 success");
+            throw new ProviderException(Messages.get("capability.ipApiStatusNotSuccess"));
         } catch (ProviderException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProviderException("ip-api.com 查询异常：" + e.getMessage(), e);
+            throw new ProviderException(Messages.get("capability.ipApiLookupError", e.getMessage()), e);
         }
     }
 

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class SmsService {
@@ -39,7 +40,7 @@ public class SmsService {
             chain.execute(new SmsRequest(code, phone, false));
         } catch (ProviderChainExhaustedException e) {
             log.error("所有短信服务商均不可用：{}", e.getMessage());
-            throw new SendSMSException("短信发送失败，所有服务商均不可用");
+            throw new SendSMSException(Messages.get("capability.allSmsProvidersFailed"));
         }
     }
 
@@ -48,7 +49,7 @@ public class SmsService {
             chain.execute(new SmsRequest(code, phone, true, areaCode));
         } catch (ProviderChainExhaustedException e) {
             log.error("所有短信服务商均不可用：{}", e.getMessage());
-            throw new SendSMSException("短信发送失败，所有服务商均不可用");
+            throw new SendSMSException(Messages.get("capability.allSmsProvidersFailed"));
         }
     }
 

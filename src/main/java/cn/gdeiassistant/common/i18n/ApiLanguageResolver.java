@@ -1,7 +1,8 @@
-package cn.gdeiassistant.core.i18n;
+package cn.gdeiassistant.common.i18n;
 
 import java.util.Locale;
 
+/** Resolves the Accept-Language header to one of the six catalog locales. */
 public final class ApiLanguageResolver {
 
     private ApiLanguageResolver() {

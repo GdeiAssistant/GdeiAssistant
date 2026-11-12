@@ -10,7 +10,7 @@ import cn.gdeiassistant.common.pojo.entity.Grade;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
@@ -27,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class GradeService {
@@ -79,7 +80,7 @@ public class GradeService {
     public GradeQueryResult queryGrade(String sessionId, Integer year) throws Exception {
         // Missing year means the latest academic year for both cache and remote paths.
         if (year == null) year = -1;
-        if (year < -1) throw new NotAvailableConditionException("当前学年暂不可查询");
+        if (year < -1) throw new NotAvailableConditionException(Messages.get("grade.currentYearUnavailable"));
         //优先从缓存中获取
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
@@ -141,7 +142,7 @@ public class GradeService {
             }
             if (firstTermGPAList.size() <= year || secondTermGPAList.size() <= year
                     || firstTermIGPList.size() <= year || secondTermIGPList.size() <= year) {
-                throw new NotAvailableConditionException("当前学年成绩缓存数据不完整，请重新查询");
+                throw new NotAvailableConditionException(Messages.get("grade.cacheIncomplete"));
             }
             Double firstTermGPA = firstTermGPAList.get(year);
             Double secondTermGPA = secondTermGPAList.get(year);
@@ -173,7 +174,7 @@ public class GradeService {
             }
             Collections.reverse(yearList);
             if (yearList.isEmpty() || yearList.size() <= year || year < -1) {
-                throw new NotAvailableConditionException("当前学年暂不可查询");
+                throw new NotAvailableConditionException(Messages.get("grade.currentYearUnavailable"));
             }
             if (year == -1) {
                 year = yearList.size() - 1;
@@ -184,7 +185,7 @@ public class GradeService {
             Document gradeDoc = eduSystemClient.fetchGradeByYear(sessionId, credential, viewState, yearOptionValue);
             Element element = gradeDoc.getElementsByClass("datelist").first();
             if (element == null) {
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
             Elements trs = element.getElementsByTag("tr");
             List<Grade> firstTermGradeList = new ArrayList<>();
@@ -244,22 +245,22 @@ public class GradeService {
             GradeQueryResult.setSecondTermGradeList(secondTermGradeList);
             return GradeQueryResult;
         } catch (PasswordIncorrectException ignored) {
-            throw new PasswordIncorrectException("用户密码错误");
+            throw new PasswordIncorrectException(Messages.get("grade.userPasswordIncorrect"));
         } catch (TimeStampIncorrectException e) {
             logger.error("课程成绩查询异常：", e);
-            throw new TimeStampIncorrectException("时间戳校验失败");
+            throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
         } catch (NotAvailableConditionException e) {
             logger.error("课程成绩查询异常：", e);
-            throw new NotAvailableConditionException("查询条件不可用");
+            throw new NotAvailableConditionException(Messages.get("query.conditionUnavailable"));
         } catch (ServerErrorException e) {
             logger.error("课程成绩查询异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } catch (java.io.IOException e) {
             logger.error("课程成绩查询异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("课程成绩查询异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
     }
 

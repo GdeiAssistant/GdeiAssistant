@@ -9,7 +9,7 @@ import cn.gdeiassistant.common.exception.queryexception.*;
 import cn.gdeiassistant.common.pojo.document.GradeDocument;
 import cn.gdeiassistant.common.pojo.entity.*;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 

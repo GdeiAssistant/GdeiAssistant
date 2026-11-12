@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class DataQueryService {
@@ -34,7 +35,7 @@ public class DataQueryService {
         if (electricFees != null) {
             return electricFees;
         }
-        throw new DataNotExistException("查询的电费数据不存在");
+        throw new DataNotExistException(Messages.get("dataquery.electricityDataMissing"));
     }
 
     /**
@@ -47,7 +48,7 @@ public class DataQueryService {
         if (yellowPageList != null && !yellowPageList.isEmpty()) {
             return yellowPageList;
         }
-        throw new DataNotExistException("没有黄页列表信息");
+        throw new DataNotExistException(Messages.get("dataquery.yellowPagesListMissing"));
     }
 
     /**
@@ -61,7 +62,7 @@ public class DataQueryService {
         if (yellowPageTypeList != null && !yellowPageTypeList.isEmpty()) {
             return yellowPageTypeList;
         }
-        throw new DataNotExistException("没有黄页分类信息");
+        throw new DataNotExistException(Messages.get("dataquery.yellowPagesCategoriesMissing"));
     }
 
     /**

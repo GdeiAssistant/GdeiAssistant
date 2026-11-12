@@ -8,7 +8,7 @@ import cn.gdeiassistant.common.exception.commonexception.*;
 import cn.gdeiassistant.common.exception.queryexception.*;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.spareroom.pojo.dto.EmptyClassroomQueryDTO;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 

@@ -11,7 +11,7 @@ import cn.gdeiassistant.core.bookquery.service.BookQueryService;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
 import jakarta.servlet.http.HttpServletRequest;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 @RequestMapping("/api/library")
@@ -83,13 +84,14 @@ public class LibraryController {
         String code = body != null ? body.getCode() : null;
         String password = body != null ? body.getPassword() : null;
         if (sn == null || sn.isEmpty() || code == null || code.isEmpty()) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("缺少 sn 或 code", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("library.renew.missingIdentifier", request.getHeader("Accept-Language")));
         }
         if (password == null || password.isEmpty()) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("请提供图书馆密码", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("library.password.required", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
-        bookQueryService.bookquery(sessionId, password);
+        // OPAC 要求先拉取借阅页以建立会话并校验图书馆密码，再发起续借。
+        bookQueryService.getBorrowedBooks(sessionId, password);
         bookQueryService.renewBook(sessionId, sn, code);
         return new JsonResult(true);
     }

@@ -3,10 +3,10 @@ package cn.gdeiassistant.core.message.controller;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
-import cn.gdeiassistant.core.i18n.ApiLanguageResolver;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.ApiLanguageResolver;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
+import cn.gdeiassistant.core.message.service.InteractionMessageLocalizer;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +37,7 @@ public class MessageController {
         }
         List<InteractionMessageVO> localizedMessages = new ArrayList<>(messages.size());
         for (InteractionMessageVO message : messages) {
-            localizedMessages.add(BackendTextLocalizer.localizeInteractionMessage(message, language));
+            localizedMessages.add(InteractionMessageLocalizer.localize(message, language));
         }
         return new DataJsonResult<>(true, localizedMessages);
     }

@@ -12,7 +12,7 @@ class ChargeServiceAmountTest {
     @Test void validAmountStillRequiresSuccessfulUpstreamAuthentication() throws Exception {
         ChargeService service = new ChargeService();
         UserCertificateService certificates = mock(UserCertificateService.class);
-        var certificate = new cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity();
+        var certificate = new cn.gdeiassistant.common.pojo.entity.UserCertificateEntity();
         certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic-user", "synthetic-password"));
         when(certificates.getUserSessionCertificate("synthetic-session")).thenReturn(certificate);
         var pool = mock(cn.gdeiassistant.integration.httpclient.HttpClientUtils.class);

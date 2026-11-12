@@ -7,7 +7,7 @@ import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionExcep
 import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
 import cn.gdeiassistant.core.spareroom.pojo.dto.EmptyClassroomQueryDTO;
 import cn.gdeiassistant.core.spareroom.pojo.vo.SpareRoomVO;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class SpareRoomService {
@@ -68,7 +69,7 @@ public class SpareRoomService {
                     }
                 }
                 if (xqj == null) {
-                    throw new ErrorQueryConditionException("错误的查询条件");
+                    throw new ErrorQueryConditionException(Messages.get("spareroom.conditionInvalid"));
                 }
                 String ddlXqm = null;
                 for (Element xqjOption : xqjOptions) {
@@ -77,7 +78,7 @@ public class SpareRoomService {
                     }
                 }
                 if (ddlXqm == null) {
-                    throw new ErrorQueryConditionException("错误的查询条件");
+                    throw new ErrorQueryConditionException(Messages.get("spareroom.conditionInvalid"));
                 }
                 String weekTypeString = null;
                 switch (query.getWeekType()) {
@@ -104,7 +105,7 @@ public class SpareRoomService {
                     ddlDsz = ddlDszOptions.first().attr("value");
                 }
                 if (ddlDsz == null) {
-                    throw new ErrorQueryConditionException("错误的查询条件");
+                    throw new ErrorQueryConditionException(Messages.get("spareroom.conditionInvalid"));
                 }
                 String sjd = Form1.getElementById("sjd").select("option").get(query.getClassNumber()).attr("value");
                 String ddlSyXn = null;
@@ -205,19 +206,19 @@ public class SpareRoomService {
             return spareRoomList;
         } catch (IOException e) {
             logger.error("查询空课室异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (TimeStampIncorrectException e) {
             logger.error("查询空课室异常：", e);
-            throw new TimeStampIncorrectException("时间戳校验失败");
+            throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
         } catch (PasswordIncorrectException e) {
             logger.error("查询空课室异常：", e);
             throw e;
         } catch (ErrorQueryConditionException e) {
             logger.error("查询空课室异常：", e);
-            throw new ErrorQueryConditionException("查询条件错误");
+            throw new ErrorQueryConditionException(Messages.get("graduateexam.conditionInvalid"));
         } catch (Exception e) {
             logger.error("查询空课室异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
     }
 

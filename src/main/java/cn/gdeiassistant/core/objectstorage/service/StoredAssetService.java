@@ -11,6 +11,7 @@ import org.springframework.transaction.TransactionDefinition;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /** Durable file lifecycle: pending records survive a failed business transaction. */
 @Service
@@ -45,9 +46,9 @@ public class StoredAssetService {
             boolean voice = key.startsWith("secret/voice/");
             int limit = voice ? cn.gdeiassistant.common.constant.ValueConstantUtils.MAX_VOICE_SIZE : cn.gdeiassistant.common.constant.ValueConstantUtils.MAX_IMAGE_SIZE;
             byte[] bytes = input.readNBytes(limit + 1);
-            if (bytes.length == 0 || bytes.length >= limit) throw new IllegalArgumentException("不合法的图片文件");
+            if (bytes.length == 0 || bytes.length >= limit) throw new IllegalArgumentException(Messages.get("upload.invalidImage"));
             String type = UploadService.validateMedia(bytes);
-            if (type == null || !(voice ? type.startsWith("audio/") : type.startsWith("image/"))) throw new IllegalArgumentException("不合法的图片文件");
+            if (type == null || !(voice ? type.startsWith("audio/") : type.startsWith("image/"))) throw new IllegalArgumentException(Messages.get("upload.invalidImage"));
             pending(key, null, type, bytes.length);
             storage.uploadBytesStrict(null, key, bytes, type);
             ready(key);

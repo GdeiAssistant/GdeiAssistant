@@ -9,7 +9,7 @@ import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.photograph.pojo.dto.PhotographPublishDTO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographCommentVO;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
@@ -31,6 +31,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class PhotographController {
@@ -39,7 +40,7 @@ public class PhotographController {
     private PhotographService photographService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     @RequestMapping(value = "/api/photograph/statistics/photos", method = RequestMethod.GET)
@@ -65,7 +66,7 @@ public class PhotographController {
             , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) {
         if (type < 0 || type > 1) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         size = PageUtils.normalizePageSize(start, size);
         List<PhotographVO> list = photographService.queryPhotographList(start, size, type, (String) request.getAttribute("sessionId"));
@@ -159,7 +160,7 @@ public class PhotographController {
         try {
             photographService.publishPhotograph(actual, sessionId, images, imageKeys);
         } catch (Exception failure) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("拍好校园图片上传失败", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("photograph.uploadFailed", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

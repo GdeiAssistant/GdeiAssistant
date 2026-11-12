@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * Cloudflare R2 对象存储服务（S3 兼容 API）。
@@ -56,7 +57,7 @@ public class R2StorageService {
             return;
         }
         if (!isEnabled()) {
-            throw new FeatureNotEnabledException("对象存储未开启，无法上传图片");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageUploadDisabled"));
         }
         byte[] bytes;
         try {
@@ -114,13 +115,13 @@ public class R2StorageService {
      */
     public void uploadBytesStrict(String bucket, String key, byte[] bytes, String contentType) {
         if (!isEnabled()) {
-            throw new FeatureNotEnabledException("对象存储未开启，无法上传图片");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageUploadDisabled"));
         }
         if (bytes == null) {
-            throw new IllegalArgumentException("bytes 不能为空");
+            throw new IllegalArgumentException(Messages.get("common.tools.bytesRequired"));
         }
         if (key == null || key.isBlank()) {
-            throw new IllegalArgumentException("key 不能为空");
+            throw new IllegalArgumentException(Messages.get("common.tools.keyRequired"));
         }
         String resolvedBucket = resolveBucket(bucket);
         PutObjectRequest request = PutObjectRequest.builder()
@@ -137,10 +138,10 @@ public class R2StorageService {
      */
     public void deleteObjectStrict(String bucket, String key) {
         if (!isEnabled()) {
-            throw new FeatureNotEnabledException("对象存储未开启，无法删除图片");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageDeleteDisabled"));
         }
         if (key == null || key.isBlank()) {
-            throw new IllegalArgumentException("key 不能为空");
+            throw new IllegalArgumentException(Messages.get("common.tools.keyRequired"));
         }
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder().bucket(resolveBucket(bucket)).key(key).build());
@@ -160,7 +161,7 @@ public class R2StorageService {
             return null;
         }
         if (maxBytes <= 0) {
-            throw new IllegalArgumentException("maxBytes 必须为正");
+            throw new IllegalArgumentException(Messages.get("common.tools.maxBytesPositive"));
         }
         try (InputStream in = s3Client.getObject(GetObjectRequest.builder()
                 .bucket(resolveBucket(bucket))
@@ -192,13 +193,13 @@ public class R2StorageService {
      */
     private void validateSourceKey(String sourceKey) {
         if (sourceKey == null || sourceKey.isEmpty()) {
-            throw new IllegalArgumentException("sourceKey 不能为空");
+            throw new IllegalArgumentException(Messages.get("common.tools.sourceKeyRequired"));
         }
         if (sourceKey.contains("..")) {
-            throw new IllegalArgumentException("sourceKey 包含非法路径穿越字符: " + sourceKey);
+            throw new IllegalArgumentException(Messages.get("common.tools.sourceKeyTraversal", sourceKey));
         }
         if (!sourceKey.startsWith(TEMP_UPLOAD_PREFIX)) {
-            throw new IllegalArgumentException("sourceKey 必须位于临时上传目录 (upload/): " + sourceKey);
+            throw new IllegalArgumentException(Messages.get("common.tools.sourceKeyOutsideUpload", sourceKey));
         }
     }
 
@@ -237,7 +238,7 @@ public class R2StorageService {
     }
 
     public HeadObjectResponse headObjectMetadata(String key) {
-        if (!isEnabled()) throw new FeatureNotEnabledException("对象存储未开启");
+        if (!isEnabled()) throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageDisabled"));
         try { return s3Client.headObject(HeadObjectRequest.builder().bucket(resolveBucket(null)).key(key).build()); }
         catch (NoSuchKeyException missing) { return null; }
     }
@@ -245,7 +246,7 @@ public class R2StorageService {
     public void moveVerifiedObject(String sourceKey, String targetKey, String etag) {
         validateSourceKey(sourceKey);
         if (etag == null || etag.isBlank()) throw new IllegalArgumentException("Missing upload version");
-        if (!isEnabled()) throw new FeatureNotEnabledException("对象存储未开启");
+        if (!isEnabled()) throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageDisabled"));
         s3Client.copyObject(CopyObjectRequest.builder().sourceBucket(resolveBucket(null)).sourceKey(sourceKey)
                 .destinationBucket(resolveBucket(null)).destinationKey(targetKey).copySourceIfMatch(etag).build());
         deleteObjectStrict(null, sourceKey);
@@ -260,7 +261,7 @@ public class R2StorageService {
 
     public String generatePutPresignedUrl(String bucket, String key, String contentType, long expire, TimeUnit unit) {
         if (!isEnabled()) {
-            throw new FeatureNotEnabledException("对象存储未开启，无法生成上传地址");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.objectStoragePresignDisabled"));
         }
         Duration duration = Duration.ofMillis(unit.toMillis(expire));
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -301,7 +302,7 @@ public class R2StorageService {
             resolvedBucket = r2Config.getBucketName();
         }
         if (resolvedBucket == null || resolvedBucket.trim().isEmpty()) {
-            throw new FeatureNotEnabledException("对象存储未配置 bucketName");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.objectStorageBucketMissing"));
         }
         return resolvedBucket;
     }

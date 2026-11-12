@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 统一使用 RedisConfig 提供的 redisTemplate（StringRedisSerializer），
@@ -83,7 +84,7 @@ public class RedisDaoUtils {
             if (timeout > 0) set(key, encoded, timeout, unit);
             else set(key, encoded);
         } catch (java.io.IOException e) {
-            throw new RuntimeException("Redis 序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.serializeFailed"), e);
         }
     }
 
@@ -97,7 +98,7 @@ public class RedisDaoUtils {
                 return (T) ois.readObject();
             }
         } catch (Exception e) {
-            throw new RuntimeException("Redis 反序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.deserializeFailed"), e);
         }
     }
 }

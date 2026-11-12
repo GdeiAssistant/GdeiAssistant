@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class AuthenticationService {
@@ -72,12 +73,12 @@ public class AuthenticationService {
                     authenticationMapper.insertAuthentication(user.getUsername(), authentication.getType()
                             , authentication.getNumber(), authentication.getName());
                 } else {
-                    throw new AuthenticationRecordExistException("已存在实名认证记录");
+                    throw new AuthenticationRecordExistException(Messages.get("authentication.recordExists"));
                 }
                 break;
 
             default:
-                throw new InconsistentAuthenticationException("该证件类型的实名认证暂未开放");
+                throw new InconsistentAuthenticationException(Messages.get("authentication.idTypeNotSupported"));
         }
     }
 
@@ -85,7 +86,7 @@ public class AuthenticationService {
         return Optional.ofNullable(authentication)
                 .map(Authentication::getType)
                 .map(AUTHENTICATION_TYPES::get)
-                .orElseThrow(() -> new InconsistentAuthenticationException("证件类型不合法"));
+                .orElseThrow(() -> new InconsistentAuthenticationException(Messages.get("authentication.idTypeInvalid")));
     }
 
     /**

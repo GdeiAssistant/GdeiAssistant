@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class CampusCredentialService {
@@ -61,7 +62,7 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO getSelfStatus(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null || StringUtils.isBlank(user.getUsername())) {
-            throw new UserNotExistException("当前用户不存在，请尝试重新登录");
+            throw new UserNotExistException(Messages.get("auth.userMissing"));
         }
         return getStatusByUsername(user.getUsername());
     }
@@ -69,7 +70,7 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO recordConsent(String sessionId, CampusCredentialConsentDTO body) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null || StringUtils.isBlank(user.getUsername())) {
-            throw new UserNotExistException("当前用户不存在，请尝试重新登录");
+            throw new UserNotExistException(Messages.get("auth.userMissing"));
         }
         return recordConsentByUsername(user.getUsername(), body);
     }
@@ -98,7 +99,7 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO revokeConsent(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null || StringUtils.isBlank(user.getUsername())) {
-            throw new UserNotExistException("当前用户不存在，请尝试重新登录");
+            throw new UserNotExistException(Messages.get("auth.userMissing"));
         }
         String username = user.getUsername();
         revokeActiveConsent(username, "USER_REVOKED");
@@ -112,7 +113,7 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO deleteSavedCredential(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null || StringUtils.isBlank(user.getUsername())) {
-            throw new UserNotExistException("当前用户不存在，请尝试重新登录");
+            throw new UserNotExistException(Messages.get("auth.userMissing"));
         }
         String username = user.getUsername();
         revokeActiveConsent(username, "CREDENTIAL_DELETED");
@@ -126,16 +127,16 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO updateQuickAuth(String sessionId, boolean enabled) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null || StringUtils.isBlank(user.getUsername())) {
-            throw new UserNotExistException("当前用户不存在，请尝试重新登录");
+            throw new UserNotExistException(Messages.get("auth.userMissing"));
         }
         String username = user.getUsername();
         ensurePrivacyRow(username);
         if (enabled) {
             if (!hasActiveConsent(username)) {
-                throw new IllegalArgumentException("启用快速认证前需要先完成校园账号凭证授权");
+                throw new IllegalArgumentException(Messages.get("campuscredential.fastAuthRequiresGrant"));
             }
             if (!hasSavedCredential(username)) {
-                throw new IllegalArgumentException("当前没有可复用的校园凭证，请重新登录并授权后再启用快速认证");
+                throw new IllegalArgumentException(Messages.get("campuscredential.fastAuthNoCredential"));
             }
             privacyMapper.updateQuickAuth(true, username);
         } else {
@@ -247,7 +248,7 @@ public class CampusCredentialService {
     private String normalizeScene(String scene, String defaultScene) {
         String normalized = StringUtils.isBlank(scene) ? defaultScene : scene.trim().toUpperCase();
         if (!SUPPORTED_SCENES.contains(normalized)) {
-            throw new IllegalArgumentException("授权场景不合法");
+            throw new IllegalArgumentException(Messages.get("campuscredential.grantSceneInvalid"));
         }
         return normalized;
     }
@@ -258,7 +259,7 @@ public class CampusCredentialService {
             LocalDate localDate = LocalDate.parse(raw);
             return Date.valueOf(localDate);
         } catch (Exception e) {
-            throw new IllegalArgumentException("授权日期格式不合法");
+            throw new IllegalArgumentException(Messages.get("campuscredential.grantDateFormatInvalid"));
         }
     }
 

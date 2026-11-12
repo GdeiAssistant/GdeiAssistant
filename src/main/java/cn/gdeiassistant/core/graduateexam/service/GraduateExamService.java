@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class GraduateExamService {
@@ -49,7 +50,7 @@ public class GraduateExamService {
             document = chsiClient.submitPostgraduateQuery(name, examNumber, idNumber, checkcode);
             Element ch_alert_message = document.getElementsByClass("ch-alert-message").first();
             if (ch_alert_message != null) {
-                throw new ErrorQueryConditionException("查询条件错误");
+                throw new ErrorQueryConditionException(Messages.get("graduateexam.conditionInvalid"));
             }
             Element container_clearfix = document.getElementsByClass("container clearfix").first();
             Element zx_no_answer = container_clearfix.getElementsByClass("zx-no-answer").first();
@@ -69,16 +70,16 @@ public class GraduateExamService {
             return postgraduate;
         } catch (IOException e) {
             logger.error("查询考研成绩异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (ErrorQueryConditionException e) {
             logger.error("查询考研成绩异常：", e);
-            throw new ErrorQueryConditionException("查询条件错误");
+            throw new ErrorQueryConditionException(Messages.get("graduateexam.conditionInvalid"));
         } catch (RecognitionException e) {
             logger.error("查询考研成绩验证码识别异常：", e);
-            throw new RecognitionException("图像识别服务异常，请稍后重试");
+            throw new RecognitionException(Messages.get("graduateexam.recognitionUnavailable"));
         } catch (Exception e) {
             logger.error("查询考研成绩异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
     }
 }

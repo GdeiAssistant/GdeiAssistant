@@ -1,44 +1,65 @@
 package cn.gdeiassistant.core.deletion.service;
 
+import cn.gdeiassistant.common.account.AccountClosure;
+import cn.gdeiassistant.common.account.AccountLifecycleContributor;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
 import cn.gdeiassistant.common.pojo.entity.CetNumber;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
+import cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper;
+import cn.gdeiassistant.core.announcement.service.AnnouncementAccountContributor;
 import cn.gdeiassistant.core.cet.mapper.CetMapper;
-import cn.gdeiassistant.core.close.mapper.CloseMapper;
+import cn.gdeiassistant.core.cet.service.CetAccountContributor;
 import cn.gdeiassistant.core.dating.mapper.DatingMapper;
+import cn.gdeiassistant.core.dating.service.DatingAccountContributor;
 import cn.gdeiassistant.core.delivery.mapper.DeliveryMapper;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryOrderEntity;
 import cn.gdeiassistant.core.delivery.pojo.entity.DeliveryTradeEntity;
+import cn.gdeiassistant.core.delivery.service.DeliveryAccountContributor;
+import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
 import cn.gdeiassistant.core.express.mapper.ExpressMapper;
+import cn.gdeiassistant.core.express.service.ExpressAccountContributor;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
+import cn.gdeiassistant.core.grade.service.GradeAccountContributor;
 import cn.gdeiassistant.core.lostandfound.mapper.LostAndFoundMapper;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
+import cn.gdeiassistant.core.lostandfound.service.LostAndFoundAccountContributor;
 import cn.gdeiassistant.core.marketplace.mapper.MarketplaceMapper;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
+import cn.gdeiassistant.core.marketplace.service.MarketplaceAccountContributor;
 import cn.gdeiassistant.core.message.mapper.InteractionNotificationMapper;
+import cn.gdeiassistant.core.message.service.MessageAccountContributor;
 import cn.gdeiassistant.core.phone.mapper.PhoneMapper;
 import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
+import cn.gdeiassistant.core.phone.service.PhoneAccountContributor;
 import cn.gdeiassistant.core.photograph.mapper.PhotographMapper;
+import cn.gdeiassistant.core.photograph.service.PhotographAccountContributor;
 import cn.gdeiassistant.core.privacy.mapper.PrivacyMapper;
+import cn.gdeiassistant.core.privacy.service.PrivacyAccountContributor;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
+import cn.gdeiassistant.core.profile.service.ProfileAccountContributor;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
+import cn.gdeiassistant.core.schedule.service.ScheduleAccountContributor;
 import cn.gdeiassistant.core.secret.mapper.SecretMapper;
+import cn.gdeiassistant.core.secret.service.SecretAccountContributor;
+import cn.gdeiassistant.core.social.mapper.SocialRelationMapper;
+import cn.gdeiassistant.core.social.service.SocialAccountContributor;
+import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
 import cn.gdeiassistant.core.topic.mapper.TopicMapper;
+import cn.gdeiassistant.core.topic.service.TopicAccountContributor;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,17 +67,25 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+/**
+ * Behaviour test for account-closure orchestration: asserts observable results only
+ * (blockers, anonymized name, per-domain erasure) and no internal field layout.
+ */
 @ExtendWith(MockitoExtension.class)
 class AccountDeletionServiceTest {
 
-    @InjectMocks
-    private AccountDeletionService accountDeletionService;
+    private static final String USERNAME = "testuser";
+    private static final String PASSWORD = "testpass";
+    private static final String SESSION_ID = "session-123";
 
-    @Mock private UserProfileService userProfileService;
     @Mock private UserCertificateService userCertificateService;
+    @Mock private UserProfileService userProfileService;
     @Mock private GradeDao gradeDao;
     @Mock private ScheduleDao scheduleDao;
     @Mock private UserMapper userMapper;
@@ -67,598 +96,349 @@ class AccountDeletionServiceTest {
     @Mock private PhoneMapper phoneMapper;
     @Mock private ProfileMapper profileMapper;
     @Mock private PrivacyMapper privacyMapper;
-    @Mock private CloseMapper closeMapper;
     @Mock private DatingMapper datingMapper;
     @Mock private TopicMapper topicMapper;
     @Mock private SecretMapper secretMapper;
     @Mock private PhotographMapper photographMapper;
     @Mock private InteractionNotificationMapper interactionNotificationMapper;
     @Mock private ExpressMapper expressMapper;
-    @Mock private cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper cleanupMapper;
-    @Mock private org.springframework.context.ApplicationEventPublisher events;
-
-    private static final String USERNAME = "testuser";
-    private static final String PASSWORD = "testpass";
-    private static final String SESSION_ID = "session-123";
+    @Mock private SocialRelationMapper socialRelationMapper;
+    @Mock private SocialRealtimeHub realtimeHub;
+    @Mock private AnnouncementMapper announcementMapper;
+    @Mock private DeletionCleanupMapper cleanupMapper;
+    @Mock private ApplicationEventPublisher events;
 
     private User mockUser;
+
+    /**
+     * Real contributors wired to mocked mappers: assertions then describe what happened to a
+     * domain's data instead of which method the orchestrator happened to call.
+     */
+    private AccountDeletionService deletionService() {
+        List<AccountLifecycleContributor> contributors = List.of(
+                new MarketplaceAccountContributor(marketplaceMapper),
+                new LostAndFoundAccountContributor(lostAndFoundMapper),
+                new DeliveryAccountContributor(deliveryMapper),
+                new CetAccountContributor(cetMapper),
+                new PhoneAccountContributor(phoneMapper),
+                new DatingAccountContributor(datingMapper),
+                new ProfileAccountContributor(profileMapper, userProfileService),
+                new PrivacyAccountContributor(privacyMapper),
+                new TopicAccountContributor(topicMapper),
+                new SecretAccountContributor(secretMapper),
+                new PhotographAccountContributor(photographMapper),
+                new MessageAccountContributor(interactionNotificationMapper),
+                new ExpressAccountContributor(expressMapper),
+                new SocialAccountContributor(socialRelationMapper, realtimeHub),
+                new GradeAccountContributor(gradeDao),
+                new ScheduleAccountContributor(scheduleDao),
+                new AnnouncementAccountContributor(announcementMapper));
+        return new AccountDeletionService(contributors, userCertificateService, userMapper, cleanupMapper, events);
+    }
 
     @BeforeEach
     void setUp() {
         mockUser = new User(USERNAME, PASSWORD);
     }
 
-    // =========================================================================
-    // deleteAccount — happy path
-    // =========================================================================
-    @Nested
-    @DisplayName("deleteAccount")
-    class DeleteAccount {
-
-        @BeforeEach
-        void setUpDeleteAccount() {
-            when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
-            // Default stubs for queries that may or may not return data
-            lenient().when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
-            lenient().when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
-            lenient().when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
-        }
-
-        @Test
-        @DisplayName("happy path: calls all anonymize mappers and closes user")
-        void happyPath_callsAllAnonymizeMappersAndClosesUser() throws Exception {
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            // Verify CET and phone cleanup were checked
-            verify(cetMapper).selectNumber(USERNAME);
-            verify(phoneMapper).selectPhone(USERNAME);
-
-            // Verify education cache removal
-            verifyNoInteractions(gradeDao);
-            verifyNoInteractions(scheduleDao);
-
-            // Verify dating profiles hidden
-            verify(datingMapper).hideDatingProfilesByUsername(USERNAME);
-
-            // Verify profile reset
-            verify(profileMapper).resetUserProfile(USERNAME, "已注销");
-            verify(profileMapper).resetUserIntroduction(USERNAME);
-
-            // Verify privacy reset
-            verify(privacyMapper).resetPrivacy(USERNAME);
-
-            // Verify avatar deletion
-            verifyNoInteractions(userProfileService);
-
-            // Verify anonymization of community content
-            verify(topicMapper).anonymizeUsername(eq(USERNAME), anyString());
-            verify(secretMapper).anonymizeUsername(eq(USERNAME), anyString());
-            verify(photographMapper).anonymizeUsername(eq(USERNAME), anyString());
-            verify(interactionNotificationMapper).anonymizeActorUsername(eq(USERNAME), anyString(), eq("已注销用户"));
-            verify(expressMapper).anonymizeByUsername(eq(USERNAME), anyString());
-            verify(expressMapper).anonymizeCommentsByUsername(eq(USERNAME), anyString());
-
-            // Verify user account closed
-            verify(userMapper).closeUser(anyString(), eq(USERNAME));
-
-            // Verify close log saved
-            verify(cleanupMapper).enqueue(anyString(), eq(USERNAME), startsWith("del_"), nullable(Long.class));
-        }
-
-        @Test
-        @DisplayName("happy path: deletedUsername is derived from sha1 hash with count suffix")
-        void happyPath_deletedUsernameFormat() throws Exception {
-            when(userMapper.selectDeletedUserCount(anyString())).thenReturn(2);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            // The deletedUsername should end with _2 (the count)
-            verify(userMapper).closeUser(argThat(resetName ->
-                    resetName.startsWith("del_") && resetName.endsWith("_2")), eq(USERNAME));
-        }
-
-        @Test
-        @DisplayName("happy path: null count from selectDeletedUserCount defaults to 0")
-        void happyPath_nullCountDefaultsToZero() throws Exception {
-            when(userMapper.selectDeletedUserCount(anyString())).thenReturn(null);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            verify(userMapper).closeUser(argThat(resetName ->
-                    resetName.endsWith("_0")), eq(USERNAME));
-        }
-
-        @Test
-        @DisplayName("deletes CET number when one exists")
-        void deletesCetNumberWhenPresent() throws Exception {
-            CetNumber cetNumber = new CetNumber();
-            when(cetMapper.selectNumber(USERNAME)).thenReturn(cetNumber);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            verify(cetMapper).updateNumber(USERNAME, null);
-        }
-
-        @Test
-        @DisplayName("skips CET deletion when no number exists")
-        void skipsCetDeletionWhenAbsent() throws Exception {
-            when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            verify(cetMapper, never()).updateNumber(anyString(), any());
-        }
-
-        @Test
-        @DisplayName("deletes phone when one exists")
-        void deletesPhoneWhenPresent() throws Exception {
-            PhoneEntity phone = new PhoneEntity();
-            when(phoneMapper.selectPhone(USERNAME)).thenReturn(phone);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            verify(phoneMapper).deletePhone(USERNAME);
-        }
-
-        @Test
-        @DisplayName("skips phone deletion when no phone exists")
-        void skipsPhoneDeletionWhenAbsent() throws Exception {
-            when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
-
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            verify(phoneMapper, never()).deletePhone(anyString());
-        }
-
-        @Test
-        @DisplayName("anonymization uses consistent deletedUsername across all mappers")
-        void anonymizationUsesConsistentDeletedUsername() throws Exception {
-            accountDeletionService.deleteAccount(SESSION_ID);
-
-            // Capture the deletedUsername from any one mapper call and verify all others use the same
-            var topicCaptor = org.mockito.ArgumentCaptor.forClass(String.class);
-            verify(topicMapper).anonymizeUsername(eq(USERNAME), topicCaptor.capture());
-            String deletedUsername = topicCaptor.getValue();
-
-            verify(secretMapper).anonymizeUsername(USERNAME, deletedUsername);
-            verify(photographMapper).anonymizeUsername(USERNAME, deletedUsername);
-            verify(interactionNotificationMapper).anonymizeActorUsername(USERNAME, deletedUsername, "已注销用户");
-            verify(expressMapper).anonymizeByUsername(USERNAME, deletedUsername);
-            verify(expressMapper).anonymizeCommentsByUsername(USERNAME, deletedUsername);
-            verify(userMapper).closeUser(deletedUsername, USERNAME);
-        }
+    private CampusAccountView campusAccount() {
+        CampusAccountView account = new CampusAccountView();
+        account.setUsername(USERNAME);
+        account.setPassword(PASSWORD);
+        return account;
     }
 
     // =========================================================================
-    // deleteAccount — optional mapper null safety
+    // deleteAccount
     // =========================================================================
-    @Nested
-    @DisplayName("deleteAccount - optional mapper null safety")
-    class DeleteAccountOptionalMappers {
 
-        /**
-         * When optional mappers (topic, secret, photograph, notification, express,
-         * dating) are null, the deletion flow must still succeed. We simulate this
-         * by creating a fresh service instance with those fields left null.
-         */
-        @Test
-        @DisplayName("deletion succeeds when all optional mappers are null")
-        void deletionSucceedsWithNullOptionalMappers() throws Exception {
-            // Build a service with optional mappers explicitly set to null via reflection
-            AccountDeletionService service = new AccountDeletionService();
-            setField(service, "userCertificateService", userCertificateService);
-            setField(service, "userMapper", userMapper);
-            setField(service, "marketplaceMapper", marketplaceMapper);
-            setField(service, "lostAndFoundMapper", lostAndFoundMapper);
-            setField(service, "deliveryMapper", deliveryMapper);
-            setField(service, "cetMapper", cetMapper);
-            setField(service, "phoneMapper", phoneMapper);
-            setField(service, "profileMapper", profileMapper);
-            setField(service, "privacyMapper", privacyMapper);
-            setField(service, "cleanupMapper", cleanupMapper);
-            setField(service, "events", events);
-            // Intentionally NOT setting: datingMapper, topicMapper, secretMapper,
-            // photographMapper, interactionNotificationMapper, expressMapper
+    @Test
+    @DisplayName("deleteAccount erases every domain and closes the account")
+    void deleteAccount_purgesEveryDomainAndClosesAccount() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(new CetNumber());
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(new PhoneEntity());
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
 
-            when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
-            when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
-            when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
-            when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
+        deletionService().deleteAccount(SESSION_ID);
 
-            // Should not throw
-            assertDoesNotThrow(() -> service.deleteAccount(SESSION_ID));
-
-            // Core non-optional operations should still be called
-            verify(profileMapper).resetUserProfile(USERNAME, "已注销");
-            verify(userMapper).closeUser(anyString(), eq(USERNAME));
-            verifyNoInteractions(closeMapper);
-        }
-
-        private void setField(Object target, String fieldName, Object value) throws Exception {
-            java.lang.reflect.Field field = target.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            field.set(target, value);
-        }
+        verify(cetMapper).updateNumber(USERNAME, null);
+        verify(phoneMapper).deletePhone(USERNAME);
+        verify(datingMapper).hideDatingProfilesByUsername(USERNAME);
+        verify(profileMapper).resetUserProfile(USERNAME, "已注销");
+        verify(profileMapper).resetUserIntroduction(USERNAME);
+        verify(privacyMapper).resetPrivacy(USERNAME);
+        verify(topicMapper).anonymizeUsername(eq(USERNAME), anyString());
+        verify(secretMapper).anonymizeUsername(eq(USERNAME), anyString());
+        verify(photographMapper).anonymizeUsername(eq(USERNAME), anyString());
+        verify(interactionNotificationMapper).anonymizeActorUsername(eq(USERNAME), anyString(), eq("已注销用户"));
+        verify(expressMapper).anonymizeByUsername(eq(USERNAME), anyString());
+        verify(expressMapper).anonymizeCommentsByUsername(eq(USERNAME), anyString());
+        verify(userMapper).closeUser(anyString(), eq(USERNAME));
+        verify(cleanupMapper).enqueue(anyString(), eq(USERNAME), startsWith("del_"), isNull());
     }
 
-    // =========================================================================
-    // CloseSocialDataState
-    // =========================================================================
-    @Nested
-    @DisplayName("closeSocialDataState")
-    class CloseSocialDataStateTests {
+    @Test
+    @DisplayName("deleteAccount skips an absent CET number and phone")
+    void deleteAccount_skipsAbsentCetNumberAndPhone() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
 
-        @Test
-        @DisplayName("closes active marketplace items (state=1 -> state=3)")
-        void closesActiveMarketplaceItems() throws Exception {
-            MarketplaceItemEntity activeItem = new MarketplaceItemEntity();
-            activeItem.setId(10);
-            activeItem.setState(1);
+        deletionService().deleteAccount(SESSION_ID);
 
-            MarketplaceItemEntity completedItem = new MarketplaceItemEntity();
-            completedItem.setId(20);
-            completedItem.setState(3);
+        verify(cetMapper, never()).updateNumber(anyString(), any());
+        verify(phoneMapper, never()).deletePhone(anyString());
+    }
 
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(activeItem, completedItem));
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
+    @Test
+    @DisplayName("deleteAccount builds the anonymized name from a hash prefix and the reuse count")
+    void deleteAccount_anonymizedNameFormat() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(2);
 
-            accountDeletionService.closeSocialDataState(USERNAME);
+        deletionService().deleteAccount(SESSION_ID);
 
-            verify(marketplaceMapper).updateItemState(10, 3);
-            verify(marketplaceMapper, never()).updateItemState(eq(20), anyInt());
-        }
+        verify(userMapper).closeUser(argThat(name -> name.startsWith("del_") && name.endsWith("_2")), eq(USERNAME));
+    }
 
-        @Test
-        @DisplayName("closes active lost-and-found items (state=0 -> state=2)")
-        void closesActiveLostAndFoundItems() throws Exception {
-            LostAndFoundItemEntity activeItem = new LostAndFoundItemEntity();
-            activeItem.setId(5);
-            activeItem.setState(0);
+    @Test
+    @DisplayName("deleteAccount treats a null reuse count as zero")
+    void deleteAccount_nullCountDefaultsToZero() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(null);
 
-            LostAndFoundItemEntity resolvedItem = new LostAndFoundItemEntity();
-            resolvedItem.setId(6);
-            resolvedItem.setState(1);
+        deletionService().deleteAccount(SESSION_ID);
 
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(activeItem, resolvedItem));
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
+        verify(userMapper).closeUser(argThat(name -> name.endsWith("_0")), eq(USERNAME));
+    }
 
-            accountDeletionService.closeSocialDataState(USERNAME);
+    @Test
+    @DisplayName("deleteAccount shares one anonymized name across domains")
+    void deleteAccount_sharesAnonymizedNameAcrossDomains() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
 
-            verify(lostAndFoundMapper).updateItemState(5, 2);
-            verify(lostAndFoundMapper, never()).updateItemState(eq(6), anyInt());
-        }
+        deletionService().deleteAccount(SESSION_ID);
 
-        @Test
-        @DisplayName("closes delivery orders: state=0 -> state=3")
-        void closesOpenDeliveryOrders() throws Exception {
-            DeliveryOrderEntity openOrder = new DeliveryOrderEntity();
-            openOrder.setOrderId(100);
-            openOrder.setState(0);
+        ArgumentCaptor<String> anonymized = ArgumentCaptor.forClass(String.class);
+        verify(topicMapper).anonymizeUsername(eq(USERNAME), anonymized.capture());
+        String name = anonymized.getValue();
+        verify(secretMapper).anonymizeUsername(USERNAME, name);
+        verify(photographMapper).anonymizeUsername(USERNAME, name);
+        verify(interactionNotificationMapper).anonymizeActorUsername(USERNAME, name, "已注销用户");
+        verify(expressMapper).anonymizeByUsername(USERNAME, name);
+        verify(expressMapper).anonymizeCommentsByUsername(USERNAME, name);
+        verify(userMapper).closeUser(name, USERNAME);
+    }
 
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(openOrder));
+    @Test
+    @DisplayName("deleteAccount leaves cross-store cleanup to the worker")
+    void deleteAccount_defersCleanupToWorker() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
 
-            accountDeletionService.closeSocialDataState(USERNAME);
+        deletionService().deleteAccount(SESSION_ID);
 
-            verify(deliveryMapper).updateOrderState(100, 3);
-        }
+        verifyNoInteractions(gradeDao, scheduleDao, announcementMapper, userProfileService, realtimeHub);
+    }
 
-        @Test
-        @DisplayName("closes delivery trades: state=1 order with state=0 trade -> trade state=2")
-        void closesDeliveryTradesForAcceptedOrders() throws Exception {
-            DeliveryOrderEntity acceptedOrder = new DeliveryOrderEntity();
-            acceptedOrder.setOrderId(200);
-            acceptedOrder.setState(1);
+    @Test
+    @DisplayName("deleteAccount clears follow and block relations for a known user")
+    void deleteAccount_clearsSocialRelationsForKnownUser() throws Exception {
+        CampusAccountView account = campusAccount();
+        account.setId(42L);
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(account);
+        when(cetMapper.selectNumber(USERNAME)).thenReturn(null);
+        when(phoneMapper.selectPhone(USERNAME)).thenReturn(null);
+        when(userMapper.selectDeletedUserCount(anyString())).thenReturn(0);
 
-            DeliveryTradeEntity pendingTrade = new DeliveryTradeEntity();
-            pendingTrade.setTradeId(300);
-            pendingTrade.setState(0);
+        deletionService().deleteAccount(SESSION_ID);
 
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(acceptedOrder));
-            when(deliveryMapper.selectDeliveryTradeByOrderId(200))
-                    .thenReturn(pendingTrade);
-
-            accountDeletionService.closeSocialDataState(USERNAME);
-
-            verify(deliveryMapper).updateTradeState(300, 0, 2);
-        }
-
-        @Test
-        @DisplayName("skips trade update when trade is null for accepted order")
-        void skipsTradeUpdateWhenTradeIsNull() throws Exception {
-            DeliveryOrderEntity acceptedOrder = new DeliveryOrderEntity();
-            acceptedOrder.setOrderId(200);
-            acceptedOrder.setState(1);
-
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(acceptedOrder));
-            when(deliveryMapper.selectDeliveryTradeByOrderId(200))
-                    .thenReturn(null);
-
-            accountDeletionService.closeSocialDataState(USERNAME);
-
-            verify(deliveryMapper, never()).updateTradeState(anyInt(), anyInt(), anyInt());
-        }
-
-        @Test
-        @DisplayName("skips trade update when trade state is not 0")
-        void skipsTradeUpdateWhenTradeAlreadyCompleted() throws Exception {
-            DeliveryOrderEntity acceptedOrder = new DeliveryOrderEntity();
-            acceptedOrder.setOrderId(200);
-            acceptedOrder.setState(1);
-
-            DeliveryTradeEntity completedTrade = new DeliveryTradeEntity();
-            completedTrade.setTradeId(300);
-            completedTrade.setState(1); // already completed
-
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(acceptedOrder));
-            when(deliveryMapper.selectDeliveryTradeByOrderId(200))
-                    .thenReturn(completedTrade);
-
-            accountDeletionService.closeSocialDataState(USERNAME);
-
-            verify(deliveryMapper, never()).updateTradeState(anyInt(), anyInt(), anyInt());
-        }
-
-        @Test
-        @DisplayName("hides dating profiles via datingMapper")
-        void hidesDatingProfiles() throws Exception {
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
-
-            accountDeletionService.closeSocialDataState(USERNAME);
-
-            verify(datingMapper).hideDatingProfilesByUsername(USERNAME);
-        }
-
-        @Test
-        @DisplayName("handles empty lists gracefully with no mapper updates")
-        void handlesEmptyListsGracefully() throws Exception {
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
-
-            accountDeletionService.closeSocialDataState(USERNAME);
-
-            verify(marketplaceMapper, never()).updateItemState(anyInt(), anyInt());
-            verify(lostAndFoundMapper, never()).updateItemState(anyInt(), anyInt());
-            verify(deliveryMapper, never()).updateOrderState(anyInt(), anyInt());
-            verify(deliveryMapper, never()).updateTradeState(anyInt(), anyInt(), anyInt());
-        }
+        verify(userMapper).selectUserByIdForUpdate(42L);
+        verify(socialRelationMapper).deleteAllFollowsForUser(42L);
+        verify(socialRelationMapper).deleteAllBlocksForUser(42L);
+        verify(userMapper).closeAppUser(42L);
     }
 
     // =========================================================================
     // checkAccountDeletability
     // =========================================================================
-    @Nested
-    @DisplayName("checkAccountDeletability")
-    class CheckAccountDeletability {
 
-        @BeforeEach
-        void setUp() {
-            when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
-        }
+    @Test
+    @DisplayName("rejects a missing user with UserNotExistException")
+    void checkAccountDeletability_userMissing() {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(null);
 
-        @Test
-        @DisplayName("throws UserNotExistException when user not found")
-        void throwsUserNotExistExceptionWhenUserNotFound() {
-            when(userMapper.selectUser(USERNAME)).thenReturn(null);
+        assertThrows(UserNotExistException.class,
+                () -> deletionService().checkAccountDeletability(SESSION_ID, PASSWORD));
+    }
 
-            assertThrows(UserNotExistException.class, () ->
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD));
-        }
+    @Test
+    @DisplayName("asks for the campus password when it is blank")
+    void checkAccountDeletability_blankPassword() {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(campusAccount());
 
-        @Test
-        @DisplayName("throws PasswordIncorrectException when password does not match")
-        void throwsPasswordIncorrectExceptionOnWrongPassword() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword("correct-password");
+        assertThrows(PasswordIncorrectException.class,
+                () -> deletionService().checkAccountDeletability(SESSION_ID, " "));
+    }
 
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
+    @Test
+    @DisplayName("rejects a wrong campus password")
+    void checkAccountDeletability_wrongPassword() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(campusAccount());
+        doThrow(new PasswordIncorrectException("密码错误"))
+                .when(userCertificateService).verifyCurrentPassword(USERNAME, "wrong-password");
 
-            org.mockito.Mockito.doThrow(new PasswordIncorrectException("密码错误"))
-                    .when(userCertificateService).verifyCurrentPassword(userEntity.getUsername(), "wrong-password");
-            assertThrows(PasswordIncorrectException.class, () ->
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, "wrong-password"));
-        }
+        assertThrows(PasswordIncorrectException.class,
+                () -> deletionService().checkAccountDeletability(SESSION_ID, "wrong-password"));
+    }
 
-        @Test
-        @DisplayName("returns success when no blocking conditions exist")
-        void returnsSuccessWhenNoPendingItems() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
+    @Test
+    @DisplayName("allows closure when no domain reports unfinished content")
+    void checkAccountDeletability_noBlockers() throws Exception {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(campusAccount());
+        when(marketplaceMapper.selectOwnerItemStates(USERNAME)).thenReturn(Collections.emptyList());
+        when(lostAndFoundMapper.selectOwnerItemStates(USERNAME)).thenReturn(Collections.emptyList());
+        when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME)).thenReturn(Collections.emptyList());
 
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
+        assertTrue(result.isSuccess());
+        verify(userCertificateService).verifyCurrentPassword(USERNAME, PASSWORD);
+    }
 
-            assertTrue(result.isSuccess());
-        }
+    @Test
+    @DisplayName("blocks closure while a marketplace item is still on sale")
+    void checkAccountDeletability_marketplaceBlocker() throws Exception {
+        MarketplaceItemEntity onSale = new MarketplaceItemEntity();
+        onSale.setId(10);
+        onSale.setState(1);
+        MarketplaceItemEntity removed = new MarketplaceItemEntity();
+        removed.setId(20);
+        removed.setState(3);
+        stubAllBlockers(List.of(onSale, removed), Collections.emptyList(), Collections.emptyList());
 
-        @Test
-        @DisplayName("returns failure with marketplace blocking condition")
-        void returnsFailureWithActiveMarketplaceItem() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            MarketplaceItemEntity activeItem = new MarketplaceItemEntity();
-            activeItem.setState(1);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getData().containsKey("二手交易平台存在未交易完成的物品"));
+    }
 
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(activeItem));
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
+    @Test
+    @DisplayName("blocks closure while a lost-and-found item is still open")
+    void checkAccountDeletability_lostAndFoundBlocker() throws Exception {
+        LostAndFoundItemEntity open = new LostAndFoundItemEntity();
+        open.setId(5);
+        open.setState(0);
+        LostAndFoundItemEntity resolved = new LostAndFoundItemEntity();
+        resolved.setId(6);
+        resolved.setState(1);
+        stubAllBlockers(Collections.emptyList(), List.of(open, resolved), Collections.emptyList());
 
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            assertFalse(result.isSuccess());
-            assertNotNull(result.getData());
-            assertTrue(result.getData().containsKey("二手交易平台存在未交易完成的物品"));
-        }
+        assertFalse(result.isSuccess());
+        assertTrue(result.getData().containsKey("失物招领平台存在未确认状态的物品"));
+        assertEquals(1, result.getData().size());
+    }
 
-        @Test
-        @DisplayName("returns failure with lost-and-found blocking condition")
-        void returnsFailureWithActiveLostAndFoundItem() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
+    @Test
+    @DisplayName("blocks closure while a delivery order has no taker")
+    void checkAccountDeletability_openDeliveryOrder() throws Exception {
+        DeliveryOrderEntity openOrder = new DeliveryOrderEntity();
+        openOrder.setOrderId(100);
+        openOrder.setState(0);
+        stubAllBlockers(Collections.emptyList(), Collections.emptyList(), List.of(openOrder));
 
-            LostAndFoundItemEntity activeItem = new LostAndFoundItemEntity();
-            activeItem.setState(0);
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(activeItem));
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(Collections.emptyList());
+        assertFalse(result.isSuccess());
+        assertTrue(result.getData().containsKey("全民快递平台存在未删除的订单信息"));
+    }
 
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
+    @Test
+    @DisplayName("blocks closure while an accepted delivery trade is pending")
+    void checkAccountDeletability_pendingDeliveryTrade() throws Exception {
+        DeliveryOrderEntity accepted = new DeliveryOrderEntity();
+        accepted.setOrderId(200);
+        accepted.setState(1);
+        DeliveryTradeEntity pendingTrade = new DeliveryTradeEntity();
+        pendingTrade.setTradeId(300);
+        pendingTrade.setState(0);
+        when(deliveryMapper.selectDeliveryTradeByOrderId(200)).thenReturn(pendingTrade);
+        stubAllBlockers(Collections.emptyList(), Collections.emptyList(), List.of(accepted));
 
-            assertFalse(result.isSuccess());
-            assertNotNull(result.getData());
-            assertTrue(result.getData().containsKey("失物招领平台存在未确认状态的物品"));
-        }
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-        @Test
-        @DisplayName("returns failure with open delivery order blocking condition")
-        void returnsFailureWithOpenDeliveryOrder() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getData().containsKey("全民快递平台存在未确认交易的订单信息"));
+    }
 
-            DeliveryOrderEntity openOrder = new DeliveryOrderEntity();
-            openOrder.setOrderId(1);
-            openOrder.setState(0);
+    @Test
+    @DisplayName("does not block when an accepted order has no trade record")
+    void checkAccountDeletability_missingTradeDoesNotBlock() throws Exception {
+        DeliveryOrderEntity accepted = new DeliveryOrderEntity();
+        accepted.setOrderId(200);
+        accepted.setState(1);
+        when(deliveryMapper.selectDeliveryTradeByOrderId(200)).thenReturn(null);
+        stubAllBlockers(Collections.emptyList(), Collections.emptyList(), List.of(accepted));
 
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(openOrder));
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
+        assertTrue(result.isSuccess());
+    }
 
-            assertFalse(result.isSuccess());
-            assertNotNull(result.getData());
-            assertTrue(result.getData().containsKey("全民快递平台存在未删除的订单信息"));
-        }
+    @Test
+    @DisplayName("returns every blocking reason")
+    void checkAccountDeletability_returnsAllBlockers() throws Exception {
+        MarketplaceItemEntity onSale = new MarketplaceItemEntity();
+        onSale.setState(1);
+        LostAndFoundItemEntity open = new LostAndFoundItemEntity();
+        open.setState(0);
+        DeliveryOrderEntity openOrder = new DeliveryOrderEntity();
+        openOrder.setOrderId(1);
+        openOrder.setState(0);
+        stubAllBlockers(List.of(onSale), List.of(open), List.of(openOrder));
 
-        @Test
-        @DisplayName("returns failure with pending delivery trade blocking condition")
-        void returnsFailureWithPendingDeliveryTrade() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
+        DataJsonResult<Map<String, String>> result =
+                deletionService().checkAccountDeletability(SESSION_ID, PASSWORD);
 
-            DeliveryOrderEntity acceptedOrder = new DeliveryOrderEntity();
-            acceptedOrder.setOrderId(1);
-            acceptedOrder.setState(1);
+        assertFalse(result.isSuccess());
+        assertEquals(3, result.getData().size());
+        List<String> reasons = new ArrayList<>(result.getData().keySet());
+        assertTrue(reasons.contains("二手交易平台存在未交易完成的物品"));
+        assertTrue(reasons.contains("失物招领平台存在未确认状态的物品"));
+        assertTrue(reasons.contains("全民快递平台存在未删除的订单信息"));
+    }
 
-            DeliveryTradeEntity pendingTrade = new DeliveryTradeEntity();
-            pendingTrade.setTradeId(2);
-            pendingTrade.setState(0);
-
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(Collections.emptyList());
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(acceptedOrder));
-            when(deliveryMapper.selectDeliveryTradeByOrderId(1))
-                    .thenReturn(pendingTrade);
-
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
-
-            assertFalse(result.isSuccess());
-            assertNotNull(result.getData());
-            assertTrue(result.getData().containsKey("全民快递平台存在未确认交易的订单信息"));
-        }
-
-        @Test
-        @DisplayName("returns all blocking conditions when multiple issues exist")
-        void returnsAllBlockingConditions() throws Exception {
-            CampusAccountView userEntity = new CampusAccountView();
-            userEntity.setUsername(USERNAME);
-            userEntity.setPassword(PASSWORD);
-
-            MarketplaceItemEntity marketplaceItem = new MarketplaceItemEntity();
-            marketplaceItem.setState(1);
-
-            LostAndFoundItemEntity lostItem = new LostAndFoundItemEntity();
-            lostItem.setState(0);
-
-            DeliveryOrderEntity openOrder = new DeliveryOrderEntity();
-            openOrder.setOrderId(1);
-            openOrder.setState(0);
-
-            when(userMapper.selectUser(USERNAME)).thenReturn(userEntity);
-            when(marketplaceMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(marketplaceItem));
-            when(lostAndFoundMapper.selectOwnerItemStates(USERNAME))
-                    .thenReturn(List.of(lostItem));
-            when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME))
-                    .thenReturn(List.of(openOrder));
-
-            DataJsonResult<Map<String, String>> result =
-                    accountDeletionService.checkAccountDeletability(SESSION_ID, PASSWORD);
-
-            assertFalse(result.isSuccess());
-            assertEquals(3, result.getData().size());
-        }
+    private void stubAllBlockers(List<MarketplaceItemEntity> marketplace,
+                                 List<LostAndFoundItemEntity> lostAndFound,
+                                 List<DeliveryOrderEntity> delivery) {
+        when(userCertificateService.getUserLoginCertificate(SESSION_ID)).thenReturn(mockUser);
+        when(userMapper.selectUser(USERNAME)).thenReturn(campusAccount());
+        when(marketplaceMapper.selectOwnerItemStates(USERNAME)).thenReturn(marketplace);
+        when(lostAndFoundMapper.selectOwnerItemStates(USERNAME)).thenReturn(lostAndFound);
+        when(deliveryMapper.selectDeliveryOrderByUsername(USERNAME)).thenReturn(delivery);
     }
 }

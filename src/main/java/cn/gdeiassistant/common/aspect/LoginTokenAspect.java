@@ -4,7 +4,7 @@ import cn.gdeiassistant.common.exception.tokenvalidexception.SuspiciouseRequestE
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
 import cn.gdeiassistant.common.pojo.entity.Device;
-import cn.gdeiassistant.core.token.service.LoginTokenService;
+import cn.gdeiassistant.common.spi.LoginTokenValidator;
 import cn.gdeiassistant.common.tools.utils.IPAddressUtils;
 import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import com.auth0.jwt.interfaces.Claim;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Aspect
 @Component
@@ -33,7 +34,7 @@ public class LoginTokenAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoginTokenAspect.class);
 
     @Autowired
-    private LoginTokenService loginTokenService;
+    private LoginTokenValidator loginTokenService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -85,7 +86,7 @@ public class LoginTokenAspect {
             token = auth.substring(7).trim();
         }
         if (token == null || token.trim().isEmpty()) {
-            throw new TokenExpiredException("请求未携带有效令牌或令牌已过期");
+            throw new TokenExpiredException(Messages.get("auth.tokenMissingOrExpired"));
         }
 
         // 1. 优先使用 JwtSessionIdFilter 已解析的 sessionId
@@ -103,11 +104,11 @@ public class LoginTokenAspect {
                     sessionId = sessionIdClaim.asString();
                 }
             } catch (JWTVerificationException e) {
-                throw new TokenNotMatchingException("签名验证不通过");
+                throw new TokenNotMatchingException(Messages.get("token.signatureInvalid"));
             }
 
             if (sessionId == null || sessionId.isEmpty()) {
-                throw new TokenExpiredException("无法解析会话标识，令牌已过期或无效");
+                throw new TokenExpiredException(Messages.get("auth.sessionIdUnreadable"));
             }
 
             loginTokenService.validToken(token);

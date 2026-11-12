@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import cn.gdeiassistant.common.exception.commonexception.*;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.integration.httpclient.*;
 
 import org.apache.http.ProtocolVersion;

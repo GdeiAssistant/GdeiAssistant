@@ -1,5 +1,6 @@
 package cn.gdeiassistant.core.token.service;
 
+import cn.gdeiassistant.common.spi.LoginTokenValidator;
 import cn.gdeiassistant.common.exception.tokenvalidexception.SuspiciouseRequestException;
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenNotMatchingException;
@@ -22,9 +23,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Map;
 import java.util.Objects;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
-public class LoginTokenService {
+public class LoginTokenService implements LoginTokenValidator {
 
     @Autowired
     private LoginTokenDao loginTokenDao;
@@ -44,7 +46,7 @@ public class LoginTokenService {
     public void expireToken(String signature) throws Exception {
         AccessToken accessToken = loginTokenDao.queryAccessToken(signature);
         if (accessToken == null) {
-            throw new TokenNotMatchingException("令牌信息不存在");
+            throw new TokenNotMatchingException(Messages.get("token.tokenMissing"));
         }
         loginTokenDao.deleteAccessToken(signature);
         loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(accessToken.getSignature()));
@@ -62,7 +64,7 @@ public class LoginTokenService {
         RefreshToken token = loginTokenDao.queryRefreshToken(refreshTokenSignature);
         if (token == null) {
             //没有对应的权限令牌
-            throw new TokenNotMatchingException("没有对应的权限令牌");
+            throw new TokenNotMatchingException(Messages.get("token.permissionTokenMissing"));
         }
         //校验AccessToken信息
         try {
@@ -164,7 +166,7 @@ public class LoginTokenService {
         Device data = loginTokenDao.queryDeviceData(signature);
         if (data == null) {
             //没有找到对应的设备信息记录
-            throw new TokenExpiredException("令牌已过期");
+            throw new TokenExpiredException(Messages.get("token.tokenExpired"));
         }
         if (!data.getUnionID().equals(device.getUnionID())) {
             //设备UnionID不匹配，校验IP地址
@@ -183,7 +185,7 @@ public class LoginTokenService {
                 //设备UnionID已在上方判断不匹配，因此此处应拒绝
                 loginTokenDao.deleteAccessToken(signature);
                 loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
-                throw new SuspiciouseRequestException("可疑的登录请求");
+                throw new SuspiciouseRequestException(Messages.get("token.suspiciousLogin"));
             }
             if (Objects.equals(currentLocation.getCountry(), tokenLocation.getCountry())
                     && Objects.equals(currentLocation.getProvince(), tokenLocation.getProvince())) {
@@ -193,7 +195,7 @@ public class LoginTokenService {
             //IP地址非同一省份，令牌失效
             loginTokenDao.deleteAccessToken(signature);
             loginTokenDao.deleteRefreshToken(StringEncryptUtils.sha256HexString(signature));
-            throw new SuspiciouseRequestException("可疑的登录请求");
+            throw new SuspiciouseRequestException(Messages.get("token.suspiciousLogin"));
         }
         //设备UnionID相同，校验通过
     }
@@ -213,12 +215,12 @@ public class LoginTokenService {
             Long expireTime = decodedJWT.getClaim("expireTime").asLong();
             if (expireTime <= LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()) {
                 //若过期时间为小于等于当前时间的时间戳，则认为权限令牌已过期
-                throw new TokenExpiredException("令牌过期异常");
+                throw new TokenExpiredException(Messages.get("token.tokenExpiredAlt"));
             }
             //校验通过
         } catch (JWTVerificationException e) {
             //签名验证不通过
-            throw new TokenNotMatchingException("签名验证不通过");
+            throw new TokenNotMatchingException(Messages.get("token.signatureInvalid"));
         }
     }
 

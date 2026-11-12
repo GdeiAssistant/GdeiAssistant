@@ -10,7 +10,7 @@ import cn.gdeiassistant.common.exception.recognitionexception.RecognitionExcepti
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.cardquery.pojo.CardQuery;
 import cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.card.CardClient;
 import cn.gdeiassistant.integration.httpclient.*;

@@ -5,7 +5,7 @@ import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectExcept
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.exception.evaluateexception.NotAvailableTimeException;
 import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class EvaluateService {
@@ -118,27 +119,27 @@ public class EvaluateService {
                             }
                             return;
                         }
-                        throw new NotAvailableTimeException("不是教学评价开放时间");
+                        throw new NotAvailableTimeException(Messages.get("evaluate.notOpen"));
                     }
-                    throw new NotAvailableTimeException("不是教学评价开放时间");
+                    throw new NotAvailableTimeException(Messages.get("evaluate.notOpen"));
                 }
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } catch (IOException e) {
             logger.error("一键评教异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (TimeStampIncorrectException e) {
             logger.error("一键评教异常：", e);
-            throw new TimeStampIncorrectException("时间戳校验失败");
+            throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
         } catch (PasswordIncorrectException e) {
             logger.error("一键评教异常：", e);
             throw e;
         } catch (NotAvailableTimeException e) {
             logger.error("一键评教异常：", e);
-            throw new NotAvailableTimeException("现在不是一键评教开放时间段");
+            throw new NotAvailableTimeException(Messages.get("evaluate.quickEvaluateNotOpen"));
         } catch (Exception e) {
             logger.error("一键评教异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
     }
 

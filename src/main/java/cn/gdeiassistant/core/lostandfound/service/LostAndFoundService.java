@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class LostAndFoundService {
@@ -65,11 +66,11 @@ public class LostAndFoundService {
     public LostAndFoundDetailVO queryLostAndFoundInfoByID(int id) throws Exception {
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);
         if (detail == null || detail.getItem() == null) {
-            throw new DataNotExistException("失物招领信息不存在");
+            throw new DataNotExistException(Messages.get("lostandfound.itemMissing"));
         }
         LostAndFoundItemEntity item = detail.getItem();
         if (Integer.valueOf(1).equals(item.getState())) {
-            throw new ConfirmedStateException("物品已确认寻回，不可再次编辑和查看");
+            throw new ConfirmedStateException(Messages.get("lostandfound.itemConfirmedNoEditOrView"));
         }
         String campusUsername = item.getUsername();
         PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
@@ -105,9 +106,9 @@ public class LostAndFoundService {
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);
         if (detail != null && detail.getItem() != null) {
             if (detail.getItem().getUsername().equals(user.getUsername())) return;
-            throw new NoAccessException("没有权限编辑该失物招领信息");
+            throw new NoAccessException(Messages.get("lostandfound.editNoAccess"));
         }
-        throw new DataNotExistException("失物招领信息不存在");
+        throw new DataNotExistException(Messages.get("lostandfound.itemMissing"));
     }
 
     public List<LostAndFoundItemVO> queryLostItems(int start) throws Exception {
@@ -151,25 +152,25 @@ public class LostAndFoundService {
         item.setId(id);
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);
         if (detail == null || detail.getItem() == null) {
-            throw new DataNotExistException("查找的失物招领信息不存在");
+            throw new DataNotExistException(Messages.get("lostandfound.itemLookupMissing"));
         }
         if (!Integer.valueOf(1).equals(detail.getItem().getState())) {
             lostAndFoundMapper.updateItemItem(item);
             return;
         }
-        throw new ConfirmedStateException("物品已确认寻回，不可再次编辑");
+        throw new ConfirmedStateException(Messages.get("lostandfound.itemConfirmedNoEdit"));
     }
 
     public void updateLostAndFoundItemState(int id, int state) throws Exception {
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);
         if (detail == null || detail.getItem() == null) {
-            throw new DataNotExistException("查找的失物招领信息不存在");
+            throw new DataNotExistException(Messages.get("lostandfound.itemLookupMissing"));
         }
         if (!Integer.valueOf(1).equals(detail.getItem().getState())) {
             lostAndFoundMapper.updateItemState(id, state);
             return;
         }
-        throw new ConfirmedStateException("物品已确认寻回，不可再次编辑");
+        throw new ConfirmedStateException(Messages.get("lostandfound.itemConfirmedNoEdit"));
     }
 
     public void uploadLostAndFoundItemPicture(int id, int index, InputStream inputStream) {
@@ -177,7 +178,7 @@ public class LostAndFoundService {
             storedAssets.uploadObject("lostandfound/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传失物招领图片失败，id={}，index={}", id, index, e);
-            throw new RuntimeException("上传失败", e);
+            throw new RuntimeException(Messages.get("upload.failed"), e);
         } finally {
             if (inputStream != null) {
                 try {

@@ -5,8 +5,8 @@ import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledExcept
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
-import cn.gdeiassistant.core.userprofile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
+import cn.gdeiassistant.core.userprofile.controller.support.ProfileResponseMapper;
 import cn.gdeiassistant.core.userprofile.controller.request.*;
 import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
 import cn.gdeiassistant.core.userprofile.pojo.ProfileOptionsVO;
@@ -53,7 +53,7 @@ public class ProfileController {
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 
     private String localize(HttpServletRequest request, String message) {
-        return BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
+        return MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
     }
 
     private JsonResult failure(HttpServletRequest request, String message) {

@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class UserProfileService {
@@ -81,7 +82,7 @@ public class UserProfileService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
             // 会话已失效，触发统一 Token 过期处理（401 + 自动登出）
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         return getUserProfile(user.getUsername());
     }
@@ -94,7 +95,7 @@ public class UserProfileService {
         if (entity != null) {
             return userProfileMapper.toVO(entity);
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -108,7 +109,7 @@ public class UserProfileService {
         if (introduction != null) {
             return introduction;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -120,7 +121,7 @@ public class UserProfileService {
     public Introduction getSelfUserIntroduction(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         return getOtherUserIntroduction(user.getUsername());
     }
@@ -271,7 +272,7 @@ public class UserProfileService {
     public void updateIntroduction(String sessionId, String introductionContent) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         Introduction introduction = profileMapper.selectUserIntroduction(user.getUsername());
         if (introduction != null) {
@@ -294,7 +295,7 @@ public class UserProfileService {
     public void updateLocation(String sessionId, String region, String state, String city) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -304,7 +305,7 @@ public class UserProfileService {
             profileMapper.updateLocation(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -319,7 +320,7 @@ public class UserProfileService {
     public void updateHometown(String sessionId, String region, String state, String city) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -329,7 +330,7 @@ public class UserProfileService {
             profileMapper.updateHometown(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -344,7 +345,7 @@ public class UserProfileService {
     public void updateBirthday(String sessionId, int year, int month, int date) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -354,7 +355,7 @@ public class UserProfileService {
             profileMapper.updateBirthday(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -366,7 +367,7 @@ public class UserProfileService {
     public void resetBirthday(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -374,7 +375,7 @@ public class UserProfileService {
             profileMapper.updateBirthday(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -387,7 +388,7 @@ public class UserProfileService {
     public void updateFaculty(String sessionId, int faculty) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -395,7 +396,7 @@ public class UserProfileService {
             profileMapper.updateFaculty(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -408,7 +409,7 @@ public class UserProfileService {
     public void updateMajor(String sessionId, String major) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -416,7 +417,7 @@ public class UserProfileService {
             profileMapper.updateMajor(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -429,7 +430,7 @@ public class UserProfileService {
     public void updateEnrollment(String sessionId, int enrollment) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -437,7 +438,7 @@ public class UserProfileService {
             profileMapper.updateEnrollment(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -449,7 +450,7 @@ public class UserProfileService {
     public void resetEnrollment(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -457,7 +458,7 @@ public class UserProfileService {
             profileMapper.updateEnrollment(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**
@@ -470,7 +471,7 @@ public class UserProfileService {
     public void updateNickname(String sessionId, String nickname) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {
-            throw new TokenExpiredException("登录凭证已过期，请重新登录");
+            throw new TokenExpiredException(Messages.get("token.expired"));
         }
         ProfileEntity entity = profileMapper.selectUserProfile(user.getUsername());
         if (entity != null) {
@@ -478,7 +479,7 @@ public class UserProfileService {
             profileMapper.updateNickname(entity);
             return;
         }
-        throw new UserNotExistException("查询的用户不存在");
+        throw new UserNotExistException(Messages.get("profile.userMissing"));
     }
 
     /**

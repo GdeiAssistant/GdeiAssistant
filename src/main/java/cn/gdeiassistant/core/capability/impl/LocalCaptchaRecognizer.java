@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component("localCaptchaRecognizer")
 public class LocalCaptchaRecognizer implements CaptchaRecognizer {
@@ -20,7 +21,7 @@ public class LocalCaptchaRecognizer implements CaptchaRecognizer {
         String text = localTemplateOcrEngine.recognizeCaptcha(imageBase64, typeEnum, length);
         text = sanitize(text, typeEnum, length);
         if (StringUtils.isBlank(text)) {
-            throw new RecognitionException("本地OCR识别验证码失败");
+            throw new RecognitionException(Messages.get("capability.localOcrCaptchaFailed"));
         }
         return text;
     }

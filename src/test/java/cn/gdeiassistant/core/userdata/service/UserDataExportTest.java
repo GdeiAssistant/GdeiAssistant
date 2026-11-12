@@ -73,6 +73,15 @@ class UserDataExportTest {
     @BeforeEach
     void setup() {
         lenient().when(certificates.getUserLoginCertificate("session")).thenReturn(user());
+        // Decoration is pure domain logic: the contributors need no mapper for this test.
+        org.springframework.test.util.ReflectionTestUtils.setField(service, "contributors", List.of(
+                new cn.gdeiassistant.core.delivery.service.DeliveryAccountContributor(null),
+                new cn.gdeiassistant.core.marketplace.service.MarketplaceAccountContributor(null),
+                new cn.gdeiassistant.core.lostandfound.service.LostAndFoundAccountContributor(null),
+                new cn.gdeiassistant.core.secret.service.SecretAccountContributor(null),
+                new cn.gdeiassistant.core.photograph.service.PhotographAccountContributor(null),
+                new cn.gdeiassistant.core.express.service.ExpressAccountContributor(null),
+                new cn.gdeiassistant.core.profile.service.ProfileAccountContributor(null, null)));
     }
 
     @Test

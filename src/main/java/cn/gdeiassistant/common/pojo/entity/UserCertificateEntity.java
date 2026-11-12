@@ -1,6 +1,5 @@
-package cn.gdeiassistant.core.userlogin.pojo.entity;
+package cn.gdeiassistant.common.pojo.entity;
 
-import cn.gdeiassistant.common.pojo.entity.User;
 
 /**
  * 用户会话凭证实体（校园网 User + keycode/number/timestamp），仅做类型包装，不改变安全逻辑。

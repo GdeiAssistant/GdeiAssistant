@@ -13,6 +13,7 @@ import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import com.tencentcloudapi.sms.v20190711.models.SendStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class TencentSmsProvider implements ServiceProvider<SmsRequest, Void> {
@@ -80,7 +81,7 @@ public class TencentSmsProvider implements ServiceProvider<SmsRequest, Void> {
                 : chinaTemplateId;
 
         if (StringUtils.isBlank(templateId)) {
-            throw new ProviderException("腾讯云短信模板未配置");
+            throw new ProviderException(Messages.get("capability.tencentSmsTemplateMissing"));
         }
 
         try {
@@ -101,11 +102,11 @@ public class TencentSmsProvider implements ServiceProvider<SmsRequest, Void> {
             SendSmsResponse resp = client.SendSms(req);
             SendStatus[] statusSet = resp.getSendStatusSet();
             if (statusSet == null || statusSet.length == 0 || !"Ok".equalsIgnoreCase(statusSet[0].getCode())) {
-                throw new ProviderException("腾讯云短信发送失败");
+                throw new ProviderException(Messages.get("capability.tencentSmsSendFailed"));
             }
             return null;
         } catch (TencentCloudSDKException e) {
-            throw new ProviderException("腾讯云短信发送失败", e);
+            throw new ProviderException(Messages.get("capability.tencentSmsSendFailed"), e);
         }
     }
 

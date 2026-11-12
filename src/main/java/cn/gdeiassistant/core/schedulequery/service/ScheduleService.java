@@ -17,7 +17,7 @@ import cn.gdeiassistant.common.pojo.entity.TeacherSchedule;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.TeacherLoginService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class ScheduleService {
@@ -96,7 +97,7 @@ public class ScheduleService {
                 if (exMin == null) exMin = 1;
                 if (exMax == null) exMax = 20;
                 if (minWeek <= exMax && maxWeek >= exMin) {
-                    throw new NotAvailableConditionException("该时间段已存在自定义课程");
+                    throw new NotAvailableConditionException(Messages.get("schedulequery.timeSlotOccupied"));
                 }
             }
         }
@@ -120,7 +121,7 @@ public class ScheduleService {
         boolean removed = courseId == null ? scheduleDao.deleteCustomSchedule(user.getUsername(), position)
                 : scheduleDao.deleteCustomSchedule(user.getUsername(), position, courseId);
         if (!removed) {
-            throw new DataNotExistException("非法操作");
+            throw new DataNotExistException(Messages.get("schedulequery.illegalOperation"));
         }
     }
 
@@ -205,10 +206,10 @@ public class ScheduleService {
                                                         //通过rowspan属性得到课程时长
                                                         rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
                                                         //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
-                                                        if (rowspan < 1 || rowspan > 4) throw new ServerErrorException("课表课程长度不合法");
+                                                        if (rowspan < 1 || rowspan > 4) throw new ServerErrorException(Messages.get("schedulequery.courseLengthInvalid"));
                                                         for (int offset = 1; offset < rowspan; offset++) {
                                                             int covered = currentPosition + offset * 7;
-                                                            if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException("课表课程超出范围");
+                                                            if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException(Messages.get("schedulequery.courseOutOfRange"));
                                                             schedulesWithSpecialEmptySchedule[covered][0] = specialEmptySchedule;
                                                         }
                                                     } else {
@@ -227,7 +228,7 @@ public class ScheduleService {
                                                                 //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                             } else {
                                                                 //有效的课表头信息,进行信息处理
-                                                                if (j > string.length - 4) throw new ServerErrorException("课表课程信息不完整");
+                                                                if (j > string.length - 4) throw new ServerErrorException(Messages.get("schedulequery.courseInfoIncomplete"));
                                                                 String[] time = string[j + 2].split("[{]");
                                                                 //课程周数
                                                                 String week = null;
@@ -286,7 +287,7 @@ public class ScheduleService {
                                                                     schedule.setColumn(currentColumnIndexInThisRow - 1);
                                                                 }
                                                                 schedule.setColorCode(ScheduleUtils.getScheduleColor(currentPosition));
-                                                                if (n >= schedulesWithSpecialEmptySchedule[currentPosition].length) throw new ServerErrorException("课表同一单元课程数量过多");
+                                                                if (n >= schedulesWithSpecialEmptySchedule[currentPosition].length) throw new ServerErrorException(Messages.get("schedulequery.tooManyCoursesInSlot"));
                                                                 schedulesWithSpecialEmptySchedule[currentPosition][n] = schedule;
                                                                 n++;
                                                                 j = j + 4;
@@ -309,18 +310,18 @@ public class ScheduleService {
                                 ScheduleQueryResult.setScheduleList(schedulesWithoutSpecialEmptySchedule);
             } catch (ServerErrorException e) {
                 logger.error("查询课表异常：", e);
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             } catch (PasswordIncorrectException ignored) {
-                throw new PasswordIncorrectException("用户密码错误");
+                throw new PasswordIncorrectException(Messages.get("grade.userPasswordIncorrect"));
             } catch (TimeStampIncorrectException e) {
                 logger.error("查询课表异常；", e);
-                throw new TimeStampIncorrectException("时间戳校验失败");
+                throw new TimeStampIncorrectException(Messages.get("gradequery.timestampInvalid"));
             } catch (IOException e) {
                 logger.error("查询课表异常：", e);
-                throw new NetWorkTimeoutException("网络连接超时");
+                throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
             } catch (Exception e) {
                 logger.error("查询课表异常：", e);
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
         } else {
             //从缓存中获取，并做空指针防御
@@ -401,14 +402,14 @@ public class ScheduleService {
                     document = eduSystemClient.fetchTeacherScheduleDocument(sessionId, username, teacherName, year, term);
                 } catch (IOException ex) {
                     logger.error("教师个人课表查询异常：", ex);
-                    throw new NetWorkTimeoutException("网络连接超时");
+                    throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
                 }
             } else {
                 throw e;
             }
         } catch (IOException e) {
             logger.error("教师个人课表查询异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         }
         //获取存放课表信息的表格
         Element table = document.getElementById("Table6");
@@ -455,10 +456,10 @@ public class ScheduleService {
                                                     //通过rowspan属性得到课程时长
                                                     rowspan = Integer.parseInt(tds.get(currentColumnIndexInThisRow).attr("rowspan"));
                                                     //将当前单元格下方对应的原单元格的课程信息标记为特殊空课程
-                                                    if (rowspan < 1 || rowspan > 4) throw new ServerErrorException("课表课程长度不合法");
+                                                    if (rowspan < 1 || rowspan > 4) throw new ServerErrorException(Messages.get("schedulequery.courseLengthInvalid"));
                                                     for (int offset = 1; offset < rowspan; offset++) {
                                                         int covered = currentPosition + offset * 7;
-                                                        if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException("课表课程超出范围");
+                                                        if (covered >= schedulesWithSpecialEmptySchedule.length) throw new ServerErrorException(Messages.get("schedulequery.courseOutOfRange"));
                                                         schedulesWithSpecialEmptySchedule[covered] = specialEmptySchedule;
                                                     }
                                                 } else {
@@ -473,12 +474,12 @@ public class ScheduleService {
                                                         //不是有效的课表头信息,跳过并查询下一个独立行的信息,直到得到有效的课表头信息
                                                     } else {
                                                         //有效的课表头信息,进行信息处理
-                                                        if (j > string.length - 6) throw new ServerErrorException("教师课表课程信息不完整");
+                                                        if (j > string.length - 6) throw new ServerErrorException(Messages.get("schedulequery.teacherCourseInfoIncomplete"));
                                                         String scheduleName = string[j];
                                                         String scheduleType = string[j + 1];
                                                         String scheduleTime = string[j + 2];
                                                         String[] timeParts = scheduleTime.split("\\(", 2);
-                                                        if (timeParts.length < 2 || !timeParts[1].contains(")")) throw new ServerErrorException("教师课表时间格式不合法");
+                                                        if (timeParts.length < 2 || !timeParts[1].contains(")")) throw new ServerErrorException(Messages.get("schedulequery.teacherTimeFormatInvalid"));
                                                         String scheduleWeek = timeParts[0];
                                                         String scheduleLesson = timeParts[1].split("\\)")[0];
                                                         String scheduleLocation = string[j + 4];

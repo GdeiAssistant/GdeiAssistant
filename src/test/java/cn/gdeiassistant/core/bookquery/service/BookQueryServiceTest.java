@@ -4,7 +4,7 @@ import cn.gdeiassistant.common.exception.bookrenewexception.BookRenewOvertimeExc
 import cn.gdeiassistant.common.exception.commonexception.*;
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.library.LibraryClient;
 import cn.gdeiassistant.integration.library.pojo.LibraryRenewResult;
@@ -52,14 +52,15 @@ class BookQueryServiceTest {
         when(client.fetchBorrowedBooksPage(anyString(), anyString(), anyString()))
                 .thenThrow(new PasswordIncorrectException("synthetic"), new IOException("synthetic"))
                 .thenReturn(Jsoup.parse("<table class='tableLib'></table>"));
-        assertThrows(PasswordIncorrectException.class, () -> service.bookquery("session", "p"));
-        assertThrows(NetWorkTimeoutException.class, () -> service.bookquery("session", "p"));
-        assertThrows(ServerErrorException.class, () -> service.bookquery("session", "p"));
+        assertThrows(PasswordIncorrectException.class, () -> service.getBorrowedBooks("session", "p"));
+        assertThrows(NetWorkTimeoutException.class, () -> service.getBorrowedBooks("session", "p"));
+        assertThrows(ServerErrorException.class, () -> service.getBorrowedBooks("session", "p"));
     }
     @Test void renewalSuccessLimitAndOutageAreNotInterchangeable() throws Exception {
-        var ok = new LibraryRenewResult(); ok.setResult(1); ok.setMessage("ok");
-        var limit = new LibraryRenewResult(); limit.setResult(1); limit.setMessage("超过最大续借次数:1！");
-        when(client.renewBook("session", "serial", "code")).thenReturn(ok, limit, new LibraryRenewResult())
+        var ok = LibraryRenewResult.fromOpac(1, "ok");
+        var limit = LibraryRenewResult.fromOpac(1, "超过最大续借次数:1！");
+        var failure = LibraryRenewResult.fromOpac(0, "upstream failure");
+        when(client.renewBook("session", "serial", "code")).thenReturn(ok, limit, failure)
                 .thenThrow(new IOException("synthetic outage"));
         service.renewBook("session", "serial", "code");
         assertThrows(BookRenewOvertimeException.class, () -> service.renewBook("session", "serial", "code"));

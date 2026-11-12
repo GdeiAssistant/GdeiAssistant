@@ -13,6 +13,7 @@ import org.springframework.web.util.HtmlUtils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class ProfilePatchService {
@@ -30,7 +31,7 @@ public class ProfilePatchService {
     @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void save(String sessionId, Map<String, Object> input) throws Exception {
         User user = certificates.getUserLoginCertificate(sessionId);
-        if (user == null) throw new TokenExpiredException("登录凭证已过期，请重新登录");
+        if (user == null) throw new TokenExpiredException(Messages.get("token.expired"));
         ProfileEntity current = profiles.lockUserProfile(user.getUsername());
         if (current == null) throw new cn.gdeiassistant.common.exception.databaseexception.UserNotExistException("查询的用户不存在");
         Map<String, String> errors = new LinkedHashMap<>();

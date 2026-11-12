@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
-import cn.gdeiassistant.core.userprofile.controller.mapper.ProfileResponseMapper;
+import cn.gdeiassistant.core.userprofile.controller.support.ProfileResponseMapper;
 import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
 import cn.gdeiassistant.core.userprofile.service.*;
 import org.junit.jupiter.api.*;

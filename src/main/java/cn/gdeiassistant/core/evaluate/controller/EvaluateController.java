@@ -4,7 +4,7 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.evaluate.pojo.dto.EvaluateSubmitDTO;
 import cn.gdeiassistant.core.evaluate.service.EvaluateService;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class EvaluateController {
@@ -28,7 +29,7 @@ public class EvaluateController {
                              @RequestBody(required = false) EvaluateSubmitDTO body) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         if (StringUtils.isBlank(sessionId)) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("未检测到有效令牌", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("token.missing", request.getHeader("Accept-Language")));
         }
         boolean directlySubmit = body != null && Boolean.TRUE.equals(body.getDirectSubmit());
         evaluateService.teacherEvaluate(sessionId, directlySubmit);

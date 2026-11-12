@@ -1,49 +1,67 @@
 package cn.gdeiassistant.core.deletion.service;
 
+import cn.gdeiassistant.common.account.AccountClosure;
+import cn.gdeiassistant.common.account.AccountLifecycleContributor;
+import cn.gdeiassistant.common.pojo.entity.CloseLog;
+import cn.gdeiassistant.core.close.mapper.CloseMapper;
 import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
-import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.core.close.mapper.CloseMapper;
-import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
-import cn.gdeiassistant.common.pojo.entity.CloseLog;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.transaction.support.TransactionTemplate;
+
 import java.util.List;
 
-/** Cross-store cleanup runs after the app transaction and survives process restarts. */
+/**
+ * Post-commit cross-store cleanup: credentials, live connections, external caches and the
+ * close log. Domain work is delegated to {@link AccountLifecycleContributor}; this class
+ * only claims tasks, retries them and owns the transaction boundary.
+ */
 @Service
 public class DeletionCleanupWorker {
+
     private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger(DeletionCleanupWorker.class);
-    public record CleanupRequested(String id) {}
-    @Autowired private DeletionCleanupMapper mapper;
-    @Autowired private UserMapper userMapper;
-    @Autowired
-    @Qualifier("appTransactionManager")
-    private PlatformTransactionManager transactions;
-    @Autowired private GradeDao gradeDao;
-    @Autowired private ScheduleDao scheduleDao;
-    @Autowired private UserProfileService profileService;
-    @Autowired private UserCertificateService certificateService;
-    @Autowired private CloseMapper closeMapper;
-    @Autowired private cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper announcements;
-    @Autowired(required=false) private SocialRealtimeHub realtimeHub;
+
+    public record CleanupRequested(String id) {
+    }
+
+    private final DeletionCleanupMapper mapper;
+    private final UserMapper userMapper;
+    private final PlatformTransactionManager transactions;
+    private final UserCertificateService certificateService;
+    private final CloseMapper closeMapper;
+    private final List<AccountLifecycleContributor> contributors;
+
+    public DeletionCleanupWorker(DeletionCleanupMapper mapper,
+                                 UserMapper userMapper,
+                                 @Qualifier("appTransactionManager") PlatformTransactionManager transactions,
+                                 UserCertificateService certificateService,
+                                 CloseMapper closeMapper,
+                                 List<AccountLifecycleContributor> contributors) {
+        this.mapper = mapper;
+        this.userMapper = userMapper;
+        this.transactions = transactions;
+        this.certificateService = certificateService;
+        this.closeMapper = closeMapper;
+        this.contributors = contributors;
+    }
 
     @TransactionalEventListener
-    public void afterCommit(CleanupRequested request) { runOne(request.id()); }
+    public void afterCommit(CleanupRequested request) {
+        runOne(request.id());
+    }
 
-    @Scheduled(fixedDelayString="${account-deletion.cleanup-delay-ms:60000}")
+    @Scheduled(fixedDelayString = "${account-deletion.cleanup-delay-ms:60000}")
     public void retryPending() {
         try {
-            for (String id : mapper.pendingIds()) runOne(id);
+            for (String id : mapper.pendingIds()) {
+                runOne(id);
+            }
         } catch (Exception failure) {
             LOGGER.warn("Account cleanup queue unavailable: {}", failure.getClass().getSimpleName());
         }
@@ -51,7 +69,7 @@ public class DeletionCleanupWorker {
 
     public void runOne(String id) {
         try {
-            var transaction = new TransactionTemplate(transactions);
+            TransactionTemplate transaction = new TransactionTemplate(transactions);
             transaction.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             // The claim row stays locked through every delete and the final queue update.
             // REQUIRES_NEW also commits writes made from the afterCommit callback.
@@ -64,7 +82,9 @@ public class DeletionCleanupWorker {
     private void cleanClaimedTask(String id) {
         boolean claimed = false;
         try {
-            if (mapper.claim(id) != 1) return;
+            if (mapper.claim(id) != 1) {
+                return;
+            }
             claimed = true;
             var task = mapper.find(id);
             if (!userMapper.selectExistingUsernames(List.of(task.getUsername())).isEmpty()) {
@@ -75,21 +95,26 @@ public class DeletionCleanupWorker {
             }
             // Repeating these operations is safe; no credential or external error text is stored.
             certificateService.clearReusableCredentials(task.getUsername());
-            if (task.getUserId() != null && realtimeHub != null) realtimeHub.disconnectUser(task.getUserId());
-            gradeDao.removeGrade(task.getUsername());
-            scheduleDao.removeSchedule(task.getUsername());
-            profileService.deleteAvatarForUsername(task.getUsername());
+            AccountClosure closure = new AccountClosure(
+                    task.getUsername(), task.getResetname(), task.getUserId());
+            for (AccountLifecycleContributor contributor : contributors) {
+                contributor.cleanupAfterCommit(closure);
+            }
             CloseLog log = new CloseLog();
             log.setUsername(task.getUsername());
             log.setResetname(task.getResetname());
             closeMapper.insertCloseLog(log);
-            announcements.deleteUserReads(task.getUsername());
             mapper.complete(id);
         } catch (Exception failure) {
             if (claimed) {
-                try { mapper.retry(id, failure.getClass().getSimpleName()); }
-                catch (Exception unavailable) { LOGGER.warn("Account cleanup retry deferred: {}", unavailable.getClass().getSimpleName()); }
-            } else LOGGER.warn("Account cleanup claim deferred: {}", failure.getClass().getSimpleName());
+                try {
+                    mapper.retry(id, failure.getClass().getSimpleName());
+                } catch (Exception unavailable) {
+                    LOGGER.warn("Account cleanup retry deferred: {}", unavailable.getClass().getSimpleName());
+                }
+            } else {
+                LOGGER.warn("Account cleanup claim deferred: {}", failure.getClass().getSimpleName());
+            }
         }
     }
 }

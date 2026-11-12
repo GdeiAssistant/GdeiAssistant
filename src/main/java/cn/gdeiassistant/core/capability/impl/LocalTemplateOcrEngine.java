@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class LocalTemplateOcrEngine {
@@ -40,27 +41,27 @@ public class LocalTemplateOcrEngine {
     public String recognizeCaptcha(String imageBase64, CheckCodeTypeEnum typeEnum, int length) throws RecognitionException {
         String allowedCharacters = resolveAllowedCharacters(typeEnum);
         if (StringUtils.isBlank(allowedCharacters)) {
-            throw new RecognitionException("本地OCR暂不支持当前验证码类型");
+            throw new RecognitionException(Messages.get("capability.localOcrCaptchaTypeUnsupported"));
         }
         boolean[][] binaryImage = decodeToBinaryImage(imageBase64);
         List<boolean[][]> segments = splitCharacters(binaryImage, length);
         if (segments.isEmpty()) {
-            throw new RecognitionException("本地OCR识别验证码失败");
+            throw new RecognitionException(Messages.get("capability.localOcrCaptchaFailed"));
         }
         if (length > 0 && segments.size() != length) {
-            throw new RecognitionException("本地OCR识别验证码失败");
+            throw new RecognitionException(Messages.get("capability.localOcrCaptchaFailed"));
         }
         StringBuilder builder = new StringBuilder();
         for (boolean[][] segment : segments) {
             MatchResult matchResult = matchSegment(segment, allowedCharacters);
             if (!matchResult.accepted()) {
-                throw new RecognitionException("本地OCR识别验证码失败");
+                throw new RecognitionException(Messages.get("capability.localOcrCaptchaFailed"));
             }
             builder.append(matchResult.getCharacter());
         }
         String result = builder.toString().toUpperCase(Locale.ROOT);
         if (length > 0 && result.length() != length) {
-            throw new RecognitionException("本地OCR识别验证码失败");
+            throw new RecognitionException(Messages.get("capability.localOcrCaptchaFailed"));
         }
         return result;
     }
@@ -69,7 +70,7 @@ public class LocalTemplateOcrEngine {
         boolean[][] binaryImage = decodeToBinaryImage(imageBase64);
         List<boolean[][]> segments = splitCharacters(binaryImage, 0);
         if (segments.isEmpty()) {
-            throw new RecognitionException("本地OCR数字识别失败");
+            throw new RecognitionException(Messages.get("capability.localOcrDigitFailed"));
         }
         StringBuilder builder = new StringBuilder();
         for (boolean[][] segment : segments) {
@@ -80,7 +81,7 @@ public class LocalTemplateOcrEngine {
         }
         String result = builder.toString();
         if (StringUtils.isBlank(result)) {
-            throw new RecognitionException("本地OCR数字识别失败");
+            throw new RecognitionException(Messages.get("capability.localOcrDigitFailed"));
         }
         return result;
     }
@@ -100,25 +101,25 @@ public class LocalTemplateOcrEngine {
 
     private boolean[][] decodeToBinaryImage(String imageBase64) throws RecognitionException {
         if (StringUtils.isBlank(imageBase64)) {
-            throw new RecognitionException("本地OCR无法读取图片");
+            throw new RecognitionException(Messages.get("capability.localOcrImageUnreadable"));
         }
         String normalizedBase64 = imageBase64.contains(",") ? imageBase64.substring(imageBase64.indexOf(',') + 1) : imageBase64;
         try {
             byte[] imageBytes = Base64.getDecoder().decode(normalizedBase64);
             BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
             if (image == null) {
-                throw new RecognitionException("本地OCR无法读取图片");
+                throw new RecognitionException(Messages.get("capability.localOcrImageUnreadable"));
             }
             boolean[][] binaryImage = threshold(image);
             binaryImage = removeIsolatedPixels(binaryImage);
             binaryImage = removeNoiseComponents(binaryImage);
             binaryImage = crop(binaryImage);
             if (binaryImage.length == 0 || binaryImage[0].length == 0) {
-                throw new RecognitionException("本地OCR无法读取图片");
+                throw new RecognitionException(Messages.get("capability.localOcrImageUnreadable"));
             }
             return binaryImage;
         } catch (IllegalArgumentException | IOException e) {
-            throw new RecognitionException("本地OCR无法读取图片");
+            throw new RecognitionException(Messages.get("capability.localOcrImageUnreadable"));
         }
     }
 

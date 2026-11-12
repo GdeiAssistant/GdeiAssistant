@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 学信网/研招网网络防腐层：www.chsi.com.cn（四六级）、yz.chsi.com.cn（考研），
@@ -54,7 +55,7 @@ public class ChsiClient {
             httpGet.setHeader("User-Agent", USER_AGENT);
             try (var response = httpClient.execute(httpGet)) {
                 if (response.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("访问学信网异常");
+                    throw new ServerErrorException(Messages.get("integration.chsi.accessFailed"));
                 }
             }
             httpGet = new HttpGet(CET_BASE + "/ValidatorIMG.JPG");
@@ -62,7 +63,7 @@ public class ChsiClient {
             httpGet.setHeader("User-Agent", USER_AGENT);
             try (var response = httpClient.execute(httpGet)) {
                 if (response.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("访问学信网异常");
+                    throw new ServerErrorException(Messages.get("integration.chsi.accessFailed"));
                 }
                 return ImageEncodeUtils.convertToBase64(response.getEntity().getContent());
             }
@@ -95,7 +96,7 @@ public class ChsiClient {
             httpGet.setHeader("User-Agent", USER_AGENT);
             try (var response = httpClient.execute(httpGet)) {
                 if (response.getStatusLine().getStatusCode() != 200) {
-                    throw new ServerErrorException("学信网系统异常");
+                    throw new ServerErrorException(Messages.get("integration.chsi.systemError"));
                 }
                 return Jsoup.parse(EntityUtils.toString(response.getEntity()));
             }
@@ -181,7 +182,7 @@ public class ChsiClient {
     private static Document parseSuccessfulResponse(Response response) throws IOException, ServerErrorException {
         ResponseBody responseBody = response.body();
         if (!response.isSuccessful() || responseBody == null) {
-            throw new ServerErrorException("查询系统异常");
+            throw new ServerErrorException(Messages.get("integration.chsi.queryError"));
         }
         return Jsoup.parse(responseBody.string());
     }
@@ -189,7 +190,7 @@ public class ChsiClient {
     private static byte[] readSuccessfulResponseBytes(Response response) throws IOException, ServerErrorException {
         ResponseBody responseBody = response.body();
         if (!response.isSuccessful() || responseBody == null) {
-            throw new ServerErrorException("查询系统异常");
+            throw new ServerErrorException(Messages.get("integration.chsi.queryError"));
         }
         return responseBody.bytes();
     }

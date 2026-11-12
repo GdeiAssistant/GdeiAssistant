@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.delaytask.pojo;
+package cn.gdeiassistant.common.pojo.delaytask;
 
 import java.util.UUID;
 

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class PhotographService {
@@ -108,7 +109,7 @@ public class PhotographService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<PhotographEntity> list = photographMapper.selectPhotographByIdAndUsername(id, user.getUsername());
         if (list == null || list.isEmpty()) {
-            throw new DataNotExistException("照片信息不存在");
+            throw new DataNotExistException(Messages.get("photograph.photoMissing"));
         }
         PhotographEntity e = list.get(0);
         PhotographVO vo = toPublicPhotographVO(e);
@@ -151,11 +152,11 @@ public class PhotographService {
     @Transactional("appTransactionManager")
     public void addPhotographComment(int id, String comment, String sessionId) throws DataNotExistException {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
-            throw new IllegalArgumentException("评论内容不能为空且不能超过 50 字");
+            throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
         }
         Integer photographCount = photographMapper.selectPhotographCountById(id);
         if (photographCount == null || photographCount == 0) {
-            throw new DataNotExistException("照片信息不存在");
+            throw new DataNotExistException(Messages.get("photograph.photoMissing"));
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         PhotographCommentEntity entity = new PhotographCommentEntity();
@@ -182,7 +183,7 @@ public class PhotographService {
             storedAssets.uploadObject("photograph/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传拍好校园图片失败，id={}, index={}", id, index, e);
-            throw new RuntimeException("拍好校园图片上传失败", e);
+            throw new RuntimeException(Messages.get("photograph.uploadFailed"), e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -220,7 +221,7 @@ public class PhotographService {
     public void likePhotograph(int id, String sessionId) throws DataNotExistException {
         Integer photographCount = photographMapper.selectPhotographCountById(id);
         if (photographCount == null || photographCount == 0) {
-            throw new DataNotExistException("照片信息不存在");
+            throw new DataNotExistException(Messages.get("photograph.photoMissing"));
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         Integer count = photographMapper.selectPhotographLikeCountByPhotoIdAndUsername(id, user.getUsername());

@@ -12,6 +12,7 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.ApiLanguageResolver;
 
 public class I18nTranslationFilter implements Filter {
 

@@ -4,7 +4,7 @@ import cn.gdeiassistant.common.exception.commonexception.*;
 import cn.gdeiassistant.common.exception.evaluateexception.NotAvailableTimeException;
 import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
 import cn.gdeiassistant.common.pojo.entity.User;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 import cn.gdeiassistant.integration.edu.pojo.EduSessionCredential;

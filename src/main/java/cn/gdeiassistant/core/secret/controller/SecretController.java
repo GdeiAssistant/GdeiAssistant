@@ -8,7 +8,7 @@ import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.secret.pojo.dto.SecretPublishDTO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.InputStream;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class SecretController {
@@ -33,7 +34,7 @@ public class SecretController {
     private SecretService secretService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     @RequestMapping(value = {"/api/secret/{id}"}, method = RequestMethod.GET)
@@ -46,7 +47,7 @@ public class SecretController {
     @RequestMapping(value = {"/api/secret/{id}/comments"}, method = RequestMethod.GET)
     public DataJsonResult<List<SecretCommentVO>> getSecretComments(@PathVariable("id") int id) throws Exception {
         if (!secretService.checkSecretInfoExist(id)) {
-            throw new DataNotExistException("查询的校园树洞信息不存在");
+            throw new DataNotExistException(Messages.get("secret.notFound"));
         }
         List<SecretCommentVO> list = secretService.getSecretComments(id);
         return new DataJsonResult<>(true, list);
@@ -113,7 +114,7 @@ public class SecretController {
     public JsonResult addSecretComment(HttpServletRequest request, @PathVariable("id") int id
             , @Validated @NotBlank @Length(min = 1, max = 50) String comment) throws Exception {
         if (!secretService.checkSecretInfoExist(id)) {
-            throw new DataNotExistException("查询的校园树洞信息不存在");
+            throw new DataNotExistException(Messages.get("secret.notFound"));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         secretService.addSecretComment(id, sessionId, comment);
@@ -136,6 +137,6 @@ public class SecretController {
                     return failure(request, "请求参数不合法");
             }
         }
-        throw new DataNotExistException("查询的校园树洞信息不存在");
+        throw new DataNotExistException(Messages.get("secret.notFound"));
     }
 }

@@ -11,7 +11,7 @@ import cn.gdeiassistant.core.charge.pojo.vo.ChargeVO;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.charge.mapper.ChargeMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class ChargeService {
@@ -72,7 +73,7 @@ public class ChargeService {
      * @return ChargeVO
      */
     public ChargeVO chargeRequest(String sessionId, int amount) throws Exception {
-        if (amount <= 0 || amount > 500) throw new AmountNotAvailableException("用户充值金额超过范围");
+        if (amount <= 0 || amount > 500) throw new AmountNotAvailableException(Messages.get("charge.amountOutOfRange"));
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
@@ -93,13 +94,13 @@ public class ChargeService {
             return vo;
         } catch (AmountNotAvailableException e) {
             logger.error("校园卡充值异常：", e);
-            throw new AmountNotAvailableException("用户充值金额超过范围");
+            throw new AmountNotAvailableException(Messages.get("charge.amountOutOfRange"));
         } catch (IOException e) {
             logger.error("校园卡充值异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("校园卡充值异常：", e);
-            throw new ServerErrorException("支付管理系统异常");
+            throw new ServerErrorException(Messages.get("charge.paymentSystemError"));
         } finally {
             if (httpClient != null) {
                 try {
@@ -146,7 +147,7 @@ public class ChargeService {
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 if (document.getElementsByClass("pcclient").size() > 0) {
-                    throw new PasswordIncorrectException("用户名或密码错误");
+                    throw new PasswordIncorrectException(Messages.get("charge.credentialsIncorrect"));
                 }
                 //获取html页面中的首个URL地址,进入支付系统页面
                 httpGet = new HttpGet(document.select("a").first().attr("href"));
@@ -242,7 +243,7 @@ public class ChargeService {
                 }
             }
         }
-        throw new ServerErrorException("支付管理平台异常");
+        throw new ServerErrorException(Messages.get("charge.paymentPlatformError"));
     }
 
     /**
@@ -302,7 +303,7 @@ public class ChargeService {
                         //获取存放充值信息的DIV
                         Element main_hd = document.getElementsByClass("main_hd").first();
                         if (main_hd == null) {
-                            throw new ServerErrorException("支付确认页面解析异常");
+                            throw new ServerErrorException(Messages.get("charge.confirmPageParseError"));
                         }
                         String confirmNumber = main_hd.select("span").get(0).text();
                         String confirmName = main_hd.select("span").get(1).text();
@@ -311,7 +312,7 @@ public class ChargeService {
                                 && confirmName != null && !confirmName.isEmpty()
                                 && !payeeName.equals(confirmName)) {
                             logger.error("校园卡充值信息不一致: payeeName={}, confirmName={}", payeeName, confirmName);
-                            throw new ServerErrorException("充值用户信息不一致，交易已中止");
+                            throw new ServerErrorException(Messages.get("charge.userMismatchAborted"));
                         }
                         String confirmAmount;
                         if (amount <= 100) {
@@ -325,11 +326,11 @@ public class ChargeService {
                         try {
                             if (Integer.parseInt(confirmAmount.trim()) != amount) {
                                 logger.error("校园卡充值金额不一致: requested={}, confirmed={}", amount, confirmAmount);
-                                throw new ServerErrorException("充值金额不一致，交易已中止");
+                                throw new ServerErrorException(Messages.get("charge.amountMismatchAborted"));
                             }
                         } catch (NumberFormatException e) {
                             logger.error("校园卡充值金额解析失败: confirmAmount={}", confirmAmount);
-                            throw new ServerErrorException("充值金额解析异常，交易已中止");
+                            throw new ServerErrorException(Messages.get("charge.amountParseErrorAborted"));
                         }
                         Map<String, String> ecardDataMap = new HashMap<>();
                         Elements ecardDatas = document.getElementsByTag("input");

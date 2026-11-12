@@ -17,6 +17,7 @@ import cn.gdeiassistant.common.exception.verificationexception.SendEmailExceptio
 import org.springframework.mail.MailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class FeedbackService {
@@ -70,7 +71,7 @@ public class FeedbackService {
     private void sendEmail(String sessionId, String content, String recipient, String subject,
                            byte[][] attachments) throws SendEmailException {
         if (!isEmailEnabled()) {
-            throw new FeatureNotEnabledException("邮件服务未启用，无法提交工单/反馈");
+            throw new FeatureNotEnabledException(Messages.get("feedback.mailDisabled"));
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         try {
@@ -79,7 +80,7 @@ public class FeedbackService {
             logger.warn("FeedbackMailFailure - exceptionType={} causeType={}", e.getClass().getSimpleName(),
                     e.getCause() != null ? e.getCause().getClass().getSimpleName() : "-");
             // No automatic resend: SMTP errors can have an unknown remote delivery outcome.
-            throw new SendEmailException("反馈邮件提交失败，请稍后重试");
+            throw new SendEmailException(Messages.get("feedback.mailSubmitFailed"));
         }
     }
 

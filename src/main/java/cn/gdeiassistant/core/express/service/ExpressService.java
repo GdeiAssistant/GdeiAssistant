@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class ExpressService {
@@ -63,7 +64,7 @@ public class ExpressService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
-            throw new DataNotExistException("表白信息不存在");
+            throw new DataNotExistException(Messages.get("express.confessionMissing"));
         }
         return expressConverter.toVO(entity);
     }
@@ -77,12 +78,12 @@ public class ExpressService {
     @Transactional("appTransactionManager")
     public void addExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
-            throw new IllegalArgumentException("评论内容不能为空且不能超过 50 字");
+            throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
-            throw new DataNotExistException("表白信息不存在");
+            throw new DataNotExistException(Messages.get("express.confessionMissing"));
         }
         ExpressComment expressComment = new ExpressComment();
         expressComment.setExpressId(expressId);
@@ -120,7 +121,7 @@ public class ExpressService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
-            throw new DataNotExistException("表白信息不存在");
+            throw new DataNotExistException(Messages.get("express.confessionMissing"));
         }
         ExpressLike like = expressMapper.selectExpressLike(expressId, user.getUsername());
         if (like == null) {
@@ -146,15 +147,15 @@ public class ExpressService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
-            throw new DataNotExistException("表白信息不存在");
+            throw new DataNotExistException(Messages.get("express.confessionMissing"));
         }
         int correctTime = expressMapper.selectCorrectExpressGuessRecord(user.getUsername());
         if (correctTime > 0) {
-            throw new CorrectRecordException("已经猜中过真实姓名");
+            throw new CorrectRecordException(Messages.get("express.nameAlreadyGuessed"));
         }
         String realname = entity.getRealname();
         if (StringUtils.isBlank(realname)) {
-            throw new NoRealNameException("表白者未填写真实姓名");
+            throw new NoRealNameException(Messages.get("express.realNameMissing"));
         }
         boolean correct = realname.equals(name);
         if (realname.equals(name)) {

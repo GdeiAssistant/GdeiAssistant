@@ -42,17 +42,14 @@ class AuthWebFlowIntegrationTest {
 
     private MockMvc mockMvc;
 
-    @Mock private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
-
     @BeforeEach
     void setUp() {
         JwtSessionIdFilter jwtSessionIdFilter = new JwtSessionIdFilter();
         ReflectionTestUtils.setField(jwtSessionIdFilter, "jwtUtil", jwtUtil);
         ReflectionTestUtils.setField(jwtSessionIdFilter, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(jwtSessionIdFilter, "userMapper", userMapper);
-        var active = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
-        active.setStatus("ACTIVE");
-        org.mockito.Mockito.lenient().when(userMapper.selectUser(org.mockito.ArgumentMatchers.anyString())).thenReturn(active);
+        org.mockito.Mockito.lenient()
+                .when(userCertificateService.isAccountActive(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(true);
 
         ApiAuthInterceptor apiAuthInterceptor = new ApiAuthInterceptor(List.of("/api/auth"));
         mockMvc = MockMvcBuilders.standaloneSetup(new TestAuthController())

@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 一卡通（ecard.gdei.edu.cn）网络防腐层。
@@ -53,7 +54,7 @@ public class CardClient {
             HttpGet httpGet = new HttpGet(ECARD_BASE + "/CardManage/CardInfo/BasicInfo");
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -81,7 +82,7 @@ public class CardClient {
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -107,7 +108,7 @@ public class CardClient {
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -133,7 +134,7 @@ public class CardClient {
             httpPost.setEntity(new UrlEncodedFormEntity(form, StandardCharsets.UTF_8));
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
         } finally {
@@ -156,7 +157,7 @@ public class CardClient {
             HttpGet httpGet = new HttpGet(ECARD_BASE + "/Account/GetNumKeyPadImg");
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
@@ -180,7 +181,7 @@ public class CardClient {
             HttpGet httpGet = new HttpGet(url);
             httpResponse = httpClient.execute(httpGet);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return readBytes(httpResponse.getEntity().getContent());
         } finally {
@@ -242,7 +243,7 @@ public class CardClient {
             httpPost.setHeader("Referer", ECARD_BASE + "/");
             httpResponse = httpClient.execute(httpPost);
             if (httpResponse.getStatusLine().getStatusCode() != 200) {
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
             return EntityUtils.toString(httpResponse.getEntity());
         } finally {
@@ -255,30 +256,30 @@ public class CardClient {
     // ---- Circuit breaker fallback methods ----
 
     private Document cardSystemFallback(String sessionId, Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 
     private Document cardSystemFallback(String sessionId, int type, int pageIndex,
                                         Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 
     private Document cardSystemFallback(String sessionId, int year, int month, int date, int pageIndex,
                                         Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 
     private byte[] cardSystemFallbackBytes(String sessionId, Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 
     private byte[] cardSystemFallbackBytes(String sessionId, String relativePath,
                                            Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 
     private String cardSystemFallbackString(String sessionId, String passwordMapped, String checkCode,
                                             Throwable t) throws ServerErrorException {
-        throw new ServerErrorException("一卡通系统暂时不可用，请稍后再试");
+        throw new ServerErrorException(Messages.get("integration.card.systemUnavailable"));
     }
 }

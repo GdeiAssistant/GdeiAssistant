@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.InetAddress;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * MaxMind GeoLite2 本地 IP 地理定位提供商。
@@ -90,9 +91,9 @@ public class MaxmindGeoIpProvider implements ServiceProvider<String, IPAddressRe
             // record.setIp(ip);
             // return record;
 
-            throw new ProviderException("MaxMind GeoLite2 尚未集成：需添加 com.maxmind.geoip2:geoip2 依赖");
+            throw new ProviderException(Messages.get("capability.maxmindDependencyMissing"));
         } catch (Exception e) {
-            throw new ProviderException("MaxMind GeoLite2 查询失败", e);
+            throw new ProviderException(Messages.get("capability.maxmindLookupFailed"), e);
         }
     }
 

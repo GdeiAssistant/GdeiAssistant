@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userprofile.controller.mapper;
+package cn.gdeiassistant.core.userprofile.controller.support;
 
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.entity.Introduction;

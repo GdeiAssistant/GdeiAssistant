@@ -28,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class SecretService {
@@ -106,7 +107,7 @@ public class SecretService {
             storedAssets.uploadObject("secret/voice/" + id + ".mp3", inputStream);
         } catch (Exception e) {
             logger.error("上传树洞语音失败，id={}", id, e);
-            throw new RuntimeException("语音上传失败", e);
+            throw new RuntimeException(Messages.get("secret.voice.uploadFailed"), e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -148,7 +149,7 @@ public class SecretService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         SecretContentEntity entity = secretMapper.selectSecretByID(id);
         if (entity == null) {
-            throw new DataNotExistException("查询的树洞消息不存在");
+            throw new DataNotExistException(Messages.get("secret.messageMissing"));
         }
         SecretVO vo = secretConverter.toVO(entity);
         if (entity.getType() != null && entity.getType() == 1) {
@@ -185,7 +186,7 @@ public class SecretService {
     @Transactional("appTransactionManager")
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
-            throw new IllegalArgumentException("评论内容不能为空且不能超过 50 字");
+            throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
         }
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         SecretCommentEntity entity = new SecretCommentEntity();

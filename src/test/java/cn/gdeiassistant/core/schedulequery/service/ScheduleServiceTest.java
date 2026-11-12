@@ -10,7 +10,7 @@ import cn.gdeiassistant.common.exception.queryexception.*;
 import cn.gdeiassistant.common.pojo.document.*;
 import cn.gdeiassistant.common.pojo.entity.*;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.edu.EduSystemClient;
 

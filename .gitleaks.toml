@@ -50,6 +50,18 @@ regexTarget = "secret"
 paths = ['''^src/test/''', '''^frontend/(?:test|tests)/''']
 regexes = ['''(?i)^(?:test|fake|dummy|example)[_.-][a-z0-9_.-]+$''']
 
+[[rules.allowlists]]
+description = "Translated prose in the i18n message catalog: a sentence is not a credential"
+condition = "AND"
+regexTarget = "line"
+paths = ['''^src/main/resources/i18n/messages_[A-Za-z_]+\.properties$''']
+# Keys such as token.expired or auth.passwordIncorrect name a message, not a
+# secret store, so the rule's keyword match hits the value. The captured group
+# is only the first word, so the discriminator is the whole line: a message
+# value is at least two whitespace-separated words, while a real key, token or
+# hash is a single opaque run.
+regexes = ['''^[^=]*=\s*(?:\S+\s+\S+|.*[\p{Han}\p{Hiragana}\p{Katakana}\p{Hangul}])''']
+
 [[allowlists]]
 description = "Explicit placeholder values, never a blanket source-path exclusion"
 regexTarget = "secret"

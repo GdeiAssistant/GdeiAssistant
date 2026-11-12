@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class CetQueryService {
@@ -41,7 +42,7 @@ public class CetQueryService {
             return chsiClient.fetchCetCaptchaImageBase64(sessionId);
         } catch (IOException e) {
             logger.error("查询四六级成绩异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         }
     }
 
@@ -54,12 +55,12 @@ public class CetQueryService {
                     dto.getCheckcode() != null ? dto.getCheckcode() : "");
             if (document.getElementsByClass("cetTable").size() == 0) {
                 if (document.getElementsByClass("error alignC marginT20").size() != 0) {
-                    throw new PasswordIncorrectException("四六级查询信息错误");
+                    throw new PasswordIncorrectException(Messages.get("cetquery.queryInfoIncorrect"));
                 }
                 if (document.getElementsByClass("error alignC").size() != 0) {
-                    throw new ErrorQueryConditionException("验证码信息错误");
+                    throw new ErrorQueryConditionException(Messages.get("cetquery.captchaIncorrect"));
                 }
-                throw new ServerErrorException("四六级查询系统异常");
+                throw new ServerErrorException(Messages.get("cetquery.systemError"));
             }
             Element element = document.getElementsByClass("cetTable").get(0);
             Elements trs = element.getElementsByTag("tr");
@@ -82,13 +83,13 @@ public class CetQueryService {
             cet.setWritingAndTranslatingScore(writingAndTranslatingScore);
             return cet;
         } catch (PasswordIncorrectException e) {
-            throw new PasswordIncorrectException("账户密码错误");
+            throw new PasswordIncorrectException(Messages.get("cetquery.passwordIncorrect"));
         } catch (ErrorQueryConditionException e) {
             logger.error("查询四六级成绩异常：", e);
-            throw new ErrorQueryConditionException("查询条件错误");
+            throw new ErrorQueryConditionException(Messages.get("graduateexam.conditionInvalid"));
         } catch (IOException e) {
             logger.error("查询四六级成绩异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         }
     }
 

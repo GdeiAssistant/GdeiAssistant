@@ -8,7 +8,7 @@ import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionExc
 import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class ScheduleQueryController {
@@ -44,7 +45,7 @@ public class ScheduleQueryController {
     public JsonResult updateScheduleCache(HttpServletRequest request) throws Exception {
         String sessionId = (String) request.getAttribute("sessionId");
         scheduleService.updateScheduleCache(sessionId);
-        return new JsonResult(true, BackendTextLocalizer.localizeMessage("课表数据更新成功", request.getHeader("Accept-Language")));
+        return new JsonResult(true, Messages.forLanguage("schedule.cache.updated", request.getHeader("Accept-Language")));
     }
 
     /**
@@ -56,7 +57,7 @@ public class ScheduleQueryController {
             throws GenerateScheduleException, CountOverLimitException, NotAvailableConditionException {
         String sessionId = (String) request.getAttribute("sessionId");
         scheduleService.addCustomSchedule(sessionId, customSchedule);
-        return new JsonResult(true, BackendTextLocalizer.localizeMessage("添加成功", request.getHeader("Accept-Language")));
+        return new JsonResult(true, Messages.forLanguage("common.addSuccess", request.getHeader("Accept-Language")));
     }
 
     /**

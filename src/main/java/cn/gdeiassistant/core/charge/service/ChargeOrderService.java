@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class ChargeOrderService {
@@ -104,7 +105,7 @@ public class ChargeOrderService {
     public ChargeOrderVO queryOrder(String orderId, String username) throws DataNotExistException {
         ChargeOrderEntity order = chargeOrderMapper.findByOrderIdAndUsername(orderId, username);
         if (order == null) {
-            throw new DataNotExistException("充值订单不存在或无权访问");
+            throw new DataNotExistException(Messages.get("charge.orderMissingOrNoAccess"));
         }
         return toSafeVO(order);
     }
@@ -113,7 +114,7 @@ public class ChargeOrderService {
         int safePage = page == null ? 0 : PageUtils.requireNonNegativeStart(page);
         int safeSize = size == null ? 20 : PageUtils.normalizePageSize(0, size.intValue());
         if (safePage > Integer.MAX_VALUE / safeSize) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         int start = safePage * safeSize;
         String normalizedStatus = normalizeStatus(status);
@@ -186,7 +187,7 @@ public class ChargeOrderService {
         try {
             return ChargeOrderStatus.valueOf(normalized).name();
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
     }
 

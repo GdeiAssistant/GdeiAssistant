@@ -90,16 +90,15 @@ class EmailIsolatedEndToEndTest {
         var sender=new SmtpEmailVerificationSender();ReflectionTestUtils.setField(sender,"emailUtils",utility);
         sender.setSmtpHost("127.0.0.1");sender.setSenderEmail("sender@example.invalid");sender.setSmtpPassword("synthetic-fixture-only");
         var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("synthetic-session")).thenReturn(new User("synthetic-owner"));
+        when(certificates.isAccountActive(org.mockito.ArgumentMatchers.anyString())).thenReturn(true);
         var service=new EmailService();ReflectionTestUtils.setField(service,"emailMapper",sql.getMapper(EmailMapper.class));
         ReflectionTestUtils.setField(service,"verificationCodeDao",codes);ReflectionTestUtils.setField(service,"emailVerificationSender",sender);
         ReflectionTestUtils.setField(service,"userCertificateService",certificates);
         var controller=new EmailController();ReflectionTestUtils.setField(controller,"emailService",service);
         var jwt=mock(JwtUtil.class);var claim=mock(Claim.class);when(claim.asString()).thenReturn("synthetic-session");
         when(jwt.verifyAndParse("synthetic-token")).thenReturn(Map.of("sessionId",claim));
-        var users=mock(UserMapper.class);var account=new CampusAccountView();account.setStatus("ACTIVE");
-        when(users.selectUser("synthetic-owner")).thenReturn(account);
         var filter=new JwtSessionIdFilter();ReflectionTestUtils.setField(filter,"jwtUtil",jwt);
-        ReflectionTestUtils.setField(filter,"userCertificateService",certificates);ReflectionTestUtils.setField(filter,"userMapper",users);
+        ReflectionTestUtils.setField(filter,"userCertificateService",certificates);
         http=MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new GlobalRestExceptionHandler())
                 .addFilters(filter).addInterceptors(new ApiAuthInterceptor(List.of())).build();
     }

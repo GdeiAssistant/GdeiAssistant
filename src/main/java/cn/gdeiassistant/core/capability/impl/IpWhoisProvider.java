@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class IpWhoisProvider implements ServiceProvider<String, IPAddressRecord> {
@@ -49,11 +50,11 @@ public class IpWhoisProvider implements ServiceProvider<String, IPAddressRecord>
                 normalize(record);
                 return record;
             }
-            throw new ProviderException("ipwho.is 查询失败：success 不为 true");
+            throw new ProviderException(Messages.get("capability.ipWhoisSuccessNotTrue"));
         } catch (ProviderException e) {
             throw e;
         } catch (Exception e) {
-            throw new ProviderException("ipwho.is 查询异常：" + e.getMessage(), e);
+            throw new ProviderException(Messages.get("capability.ipWhoisLookupError", e.getMessage()), e);
         }
     }
 

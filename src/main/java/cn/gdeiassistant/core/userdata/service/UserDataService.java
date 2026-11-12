@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.userdata.service;
 
-import cn.gdeiassistant.common.constant.ItemConstantUtils;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
@@ -23,12 +22,10 @@ import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.deletion.mapper.DeletionCleanupMapper;
 import cn.gdeiassistant.common.exception.AccountCleanupPendingException;
 import cn.gdeiassistant.core.logdata.mapper.LogDataMapper;
-import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.secret.service.SecretService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
-import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
@@ -49,6 +46,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import cn.gdeiassistant.common.i18n.Messages;
+import cn.gdeiassistant.common.account.AccountDataExport;
+import cn.gdeiassistant.common.account.AccountLifecycleContributor;
 
 @Service
 public class UserDataService {
@@ -89,6 +89,9 @@ public class UserDataService {
 
     @Autowired
     private SecretService secretService;
+
+    @Autowired
+    private List<AccountLifecycleContributor> contributors = List.of();
 
     /**
      * 检查24小时内有无导出用户数据的记录
@@ -284,72 +287,13 @@ public class UserDataService {
             if (chargeLogList != null && !chargeLogList.isEmpty()) {
                 data.put("chargeLogs", chargeLogList.stream().map(UserDataExportProjection::chargeLog).toList());
             }
-            Map<String, Object> map = data;
-            //使用字符串描述值替换部分参数值
-            if (map.containsKey("deliveryOrders")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryOrders")) {
-                    replaceWithLabel(object, "state", ItemConstantUtils.DELIVERY_ORDER_STATE_TYPE);
-                }
-            }
-            if (map.containsKey("deliveryTrades")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("deliveryTrades")) {
-                    replaceWithLabel(object, "state", ItemConstantUtils.DELIVERY_TRADE_STATE_TYPE);
-                }
-            }
-            if (map.containsKey("ershouItems")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("ershouItems")) {
-                    replaceWithLabel(object, "type", ItemConstantUtils.ERSHOU_ITEM_TYPE);
-                    replaceWithLabel(object, "state", ItemConstantUtils.ERSHOU_STATE_TYPE);
-                }
-            }
-            if (map.containsKey("lostandfoundItems")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("lostandfoundItems")) {
-                    replaceWithLabel(object, "itemType", ItemConstantUtils.LOST_AND_FOUND_ITEM_TYPE);
-                    replaceWithLabel(object, "lostType", ItemConstantUtils.LOST_AND_FOUND_LOST_TYPE);
-                    replaceWithLabel(object, "state", ItemConstantUtils.LOST_AND_FOUND_STATE_TYPE);
-                }
-            }
-            if (map.containsKey("secretItems")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("secretItems")) {
-                    replaceWithLabel(object, "state", ItemConstantUtils.SECRET_STATE_TYPE);
-                    replaceWithLabel(object, "type", ItemConstantUtils.SECRET_ITEM_TYPE);
-                }
-            }
-            if (map.containsKey("photographItems")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("photographItems")) {
-                    replaceWithLabel(object, "type", ItemConstantUtils.PHOTOGRAPH_ITEM_TYPE);
-                }
-            }
-            if (map.containsKey("expressItems")) {
-                for (Map<String, Object> object : (List<Map<String, Object>>) map.get("expressItems")) {
-                    replaceWithLabel(object, "selfGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE);
-                    replaceWithLabel(object, "personGender", ItemConstantUtils.EXPRESS_ITEM_GENDER_TYPE);
-                }
-            }
-            if (map.containsKey("profile")) {
-                Map<String, Object> object = (Map<String, Object>) map.get("profile");
-                if (object.containsKey("degree")) {
-                    String degree = (String) UserProfileService.getDegreeMap().get(object.get("degree"));
-                    object.put("degree", degree);
-                }
-                if (object.containsKey("profession")) {
-                    String profession = (String) UserProfileService.getProfessionMap().get(object.get("profession"));
-                    object.put("profession", profession);
-                }
-                if (object.containsKey("faculty")) {
-                    String faculty = (String) UserProfileService.getFacultyMap().get(object.get("faculty"));
-                    object.put("faculty", faculty);
-                }
-                if (object.containsKey("locationRegion")) {
-                    resolveLocation(object, "locationRegion", "locationState", "locationCity");
-                }
-                if (object.containsKey("hometownRegion")) {
-                    resolveLocation(object, "hometownRegion", "hometownState", "hometownCity");
-                }
+            AccountDataExport export = new AccountDataExport(data);
+            for (AccountLifecycleContributor contributor : contributors) {
+                contributor.decorateExport(export);
             }
 
             //生成JSON文件
-            userDataMap.put("data.json", new ByteArrayInputStream(JSON.toJSONString(map, "yyyy-MM-dd HH:mm:ss")
+            userDataMap.put("data.json", new ByteArrayInputStream(JSON.toJSONString(data, "yyyy-MM-dd HH:mm:ss")
                     .getBytes(StandardCharsets.UTF_8.displayName())));
 
             //生成UUID序列号
@@ -452,7 +396,7 @@ public class UserDataService {
         }
         if (queryUser != null && !queryUser.isActive()) {
             // 已注销账号的校园用户名已被改名，正常不会命中；若命中则拒绝复用
-            throw new IllegalStateException("账号已注销");
+            throw new IllegalStateException(Messages.get("userdata.accountClosed"));
         }
         if (queryUser == null) {
             for (String id : deletionCleanupMapper.unfinishedIdsForUsername(user.getUsername())) {
@@ -488,35 +432,4 @@ public class UserDataService {
         }
     }
 
-    private static void resolveLocation(Map<String, Object> object, String regionKey, String stateKey, String cityKey) {
-        try {
-            Map<String, Region> regionMap = LocationUtils.getRegionMap();
-            String regionCode = (String) object.get(regionKey);
-            String stateCode = (String) object.get(stateKey);
-            String cityCode = (String) object.get(cityKey);
-            Region region = regionCode != null ? regionMap.get(regionCode) : null;
-            if (region != null) {
-                object.put(regionKey, region.getName());
-                State state = stateCode != null ? region.getStateMap().get(stateCode) : null;
-                if (state != null) {
-                    object.put(stateKey, state.getName());
-                    City city = cityCode != null ? state.getCityMap().get(cityCode) : null;
-                    if (city != null) {
-                        object.put(cityKey, city.getName());
-                    }
-                }
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    private static void replaceWithLabel(Map<String, Object> object, String key, String[] labels) {
-        Object value = object.get(key);
-        if (value instanceof Integer) {
-            int index = (int) value;
-            if (index >= 0 && index < labels.length) {
-                object.put(key, labels[index]);
-            }
-        }
-    }
 }

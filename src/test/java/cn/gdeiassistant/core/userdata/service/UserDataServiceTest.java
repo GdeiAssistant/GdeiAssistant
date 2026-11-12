@@ -44,7 +44,7 @@ class UserDataServiceTest {
 
     @Test
     void replaceWithLabel_returnsLabelForValidIndex() throws Exception {
-        Method method = UserDataService.class.getDeclaredMethod(
+        Method method = cn.gdeiassistant.common.account.AccountDataExport.class.getMethod(
                 "replaceWithLabel", Map.class, String.class, String[].class);
         method.setAccessible(true);
 
@@ -58,7 +58,7 @@ class UserDataServiceTest {
 
     @Test
     void replaceWithLabel_doesNothingForOutOfBoundsIndex() throws Exception {
-        Method method = UserDataService.class.getDeclaredMethod(
+        Method method = cn.gdeiassistant.common.account.AccountDataExport.class.getMethod(
                 "replaceWithLabel", Map.class, String.class, String[].class);
         method.setAccessible(true);
 
@@ -72,7 +72,7 @@ class UserDataServiceTest {
 
     @Test
     void resolveLocation_handlesNullRegionCodeGracefully() throws Exception {
-        Method method = UserDataService.class.getDeclaredMethod(
+        Method method = cn.gdeiassistant.common.account.AccountDataExport.class.getMethod(
                 "resolveLocation", Map.class, String.class, String.class, String.class);
         method.setAccessible(true);
 

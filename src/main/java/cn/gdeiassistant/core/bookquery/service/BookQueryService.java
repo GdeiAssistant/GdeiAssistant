@@ -8,7 +8,7 @@ import cn.gdeiassistant.common.exception.queryexception.ErrorQueryConditionExcep
 import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.common.pojo.entity.Book;
 import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.library.LibraryClient;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class BookQueryService {
@@ -60,48 +61,32 @@ public class BookQueryService {
     }
 
     /**
-     * 查询我的借阅。
-     */
-    public List<Book> getBorrowedBooks(String sessionId, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
-        return bookquery(sessionId, password);
-    }
-
-    /**
-     * 续借图书。
+     * 续借图书。OPAC 的原始文案由 integration 层翻译为 {@link LibraryRenewResult.Outcome}。
      */
     public void renewBook(String sessionId, String sn, String code) throws NetWorkTimeoutException, ServerErrorException, BookRenewOvertimeException {
-        bookRenew(sessionId, sn, code);
-    }
-
-    /**
-     * 续借图书（原爬虫逻辑）
-     */
-    public void bookRenew(String sessionId, String sn, String code) throws NetWorkTimeoutException, ServerErrorException, BookRenewOvertimeException {
+        LibraryRenewResult result;
         try {
-            LibraryRenewResult result = libraryClient.renewBook(sessionId, sn, code);
-            if (result.getResult() == 1) {
-                if ("超过最大续借次数:1！".equals(result.getMessage())) {
-                    throw new BookRenewOvertimeException("图书续借超过次数限制");
-                }
-                return;
-            }
-            throw new ServerErrorException("图书馆系统异常");
-        } catch (BookRenewOvertimeException e) {
-            logger.error("续借图书异常:", e);
-            throw new BookRenewOvertimeException("图书续借超过次数限制");
+            result = libraryClient.renewBook(sessionId, sn, code);
         } catch (java.io.IOException e) {
             logger.error("续借图书异常:", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"), e);
         } catch (Exception e) {
             logger.error("续借图书异常", e);
-            throw new ServerErrorException("图书馆系统异常");
+            throw new ServerErrorException(Messages.get("bookquery.librarySystemError"), e);
+        }
+        switch (result.getOutcome()) {
+            case SUCCESS -> {
+                return;
+            }
+            case RENEWAL_LIMIT -> throw new BookRenewOvertimeException(Messages.get("bookquery.renewLimitExceeded"));
+            default -> throw new ServerErrorException(Messages.get("bookquery.librarySystemError"));
         }
     }
 
     /**
-     * 查询借阅图书
+     * 查询借阅图书。同时用于续借前建立 OPAC 会话、校验图书馆密码。
      */
-    public List<Book> bookquery(String sessionId, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
+    public List<Book> getBorrowedBooks(String sessionId, String password) throws NetWorkTimeoutException, ServerErrorException, PasswordIncorrectException {
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
         try {
             Document document = libraryClient.fetchBorrowedBooksPage(sessionId, userCertificate.getNumber(), password);
@@ -132,13 +117,13 @@ public class BookQueryService {
             }
             return bookList;
         } catch (PasswordIncorrectException e) {
-            throw new PasswordIncorrectException("图书馆查询密码错误");
+            throw new PasswordIncorrectException(Messages.get("bookquery.passwordIncorrect"), e);
         } catch (java.io.IOException e) {
             logger.error("查询借阅图书异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"), e);
         } catch (Exception e) {
             logger.error("查询借阅图书异常：", e);
-            throw new ServerErrorException("图书馆系统异常");
+            throw new ServerErrorException(Messages.get("bookquery.librarySystemError"), e);
         }
     }
 }

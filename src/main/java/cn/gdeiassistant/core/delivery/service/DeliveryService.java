@@ -24,6 +24,7 @@ import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class DeliveryService {
@@ -124,7 +125,7 @@ public class DeliveryService {
      */
     public DeliveryOrderVO queryDeliveryOrderByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryOrderEntity entity = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
-        if (entity == null) throw new DataNotExistException("该快递代收订单不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("delivery.parcelOrderMissing"));
         return publicOrder(entity);
     }
 
@@ -137,7 +138,7 @@ public class DeliveryService {
      */
     public DeliveryTradeVO queryDeliveryTradeByOrderId(Integer orderId) throws DataNotExistException {
         DeliveryTradeEntity entity = deliveryMapper.selectDeliveryTradeByOrderId(orderId);
-        if (entity == null) throw new DataNotExistException("该快递代收订单不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("delivery.parcelOrderMissing"));
         DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
         var author = publicAuthorResolver == null
                 ? new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户")
@@ -156,7 +157,7 @@ public class DeliveryService {
      */
     public DeliveryTradeVO queryDeliveryTradeByTradeId(Integer tradeId) throws DataNotExistException {
         DeliveryTradeEntity entity = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
-        if (entity == null) throw new DataNotExistException("该快递代收交易不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("delivery.parcelTradeMissing"));
         DeliveryTradeVO view = deliveryConverter.toTradeVO(entity);
         var author = publicAuthorResolver == null
                 ? new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户")
@@ -182,7 +183,7 @@ public class DeliveryService {
     public int queryDeliveryTradeDetailType(String sessionId, int tradeId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryTradeEntity deliveryTrade = deliveryMapper.selectDeliveryTradeByTradeId(tradeId);
-        if (deliveryTrade == null) throw new DataNotExistException("交易不存在");
+        if (deliveryTrade == null) throw new DataNotExistException(Messages.get("delivery.tradeMissing"));
         if (deliveryTrade.getUsername().equals(user.getUsername())) {
             //自己接受的交易单
             return 2;
@@ -214,7 +215,7 @@ public class DeliveryService {
     public int queryDeliveryOrderDetailType(String sessionId, int orderId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DeliveryOrderEntity deliveryOrder = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
-        if (deliveryOrder == null) throw new DataNotExistException("订单不存在");
+        if (deliveryOrder == null) throw new DataNotExistException(Messages.get("delivery.orderMissing"));
         if (deliveryOrder.getUsername().equals(user.getUsername())) {
             return 0;
         } else {
@@ -242,7 +243,7 @@ public class DeliveryService {
     public void acceptOrder(Integer orderId, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (checkAcceptUsername(orderId, user.getUsername())) {
-            throw new SelfTradingOrderException("不能接受自己下的快递代收单");
+            throw new SelfTradingOrderException(Messages.get("delivery.selfAcceptNotAllowed"));
         }
         updateOrderAndInsertTradeRecord(orderId, user.getUsername());
     }
@@ -263,7 +264,7 @@ public class DeliveryService {
      */
     @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void updateOrderAndInsertTradeRecord(Integer orderId, String username) throws Exception {
-        if (orderId == null || orderId <= 0) throw new IllegalArgumentException("订单编号不合法");
+        if (orderId == null || orderId <= 0) throw new IllegalArgumentException(Messages.get("delivery.orderIdInvalid"));
         //设置排他锁更新订单状态，并发情况下只允许一个线程修改该订单ID的订单状态
         int result = deliveryMapper.updateOrderState(orderId, 1);
         if (result > 0) {
@@ -286,7 +287,7 @@ public class DeliveryService {
             );
         } else {
             //抢单失败
-            throw new DeliveryOrderTakenException("抢单失败");
+            throw new DeliveryOrderTakenException(Messages.get("delivery.orderTakeFailed"));
         }
     }
 
@@ -302,7 +303,7 @@ public class DeliveryService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String accepterUsername = deliveryMapper.selectDeliveryTradeUsernameByOrderId(orderId);
         if (StringUtils.isBlank(accepterUsername)) {
-            throw new DataNotExistException("该快递代收交易不存在");
+            throw new DataNotExistException(Messages.get("delivery.parcelTradeMissing"));
         }
         return Objects.equals(accepterUsername, user.getUsername());
     }
@@ -319,7 +320,7 @@ public class DeliveryService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String publisherUsername = deliveryMapper.selectDeliveryOrderUsernameByOrderId(orderId);
         if (StringUtils.isBlank(publisherUsername)) {
-            throw new DataNotExistException("该快递代收订单不存在");
+            throw new DataNotExistException(Messages.get("delivery.parcelOrderMissing"));
         }
         return Objects.equals(publisherUsername, user.getUsername());
     }
@@ -340,13 +341,13 @@ public class DeliveryService {
             if (deliveryOrder.getUsername().equals(user.getUsername())) {
                 int result = deliveryMapper.deleteOrder(orderId);
                 if (result == 0) {
-                    throw new DeliveryOrderStateUpdatedException("订单状态已更新");
+                    throw new DeliveryOrderStateUpdatedException(Messages.get("delivery.orderStateAlreadyUpdated"));
                 }
                 return;
             }
-            throw new NoAccessUpdatingException("你没有权限修改该订单状态");
+            throw new NoAccessUpdatingException(Messages.get("delivery.orderStateNoAccess"));
         }
-        throw new DataNotExistException("该快递代收订单不存在");
+        throw new DataNotExistException(Messages.get("delivery.parcelOrderMissing"));
     }
 
     /**
@@ -372,7 +373,7 @@ public class DeliveryService {
                         }
                         int tradeResult = deliveryMapper.updateTradeState(tradeId, 0, 1);
                         if (tradeResult <= 0) {
-                            throw new IllegalStateException("快递代收交易状态更新失败");
+                            throw new IllegalStateException(Messages.get("delivery.tradeStateUpdateFailed"));
                         }
                         String pickupLocation = StringUtils.isNotBlank(deliveryOrder.getPickupLocation()) ? deliveryOrder.getPickupLocation() : "快递代收";
                         interactionNotificationService.createInteractionNotification(
@@ -388,11 +389,11 @@ public class DeliveryService {
                         );
                         return;
                     }
-                    throw new NoAccessUpdatingException("你没有权限修改该订单状态");
+                    throw new NoAccessUpdatingException(Messages.get("delivery.orderStateNoAccess"));
                 }
             }
         }
-        throw new DataNotExistException("该快递代收交易不存在");
+        throw new DataNotExistException(Messages.get("delivery.parcelTradeMissing"));
     }
 
     /**

@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class EmailUtils {
@@ -53,6 +54,6 @@ public class EmailUtils {
         }
         logger.error("发送至" + AnonymizeUtils.maskEmail(recipient) + "的邮箱发送失败，原因为未配置邮件发送器", LocalDateTime.now().atZone(ZoneId.systemDefault())
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日 HH:mm:ss")));
-        throw new MessagingException("邮件发送器未配置");
+        throw new MessagingException(Messages.get("common.tools.mailSenderNotConfigured"));
     }
 }

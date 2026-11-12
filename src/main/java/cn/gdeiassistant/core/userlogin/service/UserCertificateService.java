@@ -1,11 +1,12 @@
 package cn.gdeiassistant.core.userlogin.service;
 
+import cn.gdeiassistant.common.spi.SessionCertificateProvider;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
@@ -30,9 +31,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
-public class UserCertificateService {
+public class UserCertificateService implements SessionCertificateProvider {
 
     @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
     private String eduBaseUrl = "http://jwgl.gdei.edu.cn";
@@ -45,6 +47,22 @@ public class UserCertificateService {
     @Autowired
     private UserCertificateDao userCertificateDao;
 
+    @Autowired
+    private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
+
+    /**
+     * Account state is a userlogin concern. The servlet filter asks for a boolean
+     * instead of holding a MyBatis mapper itself.
+     */
+    @Override
+    public boolean isAccountActive(String username) {
+        if (username == null || username.isBlank()) {
+            return false;
+        }
+        cn.gdeiassistant.core.user.pojo.entity.CampusAccountView account = userMapper.selectUser(username);
+        return account != null && account.isActive();
+    }
+
     @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
     private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
     @org.springframework.beans.factory.annotation.Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}")
@@ -52,15 +70,15 @@ public class UserCertificateService {
 
     /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize sensitive actions. */
     public void verifyCurrentPassword(String username, String password) throws Exception {
-        if (username == null || password == null || password.isBlank()) throw new PasswordIncorrectException("请输入当前校园密码");
+        if (username == null || password == null || password.isBlank()) throw new PasswordIncorrectException(Messages.get("deletion.campusPasswordRequired"));
         HttpClientSession isolated = httpClientUtils.getHttpClient(null, false, 15);
         try (CloseableHttpClient client = isolated.getCloseableHttpClient()) {
             try (CloseableHttpResponse page = client.execute(new HttpGet(casLoginUrl))) {
-                if (page.getStatusLine().getStatusCode() != 200) throw new ServerErrorException("校园认证暂不可用");
+                if (page.getStatusLine().getStatusCode() != 200) throw new ServerErrorException(Messages.get("userlogin.campusAuthUnavailable"));
                 Document document = Jsoup.parse(EntityUtils.toString(page.getEntity()));
                 Element tokens = document.getElementById("tokens");
                 Element stamp = document.getElementById("stamp");
-                if (tokens == null || stamp == null) throw new ServerErrorException("校园认证响应异常");
+                if (tokens == null || stamp == null) throw new ServerErrorException(Messages.get("userlogin.campusAuthResponseInvalid"));
                 HttpPost post = new HttpPost(casLoginUrl);
                 post.setEntity(new UrlEncodedFormEntity(List.of(
                         new BasicNameValuePair("username", username), new BasicNameValuePair("password", password),
@@ -68,13 +86,13 @@ public class UserCertificateService {
                         new BasicNameValuePair("stamp", stamp.val()), new BasicNameValuePair("imageField.x", "0"),
                         new BasicNameValuePair("imageField.y", "0")), StandardCharsets.UTF_8));
                 try (CloseableHttpResponse result = client.execute(post)) {
-                    if (result.getStatusLine().getStatusCode() != 200) throw new ServerErrorException("校园认证暂不可用");
+                    if (result.getStatusLine().getStatusCode() != 200) throw new ServerErrorException(Messages.get("userlogin.campusAuthUnavailable"));
                     Element body = Jsoup.parse(EntityUtils.toString(result.getEntity())).body();
-                    if (!body.hasAttr("bgcolor")) throw new PasswordIncorrectException("用户密码错误");
+                    if (!body.hasAttr("bgcolor")) throw new PasswordIncorrectException(Messages.get("grade.userPasswordIncorrect"));
                 }
             }
         } catch (IOException failure) {
-            throw new NetWorkTimeoutException("校园认证连接超时");
+            throw new NetWorkTimeoutException(Messages.get("userlogin.campusAuthTimeout"));
         }
     }
 
@@ -234,7 +252,7 @@ public class UserCertificateService {
                     Element tokensEl = document.getElementById("tokens");
                     Element stampEl = document.getElementById("stamp");
                     if (tokensEl == null || stampEl == null) {
-                        throw new ServerErrorException("CAS 登录页面结构异常，未找到 tokens 或 stamp");
+                        throw new ServerErrorException(Messages.get("userlogin.casPageTokensMissing"));
                     }
                     basicNameValuePairs.add(new BasicNameValuePair("tokens", tokensEl.val()));
                     basicNameValuePairs.add(new BasicNameValuePair("stamp", stampEl.val()));
@@ -244,34 +262,34 @@ public class UserCertificateService {
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
                     if (httpResponse.getStatusLine().getStatusCode() != 200) {
                         //服务器异常
-                        throw new ServerErrorException("教务系统异常");
+                        throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                     }
                     Element bodyElement = document.select("body").first();
                     if (bodyElement == null || !bodyElement.hasAttr("bgcolor")) {
                         //认证失败,提示账号或密码错误
-                        throw new PasswordIncorrectException("登录账号密码不正确");
+                        throw new PasswordIncorrectException(Messages.get("userlogin.loginCredentialsIncorrect"));
                     }
                     Element firstLink = document.select("a").first();
                     if (firstLink == null) {
-                        throw new ServerErrorException("CAS 登录后未找到跳转链接");
+                        throw new ServerErrorException(Messages.get("userlogin.casRedirectMissing"));
                     }
                     String casRedirectUrl = firstLink.attr("href");
                     if (casRedirectUrl == null || casRedirectUrl.isEmpty()) {
-                        throw new ServerErrorException("CAS login后跳转链接为空");
+                        throw new ServerErrorException(Messages.get("userlogin.casRedirectEmpty"));
                     }
                     // Validate redirect URL stays within trusted school domains
                     try {
                         java.net.URI uri = java.net.URI.create(casRedirectUrl);
                         String scheme = uri.getScheme();
                         if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
-                            throw new ServerErrorException("CAS重定向地址协议不安全");
+                            throw new ServerErrorException(Messages.get("userlogin.casRedirectProtocolUnsafe"));
                         }
                         String host = uri.getHost();
                         if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
-                            throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
+                            throw new ServerErrorException(Messages.get("userlogin.casRedirectHostUntrusted"));
                         }
                     } catch (IllegalArgumentException e) {
-                        throw new ServerErrorException("CAS重定向地址格式异常");
+                        throw new ServerErrorException(Messages.get("userlogin.casRedirectMalformed"));
                     }
                     httpGet = new HttpGet(casRedirectUrl);
                     httpResponse = httpClient.execute(httpGet);
@@ -292,7 +310,7 @@ public class UserCertificateService {
                             }
                         }
                     }
-                    throw new ServerErrorException("教务系统异常");
+                    throw new ServerErrorException(Messages.get("grade.eduSystemError"));
                 } else if (httpResponse.getStatusLine().getStatusCode() == 302) {
                     if ("newpages/b.html".equals(httpResponse.getFirstHeader("Location").getValue())) {
                         //已经通过了认证
@@ -300,15 +318,15 @@ public class UserCertificateService {
                         return;
                     }
                 }
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             } catch (PasswordIncorrectException ignored) {
-                throw new PasswordIncorrectException("用户密码错误");
+                throw new PasswordIncorrectException(Messages.get("grade.userPasswordIncorrect"));
             } catch (IOException e) {
                 logger.error("与教务系统同步会话时网络异常", e);
-                throw new NetWorkTimeoutException("网络连接超时");
+                throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
             } catch (Exception e) {
                 logger.error("与教务系统同步会话时发生异常", e);
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             } finally {
                 if (httpClient != null) {
                     try {
@@ -343,32 +361,32 @@ public class UserCertificateService {
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             Element loginLink1 = document.select("a").first();
             if (loginLink1 == null) {
-                throw new ServerErrorException("CAS 登录后未找到跳转链接");
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectMissing"));
             }
             String loginRedirect1 = loginLink1.attr("href");
             if (loginRedirect1 == null || loginRedirect1.isEmpty()) {
-                throw new ServerErrorException("CAS login后跳转链接为空");
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectEmpty"));
             }
             // Validate redirect URL stays within trusted school domains
             try {
                 java.net.URI uri1 = java.net.URI.create(loginRedirect1);
                 String scheme1 = uri1.getScheme();
                 if (scheme1 != null && !scheme1.equalsIgnoreCase("http") && !scheme1.equalsIgnoreCase("https")) {
-                    throw new ServerErrorException("CAS重定向地址协议不安全");
+                    throw new ServerErrorException(Messages.get("userlogin.casRedirectProtocolUnsafe"));
                 }
                 String host1 = uri1.getHost();
                 if (host1 != null && !host1.toLowerCase().endsWith(".gdei.edu.cn") && !host1.toLowerCase().equals("gdei.edu.cn")) {
-                    throw new ServerErrorException("CAS重定向地址不在可信域名范围内");
+                    throw new ServerErrorException(Messages.get("userlogin.casRedirectHostUntrusted"));
                 }
             } catch (IllegalArgumentException e) {
-                throw new ServerErrorException("CAS重定向地址格式异常");
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectMalformed"));
             }
             httpGet = new HttpGet(loginRedirect1);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             String loginRedirect2 = document.select("a").attr("href");
             if (loginRedirect2 == null || loginRedirect2.isEmpty()) {
-                throw new ServerErrorException("CAS login后跳转链接为空");
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectEmpty"));
             }
             httpGet = new HttpGet(eduBaseUrl + "/" + loginRedirect2);
             httpResponse = httpClient.execute(httpGet);
@@ -376,19 +394,19 @@ public class UserCertificateService {
             //获取学生的教务系统信息
             Element scriptElement = document.select("script").first();
             if (scriptElement == null) {
-                throw new ServerErrorException("教务系统页面结构异常，未找到脚本元素");
+                throw new ServerErrorException(Messages.get("userlogin.eduPageScriptMissing"));
             }
             String script = scriptElement.data();
             Element form1Element = document.getElementById("Form1");
             if (form1Element == null) {
-                throw new ServerErrorException("教务系统页面结构异常，未找到 Form1");
+                throw new ServerErrorException(Messages.get("userlogin.eduPageFormMissing"));
             }
             String keycode = (form1Element.attr("action")
                     .split("&")[1]).split("=")[1];
             java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\\d{10,12}");
             java.util.regex.Matcher matcher = pattern.matcher(script);
             if (!matcher.find()) {
-                throw new ServerErrorException("无法从教务系统响应中提取学号");
+                throw new ServerErrorException(Messages.get("userlogin.eduStudentIdMissing"));
             }
             String number = matcher.group();
             Long timestamp = Long.valueOf(form1Element
@@ -397,7 +415,7 @@ public class UserCertificateService {
             casVerify(sessionId, httpClient, username, password, keycode, number, timestamp);
             return;
         }
-        throw new ServerErrorException("教务系统异常");
+        throw new ServerErrorException(Messages.get("grade.eduSystemError"));
     }
 
     /**
@@ -423,7 +441,7 @@ public class UserCertificateService {
             Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             /*if (document.select("script").size() > 0
                     && document.select("script").text().equals("alert('用户【工号】在教务系统中不存在。！');")) {
-                throw new UserGraduatedException("该账号已毕业注销");
+                throw new UserGraduatedException(Messages.get("userlogin.accountGraduated"));
             }*/
             httpResponse.close();
             httpGet = new HttpGet(eduBaseUrl + "/xs_main.aspx?xh=" + number + "&type=1");
@@ -448,11 +466,11 @@ public class UserCertificateService {
                     userCertificateDao.saveUserSessionCertificate(sessionId, entity);
                     return;
                 }
-                throw new ServerErrorException("教务系统异常");
+                throw new ServerErrorException(Messages.get("grade.eduSystemError"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
-        throw new ServerErrorException("教务系统异常");
+        throw new ServerErrorException(Messages.get("grade.eduSystemError"));
     }
 
 }

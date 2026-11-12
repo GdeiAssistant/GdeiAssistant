@@ -11,7 +11,7 @@ import cn.gdeiassistant.common.pojo.entity.Card;
 import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import cn.gdeiassistant.integration.card.CardClient;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
-import cn.gdeiassistant.core.userlogin.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -39,6 +39,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class CardQueryService {
@@ -81,16 +82,16 @@ public class CardQueryService {
             Document document = cardClient.fetchCardBasicInfoDocument(sessionId);
             return parseCardInfoFromDocument(document);
         } catch (PasswordIncorrectException ignored) {
-            throw new PasswordIncorrectException("账户密码不正确");
+            throw new PasswordIncorrectException(Messages.get("cardquery.passwordIncorrect"));
         } catch (ServerErrorException e) {
             logger.error("查询饭卡基本信息异常：", e);
-            throw new ServerErrorException("支付管理系统异常");
+            throw new ServerErrorException(Messages.get("charge.paymentSystemError"));
         } catch (IOException e) {
             logger.error("查询饭卡基本信息异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("查询饭卡基本信息异常", e);
-            throw new ServerErrorException("支付管理系统异常");
+            throw new ServerErrorException(Messages.get("charge.paymentSystemError"));
         } finally {
             if (httpClient != null) {
                 try {
@@ -127,13 +128,13 @@ public class CardQueryService {
             cardQueryResult.setCardQuery(cardQuery);
             return cardQueryResult;
         } catch (PasswordIncorrectException ignored) {
-            throw new PasswordIncorrectException("账户密码不正确");
+            throw new PasswordIncorrectException(Messages.get("cardquery.passwordIncorrect"));
         } catch (IOException e) {
             logger.error("查询消费流水异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("查询消费流水异常：", e);
-            throw new ServerErrorException("支付管理系统异常");
+            throw new ServerErrorException(Messages.get("charge.paymentSystemError"));
         } finally {
             if (httpClient != null) {
                 try {
@@ -164,16 +165,16 @@ public class CardQueryService {
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             submitCardLostViaClient(sessionId, cardPassword);
         } catch (PasswordIncorrectException ignored) {
-            throw new PasswordIncorrectException("账户密码不正确");
+            throw new PasswordIncorrectException(Messages.get("cardquery.passwordIncorrect"));
         } catch (RecognitionException e) {
             logger.error("校园卡挂失图像识别异常：", e);
-            throw new RecognitionException("图像识别服务异常，请稍后重试");
+            throw new RecognitionException(Messages.get("graduateexam.recognitionUnavailable"));
         } catch (IOException e) {
             logger.error("校园卡挂失异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (Exception e) {
             logger.error("校园卡挂失异常：", e);
-            throw new ServerErrorException("支付管理系统异常");
+            throw new ServerErrorException(Messages.get("charge.paymentSystemError"));
         } finally {
             if (httpClient != null) {
                 try {
@@ -210,7 +211,7 @@ public class CardQueryService {
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
             if (httpResponse.getStatusLine().getStatusCode() == 200) {
                 if (document.getElementsByClass("pcclient").size() > 0) {
-                    throw new PasswordIncorrectException("用户名或密码错误");
+                    throw new PasswordIncorrectException(Messages.get("charge.credentialsIncorrect"));
                 }
                 httpGet = new HttpGet(document.select("a").first().attr("href"));
                 httpResponse = httpClient.execute(httpGet);
@@ -300,7 +301,7 @@ public class CardQueryService {
                 }
             }
         }
-        throw new ServerErrorException("支付管理平台异常");
+        throw new ServerErrorException(Messages.get("charge.paymentPlatformError"));
     }
 
     private static CardInfo parseCardInfoFromDocument(Document document) {
@@ -433,16 +434,16 @@ public class CardQueryService {
                     }
                     String message = jsonObject.getString("msg");
                     if ("验证码不正确".equals(message)) {
-                        throw new RecognitionException("识别验证码图片失败");
+                        throw new RecognitionException(Messages.get("cardquery.captchaOcrFailed"));
                     } else if ("查询密码错误".equals(message)) {
-                        throw new PasswordIncorrectException("校园卡密码错误");
+                        throw new PasswordIncorrectException(Messages.get("cardquery.cardPasswordIncorrect"));
                     }
-                    throw new ServerErrorException("支付管理平台系统异常");
+                    throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
                 }
-                throw new ServerErrorException("支付管理平台系统异常");
+                throw new ServerErrorException(Messages.get("cardquery.paymentPlatformError"));
             }
-            throw new RecognitionException("识别验证码图片失败");
+            throw new RecognitionException(Messages.get("cardquery.captchaOcrFailed"));
         }
-        throw new RecognitionException("识别安全键盘图片失败");
+        throw new RecognitionException(Messages.get("cardquery.secureKeyboardOcrFailed"));
     }
 }

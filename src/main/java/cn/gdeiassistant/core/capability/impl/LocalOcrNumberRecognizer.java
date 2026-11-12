@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.exception.recognitionexception.RecognitionExcepti
 import cn.gdeiassistant.core.capability.ocr.OcrNumberRecognizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component("localOcrNumberRecognizer")
 public class LocalOcrNumberRecognizer implements OcrNumberRecognizer {
@@ -16,7 +17,7 @@ public class LocalOcrNumberRecognizer implements OcrNumberRecognizer {
         String text = localTemplateOcrEngine.recognizeNumbers(imageBase64);
         text = text == null ? "" : text.replaceAll("[^0-9]", "");
         if (text.isEmpty()) {
-            throw new RecognitionException("本地OCR数字识别失败");
+            throw new RecognitionException(Messages.get("capability.localOcrDigitFailed"));
         }
         return text;
     }

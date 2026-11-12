@@ -2,7 +2,7 @@ package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exception.queryexception.NotAvailableConditionException;
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.cetquery.controller.CetQueryController;
 import cn.gdeiassistant.core.library.controller.LibraryController;
 import cn.gdeiassistant.core.message.controller.MessageController;
@@ -88,13 +88,13 @@ class LocalizedApiMessageContractTest {
     @Test
     void backendTextLocalizerCoversManualSuccessAndIntegrationMessages() {
         assertEquals("Schedule data refreshed successfully",
-                BackendTextLocalizer.localizeMessage("课表数据更新成功", "en-US"));
+                MessageCatalog.localizeMessage("课表数据更新成功", "en-US"));
         assertEquals("Thanks for your feedback",
-                BackendTextLocalizer.localizeMessage("感谢您的反馈", "en-US"));
+                MessageCatalog.localizeMessage("感谢您的反馈", "en-US"));
         assertEquals("The campus news site is temporarily unavailable",
-                BackendTextLocalizer.localizeMessage("校园新闻站点访问失败", "en-US"));
+                MessageCatalog.localizeMessage("校园新闻站点访问失败", "en-US"));
         assertEquals("The academic system page structure has changed and the term selector could not be found",
-                BackendTextLocalizer.localizeMessage("教务系统页面结构异常，未找到学期下拉框", "en-US"));
+                MessageCatalog.localizeMessage("教务系统页面结构异常，未找到学期下拉框", "en-US"));
     }
 
     @ParameterizedTest

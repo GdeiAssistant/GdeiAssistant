@@ -9,7 +9,7 @@ import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDTO;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.user.pojo.dto.UserLoginDTO;
 import cn.gdeiassistant.core.userdata.service.UserDataService;
@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 前后端分离 JWT 鉴权：登录/登出接口，不依赖 HttpSession，返回 JWT Token。
@@ -82,13 +83,13 @@ public class AuthController {
             response.setStatus(HttpStatus.CONFLICT.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
             err.setCode(ErrorConstantUtils.ACCOUNT_CLEANUP_PENDING);
-            err.setMessage(BackendTextLocalizer.localizeMessage(e.getMessage(), language));
+            err.setMessage(MessageCatalog.localizeMessage(e.getMessage(), language));
             return err;
         } catch (PasswordIncorrectException e) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
             err.setCode(ErrorConstantUtils.PASSWORD_INCORRECT);
-            err.setMessage(BackendTextLocalizer.localizeMessage(
+            err.setMessage(MessageCatalog.localizeMessage(
                     e.getMessage() != null ? e.getMessage() : "账号或密码错误",
                     language));
             return err;
@@ -97,7 +98,7 @@ public class AuthController {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             DataJsonResult<Map<String, String>> err = new DataJsonResult<>(false, null);
             err.setCode(ErrorConstantUtils.INTERNAL_SERVER_ERROR);
-            err.setMessage(BackendTextLocalizer.localizeMessage("系统繁忙，登录失败，请稍后重试", language));
+            err.setMessage(Messages.forLanguage("system.busy.loginFailed", language));
             return err;
         }
         if (persistCredential) {

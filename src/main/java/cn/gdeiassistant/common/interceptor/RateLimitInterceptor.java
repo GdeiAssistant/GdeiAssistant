@@ -1,7 +1,7 @@
 package cn.gdeiassistant.common.interceptor;
 
 import cn.gdeiassistant.common.annotation.RateLimit;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Deque;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 基于 IP 的滑动窗口限流拦截器。
@@ -51,7 +52,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         if (timestamps.size() >= rateLimit.maxRequests()) {
             log.warn("请求限流: maxRequests={}, windowSeconds={}, currentRequests={}",
                     rateLimit.maxRequests(), rateLimit.windowSeconds(), timestamps.size());
-            String message = BackendTextLocalizer.localizeMessage("请求过于频繁，请稍后再试", request.getHeader("Accept-Language"));
+            String message = Messages.forLanguage("request.tooFrequent", request.getHeader("Accept-Language"));
             response.setStatus(429);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

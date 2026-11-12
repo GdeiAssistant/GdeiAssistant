@@ -1,11 +1,11 @@
 package cn.gdeiassistant.core.i18n;
 
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 import java.util.Set;
@@ -13,14 +13,13 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
+import cn.gdeiassistant.core.message.service.InteractionMessageLocalizer;
 
 class BackendLocaleCoverageTest {
 
     @Test
-    @SuppressWarnings("unchecked")
     void allSystemMessagesHaveSixNonEmptyTranslationsAndMatchingPlaceholders() {
-        Map<String, Map<String, String>> messages = (Map<String, Map<String, String>>)
-                ReflectionTestUtils.getField(BackendTextLocalizer.class, "MESSAGE_TRANSLATIONS");
+        Map<String, Map<String, String>> messages = MessageCatalog.translations();
         assertNotNull(messages);
         Set<String> locales = Set.of("zh-CN", "zh-HK", "zh-TW", "en", "ja", "ko");
         messages.forEach((key, translations) -> {
@@ -39,7 +38,7 @@ class BackendLocaleCoverageTest {
         for (String message : new String[]{"未检测到有效令牌", "缺少 sn 或 code", "请提供图书馆密码",
                 "准考证号不能为空", "准考证号必须为15位", "准考证号必须为15位数字", "请求体不能为空",
                 "fileName 不能为空", "contentType 不合法", "不支持的文件类型: ", "文件扩展名与 contentType 不匹配"}) {
-            assertNotEquals(message, BackendTextLocalizer.localizeMessage(message, locale), locale + ":" + message);
+            assertNotEquals(message, MessageCatalog.localizeMessage(message, locale), locale + ":" + message);
         }
     }
 
@@ -49,11 +48,11 @@ class BackendLocaleCoverageTest {
         message.setModule("secret");
         message.setType("comment");
         message.setContent("林同学 评论了你的树洞：一起加油");
-        InteractionMessageVO hk = BackendTextLocalizer.localizeInteractionMessage(message, "ZH_hant_HK");
+        InteractionMessageVO hk = InteractionMessageLocalizer.localize(message, "ZH_hant_HK");
         assertEquals("林同学 留言回應咗你嘅樹洞：一起加油", hk.getContent());
         assertEquals("林同学 评论了你的树洞：一起加油", message.getContent());
         assertEquals("林同学 評論了你的樹洞：一起加油",
-                BackendTextLocalizer.localizeInteractionMessage(message, "zh-TW").getContent());
+                InteractionMessageLocalizer.localize(message, "zh-TW").getContent());
     }
 
     @ParameterizedTest
@@ -76,7 +75,7 @@ class BackendLocaleCoverageTest {
         message.setType("comment");
         String original = "林同学 评论了你的" + target;
         message.setContent(original);
-        assertEquals(expected, BackendTextLocalizer.localizeInteractionMessage(message, locale).getContent());
+        assertEquals(expected, InteractionMessageLocalizer.localize(message, locale).getContent());
         assertEquals(original, message.getContent());
     }
 
@@ -94,7 +93,7 @@ class BackendLocaleCoverageTest {
         String original = prefix + "：" + detail;
         message.setContent(original);
         assertEquals(expectedPrefix + ": " + detail,
-                BackendTextLocalizer.localizeInteractionMessage(message, "en-US").getContent());
+                InteractionMessageLocalizer.localize(message, "en-US").getContent());
         assertEquals(original, message.getContent());
     }
 
@@ -104,7 +103,7 @@ class BackendLocaleCoverageTest {
             "zh-HK|beforeSeq 唔啱", "zh-TW|beforeSeq 無效", "zh-CN|beforeSeq 无效"
     })
     void translatesDynamicValidationWithoutTranslatingTheProtocolField(String locale, String expected) {
-        assertEquals(expected, BackendTextLocalizer.localizeMessage("beforeSeq 无效", locale));
+        assertEquals(expected, MessageCatalog.localizeMessage("beforeSeq 无效", locale));
     }
 
     private static Set<String> placeholders(String text) {

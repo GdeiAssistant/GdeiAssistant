@@ -35,17 +35,14 @@ class JwtSessionIdFilterTest {
 
     private JwtSessionIdFilter filter;
 
-    @Mock private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
-
     @BeforeEach
     void setUp() {
         filter = new JwtSessionIdFilter();
         ReflectionTestUtils.setField(filter, "jwtUtil", jwtUtil);
         ReflectionTestUtils.setField(filter, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(filter, "userMapper", userMapper);
-        var active = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();
-        active.setStatus("ACTIVE");
-        org.mockito.Mockito.lenient().when(userMapper.selectUser(org.mockito.ArgumentMatchers.anyString())).thenReturn(active);
+        org.mockito.Mockito.lenient()
+                .when(userCertificateService.isAccountActive(org.mockito.ArgumentMatchers.anyString()))
+                .thenReturn(true);
     }
 
     @Test
@@ -76,8 +73,7 @@ class JwtSessionIdFilterTest {
         var claim = mock(Claim.class); when(claim.asString()).thenReturn("cached-session");
         when(jwtUtil.verifyAndParse("cached-token")).thenReturn(Map.of("sessionId", claim));
         when(userCertificateService.getUserLoginCertificate("cached-session")).thenReturn(new User("synthetic"));
-        var closed = new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView(); closed.setStatus("CLOSED");
-        when(userMapper.selectUser("synthetic")).thenReturn(closed);
+        when(userCertificateService.isAccountActive("synthetic")).thenReturn(false);
         filter.doFilter(request, response, chain);
         assertNull(request.getAttribute("sessionId")); assertNull(request.getAttribute("user"));
         verify(chain).doFilter(request, response);

@@ -9,7 +9,7 @@ import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.topic.pojo.dto.TopicPublishDTO;
 import cn.gdeiassistant.core.topic.pojo.vo.TopicVO;
 import cn.gdeiassistant.core.topic.service.TopicService;
@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class TopicController {
@@ -29,19 +30,19 @@ public class TopicController {
     private TopicService topicService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     private int requirePositiveId(int id) {
         if (id < 1) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         return id;
     }
 
     private int requireImageIndex(int index) {
         if (index < 1 || index > 9) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         return index;
     }
@@ -110,7 +111,7 @@ public class TopicController {
         try {
             topicService.publishTopic(dto, sessionId, images, imageKeys);
         } catch (Exception failure) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("话题图片上传失败", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("topic.imageUpload.failed", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }

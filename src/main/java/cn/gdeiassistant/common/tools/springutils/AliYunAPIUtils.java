@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class AliYunAPIUtils {
@@ -30,7 +31,7 @@ public class AliYunAPIUtils {
      */
     public void verifyMainLandChineseResidentIDCard(Authentication authentication) throws InconsistentAuthenticationException {
         if (StringUtils.isBlank(aliyunAPIConfig.getOfficial_appCode())) {
-            throw new FeatureNotEnabledException("阿里云实名认证 API 未配置，无法校验身份证");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.aliyunIdVerificationNotConfigured"));
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", "APPCODE " + aliyunAPIConfig.getOfficial_appCode());
@@ -47,7 +48,7 @@ public class AliYunAPIUtils {
                 //校验通过
                 return;
             }
-            throw new InconsistentAuthenticationException("校验不通过");
+            throw new InconsistentAuthenticationException(Messages.get("common.tools.verificationFailed"));
         }
     }
 
@@ -60,7 +61,7 @@ public class AliYunAPIUtils {
      */
     public String characterNumberRecognize(String image) throws RecognitionException {
         if (StringUtils.isBlank(aliyunAPIConfig.getOfficial_appCode())) {
-            throw new FeatureNotEnabledException("阿里云 OCR API 未配置，无法识别图片数字");
+            throw new FeatureNotEnabledException(Messages.get("common.tools.aliyunOcrNotConfigured"));
         }
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", "APPCODE " + aliyunAPIConfig.getOfficial_appCode());
@@ -85,6 +86,6 @@ public class AliYunAPIUtils {
             }
             return stringBuilder.toString();
         }
-        throw new RecognitionException("OCR识别失败");
+        throw new RecognitionException(Messages.get("common.tools.ocrFailed"));
     }
 }

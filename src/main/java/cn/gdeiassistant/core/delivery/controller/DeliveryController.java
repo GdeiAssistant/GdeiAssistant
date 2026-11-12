@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.Min;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 @Validated
@@ -30,7 +31,7 @@ public class DeliveryController {
 
     private int requirePositiveId(Integer id) {
         if (id == null || id < 1) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         return id;
     }
@@ -44,7 +45,7 @@ public class DeliveryController {
         String sessionId = (String) request.getAttribute("sessionId");
         int detailType = deliveryService.queryDeliveryOrderDetailType(sessionId, id);
         if (detailType == 2) {
-            throw new DataNotExistException("该订单不可访问");
+            throw new DataNotExistException(Messages.get("delivery.orderNoAccess"));
         }
         DeliveryOrderVO order = deliveryService.queryDeliveryOrderByOrderId(id);
         DeliveryTradeVO trade = null;

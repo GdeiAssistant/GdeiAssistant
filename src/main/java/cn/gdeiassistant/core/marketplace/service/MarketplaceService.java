@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class MarketplaceService {
@@ -61,7 +62,7 @@ public class MarketplaceService {
     public MarketplaceItemVO queryDetailById(int id) throws Exception {
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo == null) {
-            throw new DataNotExistException("二手交易商品不存在");
+            throw new DataNotExistException(Messages.get("marketplace.itemMissing"));
         }
         String campusUsername = vo.getMarketplaceItem().getUsername();
         PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(campusUsername);
@@ -85,11 +86,11 @@ public class MarketplaceService {
                 if (!vo.getMarketplaceItem().getState().equals(2)) {
                     return;
                 }
-                throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+                throw new ConfirmedStateException(Messages.get("marketplace.soldItemNoEdit"));
             }
-            throw new NoAccessException("没有权限编辑该二手交易信息");
+            throw new NoAccessException(Messages.get("marketplace.editNoAccess"));
         }
-        throw new DataNotExistException("二手交易商品不存在");
+        throw new DataNotExistException(Messages.get("marketplace.itemMissing"));
     }
 
     public List<MarketplaceItemEntity> queryPersonalItems(String sessionId, int start, int size) throws Exception {
@@ -164,7 +165,7 @@ public class MarketplaceService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo == null) {
-            throw new DataNotExistException("查找的二手交易信息不存在");
+            throw new DataNotExistException(Messages.get("marketplace.itemLookupMissing"));
         }
         if (vo.getMarketplaceItem().getUsername().equals(user.getUsername())) {
             if (!vo.getMarketplaceItem().getState().equals(2)) {
@@ -180,25 +181,25 @@ public class MarketplaceService {
                 marketplaceMapper.updateItem(entity);
                 return;
             }
-            throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+            throw new ConfirmedStateException(Messages.get("marketplace.soldItemNoEdit"));
         }
-        throw new NoAccessException("没有权限修改该商品信息");
+        throw new NoAccessException(Messages.get("marketplace.updateNoAccess"));
     }
 
     public void updateItemState(String sessionId, int id, int state) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         MarketplaceItemVO vo = marketplaceMapper.selectInfoByID(id);
         if (vo == null) {
-            throw new DataNotExistException("查找的二手交易信息不存在");
+            throw new DataNotExistException(Messages.get("marketplace.itemLookupMissing"));
         }
         if (vo.getMarketplaceItem().getUsername().equals(user.getUsername())) {
             if (!vo.getMarketplaceItem().getState().equals(2)) {
                 marketplaceMapper.updateItemState(id, state);
                 return;
             }
-            throw new ConfirmedStateException("已出售的二手交易信息不能再次编辑");
+            throw new ConfirmedStateException(Messages.get("marketplace.soldItemNoEdit"));
         }
-        throw new NoAccessException("没有权限修改该商品信息");
+        throw new NoAccessException(Messages.get("marketplace.updateNoAccess"));
     }
 
     public void uploadItemPicture(int id, int index, InputStream inputStream) {
@@ -206,7 +207,7 @@ public class MarketplaceService {
             storedAssets.uploadObject("ershou/" + id + "_" + index + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传二手交易图片失败，id={}，index={}", id, index, e);
-            throw new RuntimeException("图片上传失败", e);
+            throw new RuntimeException(Messages.get("marketplace.imageUploadFailed"), e);
         } finally {
             if (inputStream != null) {
                 try {

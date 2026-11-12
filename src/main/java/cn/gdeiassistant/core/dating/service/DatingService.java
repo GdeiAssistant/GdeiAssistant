@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class DatingService {
@@ -59,9 +60,9 @@ public class DatingService {
 
     public DatingProfileVO queryDatingProfile(Integer id) throws DataNotExistException {
         DatingProfileEntity entity = datingMapper.selectDatingProfileById(id);
-        if (entity == null) throw new DataNotExistException("该卖室友信息不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("dating.roommatePostMissing"));
         if (entity.getState() != null && entity.getState() == 0) {
-            throw new DataNotExistException("该卖室友信息不存在");
+            throw new DataNotExistException(Messages.get("dating.roommatePostMissing"));
         }
         return profileEntityToVO(entity);
     }
@@ -107,8 +108,8 @@ public class DatingService {
     public void verifyRoommateProfileOwner(String sessionId, Integer profileId) throws DataNotExistException, NoAccessException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DatingProfileEntity profile = datingMapper.selectDatingProfileById(profileId);
-        if (profile == null) throw new DataNotExistException("该卖室友信息不存在");
-        if (!user.getUsername().equals(profile.getUsername())) throw new NoAccessException("无权限操作");
+        if (profile == null) throw new DataNotExistException(Messages.get("dating.roommatePostMissing"));
+        if (!user.getUsername().equals(profile.getUsername())) throw new NoAccessException(Messages.get("dating.noAccess"));
     }
 
     public Integer addRoommateProfile(String sessionId, DatingPublishDTO dto) {
@@ -125,7 +126,7 @@ public class DatingService {
             storedAssets.uploadObject("dating/" + id + ".jpg", inputStream);
         } catch (Exception e) {
             logger.error("上传室友信息图片失败，id={}", id, e);
-            throw new RuntimeException("上传失败", e);
+            throw new RuntimeException(Messages.get("upload.failed"), e);
         } finally {
             if (inputStream != null) {
                 try {
@@ -173,21 +174,21 @@ public class DatingService {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DatingProfileEntity profile = datingMapper.selectDatingProfileById(profileId);
         if (profile == null || (profile.getState() != null && profile.getState() == 0))
-            throw new DataNotExistException("该卖室友信息不存在");
+            throw new DataNotExistException(Messages.get("dating.roommatePostMissing"));
         if (user.getUsername().equals(profile.getUsername()))
-            throw new SelfPickException("不能向自己发布的卖室友信息发送撩一下请求");
+            throw new SelfPickException(Messages.get("dating.selfPickNotAllowed"));
         DatingPickEntity existing = datingMapper.selectDatingPick(profileId, user.getUsername());
         if (existing != null && !Integer.valueOf(-1).equals(existing.getState()))
-            throw new RepeatPickException("重复的撩一下请求");
+            throw new RepeatPickException(Messages.get("dating.duplicatePick"));
     }
 
     public void verifyRoommatePickViewAccess(String sessionId, int id) throws DataNotExistException, NoAccessException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         DatingPickEntity entity = datingMapper.selectDatingPickById(id);
-        if (entity == null) throw new DataNotExistException("该撩一下信息不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("dating.pickMissing"));
         if (entity.getRoommateProfile() != null && entity.getRoommateProfile().getUsername().equals(user.getUsername()))
             return;
-        throw new NoAccessException("没有权限查看该撩一下信息");
+        throw new NoAccessException(Messages.get("dating.pickViewNoAccess"));
     }
 
     @Transactional("appTransactionManager")
@@ -219,7 +220,7 @@ public class DatingService {
     @Transactional("appTransactionManager")
     public void updateRoommatePickState(Integer id, Integer state) throws DataNotExistException, NoAccessException {
         DatingPickEntity entity = datingMapper.selectDatingPickById(id);
-        if (entity == null) throw new DataNotExistException("该撩一下记录不存在");
+        if (entity == null) throw new DataNotExistException(Messages.get("dating.pickRecordMissing"));
         if (Integer.valueOf(0).equals(entity.getState())) {
             datingMapper.updateRoommatePickState(id, state);
             String nickname = entity.getRoommateProfile() != null && StringUtils.isNotBlank(entity.getRoommateProfile().getNickname())
@@ -239,7 +240,7 @@ public class DatingService {
             );
             return;
         }
-        throw new NoAccessException("该撩一下记录已处理，请勿重复提交");
+        throw new NoAccessException(Messages.get("dating.pickAlreadyHandled"));
     }
 
     public List<DatingPickVO> queryMySentPicks(String sessionId) {

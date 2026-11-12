@@ -12,4 +12,8 @@ public class BookRenewOvertimeException extends Exception {
     public BookRenewOvertimeException(String message) {
         super(message);
     }
+
+    public BookRenewOvertimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

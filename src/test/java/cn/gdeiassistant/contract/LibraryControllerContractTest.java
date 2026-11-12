@@ -159,7 +159,7 @@ class LibraryControllerContractTest {
                         ContractResourceSupport.loadJson("contracts/library-renew.success.json")
                 ));
 
-        verify(bookQueryService).bookquery("session-1", "library-pass");
+        verify(bookQueryService).getBorrowedBooks("session-1", "library-pass");
         verify(bookQueryService).renewBook("session-1", "SN-001", "CODE-001");
     }
 }

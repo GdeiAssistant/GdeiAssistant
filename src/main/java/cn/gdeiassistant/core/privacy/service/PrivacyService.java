@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.Resource;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class PrivacyService {
@@ -45,7 +46,7 @@ public class PrivacyService {
 
     public PrivacyVO getOtherUserPrivacySetting(String username) throws UserNotExistException {
         PrivacyEntity entity = privacyMapper.selectPrivacy(username);
-        if (entity == null) throw new UserNotExistException("当前用户不存在");
+        if (entity == null) throw new UserNotExistException(Messages.get("privacy.userMissing"));
         return privacyConverter.toVO(entity);
     }
 
@@ -149,7 +150,7 @@ public class PrivacyService {
             scheduleDao.removeSchedule(user.getUsername());
         } catch (Exception e) {
             logger.warn("清理 MongoDB 缓存失败，MySQL 隐私设置已更新，username={}", AnonymizeUtils.maskUsername(user.getUsername()), e);
-            throw new CacheClearException("清理教务缓存时遇到网络延迟，设置已保存，可能需要稍后生效。", e);
+            throw new CacheClearException(Messages.get("privacy.saved.cacheDelayed"), e);
         }
     }
 

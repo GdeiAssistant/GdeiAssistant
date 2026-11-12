@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Repository
 public class LoginTokenDaoImpl implements LoginTokenDao {
@@ -38,7 +39,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         try {
             return objectMapper.readValue(json, AccessToken.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Redis AccessToken 反序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.accessTokenDeserializeFailed"), e);
         }
     }
 
@@ -65,7 +66,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(token), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("AccessToken 序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.accessTokenSerializeFailed"), e);
         }
     }
 
@@ -111,7 +112,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         try {
             return objectMapper.readValue(json, Device.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Redis Device 反序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.deviceDeserializeFailed"), e);
         }
     }
 
@@ -124,7 +125,7 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
         try {
             redisDaoUtils.set(key, objectMapper.writeValueAsString(device), 7, TimeUnit.DAYS);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Device 序列化失败", e);
+            throw new RuntimeException(Messages.get("common.redis.deviceSerializeFailed"), e);
         }
     }
 

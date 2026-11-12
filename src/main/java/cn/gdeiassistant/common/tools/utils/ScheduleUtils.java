@@ -6,6 +6,7 @@ import cn.gdeiassistant.common.pojo.entity.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 public class ScheduleUtils {
 
@@ -46,10 +47,10 @@ public class ScheduleUtils {
                 || customSchedule.getPosition() / 7 + customSchedule.getScheduleLength() > 10
                 || customSchedule.getMinScheduleWeek() == null || customSchedule.getMaxScheduleWeek() == null
                 || customSchedule.getMinScheduleWeek() < 1 || customSchedule.getMaxScheduleWeek() > 20) {
-            throw new GenerateScheduleException("自定义课程数据不合法");
+            throw new GenerateScheduleException(Messages.get("schedule.customCourseDataInvalid"));
         }
         if (customSchedule.getMinScheduleWeek() > customSchedule.getMaxScheduleWeek()) {
-            throw new GenerateScheduleException("自定义课程数据不合法");
+            throw new GenerateScheduleException(Messages.get("schedule.customCourseDataInvalid"));
         }
         Schedule schedule = new Schedule();
         //配置行列属性
@@ -92,7 +93,7 @@ public class ScheduleUtils {
     private static String generateScheduleLesson(Integer row, Integer column, Integer length) {
         if (row == null || column == null || length == null || row < 0 || row > 9
                 || column < 0 || column > 6 || length < 1 || length > 5 || row + length > 10) {
-            throw new IllegalArgumentException("自定义课程节数不合法");
+            throw new IllegalArgumentException(Messages.get("schedule.customCoursePeriodsInvalid"));
         }
         StringBuilder stringBuilder = new StringBuilder("周");
         stringBuilder.append(COLUMNS[column]).append("第").append(row + 1);

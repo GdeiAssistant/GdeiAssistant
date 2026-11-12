@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.privacy.pojo.dto.PrivacyUpdateDTO;
 import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.privacy.service.PrivacyService;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class PrivacyController {
@@ -35,7 +36,7 @@ public class PrivacyController {
     @RequestMapping(value = "/api/privacy", method = RequestMethod.POST)
     public JsonResult updateUserPrivacySetting(HttpServletRequest request, @RequestBody PrivacyUpdateDTO body) throws Exception {
         if (body == null) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("请求体不能为空", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("request.body.required", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         boolean faculty = Boolean.TRUE.equals(body.getFacultyOpen());
@@ -60,7 +61,7 @@ public class PrivacyController {
             privacyService.updateCache(cache, sessionId);
             return new JsonResult(true);
         } catch (CacheClearException e) {
-            JsonResult result = new JsonResult(true, BackendTextLocalizer.localizeMessage(e.getMessage(), request.getHeader("Accept-Language")));
+            JsonResult result = new JsonResult(true, MessageCatalog.localizeMessage(e.getMessage(), request.getHeader("Accept-Language")));
             result.setCode(206);
             return result;
         }

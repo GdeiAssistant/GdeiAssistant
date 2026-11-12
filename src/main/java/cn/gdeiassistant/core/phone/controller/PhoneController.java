@@ -7,7 +7,7 @@ import cn.gdeiassistant.common.pojo.entity.Attribution;
 import cn.gdeiassistant.core.phone.pojo.dto.PhoneBindDTO;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.profile.pojo.AttributionComparator;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.phone.service.PhoneService;
@@ -36,7 +36,7 @@ public class PhoneController {
     private PhoneService phoneService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     /**

@@ -10,7 +10,7 @@ import cn.gdeiassistant.common.exception.datingexception.RepeatPickException;
 import cn.gdeiassistant.common.exception.datingexception.SelfPickException;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPickSubmitDTO;
 import cn.gdeiassistant.core.dating.pojo.dto.DatingPublishDTO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 卖室友 REST 接口。统一 /api/dating/...（路径保留兼容），使用 Roommate* 类型。
@@ -42,12 +43,12 @@ public class DatingController {
     private DatingService datingService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     private int requirePositiveId(Integer id) {
         if (id == null || id < 1) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         return id;
     }
@@ -79,7 +80,7 @@ public class DatingController {
     @RequestMapping(value = "/api/dating/profile/area/{area}/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<DatingProfileVO>> queryDatingProfile(@PathVariable("start") Integer start, @PathVariable("area") Integer area) {
         if (area == null || area < 0 || area > 1) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         start = PageUtils.requireNonNegativeStart(start);
         List<DatingProfileVO> list = datingService.queryDatingProfile(start, 10, area);

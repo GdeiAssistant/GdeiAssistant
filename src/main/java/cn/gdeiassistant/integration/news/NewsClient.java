@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import cn.gdeiassistant.common.i18n.Messages;
 
 /**
  * 校园新闻抓取防腐层：直接访问学校公开站点，仅返回 Document 或文本内容。
@@ -26,7 +27,7 @@ public class NewsClient {
                 .method(Connection.Method.GET)
                 .execute();
         if (response.statusCode() != 200) {
-            throw new ServerErrorException("校园新闻站点访问失败");
+            throw new ServerErrorException(Messages.get("news.siteAccess.failed"));
         }
         return response;
     }

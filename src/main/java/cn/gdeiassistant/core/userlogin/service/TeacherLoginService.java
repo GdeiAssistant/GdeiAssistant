@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
 public class TeacherLoginService {
@@ -93,30 +94,30 @@ public class TeacherLoginService {
                         if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("正方教务管理系统")) {
                             return;
                         }
-                        throw new ServerErrorException("进入教师主页失败");
+                        throw new ServerErrorException(Messages.get("userlogin.teacherHomeFailed"));
                     } else if (httpResponse.getStatusLine().getStatusCode() == 200 && document.title().equals("欢迎使用正方教务管理系统！请登录")) {
-                        throw new PasswordIncorrectException("账号密码错误");
+                        throw new PasswordIncorrectException(Messages.get("userlogin.credentialsIncorrect"));
                     } else {
-                        throw new ServerErrorException("登录系统异常");
+                        throw new ServerErrorException(Messages.get("userlogin.loginSystemError"));
                     }
                 }
-                throw new ServerErrorException("获取验证码图片失败");
+                throw new ServerErrorException(Messages.get("userlogin.captchaImageFailed"));
             }
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } catch (IOException e) {
             logger.error("教师登录异常：", e);
-            throw new NetWorkTimeoutException("网络连接超时");
+            throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
         } catch (RecognitionException e) {
             logger.error("教师登录验证码识别异常：", e);
-            throw new RecognitionException("图像识别服务异常，请稍后重试");
+            throw new RecognitionException(Messages.get("graduateexam.recognitionUnavailable"));
         } catch (ServerErrorException e) {
             logger.error("教师登录异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } catch (PasswordIncorrectException ignored) {
-            throw new PasswordIncorrectException("用户账号密码错误");
+            throw new PasswordIncorrectException(Messages.get("userlogin.passwordIncorrect"));
         } catch (Exception e) {
             logger.error("教师登录异常：", e);
-            throw new ServerErrorException("教务系统异常");
+            throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         } finally {
             if (httpClient != null) {
                 try {

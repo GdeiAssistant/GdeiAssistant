@@ -5,7 +5,7 @@ import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeI
 import cn.gdeiassistant.common.pojo.entity.Email;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import org.hibernate.validator.constraints.Length;
@@ -29,7 +29,7 @@ public class EmailController {
     private EmailService emailService;
 
     private JsonResult failure(HttpServletRequest request, String message) {
-        return new JsonResult(false, BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
+        return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));
     }
 
     /**

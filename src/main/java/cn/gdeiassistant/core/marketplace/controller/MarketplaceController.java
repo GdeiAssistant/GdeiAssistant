@@ -6,7 +6,7 @@ import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
 import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
 import cn.gdeiassistant.common.exception.databaseexception.NotAvailableStateException;
-import cn.gdeiassistant.core.i18n.BackendTextLocalizer;
+import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.marketplace.pojo.dto.MarketplacePublishDTO;
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.pojo.vo.MarketplaceItemVO;
@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import cn.gdeiassistant.common.i18n.Messages;
 
 @RestController
 public class MarketplaceController {
@@ -63,7 +64,7 @@ public class MarketplaceController {
     public record MarketplaceDetailResponse(MarketplaceItemResponse item, MarketplaceAuthorResponse profile, boolean ownedByCurrentUser) {}
 
     private String localize(HttpServletRequest request, String message) {
-        return BackendTextLocalizer.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
+        return MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null);
     }
 
     private JsonResult failure(HttpServletRequest request, String message) {
@@ -148,7 +149,7 @@ public class MarketplaceController {
         try {
             marketplaceService.publishItem(dto, sessionId, images, imageKeys);
         } catch (Exception failure) {
-            return new JsonResult(false, BackendTextLocalizer.localizeMessage("上传失败", request.getHeader("Accept-Language")));
+            return new JsonResult(false, Messages.forLanguage("upload.failed", request.getHeader("Accept-Language")));
         }
         return new JsonResult(true);
     }
@@ -174,10 +175,10 @@ public class MarketplaceController {
     public DataJsonResult<MarketplaceDetailResponse> getItemDetail(HttpServletRequest request, @PathVariable("id") int id) throws Exception {
         MarketplaceItemVO vo = marketplaceService.queryDetailById(id);
         if (vo.getMarketplaceItem().getState().equals(0)) {
-            throw new NotAvailableStateException("已下架的二手交易信息不能查看");
+            throw new NotAvailableStateException(Messages.get("marketplace.offUnavailable"));
         }
         if (vo.getMarketplaceItem().getState().equals(2)) {
-            throw new ConfirmedStateException("已出售的二手交易信息不能查看");
+            throw new ConfirmedStateException(Messages.get("marketplace.soldUnavailable"));
         }
         MarketplaceItemResponse item = response(vo.getMarketplaceItem());
         return new DataJsonResult<>(true, new MarketplaceDetailResponse(item,
@@ -190,7 +191,7 @@ public class MarketplaceController {
     public DataJsonResult<List<MarketplaceItemResponse>> getItemByType(@Validated @Range(min = 0, max = 11) @PathVariable("type") int type,
             @PathVariable("start") int start) throws Exception {
         if (type < 0 || type > 11) {
-            throw new IllegalArgumentException("请求参数不合法");
+            throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         start = PageUtils.requireNonNegativeStart(start);
         List<MarketplaceItemEntity> list = marketplaceService.queryItemsByType(type, start);

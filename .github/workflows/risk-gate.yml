@@ -1,4 +1,4 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@4c296692ae2efbce09bc21b6641299f368435c40.
+# Shared governance action: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc.
 # Keep the job names; they are required status check contexts.
 
 name: PR risk gate
@@ -50,10 +50,11 @@ jobs:
       statuses: write
     steps:
       - name: Record label head
-        uses: GdeiAssistant/.github/pr-governance@4c296692ae2efbce09bc21b6641299f368435c40
+        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
         env:
           GOVERNANCE_OWNER_ID: ${{ vars.RISK_GATE_OWNER_ID }}
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
+          GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
         with:
           mode: gate
           record-label: 'true'
@@ -83,10 +84,11 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Evaluate
-        uses: GdeiAssistant/.github/pr-governance@4c296692ae2efbce09bc21b6641299f368435c40
+        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
         env:
           GOVERNANCE_OWNER_ID: ${{ vars.RISK_GATE_OWNER_ID }}
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
+          GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
         with:
           mode: gate
           record-label: 'false'

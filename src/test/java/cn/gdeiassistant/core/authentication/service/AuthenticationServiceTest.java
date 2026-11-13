@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AuthenticationServiceTest {
 
-    private final AuthenticationService service = new AuthenticationService();
+    private final AuthenticationService service = new AuthenticationService(null, null, null);
 
     @Test
     void nullTypeIsRejectedBeforeArrayLookup() {

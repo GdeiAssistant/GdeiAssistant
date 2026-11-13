@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.tools.springutils;
 import cn.gdeiassistant.common.pojo.delaytask.DelayTask;
 import cn.gdeiassistant.common.pojo.delaytask.DelayTaskElement;
 import cn.gdeiassistant.common.pojo.delaytask.SessionAttributeExpireDelayTaskElement;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +15,11 @@ public class DelayTaskUtils {
 
     private final DelayQueue<DelayTask> delayQueue = new DelayQueue<>();
 
-    @Autowired
-    private ServletContext servletContext;
+    private final ServletContext servletContext;
+
+    public DelayTaskUtils(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
 
     @EventListener(DelayTaskUtils.class)
     public void init() {

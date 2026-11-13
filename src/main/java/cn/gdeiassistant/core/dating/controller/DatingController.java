@@ -18,7 +18,6 @@ import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.dating.service.DatingService;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,8 +38,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class DatingController {
 
-    @Autowired
-    private DatingService datingService;
+    private final DatingService datingService;
+
+    public DatingController(DatingService datingService) {
+        this.datingService = datingService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

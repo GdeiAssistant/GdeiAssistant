@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.marketplace.service.MarketplaceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -31,11 +30,9 @@ class CommunitySummaryContractTest {
         marketplaceService = mock(MarketplaceService.class);
         lostAndFoundService = mock(LostAndFoundService.class);
 
-        MarketplaceController marketplaceController = new MarketplaceController();
-        ReflectionTestUtils.setField(marketplaceController, "marketplaceService", marketplaceService);
+        MarketplaceController marketplaceController = new MarketplaceController(marketplaceService, null);
 
-        LostAndFoundController lostAndFoundController = new LostAndFoundController();
-        ReflectionTestUtils.setField(lostAndFoundController, "lostAndFoundService", lostAndFoundService);
+        LostAndFoundController lostAndFoundController = new LostAndFoundController(lostAndFoundService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(marketplaceController, lostAndFoundController).build();
     }

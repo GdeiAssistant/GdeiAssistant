@@ -11,7 +11,6 @@ import cn.gdeiassistant.core.capability.sms.SmsVerificationSender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -20,13 +19,9 @@ class PhoneServiceTest {
     private final VerificationCodeDao codes = mock(VerificationCodeDao.class);
     private final SmsVerificationSender sms = mock(SmsVerificationSender.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
-    private final PhoneService service = new PhoneService();
+    private final PhoneService service = new PhoneService(mapper, codes, certificates, sms);
     private static final String PHONE = "13800000000";
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "phoneMapper", mapper);
-        ReflectionTestUtils.setField(service, "verificationCodeDao", codes);
-        ReflectionTestUtils.setField(service, "smsVerificationSender", sms);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
     }
     @Test void boundPhoneIsMaskedAndAbsentPhoneIsNull() {

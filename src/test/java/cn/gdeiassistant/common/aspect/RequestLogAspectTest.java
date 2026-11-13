@@ -9,7 +9,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.servlet.HandlerMapping;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,13 +17,10 @@ import static org.mockito.Mockito.*;
 class RequestLogAspectTest {
     @Test
     void rawPathAndUnknownHttpVerbCannotLeakOrCreateMetricLabels() throws Throwable {
-        var aspect = new RequestLogAspect();
-        var settings = new ObservabilityConstants();
-        ReflectionTestUtils.setField(settings, "slowRequestThresholdMs", -1L);
-        ReflectionTestUtils.setField(aspect, "observabilityConstants", settings);
+        var settings = new ObservabilityConstants(-1L, 1500L);
         var registry = new SimpleMeterRegistry();
+        var aspect = new RequestLogAspect(settings, registry);
         try {
-            ReflectionTestUtils.setField(aspect, "meterRegistry", registry);
             var point = mock(ProceedingJoinPoint.class);
             var signature = mock(CodeSignature.class);
             when(point.getSignature()).thenReturn(signature);

@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userprofile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
@@ -19,14 +18,17 @@ import java.time.temporal.ChronoUnit;
 @Component
 public class ProfileResponseMapper {
 
-    @Autowired
-    private UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
-    @Autowired
-    private IPAddressService ipAddressService;
+    private final IPAddressService ipAddressService;
 
-    @Autowired
-    private ProfileLocalizationService profileLocalizationService;
+    private final ProfileLocalizationService profileLocalizationService;
+
+    public ProfileResponseMapper(UserProfileService userProfileService, IPAddressService ipAddressService, ProfileLocalizationService profileLocalizationService) {
+        this.userProfileService = userProfileService;
+        this.ipAddressService = ipAddressService;
+        this.profileLocalizationService = profileLocalizationService;
+    }
 
     /**
      * Assembles a UserProfileVO from the given ProfileVO and session context.

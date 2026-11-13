@@ -12,7 +12,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicStatusLine;
 import org.apache.http.HttpVersion;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,9 +31,8 @@ class FreshPasswordVerificationTest {
         var pageResponse = response("<input id='tokens' value='synthetic'><input id='stamp' value='synthetic'>");
         var resultResponse = response("<body bgcolor='white'><a href='http://portal.gdei.edu.cn:8001/Login'>ok</a></body>");
         when(client.execute(any(HttpUriRequest.class))).thenReturn(pageResponse, resultResponse);
-        var service = new UserCertificateService();
-        ReflectionTestUtils.setField(service,"httpClientUtils",clients);
-        ReflectionTestUtils.setField(service,"userCertificateDao",cached);
+        var service = new UserCertificateService("http://jwgl.gdei.edu.cn", clients, cached, null, "https://security.gdei.edu.cn/cas/login", "http://portal.gdei.edu.cn:8001/Login");
+
         service.verifyCurrentPassword("synthetic-user","synthetic-password");
         verify(clients).getHttpClient(null,false,15);
         verify(client,times(2)).execute(any(HttpUriRequest.class));
@@ -48,8 +46,8 @@ class FreshPasswordVerificationTest {
         var pageResponse = response("<input id='tokens'><input id='stamp'>");
         var resultResponse = response("<body>wrong password</body>");
         when(client.execute(any(HttpUriRequest.class))).thenReturn(pageResponse, resultResponse);
-        var service = new UserCertificateService();
-        ReflectionTestUtils.setField(service,"httpClientUtils",clients);
+        var service = new UserCertificateService("http://jwgl.gdei.edu.cn", clients, mock(UserCertificateDao.class), null, "https://security.gdei.edu.cn/cas/login", "http://portal.gdei.edu.cn:8001/Login");
+
         assertThrows(PasswordIncorrectException.class, () -> service.verifyCurrentPassword("synthetic-user","wrong"));
     }
 }

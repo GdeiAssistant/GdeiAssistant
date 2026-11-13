@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.lostandfound.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
@@ -19,11 +21,9 @@ import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,32 +36,35 @@ import cn.gdeiassistant.common.i18n.Messages;
 public class LostAndFoundService {
 
     private static final Logger logger = LoggerFactory.getLogger(LostAndFoundService.class);
-    @Resource(name = "lostAndFoundMapper")
-    private LostAndFoundMapper lostAndFoundMapper;
+    private final LostAndFoundMapper lostAndFoundMapper;
 
-    @Autowired
-    private LostAndFoundItemConverter lostAndFoundItemConverter;
+    private final LostAndFoundItemConverter lostAndFoundItemConverter;
 
-    @Autowired
-    private LostAndFoundDetailConverter lostAndFoundDetailConverter;
+    private final LostAndFoundDetailConverter lostAndFoundDetailConverter;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private PublicAuthorResolver publicAuthorResolver;
+    private final PublicAuthorResolver publicAuthorResolver;
+
+    public LostAndFoundService(@Qualifier("lostAndFoundMapper") LostAndFoundMapper lostAndFoundMapper, LostAndFoundItemConverter lostAndFoundItemConverter, LostAndFoundDetailConverter lostAndFoundDetailConverter, UserCertificateService userCertificateService, UserProfileService userProfileService, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, PublicAuthorResolver publicAuthorResolver) {
+        this.lostAndFoundMapper = lostAndFoundMapper;
+        this.lostAndFoundItemConverter = lostAndFoundItemConverter;
+        this.lostAndFoundDetailConverter = lostAndFoundDetailConverter;
+        this.userCertificateService = userCertificateService;
+        this.userProfileService = userProfileService;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     public LostAndFoundDetailVO queryLostAndFoundInfoByID(int id) throws Exception {
         LostAndFoundDetailEntity detail = lostAndFoundMapper.selectInfoByID(id);

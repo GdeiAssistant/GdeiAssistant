@@ -9,7 +9,6 @@ import cn.gdeiassistant.common.pojo.entity.Authentication;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,11 +17,14 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class AliYunAPIUtils {
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-    @Autowired
-    private AliYunAPIConfig aliyunAPIConfig;
+    private final AliYunAPIConfig aliyunAPIConfig;
+
+    public AliYunAPIUtils(RestTemplate restTemplate, AliYunAPIConfig aliyunAPIConfig) {
+        this.restTemplate = restTemplate;
+        this.aliyunAPIConfig = aliyunAPIConfig;
+    }
 
     /**
      * 校验中国居民身份证信息

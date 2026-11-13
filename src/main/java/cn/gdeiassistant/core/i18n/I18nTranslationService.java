@@ -35,12 +35,9 @@ public class I18nTranslationService {
 
     private final ConcurrentHashMap<String, CompletableFuture<String>> inFlight = new ConcurrentHashMap<>();
 
-    @Autowired
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
-    @Autowired(required = false)
-    @Qualifier("i18nExecutor")
-    private Executor i18nExecutor;
+    private final Executor i18nExecutor;
 
     private static final Map<String, String> DEEPL_LANG_MAP = Map.of(
             "en", "EN",
@@ -50,8 +47,25 @@ public class I18nTranslationService {
             "zh-TW", "ZH-HANT"
     );
 
-    public I18nTranslationService(I18nConfig config) {
+    public I18nTranslationService(I18nConfig config,
+                                  RedisTemplate<String, String> redisTemplate,
+                                  @Autowired(required = false) @Qualifier("i18nExecutor") Executor i18nExecutor) {
         this.config = config;
+        this.redisTemplate = redisTemplate;
+        this.i18nExecutor = i18nExecutor;
+    }
+
+    /** Test factory: allow RestTemplate override without field reflection. */
+    I18nTranslationService(I18nConfig config,
+                           RedisTemplate<String, String> redisTemplate,
+                           Executor i18nExecutor,
+                           RestTemplate restTemplate) {
+        this.config = config;
+        this.redisTemplate = redisTemplate;
+        this.i18nExecutor = i18nExecutor;
+        if (restTemplate != null) {
+            this.restTemplate = restTemplate;
+        }
     }
 
     public String getCachedTranslation(String text, String targetLang) {

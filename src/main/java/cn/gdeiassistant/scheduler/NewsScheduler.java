@@ -16,8 +16,15 @@ import java.util.concurrent.ExecutionException;
 @Profile("production")
 public class NewsScheduler {
 
-    @Autowired(required = false)
-    private SchoolNewsCronService schoolNewsCronService;
+    private final SchoolNewsCronService schoolNewsCronService;
+
+        public NewsScheduler() {
+        this(null);
+    }
+
+    public NewsScheduler(@Autowired(required = false) SchoolNewsCronService schoolNewsCronService) {
+        this.schoolNewsCronService = schoolNewsCronService;
+    }
 
     @Scheduled(cron = "0 0 0,9,18 * * ?")
     public void collectNews() throws IOException, ExecutionException, InterruptedException {

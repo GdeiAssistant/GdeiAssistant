@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.userlogin.service;
 import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -18,8 +17,7 @@ class UserCertificateServiceTest {
         when(dao.queryUserSessionCertificate("session-1"))
                 .thenReturn(new UserCertificateEntity());
 
-        UserCertificateService service = new UserCertificateService();
-        ReflectionTestUtils.setField(service, "userCertificateDao", dao);
+        UserCertificateService service = new UserCertificateService(null, null, dao, null, null, null);
 
         service.syncUpdateSessionCertificate("session-1", "username", "password");
 

@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.pojo.entity.ElectricFees;
 import cn.gdeiassistant.common.pojo.entity.YellowPage;
 import cn.gdeiassistant.core.electricfees.mapper.ElectricFeesMapper;
 import cn.gdeiassistant.core.yellowpage.mapper.YellowPageMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,11 +14,14 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class DataQueryService {
 
-    @Autowired
-    private ElectricFeesMapper electricFeesMapper;
+    private final ElectricFeesMapper electricFeesMapper;
 
-    @Autowired
-    private YellowPageMapper yellowPageMapper;
+    private final YellowPageMapper yellowPageMapper;
+
+    public DataQueryService(ElectricFeesMapper electricFeesMapper, YellowPageMapper yellowPageMapper) {
+        this.electricFeesMapper = electricFeesMapper;
+        this.yellowPageMapper = yellowPageMapper;
+    }
 
     /**
      * 查询电费信息

@@ -2,12 +2,13 @@ package cn.gdeiassistant.core.photograph.converter;
 
 import cn.gdeiassistant.core.photograph.pojo.entity.PhotographEntity;
 import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = PhotographCommentConverter.class)
+@Mapper(componentModel = "spring", uses = PhotographCommentConverter.class, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface PhotographConverter {
 
     @Mapping(target = "firstImageUrl", ignore = true)

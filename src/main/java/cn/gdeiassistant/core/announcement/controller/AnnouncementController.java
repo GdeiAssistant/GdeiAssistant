@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.service.announcement.AnnouncementService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,11 @@ import java.util.List;
 @RequestMapping("/api/information/announcement")
 public class AnnouncementController {
 
-    @Autowired
-    private AnnouncementService announcementService;
+    private final AnnouncementService announcementService;
+
+    public AnnouncementController(AnnouncementService announcementService) {
+        this.announcementService = announcementService;
+    }
 
     /**
      * 获取通知公告信息

@@ -3,14 +3,12 @@ package cn.gdeiassistant.core.charge.service;
 import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class ChargeServiceAmountTest {
     @Test void validAmountStillRequiresSuccessfulUpstreamAuthentication() throws Exception {
-        ChargeService service = new ChargeService();
         UserCertificateService certificates = mock(UserCertificateService.class);
         var certificate = new cn.gdeiassistant.common.pojo.entity.UserCertificateEntity();
         certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic-user", "synthetic-password"));
@@ -23,8 +21,7 @@ class ChargeServiceAmountTest {
         when(client.execute(any(org.apache.http.client.methods.HttpUriRequest.class))).thenReturn(response);
         when(pool.getHttpClient("synthetic-session", false, 15)).thenReturn(
                 new cn.gdeiassistant.integration.httpclient.HttpClientSession(client, new org.apache.http.impl.client.BasicCookieStore()));
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "httpClientUtils", pool);
+        ChargeService service = new ChargeService(pool, "https://security.gdei.edu.cn/cas/login", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx", "http://ecard.gdei.edu.cn", "https://epay.gdei.edu.cn:8443/synpay/web", "https://mapi.alipay.com/gateway.do?_input_charset=utf-8", null, certificates);
         assertThrows(cn.gdeiassistant.common.exception.commonexception.ServerErrorException.class,
                 () -> service.chargeRequest("synthetic-session", 50));
         verify(client, times(1)).execute(any(org.apache.http.client.methods.HttpUriRequest.class));
@@ -32,9 +29,8 @@ class ChargeServiceAmountTest {
     }
 
     @Test void rejectsInvalidAmountBeforeAccessingCredentialsOrTheNetwork() {
-        ChargeService service = new ChargeService();
         UserCertificateService certificates = mock(UserCertificateService.class);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
+        ChargeService service = new ChargeService(null, null, null, null, null, null, null, certificates);
         for (int amount : new int[]{Integer.MIN_VALUE, 0, 501, Integer.MAX_VALUE}) {
             assertThrows(AmountNotAvailableException.class, () -> service.chargeRequest("synthetic-session", amount));
         }

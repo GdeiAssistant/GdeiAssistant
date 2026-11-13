@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.spi.SessionCertificateProvider;
 import cn.gdeiassistant.common.tools.utils.JwtUtil;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import jakarta.servlet.*;
@@ -23,11 +22,14 @@ public class JwtSessionIdFilter implements Filter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER_PREFIX = "bearer ";
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private SessionCertificateProvider userCertificateService;
+    private final SessionCertificateProvider userCertificateService;
+
+    public JwtSessionIdFilter(JwtUtil jwtUtil, SessionCertificateProvider userCertificateService) {
+        this.jwtUtil = jwtUtil;
+        this.userCertificateService = userCertificateService;
+    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

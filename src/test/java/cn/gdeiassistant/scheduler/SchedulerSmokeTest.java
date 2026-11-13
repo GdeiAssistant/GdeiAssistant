@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -47,23 +46,23 @@ class SchedulerSmokeTest {
 
     @Test
     void schedulersDelegateWhenServicesAreAvailable() throws Exception {
-        GradeScheduler gradeScheduler = new GradeScheduler();
-        ReflectionTestUtils.setField(gradeScheduler, "gradeCronService", gradeCronService);
+        GradeScheduler gradeScheduler = new GradeScheduler(gradeCronService);
+
         gradeScheduler.synchronizeGradeData();
         verify(gradeCronService).synchronizeGradeData();
 
-        ScheduleScheduler scheduleScheduler = new ScheduleScheduler();
-        ReflectionTestUtils.setField(scheduleScheduler, "scheduleCronService", scheduleCronService);
+        ScheduleScheduler scheduleScheduler = new ScheduleScheduler(scheduleCronService);
+
         scheduleScheduler.synchronizeScheduleData();
         verify(scheduleCronService).synchronizeScheduleData();
 
-        NewsScheduler newsScheduler = new NewsScheduler();
-        ReflectionTestUtils.setField(newsScheduler, "schoolNewsCronService", schoolNewsCronService);
+        NewsScheduler newsScheduler = new NewsScheduler(schoolNewsCronService);
+
         newsScheduler.collectNews();
         verify(schoolNewsCronService).collectNews();
 
-        SecretScheduler secretScheduler = new SecretScheduler();
-        ReflectionTestUtils.setField(secretScheduler, "secretService", secretService);
+        SecretScheduler secretScheduler = new SecretScheduler(secretService);
+
         secretScheduler.deleteTimerSecretInfos();
         verify(secretService).deleteTimerSecretInfos();
     }

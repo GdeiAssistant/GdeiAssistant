@@ -20,7 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mapstruct.factory.Mappers;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.*;
 import java.time.*;
@@ -35,12 +34,11 @@ class UserProfileServiceTest {
 
     @Mock
     private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
-    @InjectMocks UserProfileService service;
+    UserProfileService service;
 
     @BeforeEach
     void setup() {
-        ReflectionTestUtils.setField(
-                service, "userProfileMapper", Mappers.getMapper(UserProfileMapper.class));
+        service = new UserProfileService(certificates, profiles, Mappers.getMapper(UserProfileMapper.class), storage, uploadService, storedAssets);
     }
 
     ProfileEntity entity() {

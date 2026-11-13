@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.schoolnews.controller.SchoolNewsController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -40,14 +39,11 @@ class InformationCenterContractTest {
         announcementService = mock(AnnouncementService.class);
         interactionNotificationService = mock(InteractionNotificationService.class);
 
-        SchoolNewsController schoolNewsController = new SchoolNewsController();
-        ReflectionTestUtils.setField(schoolNewsController, "schoolNewsService", schoolNewsService);
+        SchoolNewsController schoolNewsController = new SchoolNewsController(schoolNewsService);
 
-        AnnouncementController announcementController = new AnnouncementController();
-        ReflectionTestUtils.setField(announcementController, "announcementService", announcementService);
+        AnnouncementController announcementController = new AnnouncementController(announcementService);
 
-        MessageController messageController = new MessageController();
-        ReflectionTestUtils.setField(messageController, "interactionNotificationService", interactionNotificationService);
+        MessageController messageController = new MessageController(interactionNotificationService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(
                 schoolNewsController,

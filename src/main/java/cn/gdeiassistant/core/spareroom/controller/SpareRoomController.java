@@ -7,7 +7,6 @@ import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.spareroom.pojo.dto.EmptyClassroomQueryDTO;
 import cn.gdeiassistant.core.spareroom.pojo.vo.SpareRoomVO;
 import cn.gdeiassistant.core.spareroom.service.SpareRoomService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +20,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class SpareRoomController {
 
-    @Autowired
-    private SpareRoomService spareRoomService;
+    private final SpareRoomService spareRoomService;
+
+    public SpareRoomController(SpareRoomService spareRoomService) {
+        this.spareRoomService = spareRoomService;
+    }
 
     /**
      * 查询空课室信息。鉴权：请求头 token（或 Authorization: Bearer）由 JwtSessionIdFilter 注入 session。

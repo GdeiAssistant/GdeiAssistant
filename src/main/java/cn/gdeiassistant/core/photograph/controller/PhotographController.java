@@ -16,7 +16,6 @@ import cn.gdeiassistant.core.photograph.pojo.vo.PhotographVO;
 import cn.gdeiassistant.core.photograph.service.PhotographService;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +35,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class PhotographController {
 
-    @Autowired
-    private PhotographService photographService;
+    private final PhotographService photographService;
+
+    public PhotographController(PhotographService photographService) {
+        this.photographService = photographService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

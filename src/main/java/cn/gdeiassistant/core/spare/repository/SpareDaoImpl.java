@@ -14,8 +14,11 @@ import java.util.List;
 @Repository
 public class SpareDaoImpl implements SpareDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public SpareDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public List<SpareRoom> querySpareListByUsername(String username) {

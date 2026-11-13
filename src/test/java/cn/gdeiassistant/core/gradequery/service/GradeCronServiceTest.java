@@ -6,9 +6,9 @@ import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -37,8 +37,12 @@ class GradeCronServiceTest {
     @Mock
     private CampusCredentialService campusCredentialService;
 
-    @InjectMocks
     private GradeCronService gradeCronService;
+
+    @BeforeEach
+    void setUp() {
+        gradeCronService = new GradeCronService(Runnable::run, userLoginService, gradeService, cronMapper, gradeDao, campusCredentialService);
+    }
 
     @Test
     void synchronizeGradeDataOnlyProcessesUsersAllowedByEffectiveQuickAuth() {
@@ -65,7 +69,6 @@ class GradeCronServiceTest {
     }
 
     @Test void expiredCachesRetainIdsAndOnlySuccessfulYearsAreSavedInBatches() throws Exception {
-        org.springframework.test.util.ReflectionTestUtils.setField(gradeCronService, "campusSyncExecutor", (java.util.concurrent.Executor) Runnable::run);
         var users = java.util.stream.IntStream.range(0, 6).mapToObj(i -> new User("synthetic-" + i, "synthetic-password")).toList();
         when(cronMapper.selectCacheAllowUsers()).thenReturn(users);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(users)).thenReturn(users);

@@ -9,7 +9,6 @@ import com.auth0.jwt.interfaces.Claim;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -43,14 +42,19 @@ public class SocialRealtimeHandler extends TextWebSocketHandler {
     private final ConcurrentHashMap<String, ScheduledFuture<?>> authTimeouts = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, ScheduledFuture<?>> sessionRechecks = new ConcurrentHashMap<>();
 
-    @Autowired
-    private JwtUtil jwtUtil;
-    @Autowired
-    private UserCertificateDao userCertificateDao;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private SocialRealtimeHub realtimeHub;
+    Map<String, ScheduledFuture<?>> sessionRechecks() { return sessionRechecks; }
+
+    private final JwtUtil jwtUtil;
+    private final UserCertificateDao userCertificateDao;
+    private final UserMapper userMapper;
+    private final SocialRealtimeHub realtimeHub;
+
+    public SocialRealtimeHandler(JwtUtil jwtUtil, UserCertificateDao userCertificateDao, UserMapper userMapper, SocialRealtimeHub realtimeHub) {
+        this.jwtUtil = jwtUtil;
+        this.userCertificateDao = userCertificateDao;
+        this.userMapper = userMapper;
+        this.realtimeHub = realtimeHub;
+    }
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {

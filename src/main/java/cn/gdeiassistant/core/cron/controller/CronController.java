@@ -21,17 +21,20 @@ public class CronController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CronController.class);
 
-    @Autowired(required = false)
-    private GradeCronService gradeCronService;
+    private final GradeCronService gradeCronService;
 
-    @Autowired(required = false)
-    private ScheduleCronService scheduleCronService;
+    private final ScheduleCronService scheduleCronService;
 
-    @Autowired(required = false)
-    private SchoolNewsCronService schoolNewsCronService;
+    private final SchoolNewsCronService schoolNewsCronService;
 
-    @Value("${app.cron.secret}")
-    private String cronSecret;
+    private final String cronSecret;
+
+    public CronController(@Autowired(required = false) GradeCronService gradeCronService, @Autowired(required = false) ScheduleCronService scheduleCronService, @Autowired(required = false) SchoolNewsCronService schoolNewsCronService, @Value("${app.cron.secret}") String cronSecret) {
+        this.gradeCronService = gradeCronService;
+        this.scheduleCronService = scheduleCronService;
+        this.schoolNewsCronService = schoolNewsCronService;
+        this.cronSecret = cronSecret;
+    }
 
     /**
      * Validate the X-Cron-Secret header against the configured secret.

@@ -10,8 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class GradeDaoImpl implements GradeDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public GradeDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     /**
      * 保存用户成绩信息

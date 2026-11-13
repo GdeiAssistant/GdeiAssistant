@@ -17,7 +17,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,11 +44,14 @@ public class MarketplaceController {
      * Per-group cap for the personal profile endpoint.
      * Prevents unbounded result sets for doing/sold/off groups.
      */
-    @Autowired
-    private MarketplaceService marketplaceService;
+    private final MarketplaceService marketplaceService;
 
-    @Autowired
-    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
+    private final cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
+
+    public MarketplaceController(MarketplaceService marketplaceService, cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver) {
+        this.marketplaceService = marketplaceService;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     private MarketplaceItemResponse response(MarketplaceItemEntity item) {
         return new MarketplaceItemResponse(item.getId(), item.getAuthorId(),

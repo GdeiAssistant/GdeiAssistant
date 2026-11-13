@@ -11,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -30,10 +29,8 @@ class ProfileLocationContractTest {
 
     @BeforeEach
     void setUp() {
-        ProfileController controller = new ProfileController();
-        ReflectionTestUtils.setField(controller, "userProfileService", userProfileService);
-        ReflectionTestUtils.setField(controller, "profileLocationValidator", new ProfileLocationValidator());
-        ReflectionTestUtils.setField(controller, "profileLocalizationService", new ProfileLocalizationService());
+        ProfileController controller = new ProfileController(userProfileService, null, null, new ProfileLocationValidator(), new ProfileLocalizationService());
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())
                 .build();

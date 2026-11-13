@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.email.service.EmailService;
 import cn.gdeiassistant.common.annotation.RateLimit;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,8 +24,11 @@ import jakarta.validation.constraints.Pattern;
 @RestController
 public class EmailController {
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
+
+    public EmailController(EmailService emailService) {
+        this.emailService = emailService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

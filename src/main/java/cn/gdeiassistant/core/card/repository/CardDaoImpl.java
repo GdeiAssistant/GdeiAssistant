@@ -10,8 +10,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class CardDaoImpl implements CardDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public CardDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public CardTestDocument queryCardDocumentByUsername(String username) {

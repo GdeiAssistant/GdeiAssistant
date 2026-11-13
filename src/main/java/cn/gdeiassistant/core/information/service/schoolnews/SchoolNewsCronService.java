@@ -11,7 +11,6 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -40,11 +39,14 @@ public class SchoolNewsCronService {
 
     private final Logger logger = LoggerFactory.getLogger(SchoolNewsCronService.class);
 
-    @Autowired
-    private NewsRepository newsRepository;
+    private final NewsRepository newsRepository;
 
-    @Autowired
-    private NewsClient newsClient;
+    private final NewsClient newsClient;
+
+    public SchoolNewsCronService(NewsRepository newsRepository, NewsClient newsClient) {
+        this.newsRepository = newsRepository;
+        this.newsClient = newsClient;
+    }
 
     /**
      * 收集新闻通知信息（可由 Scheduler 或 HTTP /cron/news 触发）。

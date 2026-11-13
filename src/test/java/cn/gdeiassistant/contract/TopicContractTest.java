@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -40,8 +39,7 @@ class TopicContractTest {
     void setUp() {
         topicService = mock(TopicService.class);
 
-        TopicController controller = new TopicController();
-        ReflectionTestUtils.setField(controller, "topicService", topicService);
+        TopicController controller = new TopicController(topicService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

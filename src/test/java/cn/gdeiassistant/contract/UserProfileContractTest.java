@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -43,21 +42,13 @@ class UserProfileContractTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        ProfileLocalizationService localizationService = new ProfileLocalizationService();
-        ReflectionTestUtils.setField(localizationService, "translationService", translationService);
+        ProfileLocalizationService localizationService = new ProfileLocalizationService(translationService);
 
         ProfileOptionsFacade profileOptionsFacade = new ProfileOptionsFacade();
 
-        ProfileResponseMapper mapper = new ProfileResponseMapper();
-        ReflectionTestUtils.setField(mapper, "userProfileService", userProfileService);
-        ReflectionTestUtils.setField(mapper, "ipAddressService", ipAddressService);
-        ReflectionTestUtils.setField(mapper, "profileLocalizationService", localizationService);
+        ProfileResponseMapper mapper = new ProfileResponseMapper(userProfileService, ipAddressService, localizationService);
 
-        ProfileController controller = new ProfileController();
-        ReflectionTestUtils.setField(controller, "userProfileService", userProfileService);
-        ReflectionTestUtils.setField(controller, "profileResponseMapper", mapper);
-        ReflectionTestUtils.setField(controller, "profileLocalizationService", localizationService);
-        ReflectionTestUtils.setField(controller, "profileOptionsFacade", profileOptionsFacade);
+        ProfileController controller = new ProfileController(userProfileService, mapper, profileOptionsFacade, null, localizationService);
 
         ProfileVO profile = new ProfileVO();
         profile.setUsername("20231234");

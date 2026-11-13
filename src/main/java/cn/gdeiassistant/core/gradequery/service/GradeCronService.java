@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.gradequery.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.pojo.document.GradeDocument;
 import cn.gdeiassistant.common.pojo.entity.Grade;
@@ -12,7 +14,6 @@ import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -33,27 +34,29 @@ import java.util.concurrent.Semaphore;
 @Profile("production")
 public class GradeCronService {
 
-    @Autowired
-    @org.springframework.beans.factory.annotation.Qualifier("campusSyncExecutor")
-    private java.util.concurrent.Executor campusSyncExecutor;
+    private final java.util.concurrent.Executor campusSyncExecutor;
     private final java.util.concurrent.atomic.AtomicBoolean running = new java.util.concurrent.atomic.AtomicBoolean();
 
     private final Logger logger = LoggerFactory.getLogger(GradeCronService.class);
 
-    @Autowired
-    private UserLoginService userLoginService;
+    private final UserLoginService userLoginService;
 
-    @Autowired
-    private GradeService gradeService;
+    private final GradeService gradeService;
 
-    @Autowired
-    private CronMapper cronMapper;
+    private final CronMapper cronMapper;
 
-    @Autowired
-    private GradeDao gradeDao;
+    private final GradeDao gradeDao;
 
-    @Autowired
-    private CampusCredentialService campusCredentialService;
+    private final CampusCredentialService campusCredentialService;
+
+    public GradeCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, GradeService gradeService, CronMapper cronMapper, GradeDao gradeDao, CampusCredentialService campusCredentialService) {
+        this.campusSyncExecutor = campusSyncExecutor;
+        this.userLoginService = userLoginService;
+        this.gradeService = gradeService;
+        this.cronMapper = cronMapper;
+        this.gradeDao = gradeDao;
+        this.campusCredentialService = campusCredentialService;
+    }
 
     /**
      * 同步教务系统实时成绩信息（可由 Scheduler 或 HTTP /cron/grade 触发）。

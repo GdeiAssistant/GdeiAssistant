@@ -9,7 +9,6 @@ import cn.gdeiassistant.core.social.pojo.dto.SocialUserDTO;
 import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +24,19 @@ import java.util.Map;
 @Service
 public class SocialRelationService {
 
-    @Autowired
-    private SocialIdentityService identityService;
-    @Autowired
-    private SocialRelationMapper relationMapper;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private PrivacyMapper privacyMapper;
-    @Autowired
-    private SocialRealtimeHub realtimeHub;
+    private final SocialIdentityService identityService;
+    private final SocialRelationMapper relationMapper;
+    private final UserMapper userMapper;
+    private final PrivacyMapper privacyMapper;
+    private final SocialRealtimeHub realtimeHub;
+
+    public SocialRelationService(SocialIdentityService identityService, SocialRelationMapper relationMapper, UserMapper userMapper, PrivacyMapper privacyMapper, SocialRealtimeHub realtimeHub) {
+        this.identityService = identityService;
+        this.relationMapper = relationMapper;
+        this.userMapper = userMapper;
+        this.privacyMapper = privacyMapper;
+        this.realtimeHub = realtimeHub;
+    }
 
     public SocialUserDTO getMe(String sessionId) {
         CampusAccountView me = identityService.requireActiveViewer(sessionId);

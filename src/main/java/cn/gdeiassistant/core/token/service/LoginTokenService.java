@@ -16,7 +16,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -28,14 +27,17 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class LoginTokenService implements LoginTokenValidator {
 
-    @Autowired
-    private LoginTokenDao loginTokenDao;
+    private final LoginTokenDao loginTokenDao;
 
-    @Autowired
-    private IPAddressService ipAddressService;
+    private final IPAddressService ipAddressService;
 
-    @Autowired
-    private JWTConfig jwtConfig;
+    private final JWTConfig jwtConfig;
+
+    public LoginTokenService(LoginTokenDao loginTokenDao, IPAddressService ipAddressService, JWTConfig jwtConfig) {
+        this.loginTokenDao = loginTokenDao;
+        this.ipAddressService = ipAddressService;
+        this.jwtConfig = jwtConfig;
+    }
 
     /**
      * 使令牌过期，从缓存中过期

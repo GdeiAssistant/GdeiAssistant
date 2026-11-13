@@ -13,7 +13,6 @@ import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,7 +21,7 @@ import static org.mockito.Mockito.*;
 class EvaluateServiceTest {
     private final EduSystemClient client = mock(EduSystemClient.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
-    private final EvaluateService service = new EvaluateService();
+    private final EvaluateService service = new EvaluateService(certificates, client);
     private static final String FORM = """
         <form id='Form1' action='save.aspx'><input name='__VIEWSTATE' value='fresh'>
         <input name='__EVENTTARGET' value='target'><input name='__EVENTARGUMENT' value='argument'>
@@ -30,8 +29,6 @@ class EvaluateServiceTest {
         <select name='pjkc'></select></td></tr></table></form>
         """;
     @BeforeEach void setup() throws Exception {
-        ReflectionTestUtils.setField(service, "eduSystemClient", client);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
         var certificate = new UserCertificateEntity(); certificate.setUser(new User("owner"));
         certificate.setNumber("number"); certificate.setKeycode("key"); certificate.setTimestamp(123L);
         when(certificates.getUserSessionCertificate("session")).thenReturn(certificate);

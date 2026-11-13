@@ -19,7 +19,6 @@ import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import cn.gdeiassistant.common.validgroup.user.UserLoginValidGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,25 +39,28 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    @Autowired
-    private UserLoginService userLoginService;
+    private final UserLoginService userLoginService;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private CampusCredentialService campusCredentialService;
+    private final CampusCredentialService campusCredentialService;
 
-    @Autowired
-    private UserDataService userDataService;
+    private final UserDataService userDataService;
+
+    public AuthController(HttpClientUtils httpClientUtils, UserLoginService userLoginService, UserCertificateService userCertificateService, JwtUtil jwtUtil, CampusCredentialService campusCredentialService, UserDataService userDataService) {
+        this.httpClientUtils = httpClientUtils;
+        this.userLoginService = userLoginService;
+        this.userCertificateService = userCertificateService;
+        this.jwtUtil = jwtUtil;
+        this.campusCredentialService = campusCredentialService;
+        this.userDataService = userDataService;
+    }
 
     /**
      * 用户登录（JWT）

@@ -16,7 +16,6 @@ import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,20 +26,23 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class ExpressService {
 
-    @Autowired
-    private ExpressMapper expressMapper;
+    private final ExpressMapper expressMapper;
 
-    @Autowired
-    private ExpressConverter expressConverter;
+    private final ExpressConverter expressConverter;
 
-    @Autowired
-    private ExpressCommentConverter expressCommentConverter;
+    private final ExpressCommentConverter expressCommentConverter;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
+
+    public ExpressService(ExpressMapper expressMapper, ExpressConverter expressConverter, ExpressCommentConverter expressCommentConverter, UserCertificateService userCertificateService, InteractionNotificationService interactionNotificationService) {
+        this.expressMapper = expressMapper;
+        this.expressConverter = expressConverter;
+        this.expressCommentConverter = expressCommentConverter;
+        this.userCertificateService = userCertificateService;
+        this.interactionNotificationService = interactionNotificationService;
+    }
 
     public List<ExpressVO> queryExpressPage(int start, int size, String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);

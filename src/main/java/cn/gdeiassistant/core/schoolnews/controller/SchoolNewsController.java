@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +22,11 @@ import java.util.List;
 @RequestMapping("/api/information/news")
 public class SchoolNewsController {
 
-    @Autowired
-    private SchoolNewsService schoolNewsService;
+    private final SchoolNewsService schoolNewsService;
+
+    public SchoolNewsController(SchoolNewsService schoolNewsService) {
+        this.schoolNewsService = schoolNewsService;
+    }
 
     /**
      * 分页获取新闻列表。GET /api/information/news/type/{type}/start/{start}/size/{size}

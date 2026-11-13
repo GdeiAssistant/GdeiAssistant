@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,8 +33,7 @@ class CampusCredentialContractTest {
     void setUp() throws Exception {
         campusCredentialService = Mockito.mock(CampusCredentialService.class);
 
-        CampusCredentialController controller = new CampusCredentialController();
-        ReflectionTestUtils.setField(controller, "campusCredentialService", campusCredentialService);
+        CampusCredentialController controller = new CampusCredentialController(campusCredentialService);
 
         CampusCredentialStatusVO statusVO = new CampusCredentialStatusVO();
         statusVO.setHasActiveConsent(true);

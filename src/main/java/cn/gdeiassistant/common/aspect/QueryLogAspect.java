@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
@@ -33,11 +32,14 @@ public class QueryLogAspect {
 
     private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-    @Autowired
-    private ObservabilityConstants observabilityConstants;
+    private final ObservabilityConstants observabilityConstants;
 
-    @Autowired
-    private MeterRegistry meterRegistry;
+    private final MeterRegistry meterRegistry;
+
+    public QueryLogAspect(ObservabilityConstants observabilityConstants, MeterRegistry meterRegistry) {
+        this.observabilityConstants = observabilityConstants;
+        this.meterRegistry = meterRegistry;
+    }
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.QueryLogPersistence)")
     public void queryAction() {

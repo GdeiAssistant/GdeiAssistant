@@ -28,7 +28,18 @@ class UserCertificateLifecycleTest {
     @Mock UserCertificateDao dao;
     @Mock HttpClientUtils clients;
     @Mock CloseableHttpClient http;
-    @InjectMocks UserCertificateService service;
+    UserCertificateService service;
+
+    @BeforeEach
+    void initService() {
+        service = new UserCertificateService(
+                "http://jwgl.gdei.edu.cn",
+                clients,
+                dao,
+                null,
+                "https://security.gdei.edu.cn/cas/login",
+                "http://portal.gdei.edu.cn:8001/Login");
+    }
 
     CloseableHttpResponse response(int status, String html, String location) {
         CloseableHttpResponse r = mock(CloseableHttpResponse.class);

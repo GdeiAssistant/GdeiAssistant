@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.campuscredential.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
@@ -16,10 +18,8 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -31,8 +31,7 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class CampusCredentialService {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     public static final String CONSENT_TYPE_CAMPUS_CREDENTIAL = "CAMPUS_CREDENTIAL";
     public static final String SCENE_LOGIN = "LOGIN";
@@ -47,17 +46,21 @@ public class CampusCredentialService {
             SCENE_LOGIN, SCENE_BIND, SCENE_QUICK_AUTH, SCENE_SETTINGS
     );
 
-    @Resource(name = "campusCredentialConsentMapper")
-    private CampusCredentialConsentMapper campusCredentialConsentMapper;
+    private final CampusCredentialConsentMapper campusCredentialConsentMapper;
 
-    @Resource(name = "privacyMapper")
-    private PrivacyMapper privacyMapper;
+    private final PrivacyMapper privacyMapper;
 
-    @Resource(name = "userMapper")
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public CampusCredentialService(HttpClientUtils httpClientUtils, @Qualifier("campusCredentialConsentMapper") CampusCredentialConsentMapper campusCredentialConsentMapper, @Qualifier("privacyMapper") PrivacyMapper privacyMapper, @Qualifier("userMapper") UserMapper userMapper, UserCertificateService userCertificateService) {
+        this.httpClientUtils = httpClientUtils;
+        this.campusCredentialConsentMapper = campusCredentialConsentMapper;
+        this.privacyMapper = privacyMapper;
+        this.userMapper = userMapper;
+        this.userCertificateService = userCertificateService;
+    }
 
     public CampusCredentialStatusVO getSelfStatus(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);

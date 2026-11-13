@@ -5,7 +5,6 @@ import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialConsentDT
 import cn.gdeiassistant.core.campuscredential.pojo.dto.CampusCredentialQuickAuthUpdateDTO;
 import cn.gdeiassistant.core.campuscredential.pojo.vo.CampusCredentialStatusVO;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,8 +13,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/api/campus-credential")
 public class CampusCredentialController {
 
-    @Autowired
-    private CampusCredentialService campusCredentialService;
+    private final CampusCredentialService campusCredentialService;
+
+    public CampusCredentialController(CampusCredentialService campusCredentialService) {
+        this.campusCredentialService = campusCredentialService;
+    }
 
     @GetMapping("/status")
     public DataJsonResult<CampusCredentialStatusVO> getStatus(HttpServletRequest request) throws Exception {

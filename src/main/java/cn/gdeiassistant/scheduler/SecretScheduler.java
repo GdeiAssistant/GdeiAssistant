@@ -11,8 +11,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecretScheduler {
 
-    @Autowired(required = false)
-    private SecretService secretService;
+    private final SecretService secretService;
+
+        public SecretScheduler() {
+        this(null);
+    }
+
+    public SecretScheduler(@Autowired(required = false) SecretService secretService) {
+        this.secretService = secretService;
+    }
 
     @Scheduled(fixedDelay = 300000)
     public void deleteTimerSecretInfos() throws Exception {

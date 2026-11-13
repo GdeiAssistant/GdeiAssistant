@@ -4,7 +4,6 @@ import cn.gdeiassistant.core.userprofile.controller.ProfileController;
 import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -18,9 +17,8 @@ class ProfileOptionsContractTest {
 
     @BeforeEach
     void setUp() {
-        ProfileController controller = new ProfileController();
         ProfileOptionsFacade facade = new ProfileOptionsFacade();
-        ReflectionTestUtils.setField(controller, "profileOptionsFacade", facade);
+        ProfileController controller = new ProfileController(null, null, facade, null, null);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 

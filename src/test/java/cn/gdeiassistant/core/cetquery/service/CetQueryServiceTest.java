@@ -12,7 +12,6 @@ import cn.gdeiassistant.integration.chsi.ChsiClient;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 
@@ -23,12 +22,9 @@ class CetQueryServiceTest {
     private final CetMapper mapper = mock(CetMapper.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
     private final ChsiClient client = mock(ChsiClient.class);
-    private final CetQueryService service = new CetQueryService();
+    private final CetQueryService service = new CetQueryService(mapper, certificates, client);
 
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "cetMapper", mapper);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "chsiClient", client);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic-user"));
     }
 

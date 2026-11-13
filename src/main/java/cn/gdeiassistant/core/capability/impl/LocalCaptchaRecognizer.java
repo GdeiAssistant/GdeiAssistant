@@ -4,7 +4,6 @@ import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.ocr.CaptchaRecognizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
@@ -13,8 +12,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component("localCaptchaRecognizer")
 public class LocalCaptchaRecognizer implements CaptchaRecognizer {
 
-    @Autowired
-    private LocalTemplateOcrEngine localTemplateOcrEngine;
+    private final LocalTemplateOcrEngine localTemplateOcrEngine;
+
+    public LocalCaptchaRecognizer(LocalTemplateOcrEngine localTemplateOcrEngine) {
+        this.localTemplateOcrEngine = localTemplateOcrEngine;
+    }
 
     @Override
     public String recognize(String imageBase64, CheckCodeTypeEnum typeEnum, int length) throws RecognitionException {

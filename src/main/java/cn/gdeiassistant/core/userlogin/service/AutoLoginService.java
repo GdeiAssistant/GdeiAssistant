@@ -1,6 +1,5 @@
 package cn.gdeiassistant.core.userlogin.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.Cookie;
@@ -13,8 +12,11 @@ public class AutoLoginService {
     private final int AUTOLOGIN_SESSION = 1;
     private final int AUTOLOGIN_COOKIE = 2;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public AutoLoginService(UserCertificateService userCertificateService) {
+        this.userCertificateService = userCertificateService;
+    }
 
     /**
      * 检查自动登录状态

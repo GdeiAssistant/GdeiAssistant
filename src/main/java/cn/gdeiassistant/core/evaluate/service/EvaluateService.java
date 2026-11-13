@@ -15,7 +15,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,11 +27,14 @@ public class EvaluateService {
 
     private final Logger logger = LoggerFactory.getLogger(EvaluateService.class);
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private EduSystemClient eduSystemClient;
+    private final EduSystemClient eduSystemClient;
+
+    public EvaluateService(UserCertificateService userCertificateService, EduSystemClient eduSystemClient) {
+        this.userCertificateService = userCertificateService;
+        this.eduSystemClient = eduSystemClient;
+    }
 
     /**
      * 一键评教接口

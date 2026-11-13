@@ -13,7 +13,6 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import com.sun.net.httpserver.HttpServer;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.net.*;
@@ -51,13 +50,10 @@ class ChargeFreshVerificationTest {
         });cas.start();
         clients=new HttpClientUtils();cookies=mock(CookieStoreDao.class);clients.setCookieStoreDao(cookies);
         certificates=mock(UserCertificateDao.class);when(certificates.queryUserLoginCertificate(SESSION)).thenReturn(new User(USER,(String)null));
-        var service=new UserCertificateService();ReflectionTestUtils.setField(service,"httpClientUtils",clients);ReflectionTestUtils.setField(service,"userCertificateDao",certificates);
         String local="http://127.0.0.1:"+cas.getAddress().getPort()+"/cas";
-        ReflectionTestUtils.setField(service,"casLoginUrl",local);ReflectionTestUtils.setField(service,"portalLoginUrl",local);
+        var service=new UserCertificateService(null, clients, certificates, null, local, local);
         charges=mock(ChargeService.class);orders=mock(ChargeOrderService.class);idempotency=mock(ChargeIdempotencyService.class);
-        var controller=new ChargeRequestController();ReflectionTestUtils.setField(controller,"userCertificateService",service);
-        ReflectionTestUtils.setField(controller,"chargeService",charges);ReflectionTestUtils.setField(controller,"chargeOrderService",orders);
-        ReflectionTestUtils.setField(controller,"chargeIdempotencyService",idempotency);
+        var controller=new ChargeRequestController(charges, idempotency, orders, service);
         mvc=MockMvcBuilders.standaloneSetup(controller).addInterceptors(new ApiAuthInterceptor(List.of())).setControllerAdvice(new GlobalRestExceptionHandler()).build();
     }
     @AfterEach void close(){if(cas!=null)cas.stop(0);if(clients!=null)clients.closePool();}

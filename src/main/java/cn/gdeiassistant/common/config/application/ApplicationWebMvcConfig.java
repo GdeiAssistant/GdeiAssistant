@@ -33,8 +33,11 @@ public class ApplicationWebMvcConfig implements WebMvcConfigurer {
             "http://127.0.0.1:4173"
     };
 
-    @Value("${app.cors.allowed-origin-patterns:}")
-    private String allowedOriginPatterns;
+    private final String allowedOriginPatterns;
+
+    public ApplicationWebMvcConfig(@Value("${app.cors.allowed-origin-patterns:}") String allowedOriginPatterns) {
+        this.allowedOriginPatterns = allowedOriginPatterns;
+    }
 
     /**
      * API 鉴权放行的 URL 前缀或路径（无状态，不依赖 Session）

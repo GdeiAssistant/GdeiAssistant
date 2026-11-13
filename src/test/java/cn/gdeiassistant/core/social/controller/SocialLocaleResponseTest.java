@@ -4,7 +4,6 @@ import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.service.SocialRelationService;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,8 +24,7 @@ class SocialLocaleResponseTest {
     })
     void socialErrorsAreLocalizedAndMalformedInputNeverEchoesRawExceptions(String locale, String user, String invalid) throws Exception {
         SocialRelationService relations = mock(SocialRelationService.class);
-        SocialController controller = new SocialController();
-        ReflectionTestUtils.setField(controller, "relationService", relations);
+        SocialController controller = new SocialController(relations, null, null, null);
         when(relations.getMe("demo-session")).thenThrow(SocialException.userNotFound());
         MockMvc mvc = MockMvcBuilders.standaloneSetup(controller).build();
         mvc.perform(get("/api/social/me").requestAttr("sessionId", "demo-session").header("Accept-Language", locale))

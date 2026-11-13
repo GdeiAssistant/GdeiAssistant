@@ -17,7 +17,6 @@ import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,32 +32,35 @@ public class PhotographService {
 
     private static final Logger logger = LoggerFactory.getLogger(PhotographService.class);
 
-    @Autowired
-    private PhotographMapper photographMapper;
+    private final PhotographMapper photographMapper;
 
-    @Autowired
-    private PhotographConverter photographConverter;
+    private final PhotographConverter photographConverter;
 
-    @Autowired
-    private PhotographCommentConverter photographCommentConverter;
+    private final PhotographCommentConverter photographCommentConverter;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
 
-    @Autowired
-    private PublicAuthorResolver publicAuthorResolver;
+    private final PublicAuthorResolver publicAuthorResolver;
+
+    public PhotographService(PhotographMapper photographMapper, PhotographConverter photographConverter, PhotographCommentConverter photographCommentConverter, UserCertificateService userCertificateService, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, InteractionNotificationService interactionNotificationService, PublicAuthorResolver publicAuthorResolver) {
+        this.photographMapper = photographMapper;
+        this.photographConverter = photographConverter;
+        this.photographCommentConverter = photographCommentConverter;
+        this.userCertificateService = userCertificateService;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.interactionNotificationService = interactionNotificationService;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     public int queryPhotoStatisticalData() {
         Integer n = photographMapper.selectPhotographImageCount();

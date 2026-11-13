@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.message.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
@@ -11,7 +13,6 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -26,14 +27,17 @@ public class InteractionNotificationService {
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final ZoneId ZONE_ID = ZoneId.of("Asia/Shanghai");
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Resource(name = "interactionNotificationMapper")
-    private InteractionNotificationMapper interactionNotificationMapper;
+    private final InteractionNotificationMapper interactionNotificationMapper;
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
+
+    public InteractionNotificationService(UserCertificateService userCertificateService, @Qualifier("interactionNotificationMapper") InteractionNotificationMapper interactionNotificationMapper, @Autowired(required = false) UserMapper userMapper) {
+        this.userCertificateService = userCertificateService;
+        this.interactionNotificationMapper = interactionNotificationMapper;
+        this.userMapper = userMapper;
+    }
 
     public void createInteractionNotification(String module, String type, String receiverUsername, String actorUsername,
             String targetId, String targetSubId, String targetType, String title, String content) {

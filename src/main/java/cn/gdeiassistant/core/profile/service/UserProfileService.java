@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.profile.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
 import cn.gdeiassistant.common.exception.tokenvalidexception.TokenExpiredException;
 import cn.gdeiassistant.common.pojo.entity.Introduction;
@@ -10,7 +12,6 @@ import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.converter.UserProfileMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +28,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class UserProfileService {
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Resource(name = "profileMapper")
-    private ProfileMapper profileMapper;
+    private final ProfileMapper profileMapper;
 
-    @Autowired
-    private UserProfileMapper userProfileMapper;
+    private final UserProfileMapper userProfileMapper;
 
     @Resource(name = "professionMap")
     public void setProfessionMap(Map<Integer, String> professionMap) {
@@ -66,14 +64,24 @@ public class UserProfileService {
         UserProfileService.facultyMap = facultyMap;
     }
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+
+    public UserProfileService() {
+        this(null, null, null, null, null, null);
+    }
+
+    public UserProfileService(UserCertificateService userCertificateService, @Qualifier("profileMapper") ProfileMapper profileMapper, UserProfileMapper userProfileMapper, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets) {
+        this.userCertificateService = userCertificateService;
+        this.profileMapper = profileMapper;
+        this.userProfileMapper = userProfileMapper;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+    }
 
     /**
      * 获取当前用户个人资料

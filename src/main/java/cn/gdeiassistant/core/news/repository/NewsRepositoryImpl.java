@@ -13,8 +13,11 @@ import java.util.List;
 @Repository
 public class NewsRepositoryImpl implements NewsRepository {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public NewsRepositoryImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public void saveNewsItems(List<NewsItem> newsItems){

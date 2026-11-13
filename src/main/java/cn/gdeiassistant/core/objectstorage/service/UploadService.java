@@ -2,7 +2,6 @@ package cn.gdeiassistant.core.objectstorage.service;
 
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -17,15 +16,18 @@ public class UploadService {
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.userlogin.service.UserCertificateService certificates;
-    @Autowired
-    private cn.gdeiassistant.common.tools.springutils.RedisDaoUtils redis;
-    @Autowired
-    private StoredAssetService assets;
+    private final cn.gdeiassistant.core.userlogin.service.UserCertificateService certificates;
+    private final cn.gdeiassistant.common.tools.springutils.RedisDaoUtils redis;
+    private final StoredAssetService assets;
+
+    public UploadService(R2StorageService r2StorageService, cn.gdeiassistant.core.userlogin.service.UserCertificateService certificates, cn.gdeiassistant.common.tools.springutils.RedisDaoUtils redis, StoredAssetService assets) {
+        this.r2StorageService = r2StorageService;
+        this.certificates = certificates;
+        this.redis = redis;
+        this.assets = assets;
+    }
 
     private String owner(String sessionId) {
         var user = certificates.getUserLoginCertificate(sessionId);

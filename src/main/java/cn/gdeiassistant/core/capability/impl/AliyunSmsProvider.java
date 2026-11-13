@@ -7,18 +7,20 @@ import cn.gdeiassistant.common.tools.springutils.AliYunSMSUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.ServiceProvider;
 import com.aliyuncs.exceptions.ClientException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class AliyunSmsProvider implements ServiceProvider<SmsRequest, Void> {
 
-    @Autowired
-    private AliYunSMSUtils aliYunSMSUtils;
+    private final AliYunSMSUtils aliYunSMSUtils;
 
-    @Autowired
-    private AliYunSMSConfig aliyunSMSConfig;
+    private final AliYunSMSConfig aliyunSMSConfig;
+
+    public AliyunSmsProvider(AliYunSMSUtils aliYunSMSUtils, AliYunSMSConfig aliyunSMSConfig) {
+        this.aliYunSMSUtils = aliYunSMSUtils;
+        this.aliyunSMSConfig = aliyunSMSConfig;
+    }
 
     @Override
     public String providerName() {

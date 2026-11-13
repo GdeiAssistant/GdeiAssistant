@@ -7,7 +7,6 @@ import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import com.auth0.jwt.interfaces.Claim;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.*;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -22,11 +21,10 @@ class SocialRealtimeSendTest {
     SocialRealtimeHub hub;SocialRealtimeHandler handler;WebSocketSession session;Map<String,Object> attrs;
     UserMapper users;UserCertificateDao certificates;JwtUtil jwt;ExecutorService executor;
     @BeforeEach void setup() {
-        hub=new SocialRealtimeHub();handler=new SocialRealtimeHandler();session=mock(WebSocketSession.class);attrs=new ConcurrentHashMap<>();
+        hub=new SocialRealtimeHub();session=mock(WebSocketSession.class);attrs=new ConcurrentHashMap<>();
         when(session.getAttributes()).thenReturn(attrs);when(session.isOpen()).thenReturn(true);when(session.getId()).thenReturn("synthetic-ws");
         users=mock(UserMapper.class);certificates=mock(UserCertificateDao.class);jwt=mock(JwtUtil.class);
-        ReflectionTestUtils.setField(handler,"realtimeHub",hub);ReflectionTestUtils.setField(handler,"userMapper",users);
-        ReflectionTestUtils.setField(handler,"userCertificateDao",certificates);ReflectionTestUtils.setField(handler,"jwtUtil",jwt);
+        handler = new SocialRealtimeHandler(jwt, certificates, users, hub);
         var account=new CampusAccountView();account.setId(1L);account.setStatus("ACTIVE");
         when(users.selectUser("synthetic")).thenReturn(account);when(users.selectUserById(1L)).thenReturn(account);
         when(certificates.queryUserLoginCertificate("synthetic-session")).thenReturn(new User("synthetic"));
@@ -52,7 +50,7 @@ class SocialRealtimeSendTest {
     @Test void failedReadyRemovesRegistrationAndCancelsRecheck() throws Exception {
         stubAuth();doThrow(new java.io.IOException("synthetic disconnected peer")).when(session).sendMessage(any());
         handler.handleTextMessage(session,new TextMessage("{\"type\":\"auth\",\"token\":\"synthetic-token\"}"));
-        assertTrue(((Map<?,?>)ReflectionTestUtils.getField(handler,"sessionRechecks")).isEmpty());
+        assertTrue(handler.sessionRechecks().isEmpty());
         hub.pushToUser(1L,Map.of("type","business"));verify(session,times(1)).sendMessage(any());verify(session).close();
     }
     @Test void readyAndBusinessPushShareTheSameSendLock() throws Exception {

@@ -6,7 +6,6 @@ import com.mongodb.client.MongoClients;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,7 +15,7 @@ class CustomScheduleConcurrencyTest {
     @BeforeEach void setup() {
         client=MongoClients.create("mongodb://synthetic_admin:synthetic_ci_only@127.0.0.1:"+System.getenv("GDEI_MONGO_TEST_PORT")+"/?authSource=admin");
         mongo=new MongoTemplate(client,"synthetic_audit_"+java.util.UUID.randomUUID().toString().replace("-",""));
-        a=new ScheduleDaoImpl();b=new ScheduleDaoImpl();ReflectionTestUtils.setField(a,"mongoTemplate",mongo);ReflectionTestUtils.setField(b,"mongoTemplate",mongo);
+        a=new ScheduleDaoImpl(mongo); b=new ScheduleDaoImpl(mongo);
     }
     @AfterEach void close(){try{mongo.getDb().drop();}finally{client.close();}}
     CustomSchedule course(String name){var c=new CustomSchedule();c.setPosition(0);c.setScheduleName(name);c.setScheduleLocation("synthetic");c.setScheduleLength(1);c.setMinScheduleWeek(1);c.setMaxScheduleWeek(20);return c;}
@@ -61,8 +60,7 @@ class CustomScheduleConcurrencyTest {
                 .append("title","Synthetic news").append("publishDate",new java.util.Date(0))
                 .append("_class","cn.gdeiassistant.common.pojo.entity.NewInfo");
         mongo.getCollection("new").insertOne(original);
-        var repository=new cn.gdeiassistant.core.news.repository.NewsRepositoryImpl();
-        ReflectionTestUtils.setField(repository,"mongoTemplate",mongo);
+        var repository=new cn.gdeiassistant.core.news.repository.NewsRepositoryImpl(mongo);
         assertEquals("Synthetic news",repository.queryNewsItem("synthetic-news").getTitle());
         assertEquals(1,repository.queryNewsItems(1,0,10).size());
         assertEquals(original,mongo.getCollection("new").find().first());

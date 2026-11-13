@@ -17,7 +17,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,14 +27,17 @@ public class CetQueryService {
 
     private final Logger logger = LoggerFactory.getLogger(CetQueryService.class);
 
-    @Autowired
-    private CetMapper cetMapper;
+    private final CetMapper cetMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private ChsiClient chsiClient;
+    private final ChsiClient chsiClient;
+
+    public CetQueryService(CetMapper cetMapper, UserCertificateService userCertificateService, ChsiClient chsiClient) {
+        this.cetMapper = cetMapper;
+        this.userCertificateService = userCertificateService;
+        this.chsiClient = chsiClient;
+    }
 
     public String cetIndex(String sessionId) throws Exception {
         try {

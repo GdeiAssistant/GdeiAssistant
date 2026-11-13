@@ -19,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +33,17 @@ public class GradeService {
 
     private final Logger logger = LoggerFactory.getLogger(GradeService.class);
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private GradeDao gradeDao;
+    private final GradeDao gradeDao;
 
-    @Autowired
-    private EduSystemClient eduSystemClient;
+    private final EduSystemClient eduSystemClient;
+
+    public GradeService(UserCertificateService userCertificateService, GradeDao gradeDao, EduSystemClient eduSystemClient) {
+        this.userCertificateService = userCertificateService;
+        this.gradeDao = gradeDao;
+        this.eduSystemClient = eduSystemClient;
+    }
 
     /**
      * 清空用户缓存的成绩信息

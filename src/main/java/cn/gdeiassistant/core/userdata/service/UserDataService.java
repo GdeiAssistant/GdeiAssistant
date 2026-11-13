@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.userdata.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.core.marketplace.pojo.entity.MarketplaceItemEntity;
 import cn.gdeiassistant.core.lostandfound.pojo.entity.LostAndFoundItemEntity;
 import cn.gdeiassistant.core.express.pojo.entity.ExpressEntity;
@@ -30,13 +32,11 @@ import cn.gdeiassistant.common.tools.utils.StringUtils;
 import com.alibaba.fastjson2.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Isolation;
 
-import jakarta.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,44 +54,47 @@ import cn.gdeiassistant.common.account.AccountLifecycleContributor;
 public class UserDataService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserDataService.class);
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private DeletionCleanupMapper deletionCleanupMapper;
+    private final DeletionCleanupMapper deletionCleanupMapper;
 
-    @Resource(name = "userMapper")
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Resource(name = "phoneMapper")
-    private PhoneMapper phoneMapper;
+    private final PhoneMapper phoneMapper;
 
-    @Resource(name = "profileMapper")
-    private ProfileMapper profileMapper;
+    private final ProfileMapper profileMapper;
 
-    @Resource(name = "privacyMapper")
-    private PrivacyMapper privacyMapper;
+    private final PrivacyMapper privacyMapper;
 
-    @Resource(name = "appDataMapper")
-    private AppDataMapper appDataMapper;
+    private final AppDataMapper appDataMapper;
 
-    @Resource(name = "logDataMapper")
-    private LogDataMapper logDataMapper;
+    private final LogDataMapper logDataMapper;
 
-    @Autowired
-    private ExportDataDao exportDataDao;
+    private final ExportDataDao exportDataDao;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private SecretService secretService;
+    private final SecretService secretService;
 
-    @Autowired
-    private List<AccountLifecycleContributor> contributors = List.of();
+    private final List<AccountLifecycleContributor> contributors;
+
+    public UserDataService(UserCertificateService userCertificateService, DeletionCleanupMapper deletionCleanupMapper, @Qualifier("userMapper") UserMapper userMapper, @Qualifier("phoneMapper") PhoneMapper phoneMapper, @Qualifier("profileMapper") ProfileMapper profileMapper, @Qualifier("privacyMapper") PrivacyMapper privacyMapper, @Qualifier("appDataMapper") AppDataMapper appDataMapper, @Qualifier("logDataMapper") LogDataMapper logDataMapper, ExportDataDao exportDataDao, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, SecretService secretService, List<AccountLifecycleContributor> contributors) {
+        this.userCertificateService = userCertificateService;
+        this.deletionCleanupMapper = deletionCleanupMapper;
+        this.userMapper = userMapper;
+        this.phoneMapper = phoneMapper;
+        this.profileMapper = profileMapper;
+        this.privacyMapper = privacyMapper;
+        this.appDataMapper = appDataMapper;
+        this.logDataMapper = logDataMapper;
+        this.exportDataDao = exportDataDao;
+        this.r2StorageService = r2StorageService;
+        this.storedAssets = storedAssets;
+        this.secretService = secretService;
+        this.contributors = contributors;
+    }
 
     /**
      * 检查24小时内有无导出用户数据的记录

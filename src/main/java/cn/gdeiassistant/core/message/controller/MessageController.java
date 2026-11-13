@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.message.pojo.vo.InteractionMessageVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.message.service.InteractionMessageLocalizer;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,8 +20,11 @@ import java.util.List;
 @RequestMapping("/api/information/message")
 public class MessageController {
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
+
+    public MessageController(InteractionNotificationService interactionNotificationService) {
+        this.interactionNotificationService = interactionNotificationService;
+    }
 
     @RequestMapping(value = "/interaction/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<InteractionMessageVO>> getInteractionMessages(HttpServletRequest request,

@@ -21,8 +21,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Repository
 public class ScheduleDaoImpl implements ScheduleDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public ScheduleDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     /**
      * 查询用户的课表信息

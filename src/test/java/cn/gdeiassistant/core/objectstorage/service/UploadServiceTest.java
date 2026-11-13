@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,9 +16,9 @@ class UploadServiceTest {
     String owner=StringEncryptUtils.sha256HexString("synthetic-owner"),key="upload/"+owner+"/sample.png";
     byte[] image;
     @BeforeEach void setup() throws Exception {
-        service=new UploadService();storage=mock(R2StorageService.class);redis=mock(RedisDaoUtils.class);assets=mock(StoredAssetService.class);
+        storage=mock(R2StorageService.class);redis=mock(RedisDaoUtils.class);assets=mock(StoredAssetService.class);
         var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic-owner"));
-        ReflectionTestUtils.setField(service,"r2StorageService",storage);ReflectionTestUtils.setField(service,"redis",redis);ReflectionTestUtils.setField(service,"assets",assets);ReflectionTestUtils.setField(service,"certificates",certificates);
+        service=new UploadService(storage, certificates, redis, assets);
         var bytes=new java.io.ByteArrayOutputStream();javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(2,2,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",bytes);image=bytes.toByteArray();
     }
     void ticket() {

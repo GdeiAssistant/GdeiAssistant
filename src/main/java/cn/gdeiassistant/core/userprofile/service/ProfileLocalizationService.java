@@ -16,8 +16,15 @@ import java.util.List;
 @Service
 public class ProfileLocalizationService {
 
-    @Autowired(required = false)
-    private I18nTranslationService translationService;
+    private final I18nTranslationService translationService;
+
+        public ProfileLocalizationService() {
+        this(null);
+    }
+
+    public ProfileLocalizationService(@Autowired(required = false) I18nTranslationService translationService) {
+        this.translationService = translationService;
+    }
 
     public String normalizeLanguage(String header) {
         if (header == null || header.isBlank()) {

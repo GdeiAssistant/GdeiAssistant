@@ -19,7 +19,6 @@ import cn.gdeiassistant.core.charge.service.ChargeService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,17 +32,20 @@ public class ChargeRequestController {
 
     private static final Logger logger = LoggerFactory.getLogger(ChargeRequestController.class);
 
-    @Autowired
-    private ChargeService chargeService;
+    private final ChargeService chargeService;
 
-    @Autowired
-    private ChargeIdempotencyService chargeIdempotencyService;
+    private final ChargeIdempotencyService chargeIdempotencyService;
 
-    @Autowired
-    private ChargeOrderService chargeOrderService;
+    private final ChargeOrderService chargeOrderService;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public ChargeRequestController(ChargeService chargeService, ChargeIdempotencyService chargeIdempotencyService, ChargeOrderService chargeOrderService, UserCertificateService userCertificateService) {
+        this.chargeService = chargeService;
+        this.chargeIdempotencyService = chargeIdempotencyService;
+        this.chargeOrderService = chargeOrderService;
+        this.userCertificateService = userCertificateService;
+    }
 
     @RequestMapping(value = "/api/card/charge", method = RequestMethod.POST)
     @RestAuthentication

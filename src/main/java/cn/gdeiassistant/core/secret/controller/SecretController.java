@@ -17,7 +17,6 @@ import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,8 +29,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class SecretController {
 
-    @Autowired
-    private SecretService secretService;
+    private final SecretService secretService;
+
+    public SecretController(SecretService secretService) {
+        this.secretService = secretService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

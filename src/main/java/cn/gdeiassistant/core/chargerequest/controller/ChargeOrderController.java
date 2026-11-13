@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeOrderVO;
 import cn.gdeiassistant.core.charge.service.ChargeOrderService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,11 +18,14 @@ import java.util.List;
 @RestController
 public class ChargeOrderController {
 
-    @Autowired
-    private ChargeOrderService chargeOrderService;
+    private final ChargeOrderService chargeOrderService;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public ChargeOrderController(ChargeOrderService chargeOrderService, UserCertificateService userCertificateService) {
+        this.chargeOrderService = chargeOrderService;
+        this.userCertificateService = userCertificateService;
+    }
 
     @RequestMapping(value = "/api/card/charge/orders/{orderId}", method = RequestMethod.GET)
     @RestAuthentication

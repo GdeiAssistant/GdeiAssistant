@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.pojo.config;
 import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -22,8 +21,11 @@ public class AliYunSMSConfig {
 
     private String smsAliyunGlobalTemplateCode;
 
-    @Autowired
-    private ModuleUtils moduleUtils;
+    private final ModuleUtils moduleUtils;
+
+    public AliYunSMSConfig(ModuleUtils moduleUtils) {
+        this.moduleUtils = moduleUtils;
+    }
 
     @Value("${sms.aliyun.userid:}")
     public void setSmsAliyunUserId(String smsAliyunUserId) {

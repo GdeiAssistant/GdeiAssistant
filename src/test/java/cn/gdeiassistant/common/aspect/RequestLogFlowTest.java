@@ -10,7 +10,6 @@ import org.aspectj.lang.reflect.CodeSignature;
 import org.junit.jupiter.api.*;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
@@ -22,15 +21,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RequestLogFlowTest {
-    private final RequestLogAspect aspect=new RequestLogAspect();
+    private RequestLogAspect aspect;
     private final ProceedingJoinPoint point=mock(ProceedingJoinPoint.class);
     private final CodeSignature signature=mock(CodeSignature.class);
     private final SimpleMeterRegistry registry=new SimpleMeterRegistry();
     private final ListAppender<ILoggingEvent> logs=new ListAppender<>();
     private final Logger logger=(Logger)org.slf4j.LoggerFactory.getLogger(RequestLogAspect.class);
     @BeforeEach void setup() {
-        var settings=new ObservabilityConstants();ReflectionTestUtils.setField(settings,"slowRequestThresholdMs",-1L);
-        ReflectionTestUtils.setField(aspect,"observabilityConstants",settings);ReflectionTestUtils.setField(aspect,"meterRegistry",registry);
+        aspect=new RequestLogAspect(new ObservabilityConstants(-1L, 1500L), registry);
         when(point.getSignature()).thenReturn(signature);when(signature.getDeclaringType()).thenReturn(getClass());
         when(signature.getDeclaringTypeName()).thenReturn(getClass().getName());when(signature.getName()).thenReturn("handle");
         logs.start();logger.addAppender(logs);

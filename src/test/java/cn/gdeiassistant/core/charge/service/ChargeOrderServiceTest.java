@@ -6,6 +6,7 @@ import cn.gdeiassistant.core.charge.mapper.ChargeOrderMapper;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderEntity;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderStatus;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeOrderVO;
+import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -46,9 +46,8 @@ class ChargeOrderServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new ChargeOrderService();
-        ReflectionTestUtils.setField(service, "chargeOrderMapper", chargeOrderMapper);
-        ReflectionTestUtils.setField(service, "chargeIdempotencyService", new ChargeIdempotencyService());
+        service = new ChargeOrderService(chargeOrderMapper, new ChargeIdempotencyService(org.mockito.Mockito.mock(RedisDaoUtils.class), new ObjectMapper()));
+
     }
 
     @Test

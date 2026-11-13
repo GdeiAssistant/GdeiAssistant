@@ -15,11 +15,14 @@ public class ObservabilityConstants {
     public static final long REST_SLOW_THRESHOLD_MS = 800;
     public static final long QUERY_SLOW_THRESHOLD_MS = 1500;
 
-    @Value("${observability.slow-request-threshold-ms:800}")
-    private long slowRequestThresholdMs;
+    private final long slowRequestThresholdMs;
 
-    @Value("${observability.slow-query-threshold-ms:1500}")
-    private long slowQueryThresholdMs;
+    private final long slowQueryThresholdMs;
+
+    public ObservabilityConstants(@Value("${observability.slow-request-threshold-ms:800}") long slowRequestThresholdMs, @Value("${observability.slow-query-threshold-ms:1500}") long slowQueryThresholdMs) {
+        this.slowRequestThresholdMs = slowRequestThresholdMs;
+        this.slowQueryThresholdMs = slowQueryThresholdMs;
+    }
 
     public long getSlowRequestThresholdMs() {
         return slowRequestThresholdMs;

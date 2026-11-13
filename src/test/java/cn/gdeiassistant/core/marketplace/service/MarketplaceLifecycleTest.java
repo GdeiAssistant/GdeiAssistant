@@ -9,7 +9,6 @@ import cn.gdeiassistant.core.objectstorage.service.*;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.mock.web.MockMultipartFile;
 import java.math.BigDecimal;
 import java.util.*;
@@ -17,13 +16,13 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 class MarketplaceLifecycleTest {
-    private final MarketplaceService service=new MarketplaceService();
     private final MarketplaceMapper mapper=mock(MarketplaceMapper.class);
     private final UserCertificateService certificates=mock(UserCertificateService.class);
     private final UploadService uploads=mock(UploadService.class);
     private final StoredAssetService assets=mock(StoredAssetService.class);
     private final PublicAuthorResolver authors=mock(PublicAuthorResolver.class);
-    @BeforeEach void setup(){ReflectionTestUtils.setField(service,"marketplaceMapper",mapper);ReflectionTestUtils.setField(service,"userCertificateService",certificates);ReflectionTestUtils.setField(service,"uploads",uploads);ReflectionTestUtils.setField(service,"storedAssets",assets);ReflectionTestUtils.setField(service,"publicAuthorResolver",authors);when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic-owner"));}
+    private final MarketplaceService service=new MarketplaceService(mapper, certificates, null, null, uploads, assets, authors);
+    @BeforeEach void setup(){when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic-owner"));}
     private MarketplaceItemEntity item(int id,String owner,int state){var item=new MarketplaceItemEntity();item.setId(id);item.setUsername(owner);item.setState(state);return item;}
     private void detail(MarketplaceItemEntity item){var detail=new MarketplaceItemVO();detail.setMarketplaceItem(item);when(mapper.selectInfoByID(item.getId())).thenReturn(detail);}
     private MarketplacePublishDTO publish(){var dto=new MarketplacePublishDTO();dto.setName("合成商品");dto.setDescription("合成说明");dto.setPrice(new BigDecimal("12.30"));dto.setLocation("合成地点");dto.setType(2);dto.setQq("synthetic-contact");return dto;}

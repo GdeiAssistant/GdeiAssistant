@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,13 +25,9 @@ class DeliveryPrivacyFlowTest {
     private final DeliveryMapper mapper = mock(DeliveryMapper.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
     private final PublicAuthorResolver authors = mock(PublicAuthorResolver.class);
-    private final DeliveryService service = new DeliveryService();
+    private final DeliveryService service = new DeliveryService(mapper, Mappers.getMapper(DeliveryConverter.class), certificates, null, authors);
 
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "deliveryMapper", mapper);
-        ReflectionTestUtils.setField(service, "deliveryConverter", Mappers.getMapper(DeliveryConverter.class));
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "publicAuthorResolver", authors);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
         when(authors.resolve(anyString())).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称"));
     }

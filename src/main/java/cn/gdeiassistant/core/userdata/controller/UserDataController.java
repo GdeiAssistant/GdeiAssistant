@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.userdata.service.UserDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,8 +15,11 @@ import java.io.IOException;
 @RestController
 public class UserDataController {
 
-    @Autowired
-    private UserDataService userDataService;
+    private final UserDataService userDataService;
+
+    public UserDataController(UserDataService userDataService) {
+        this.userDataService = userDataService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

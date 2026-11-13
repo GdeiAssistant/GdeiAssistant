@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -32,11 +31,14 @@ public class ChargeIdempotencyService {
     private static final long FAILED_TTL_MINUTES = 10;
     private static final int MAX_IDEMPOTENCY_KEY_LENGTH = 128;
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    public ChargeIdempotencyService(RedisDaoUtils redisDaoUtils, ObjectMapper objectMapper) {
+        this.redisDaoUtils = redisDaoUtils;
+        this.objectMapper = objectMapper;
+    }
 
     /**
      * Begins an idempotent charge operation.

@@ -14,7 +14,6 @@ import cn.gdeiassistant.core.phone.service.PhoneService;
 import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,8 +31,11 @@ import java.util.Map;
 @RestController
 public class PhoneController {
 
-    @Autowired
-    private PhoneService phoneService;
+    private final PhoneService phoneService;
+
+    public PhoneController(PhoneService phoneService) {
+        this.phoneService = phoneService;
+    }
 
     private JsonResult failure(HttpServletRequest request, String message) {
         return new JsonResult(false, MessageCatalog.localizeMessage(message, request != null ? request.getHeader("Accept-Language") : null));

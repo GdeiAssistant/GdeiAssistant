@@ -9,7 +9,6 @@ import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.phone.service.PhoneService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -32,11 +31,9 @@ class ContactValidationContractTest {
         emailService = mock(EmailService.class);
         phoneService = mock(PhoneService.class);
 
-        EmailController emailController = new EmailController();
-        ReflectionTestUtils.setField(emailController, "emailService", emailService);
+        EmailController emailController = new EmailController(emailService);
 
-        PhoneController phoneController = new PhoneController();
-        ReflectionTestUtils.setField(phoneController, "phoneService", phoneService);
+        PhoneController phoneController = new PhoneController(phoneService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(emailController, phoneController)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

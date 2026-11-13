@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -15,11 +14,9 @@ import static org.mockito.Mockito.*;
 
 class LoginTokenDaoSerializationTest {
     private final RedisDaoUtils redis = mock(RedisDaoUtils.class);
-    private final LoginTokenDaoImpl dao = new LoginTokenDaoImpl();
+    private final LoginTokenDaoImpl dao = new LoginTokenDaoImpl(redis, new ObjectMapper());
     private final Map<String, String> values = new HashMap<>();
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(dao, "redisDaoUtils", redis);
-        ReflectionTestUtils.setField(dao, "objectMapper", new ObjectMapper());
         when(redis.get(anyString())).thenAnswer(a -> values.get(a.getArgument(0)));
         doAnswer(a -> { values.put(a.getArgument(0), a.getArgument(1)); return null; })
                 .when(redis).set(anyString(), anyString(), anyLong(), any(TimeUnit.class));

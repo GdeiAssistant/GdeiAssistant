@@ -10,7 +10,6 @@ import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,9 +28,7 @@ class DeliveryTransactionTest {
         when(mapper.selectDeliveryOrderUsername(1)).thenReturn("owner");
         when(mapper.updateOrderState(1,1)).thenAnswer(call -> sql.update("update delivery_order set state=1 where order_id=1 and state=0"));
         doThrow(new IllegalStateException("synthetic insert failure")).when(mapper).insertTradeRecord(any(DeliveryTradeEntity.class));
-        var service = new DeliveryService();
-        ReflectionTestUtils.setField(service,"deliveryMapper",mapper);
-        ReflectionTestUtils.setField(service,"userCertificateService",certificate);
+        var service = new DeliveryService(mapper, null, certificate, null, null);
         var manager = new DataSourceTransactionManager(source);
         var beans = new DefaultListableBeanFactory();
         beans.registerSingleton("appTransactionManager",manager);

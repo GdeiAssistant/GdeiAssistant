@@ -18,19 +18,18 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class LoginTokenServiceTest {
     @Mock LoginTokenDao dao;
     @Mock IPAddressService locations;
-    @InjectMocks LoginTokenService service;
+    LoginTokenService service;
 
     @BeforeEach
     void config() {
-        JWTConfig c = new JWTConfig();
+        JWTConfig c = new JWTConfig(null);
         c.setSecret("synthetic-test-signing-key");
-        ReflectionTestUtils.setField(service, "jwtConfig", c);
+        service = new LoginTokenService(dao, locations, c);
     }
 
     @Test

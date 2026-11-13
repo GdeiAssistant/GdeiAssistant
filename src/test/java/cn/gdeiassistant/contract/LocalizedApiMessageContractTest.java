@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,8 +52,7 @@ class LocalizedApiMessageContractTest {
         when(interactionNotificationService.queryInteractionMessages("session-1", 0, 20))
                 .thenReturn(List.of(message));
 
-        MessageController messageController = new MessageController();
-        ReflectionTestUtils.setField(messageController, "interactionNotificationService", interactionNotificationService);
+        MessageController messageController = new MessageController(interactionNotificationService);
 
         messageMockMvc = MockMvcBuilders.standaloneSetup(messageController).build();
     }
@@ -108,7 +106,7 @@ class LocalizedApiMessageContractTest {
     })
     void manualValidationResponsesRespectAllSupportedLocales(String locale, String ticket, String library) throws Exception {
         MockMvc validationMockMvc = MockMvcBuilders
-                .standaloneSetup(new CetQueryController(), new LibraryController()).build();
+                .standaloneSetup(new CetQueryController(null), new LibraryController(null, null)).build();
         validationMockMvc.perform(post("/api/cet/number")
                         .header("Accept-Language", locale)
                         .contentType(MediaType.APPLICATION_JSON).content("{\"number\":\"\"}"))

@@ -11,7 +11,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.service.ScheduleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +20,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class ScheduleQueryController {
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
+
+    public ScheduleQueryController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
     @RequestMapping(value = "/api/schedule", method = RequestMethod.GET)
     @QueryLogPersistence

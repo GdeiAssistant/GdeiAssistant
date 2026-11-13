@@ -30,7 +30,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -44,17 +43,20 @@ public class ScheduleService {
 
     private final Logger logger = LoggerFactory.getLogger(ScheduleService.class);
 
-    @Autowired
-    private TeacherLoginService teacherLoginService;
+    private final TeacherLoginService teacherLoginService;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private ScheduleDao scheduleDao;
+    private final ScheduleDao scheduleDao;
 
-    @Autowired
-    private EduSystemClient eduSystemClient;
+    private final EduSystemClient eduSystemClient;
+
+    public ScheduleService(TeacherLoginService teacherLoginService, UserCertificateService userCertificateService, ScheduleDao scheduleDao, EduSystemClient eduSystemClient) {
+        this.teacherLoginService = teacherLoginService;
+        this.userCertificateService = userCertificateService;
+        this.scheduleDao = scheduleDao;
+        this.eduSystemClient = eduSystemClient;
+    }
 
     /**
      * 获取自定义课表信息

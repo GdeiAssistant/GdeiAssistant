@@ -8,22 +8,20 @@ import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.social.mapper.SocialRelationMapper;
 import cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class SocialIdentityPolicyTest {
-    private final SocialIdentityService service=new SocialIdentityService();
     private final PrivacyMapper privacy=mock(PrivacyMapper.class);
     private final ProfileMapper profiles=mock(ProfileMapper.class);
     private final SocialRelationMapper relations=mock(SocialRelationMapper.class);
     private final SocialUserSummaryMapper summaries=mock(SocialUserSummaryMapper.class);
+    private final SocialIdentityService service=new SocialIdentityService(null, null, profiles, privacy, relations, summaries);
     private CampusAccountView user(long id){var user=new CampusAccountView();user.setId(id);user.setPublicId("synthetic-public-"+id);user.setUsername("synthetic-"+id);user.setStatus("ACTIVE");return user;}
-    @BeforeEach void setup(){ReflectionTestUtils.setField(service,"privacyMapper",privacy);ReflectionTestUtils.setField(service,"profileMapper",profiles);ReflectionTestUtils.setField(service,"socialRelationMapper",relations);ReflectionTestUtils.setField(service,"summaries",summaries);}
     @ParameterizedTest
     @CsvSource({"ALL,false,false,true,NONE","NONE,true,true,false,MUTUAL","FOLLOWING,false,true,true,FOLLOWED_BY","FOLLOWING,true,false,false,FOLLOWING","MUTUAL,true,true,true,MUTUAL","MUTUAL,true,false,false,FOLLOWING","invalid,false,false,false,NONE"})
     void batchAndSinglePoliciesHaveTheSameDirectionAndDefaults(String policy,boolean following,boolean followedBy,boolean allowed,String relationship){

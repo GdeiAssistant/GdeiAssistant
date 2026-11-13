@@ -2,17 +2,19 @@ package cn.gdeiassistant.core.userlogin.service;
 
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.userdata.service.UserDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserLoginService {
 
-    @Autowired
-    private cn.gdeiassistant.core.userlogin.service.UserCertificateService userCertificateService;
+    private final cn.gdeiassistant.core.userlogin.service.UserCertificateService userCertificateService;
 
-    @Autowired
-    private UserDataService userDataService;
+    private final UserDataService userDataService;
+
+    public UserLoginService(cn.gdeiassistant.core.userlogin.service.UserCertificateService userCertificateService, UserDataService userDataService) {
+        this.userCertificateService = userCertificateService;
+        this.userDataService = userDataService;
+    }
 
     /**
      * 用户登录验证

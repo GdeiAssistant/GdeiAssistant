@@ -2,14 +2,16 @@ package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
 import cn.gdeiassistant.core.capability.sms.SmsVerificationSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MultiProviderSmsVerificationSender implements SmsVerificationSender {
 
-    @Autowired
-    private SmsService smsService;
+    private final SmsService smsService;
+
+    public MultiProviderSmsVerificationSender(SmsService smsService) {
+        this.smsService = smsService;
+    }
 
     @Override
     public void sendChina(int code, String phone) throws SendSMSException {

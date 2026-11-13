@@ -15,7 +15,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -37,12 +36,10 @@ class UserCertificateRedisIntegrationTest {
         factory.afterPropertiesSet();
         factory.start();
         redis = new RedisConfig().redisTemplate(factory);
-        utils = new RedisDaoUtils();
-        ReflectionTestUtils.setField(utils, "redisTemplate", redis);
-        dao = new UserCertificateDaoImpl();
-        ReflectionTestUtils.setField(dao, "redisDaoUtils", utils);
-        ReflectionTestUtils.setField(dao, "redisTemplate", redis);
-        ReflectionTestUtils.setField(dao, "objectMapper", new ObjectMapper());
+        utils = new RedisDaoUtils(redis);
+
+        dao = new UserCertificateDaoImpl(utils, new ObjectMapper(), redis);
+
         AESEncryptConfig c = new AESEncryptConfig();
         c.setPrivateKey("synthetic-integration-encryption");
         new StringEncryptUtils().setEncryptConfig(c);

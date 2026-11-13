@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.marketplace.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
@@ -15,11 +17,9 @@ import cn.gdeiassistant.common.tools.springutils.R2StorageService;
 import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -32,26 +32,29 @@ import cn.gdeiassistant.common.i18n.Messages;
 public class MarketplaceService {
 
     private static final Logger logger = LoggerFactory.getLogger(MarketplaceService.class);
-    @Resource(name = "marketplaceMapper")
-    private MarketplaceMapper marketplaceMapper;
+    private final MarketplaceMapper marketplaceMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private PublicAuthorResolver publicAuthorResolver;
+    private final PublicAuthorResolver publicAuthorResolver;
+
+    public MarketplaceService(@Qualifier("marketplaceMapper") MarketplaceMapper marketplaceMapper, UserCertificateService userCertificateService, UserProfileService userProfileService, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, PublicAuthorResolver publicAuthorResolver) {
+        this.marketplaceMapper = marketplaceMapper;
+        this.userCertificateService = userCertificateService;
+        this.userProfileService = userProfileService;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     public boolean ownedByCurrentUser(String sessionId, MarketplaceItemEntity item) throws Exception {
         if (sessionId == null) return false;

@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,8 +16,11 @@ import java.util.List;
 @RestController
 public class IPAddressController {
 
-    @Autowired
-    private IPAddressService ipAddressService;
+    private final IPAddressService ipAddressService;
+
+    public IPAddressController(IPAddressService ipAddressService) {
+        this.ipAddressService = ipAddressService;
+    }
 
     /**
      * 获取当前用户最近登录记录

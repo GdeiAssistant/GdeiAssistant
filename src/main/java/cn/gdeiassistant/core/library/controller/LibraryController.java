@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.collectionquery.pojo.CollectionQueryResult;
 import cn.gdeiassistant.core.collectionquery.service.CollectionQueryService;
 import jakarta.servlet.http.HttpServletRequest;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,11 +25,14 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RequestMapping("/api/library")
 public class LibraryController {
 
-    @Autowired
-    private CollectionQueryService collectionQueryService;
+    private final CollectionQueryService collectionQueryService;
 
-    @Autowired
-    private BookQueryService bookQueryService;
+    private final BookQueryService bookQueryService;
+
+    public LibraryController(CollectionQueryService collectionQueryService, BookQueryService bookQueryService) {
+        this.collectionQueryService = collectionQueryService;
+        this.bookQueryService = bookQueryService;
+    }
 
     /**
      * 图书馆检索。GET /api/library/search?keyword=xxx&page=1

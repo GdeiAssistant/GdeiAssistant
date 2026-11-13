@@ -1,5 +1,7 @@
 package cn.gdeiassistant.integration.edu;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectException;
@@ -36,12 +38,15 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class EduSystemClient {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(EduSystemClient.class);
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
-    private String JWGL_BASE = "http://jwgl.gdei.edu.cn";
+    private final String JWGL_BASE;
+
+    public EduSystemClient(HttpClientUtils httpClientUtils, @Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}") String JWGL_BASE) {
+        this.httpClientUtils = httpClientUtils;
+        this.JWGL_BASE = JWGL_BASE;
+    }
     private static final int EDU_REQUEST_TIMEOUT_SEC = 15;
 
     /**

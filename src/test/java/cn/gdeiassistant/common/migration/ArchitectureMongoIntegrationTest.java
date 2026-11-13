@@ -15,7 +15,6 @@ import org.bson.Document;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -119,10 +118,8 @@ class ArchitectureMongoIntegrationTest {
     @Test
     void concurrentUpsertsKeepOneDocumentPerOwnerAndPreserveOtherOwners() throws Exception {
         new CacheIndexConfig().createCacheIndexes(mongo);
-        GradeDaoImpl grades = new GradeDaoImpl();
-        ScheduleDaoImpl schedules = new ScheduleDaoImpl();
-        ReflectionTestUtils.setField(grades, "mongoTemplate", mongo);
-        ReflectionTestUtils.setField(schedules, "mongoTemplate", mongo);
+        GradeDaoImpl grades = new GradeDaoImpl(mongo);
+        ScheduleDaoImpl schedules = new ScheduleDaoImpl(mongo);
         ExecutorService pool = Executors.newFixedThreadPool(4);
         try {
             List<Callable<Void>> calls = new ArrayList<>();

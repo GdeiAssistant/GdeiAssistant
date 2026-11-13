@@ -13,8 +13,15 @@ import org.springframework.stereotype.Component;
 @Profile("production")
 public class ScheduleScheduler {
 
-    @Autowired(required = false)
-    private ScheduleCronService scheduleCronService;
+    private final ScheduleCronService scheduleCronService;
+
+        public ScheduleScheduler() {
+        this(null);
+    }
+
+    public ScheduleScheduler(@Autowired(required = false) ScheduleCronService scheduleCronService) {
+        this.scheduleCronService = scheduleCronService;
+    }
 
     @Scheduled(fixedDelay = 7200000)
     public void synchronizeScheduleData() {

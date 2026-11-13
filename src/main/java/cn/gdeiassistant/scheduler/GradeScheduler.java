@@ -13,8 +13,15 @@ import org.springframework.stereotype.Component;
 @Profile("production")
 public class GradeScheduler {
 
-    @Autowired(required = false)
-    private GradeCronService gradeCronService;
+    private final GradeCronService gradeCronService;
+
+        public GradeScheduler() {
+        this(null);
+    }
+
+    public GradeScheduler(@Autowired(required = false) GradeCronService gradeCronService) {
+        this.gradeCronService = gradeCronService;
+    }
 
     @Scheduled(fixedDelay = 7200000)
     public void synchronizeGradeData() {

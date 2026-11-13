@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.dating.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.exception.databaseexception.NoAccessException;
 import cn.gdeiassistant.common.exception.datingexception.RepeatPickException;
@@ -17,13 +19,11 @@ import cn.gdeiassistant.core.dating.pojo.vo.DatingPickVO;
 import cn.gdeiassistant.core.dating.pojo.vo.DatingProfileVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.R2StorageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,26 +37,29 @@ public class DatingService {
 
     private static final Logger logger = LoggerFactory.getLogger(DatingService.class);
     private static final int MY_PICK_LIMIT = 50;
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Resource(name = "datingMapper")
-    private DatingMapper datingMapper;
+    private final DatingMapper datingMapper;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
 
-    @Autowired
-    private PublicAuthorResolver publicAuthorResolver;
+    private final PublicAuthorResolver publicAuthorResolver;
+
+    public DatingService(UserCertificateService userCertificateService, @Qualifier("datingMapper") DatingMapper datingMapper, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, InteractionNotificationService interactionNotificationService, PublicAuthorResolver publicAuthorResolver) {
+        this.userCertificateService = userCertificateService;
+        this.datingMapper = datingMapper;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.interactionNotificationService = interactionNotificationService;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     public DatingProfileVO queryDatingProfile(Integer id) throws DataNotExistException {
         DatingProfileEntity entity = datingMapper.selectDatingProfileById(id);

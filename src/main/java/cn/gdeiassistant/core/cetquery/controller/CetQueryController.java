@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.cetquery.pojo.dto.CetQueryDTO;
 import cn.gdeiassistant.core.cetquery.pojo.vo.CetNumberVO;
 import cn.gdeiassistant.core.cetquery.service.CetQueryService;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +17,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class CetQueryController {
 
-    @Autowired
-    private CetQueryService cetQueryService;
+    private final CetQueryService cetQueryService;
+
+    public CetQueryController(CetQueryService cetQueryService) {
+        this.cetQueryService = cetQueryService;
+    }
 
     @RequestMapping(value = "/api/cet/number", method = RequestMethod.GET)
     public DataJsonResult<CetNumberVO> getCetNumber(HttpServletRequest request) throws Exception {

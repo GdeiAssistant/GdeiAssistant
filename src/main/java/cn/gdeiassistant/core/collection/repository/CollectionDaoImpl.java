@@ -16,8 +16,11 @@ import java.util.List;
 @Repository
 public class CollectionDaoImpl implements CollectionDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public CollectionDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public List<Collection> queryCollectionListByUsername(String username) {

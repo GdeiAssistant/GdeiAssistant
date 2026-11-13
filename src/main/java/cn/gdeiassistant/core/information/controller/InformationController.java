@@ -6,7 +6,6 @@ import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import cn.gdeiassistant.core.information.pojo.vo.InformationVO;
 import cn.gdeiassistant.core.information.service.announcement.AnnouncementService;
 import cn.gdeiassistant.common.tools.utils.FestivalUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +20,11 @@ import java.util.List;
 @RestController
 public class InformationController {
 
-    @Autowired
-    private AnnouncementService announcementService;
+    private final AnnouncementService announcementService;
+
+    public InformationController(AnnouncementService announcementService) {
+        this.announcementService = announcementService;
+    }
 
     @RequestMapping(value = "/api/information/overview", method = RequestMethod.GET)
     public DataJsonResult<InformationVO> loadInformation() {

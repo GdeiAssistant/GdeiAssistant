@@ -15,9 +15,15 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class RedisDaoUtils {
 
-    @Autowired(required = false)
-    @Qualifier("redisTemplate")
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+
+        public RedisDaoUtils() {
+        this(null);
+    }
+
+    public RedisDaoUtils(@Autowired(required = false) @Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     public String get(String key) {
         if (redisTemplate != null) {

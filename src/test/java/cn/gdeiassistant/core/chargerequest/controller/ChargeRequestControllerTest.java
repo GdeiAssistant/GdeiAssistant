@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -67,11 +66,7 @@ class ChargeRequestControllerTest {
 
     @BeforeEach
     void setUp() {
-        ChargeRequestController controller = new ChargeRequestController();
-        ReflectionTestUtils.setField(controller, "chargeService", chargeService);
-        ReflectionTestUtils.setField(controller, "chargeIdempotencyService", chargeIdempotencyService);
-        ReflectionTestUtils.setField(controller, "chargeOrderService", chargeOrderService);
-        ReflectionTestUtils.setField(controller, "userCertificateService", userCertificateService);
+        ChargeRequestController controller = new ChargeRequestController(chargeService, chargeIdempotencyService, chargeOrderService, userCertificateService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .addInterceptors(new ApiAuthInterceptor(List.of()))

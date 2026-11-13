@@ -6,7 +6,6 @@ import cn.gdeiassistant.core.ipaddress.controller.IPAddressController;
 import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,8 +33,7 @@ class IPAddressContractTest {
     void setUp() {
         ipAddressService = mock(IPAddressService.class);
 
-        IPAddressController controller = new IPAddressController();
-        ReflectionTestUtils.setField(controller, "ipAddressService", ipAddressService);
+        IPAddressController controller = new IPAddressController(ipAddressService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

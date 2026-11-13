@@ -10,7 +10,6 @@ import cn.gdeiassistant.integration.chsi.ChsiClient;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -18,10 +17,8 @@ import static org.mockito.Mockito.*;
 class GraduateExamServiceTest {
     private final ChsiClient client = mock(ChsiClient.class);
     private final ImageRecognitionService recognition = mock(ImageRecognitionService.class);
-    private final GraduateExamService service = new GraduateExamService();
+    private final GraduateExamService service = new GraduateExamService(recognition, client);
     @BeforeEach void setup() throws Exception {
-        ReflectionTestUtils.setField(service, "chsiClient", client);
-        ReflectionTestUtils.setField(service, "imageRecognitionService", recognition);
         when(client.fetchPostgraduateCjcxPage()).thenReturn(Jsoup.parse("<form name='cjcxForm'></form>"));
     }
     @Test void fourDistinctSubjectsMustRemainDistinctInTheExistingTableContract() throws Exception {

@@ -1,5 +1,7 @@
 package cn.gdeiassistant.integration.chsi;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
@@ -26,14 +28,17 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class ChsiClient {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(ChsiClient.class);
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cet-base-url:http://www.chsi.com.cn/cet}")
-    private String CET_BASE = "http://www.chsi.com.cn/cet";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.graduate-query-url:https://yz.chsi.com.cn/apply/cjcx}")
-    private String KAOYAN_CJCX = "https://yz.chsi.com.cn/apply/cjcx";
+    private final String CET_BASE;
+    private final String KAOYAN_CJCX;
+
+    public ChsiClient(HttpClientUtils httpClientUtils, @Value("${campus.upstream.cet-base-url:http://www.chsi.com.cn/cet}") String CET_BASE, @Value("${campus.upstream.graduate-query-url:https://yz.chsi.com.cn/apply/cjcx}") String KAOYAN_CJCX) {
+        this.httpClientUtils = httpClientUtils;
+        this.CET_BASE = CET_BASE;
+        this.KAOYAN_CJCX = KAOYAN_CJCX;
+    }
     private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
     private static final String USER_AGENT_MAC = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36";
     private static final int CHSI_TIMEOUT_SEC = 15;

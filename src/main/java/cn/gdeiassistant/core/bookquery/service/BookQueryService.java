@@ -18,7 +18,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,14 +30,17 @@ public class BookQueryService {
 
     private final Logger logger = LoggerFactory.getLogger(BookQueryService.class);
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private CollectionQueryService collectionQueryService;
+    private final CollectionQueryService collectionQueryService;
 
-    @Autowired
-    private LibraryClient libraryClient;
+    private final LibraryClient libraryClient;
+
+    public BookQueryService(UserCertificateService userCertificateService, CollectionQueryService collectionQueryService, LibraryClient libraryClient) {
+        this.userCertificateService = userCertificateService;
+        this.collectionQueryService = collectionQueryService;
+        this.libraryClient = libraryClient;
+    }
 
     /**
      * 馆藏检索。

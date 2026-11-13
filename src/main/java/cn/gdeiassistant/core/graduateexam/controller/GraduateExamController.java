@@ -8,7 +8,6 @@ import cn.gdeiassistant.common.pojo.entity.Postgraduate;
 import cn.gdeiassistant.core.graduateexam.pojo.GraduateExamQuery;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.core.graduateexam.service.GraduateExamService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GraduateExamController {
 
-    @Autowired
-    private GraduateExamService graduateExamService;
+    private final GraduateExamService graduateExamService;
+
+    public GraduateExamController(GraduateExamService graduateExamService) {
+        this.graduateExamService = graduateExamService;
+    }
 
     @PostMapping("/api/graduate-exam/query")
     public DataJsonResult<Postgraduate> queryPostgraduateScore(@Validated @RequestBody GraduateExamQuery graduateExamQuery)

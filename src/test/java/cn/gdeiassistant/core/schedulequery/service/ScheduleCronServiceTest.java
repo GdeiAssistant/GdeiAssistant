@@ -6,9 +6,9 @@ import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -37,8 +37,12 @@ class ScheduleCronServiceTest {
     @Mock
     private CampusCredentialService campusCredentialService;
 
-    @InjectMocks
     private ScheduleCronService scheduleCronService;
+
+    @BeforeEach
+    void setUp() {
+        scheduleCronService = new ScheduleCronService(Runnable::run, userLoginService, scheduleService, cronMapper, scheduleDao, campusCredentialService);
+    }
 
     @Test
     void synchronizeScheduleDataOnlyProcessesUsersAllowedByEffectiveQuickAuth() {
@@ -65,7 +69,6 @@ class ScheduleCronServiceTest {
     }
 
     @Test void staleCacheRefreshRetainsIdentityAndNewCachesAreCreated() throws Exception {
-        org.springframework.test.util.ReflectionTestUtils.setField(scheduleCronService, "campusSyncExecutor", (java.util.concurrent.Executor) Runnable::run);
         var users = java.util.stream.IntStream.range(0, 6).mapToObj(i -> new User("synthetic-" + i, "synthetic-password")).toList();
         when(cronMapper.selectCacheAllowUsers()).thenReturn(users);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(users)).thenReturn(users);

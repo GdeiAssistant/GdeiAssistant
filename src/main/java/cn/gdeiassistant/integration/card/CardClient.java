@@ -1,5 +1,7 @@
 package cn.gdeiassistant.integration.card;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
@@ -33,12 +35,15 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class CardClient {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(CardClient.class);
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
-    private String ECARD_BASE = "http://ecard.gdei.edu.cn";
+    private final String ECARD_BASE;
+
+    public CardClient(HttpClientUtils httpClientUtils, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String ECARD_BASE) {
+        this.httpClientUtils = httpClientUtils;
+        this.ECARD_BASE = ECARD_BASE;
+    }
     private static final int CARD_TIMEOUT_SEC = 15;
 
     /**

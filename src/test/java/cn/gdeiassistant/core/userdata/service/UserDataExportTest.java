@@ -57,7 +57,7 @@ class UserDataExportTest {
     @Mock
     private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
     @Mock SecretService secrets;
-    @InjectMocks UserDataService service;
+    UserDataService service;
 
     static class ExtendedProfile extends ProfileEntity {
         private final String internalCredential="synthetic-future-private-field";
@@ -73,8 +73,7 @@ class UserDataExportTest {
     @BeforeEach
     void setup() {
         lenient().when(certificates.getUserLoginCertificate("session")).thenReturn(user());
-        // Decoration is pure domain logic: the contributors need no mapper for this test.
-        org.springframework.test.util.ReflectionTestUtils.setField(service, "contributors", List.of(
+        service = new UserDataService(certificates, deletionCleanupMapper, users, phones, profiles, privacy, app, logs, exports, storage, storedAssets, secrets, List.of(
                 new cn.gdeiassistant.core.delivery.service.DeliveryAccountContributor(null),
                 new cn.gdeiassistant.core.marketplace.service.MarketplaceAccountContributor(null),
                 new cn.gdeiassistant.core.lostandfound.service.LostAndFoundAccountContributor(null),

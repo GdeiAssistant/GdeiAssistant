@@ -5,7 +5,6 @@ import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.social.image.ChatImageCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionSynchronization;
@@ -23,14 +22,17 @@ public class SocialChatImageService {
 
     private static final Logger log = LoggerFactory.getLogger(SocialChatImageService.class);
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Value("${r2.chatBucketName:}")
-    private String chatBucketName;
+    private final String chatBucketName;
 
-    @Value("${r2.bucketName:}")
-    private String defaultBucketName;
+    private final String defaultBucketName;
+
+    public SocialChatImageService(R2StorageService r2StorageService, @Value("${r2.chatBucketName:}") String chatBucketName, @Value("${r2.bucketName:}") String defaultBucketName) {
+        this.r2StorageService = r2StorageService;
+        this.chatBucketName = chatBucketName;
+        this.defaultBucketName = defaultBucketName;
+    }
 
     public boolean isImageMessagingEnabled() {
         String chat = normalize(chatBucketName);

@@ -22,8 +22,11 @@ public class EmailUtils {
 
     private final Logger logger = LoggerFactory.getLogger(EmailUtils.class);
 
-    @Autowired(required = false)
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+
+    public EmailUtils(@Autowired(required = false) JavaMailSender javaMailSender) {
+        this.javaMailSender = javaMailSender;
+    }
 
     /**
      * 发送电子邮件

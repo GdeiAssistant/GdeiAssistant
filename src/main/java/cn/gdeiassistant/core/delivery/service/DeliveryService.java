@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.delivery.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.exception.deliveryexception.DeliveryOrderStateUpdatedException;
 import cn.gdeiassistant.common.exception.deliveryexception.DeliveryOrderTakenException;
@@ -16,11 +18,9 @@ import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
 import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -29,20 +29,23 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class DeliveryService {
 
-    @Resource(name = "deliveryMapper")
-    private DeliveryMapper deliveryMapper;
+    private final DeliveryMapper deliveryMapper;
 
-    @Autowired
-    private DeliveryConverter deliveryConverter;
+    private final DeliveryConverter deliveryConverter;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
 
-    @Autowired
-    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
+    private final cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver;
+
+    public DeliveryService(@Qualifier("deliveryMapper") DeliveryMapper deliveryMapper, DeliveryConverter deliveryConverter, UserCertificateService userCertificateService, InteractionNotificationService interactionNotificationService, cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthorResolver) {
+        this.deliveryMapper = deliveryMapper;
+        this.deliveryConverter = deliveryConverter;
+        this.userCertificateService = userCertificateService;
+        this.interactionNotificationService = interactionNotificationService;
+        this.publicAuthorResolver = publicAuthorResolver;
+    }
 
     private DeliveryOrderVO publicOrder(DeliveryOrderEntity entity) {
         DeliveryOrderVO view = deliveryConverter.toOrderVO(entity);

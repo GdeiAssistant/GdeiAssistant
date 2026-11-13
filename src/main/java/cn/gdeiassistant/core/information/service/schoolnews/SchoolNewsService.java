@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.information.service.schoolnews;
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.pojo.entity.NewsItem;
 import cn.gdeiassistant.core.news.repository.NewsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class SchoolNewsService {
 
-    @Autowired
-    private NewsRepository newsRepository;
+    private final NewsRepository newsRepository;
+
+    public SchoolNewsService(NewsRepository newsRepository) {
+        this.newsRepository = newsRepository;
+    }
 
     /**
      * 查找新闻通知信息列表

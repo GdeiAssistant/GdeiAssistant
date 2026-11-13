@@ -14,8 +14,11 @@ import java.util.List;
 @Repository
 public class BookDaoImpl implements BookDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public BookDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Override
     public List<Book> queryBookListByUsername(String username) {

@@ -32,7 +32,6 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -79,26 +78,25 @@ class EmailIsolatedEndToEndTest {
         redisFactory=new LettuceConnectionFactory("127.0.0.1",Integer.parseInt(System.getenv("GDEI_REDIS_TEST_PORT")));
         redisFactory.afterPropertiesSet();redisFactory.start();
         var redis=new RedisConfig().redisTemplate(redisFactory);
-        var redisUtils=new RedisDaoUtils();ReflectionTestUtils.setField(redisUtils,"redisTemplate",redis);
-        codes=new VerificationCodeDaoImpl();ReflectionTestUtils.setField(codes,"redisDaoUtils",redisUtils);
+        var redisUtils=new RedisDaoUtils(redis);
+        codes=new VerificationCodeDaoImpl(redisUtils);
         codes.deleteEmailVerificationCode(FIRST);codes.deleteEmailVerificationCode(SECOND);
         smtp=new LoopbackSmtp();
         var mail=new JavaMailSenderImpl();mail.setHost("127.0.0.1");mail.setPort(smtp.port());mail.setDefaultEncoding("UTF-8");
         mail.getJavaMailProperties().setProperty("mail.smtp.connectiontimeout","3000");
         mail.getJavaMailProperties().setProperty("mail.smtp.timeout","3000");
-        var utility=new EmailUtils();ReflectionTestUtils.setField(utility,"javaMailSender",mail);
-        var sender=new SmtpEmailVerificationSender();ReflectionTestUtils.setField(sender,"emailUtils",utility);
+        var utility=new EmailUtils(mail);
+        var sender=new SmtpEmailVerificationSender(utility);
         sender.setSmtpHost("127.0.0.1");sender.setSenderEmail("sender@example.invalid");sender.setSmtpPassword("synthetic-fixture-only");
         var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("synthetic-session")).thenReturn(new User("synthetic-owner"));
         when(certificates.isAccountActive(org.mockito.ArgumentMatchers.anyString())).thenReturn(true);
-        var service=new EmailService();ReflectionTestUtils.setField(service,"emailMapper",sql.getMapper(EmailMapper.class));
-        ReflectionTestUtils.setField(service,"verificationCodeDao",codes);ReflectionTestUtils.setField(service,"emailVerificationSender",sender);
-        ReflectionTestUtils.setField(service,"userCertificateService",certificates);
-        var controller=new EmailController();ReflectionTestUtils.setField(controller,"emailService",service);
+        var service=new EmailService(sql.getMapper(EmailMapper.class), codes, certificates, sender);
+
+        var controller=new EmailController(service);
         var jwt=mock(JwtUtil.class);var claim=mock(Claim.class);when(claim.asString()).thenReturn("synthetic-session");
         when(jwt.verifyAndParse("synthetic-token")).thenReturn(Map.of("sessionId",claim));
-        var filter=new JwtSessionIdFilter();ReflectionTestUtils.setField(filter,"jwtUtil",jwt);
-        ReflectionTestUtils.setField(filter,"userCertificateService",certificates);
+        var filter=new JwtSessionIdFilter(jwt, certificates);
+
         http=MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new GlobalRestExceptionHandler())
                 .addFilters(filter).addInterceptors(new ApiAuthInterceptor(List.of())).build();
     }

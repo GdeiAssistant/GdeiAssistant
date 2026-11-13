@@ -1,4 +1,4 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@3669428ee2300ffc1d98a53f660a7b015ee824e3.
+# Shared governance action: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc.
 # Keep the job names; they are required status check contexts.
 
 name: Review request
@@ -24,6 +24,6 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Request
-        uses: GdeiAssistant/.github/pr-governance@3669428ee2300ffc1d98a53f660a7b015ee824e3
+        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
         with:
           mode: nudge

@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.userlogin.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 
 import cn.gdeiassistant.common.spi.SessionCertificateProvider;
@@ -67,6 +69,7 @@ public class UserCertificateService implements SessionCertificateProvider {
         this(null, null, null, null, null, null);
     }
 
+    @Autowired
     public UserCertificateService(@Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}") String eduBaseUrl, HttpClientUtils httpClientUtils, UserCertificateDao userCertificateDao, cn.gdeiassistant.core.user.mapper.UserMapper userMapper, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}") String portalLoginUrl) {
         this.eduBaseUrl = eduBaseUrl;
         this.httpClientUtils = httpClientUtils;

@@ -1,5 +1,7 @@
 package cn.gdeiassistant.common.tools.springutils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
@@ -19,6 +21,7 @@ public class ModuleUtils {
         this(new java.util.EnumMap<>(cn.gdeiassistant.common.enums.module.ModuleEnum.class), new java.util.EnumMap<>(cn.gdeiassistant.common.enums.module.CoreModuleEnum.class));
     }
 
+    @Autowired
     public ModuleUtils(@Qualifier("moduleStateMap") Map<ModuleEnum, Boolean> moduleStateMap, @Qualifier("coreModuleStateMap") Map<CoreModuleEnum, Boolean> coreModuleEnumBooleanMap) {
         this.moduleStateMap = moduleStateMap;
         this.coreModuleEnumBooleanMap = coreModuleEnumBooleanMap;

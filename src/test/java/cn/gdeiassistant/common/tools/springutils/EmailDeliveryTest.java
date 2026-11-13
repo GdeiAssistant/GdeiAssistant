@@ -14,7 +14,7 @@ import static org.mockito.Mockito.*;
 
 class EmailDeliveryTest {
     @Test void missingMailTransportCannotReportSuccessfulDelivery() {
-        EmailUtils utility = new EmailUtils(null);
+        EmailUtils utility = new EmailUtils((JavaMailSender) null);
         assertThrows(MessagingException.class, () -> utility.sendEmail("sender@example.invalid", "recipient@example.invalid", "synthetic", "body", new byte[0][]));
     }
     @Test void realMimeMessageKeepsSenderRecipientUtf8BodyAndAttachment() throws Exception {

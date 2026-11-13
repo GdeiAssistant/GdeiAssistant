@@ -22,6 +22,7 @@ public class ProfileLocalizationService {
         this(null);
     }
 
+    @Autowired
     public ProfileLocalizationService(@Autowired(required = false) I18nTranslationService translationService) {
         this.translationService = translationService;
     }

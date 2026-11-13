@@ -19,6 +19,7 @@ public class ScheduleScheduler {
         this(null);
     }
 
+    @Autowired
     public ScheduleScheduler(@Autowired(required = false) ScheduleCronService scheduleCronService) {
         this.scheduleCronService = scheduleCronService;
     }

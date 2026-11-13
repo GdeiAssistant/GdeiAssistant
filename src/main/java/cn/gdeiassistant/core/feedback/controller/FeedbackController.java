@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.feedback.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.pojo.entity.ClassifiedFeedback;
 import cn.gdeiassistant.common.pojo.entity.Feedback;
@@ -29,6 +31,7 @@ public class FeedbackController {
         this(null);
     }
 
+    @Autowired
     public FeedbackController(FeedbackService feedbackService) {
         this.feedbackService = feedbackService;
     }

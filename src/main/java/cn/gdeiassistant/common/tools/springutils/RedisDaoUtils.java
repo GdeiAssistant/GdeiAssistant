@@ -21,6 +21,7 @@ public class RedisDaoUtils {
         this(null);
     }
 
+    @Autowired
     public RedisDaoUtils(@Autowired(required = false) @Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }

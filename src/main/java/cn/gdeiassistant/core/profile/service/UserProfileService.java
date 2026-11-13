@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.profile.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
@@ -74,6 +76,7 @@ public class UserProfileService {
         this(null, null, null, null, null, null);
     }
 
+    @Autowired
     public UserProfileService(UserCertificateService userCertificateService, @Qualifier("profileMapper") ProfileMapper profileMapper, UserProfileMapper userProfileMapper, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets) {
         this.userCertificateService = userCertificateService;
         this.profileMapper = profileMapper;

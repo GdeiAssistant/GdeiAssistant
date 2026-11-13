@@ -17,6 +17,7 @@ public class SecretScheduler {
         this(null);
     }
 
+    @Autowired
     public SecretScheduler(@Autowired(required = false) SecretService secretService) {
         this.secretService = secretService;
     }

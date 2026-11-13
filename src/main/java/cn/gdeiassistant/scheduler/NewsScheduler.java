@@ -22,6 +22,7 @@ public class NewsScheduler {
         this(null);
     }
 
+    @Autowired
     public NewsScheduler(@Autowired(required = false) SchoolNewsCronService schoolNewsCronService) {
         this.schoolNewsCronService = schoolNewsCronService;
     }

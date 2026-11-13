@@ -19,6 +19,7 @@ public class GradeScheduler {
         this(null);
     }
 
+    @Autowired
     public GradeScheduler(@Autowired(required = false) GradeCronService gradeCronService) {
         this.gradeCronService = gradeCronService;
     }

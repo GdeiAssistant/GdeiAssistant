@@ -3,6 +3,7 @@ package cn.gdeiassistant.common.tools.springutils;
 import cn.gdeiassistant.common.tools.utils.AnonymizeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,8 +25,14 @@ public class EmailUtils {
 
     private final JavaMailSender javaMailSender;
 
-    public EmailUtils(@Autowired(required = false) JavaMailSender javaMailSender) {
+    /** Direct injection for tests that already resolved a sender (or null). */
+    public EmailUtils(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
+    }
+
+    @Autowired
+    public EmailUtils(ObjectProvider<JavaMailSender> javaMailSender) {
+        this(javaMailSender.getIfAvailable());
     }
 
     /**

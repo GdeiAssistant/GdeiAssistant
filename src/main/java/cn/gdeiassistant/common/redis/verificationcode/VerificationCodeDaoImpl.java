@@ -2,7 +2,6 @@ package cn.gdeiassistant.common.redis.verificationcode;
 
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -13,8 +12,11 @@ public class VerificationCodeDaoImpl implements VerificationCodeDao {
     private final String PHONE_PREFIX = "PHONE_VERIFICATION_CODE_";
     private final String EMAIL_PREFIX = "EMAIL_VERIFICATION_CODE_";
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
+
+    public VerificationCodeDaoImpl(RedisDaoUtils redisDaoUtils) {
+        this.redisDaoUtils = redisDaoUtils;
+    }
 
     @Override
     public boolean consumePhoneVerificationCode(int code, String phone, int expectedCode) {

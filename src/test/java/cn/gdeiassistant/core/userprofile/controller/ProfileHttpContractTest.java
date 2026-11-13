@@ -11,7 +11,6 @@ import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValid
 import cn.gdeiassistant.core.userprofile.service.*;
 import org.junit.jupiter.api.*;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.time.LocalDate;
@@ -31,13 +30,10 @@ class ProfileHttpContractTest {
         var options=cn.gdeiassistant.common.constant.OptionConstantUtils.FACULTY_OPTIONS;
         for(int i=0;i<options.length;i++)faculties.put(i,options[i]);
         new UserProfileService().setFacultyMap(faculties);
-        var localization=new ProfileLocalizationService();var mapper=new ProfileResponseMapper();
-        ReflectionTestUtils.setField(mapper,"userProfileService",service);ReflectionTestUtils.setField(mapper,"ipAddressService",ip);
-        ReflectionTestUtils.setField(mapper,"profileLocalizationService",localization);
-        var controller=new ProfileController();ReflectionTestUtils.setField(controller,"userProfileService",service);
-        ReflectionTestUtils.setField(controller,"profileResponseMapper",mapper);ReflectionTestUtils.setField(controller,"profileLocalizationService",localization);
-        ReflectionTestUtils.setField(controller,"profileLocationValidator",new ProfileLocationValidator());
-        ReflectionTestUtils.setField(controller,"profileOptionsFacade",mock(ProfileOptionsFacade.class));
+        var localization=new ProfileLocalizationService();var mapper=new ProfileResponseMapper(service, ip, localization);
+
+        var controller=new ProfileController(service, mapper, mock(ProfileOptionsFacade.class), new ProfileLocationValidator(), localization);
+
         http=MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new GlobalRestExceptionHandler()).build();
     }
     @AfterEach void restoreFaculty(){new UserProfileService().setFacultyMap(originalFaculty);}

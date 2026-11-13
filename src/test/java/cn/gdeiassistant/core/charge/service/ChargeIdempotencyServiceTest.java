@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -44,9 +43,7 @@ class ChargeIdempotencyServiceTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper().findAndRegisterModules();
-        service = new ChargeIdempotencyService();
-        ReflectionTestUtils.setField(service, "redisDaoUtils", redisDaoUtils);
-        ReflectionTestUtils.setField(service, "objectMapper", objectMapper);
+        service = new ChargeIdempotencyService(redisDaoUtils, objectMapper);
     }
 
     @Test

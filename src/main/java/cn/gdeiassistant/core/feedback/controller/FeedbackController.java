@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.feedback.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import cn.gdeiassistant.common.constant.ValueConstantUtils;
 import cn.gdeiassistant.common.pojo.entity.ClassifiedFeedback;
 import cn.gdeiassistant.common.pojo.entity.Feedback;
@@ -7,7 +9,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.feedback.pojo.dto.FeedbackSubmitDTO;
 import cn.gdeiassistant.core.feedback.service.FeedbackService;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,8 +25,16 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class FeedbackController {
 
+    private final FeedbackService feedbackService;
+
+        public FeedbackController() {
+        this(null);
+    }
+
     @Autowired
-    private FeedbackService feedbackService;
+    public FeedbackController(FeedbackService feedbackService) {
+        this.feedbackService = feedbackService;
+    }
 
     /**
      * 帮助与反馈 - 提交反馈（JSON  body，写入 MySQL）

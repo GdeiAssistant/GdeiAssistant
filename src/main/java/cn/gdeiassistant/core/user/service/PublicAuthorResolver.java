@@ -15,13 +15,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class PublicAuthorResolver {
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
-    @Autowired(required = false)
-    private ProfileMapper profileMapper;
+    private final UserMapper userMapper;
+    private final ProfileMapper profileMapper;
 
-    @Autowired(required = false)
-    private cn.gdeiassistant.core.user.mapper.PublicAuthorMapper publicAuthorMapper;
+    private final cn.gdeiassistant.core.user.mapper.PublicAuthorMapper publicAuthorMapper;
+
+    public PublicAuthorResolver(@Autowired(required = false) UserMapper userMapper, @Autowired(required = false) ProfileMapper profileMapper, @Autowired(required = false) cn.gdeiassistant.core.user.mapper.PublicAuthorMapper publicAuthorMapper) {
+        this.userMapper = userMapper;
+        this.profileMapper = profileMapper;
+        this.publicAuthorMapper = publicAuthorMapper;
+    }
 
     public java.util.Map<String, AuthorPublic> resolveAll(java.util.Collection<String> usernames) {
         var result = new java.util.HashMap<String, AuthorPublic>();

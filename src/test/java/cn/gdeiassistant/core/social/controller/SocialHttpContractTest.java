@@ -5,7 +5,6 @@ import cn.gdeiassistant.core.social.service.*;
 import cn.gdeiassistant.core.social.exception.SocialException;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,7 +19,7 @@ class SocialHttpContractTest {
     private final SocialIdentityService identity=mock(SocialIdentityService.class);
     private final R2StorageService storage=mock(R2StorageService.class);
     private MockMvc http;
-    @BeforeEach void setup(){var controller=new SocialController();ReflectionTestUtils.setField(controller,"relationService",relations);ReflectionTestUtils.setField(controller,"chatService",chat);ReflectionTestUtils.setField(controller,"identityService",identity);ReflectionTestUtils.setField(controller,"r2StorageService",storage);http=MockMvcBuilders.standaloneSetup(controller).build();}
+    @BeforeEach void setup(){http=MockMvcBuilders.standaloneSetup(new SocialController(relations, chat, identity, storage)).build();}
     @Test void userReadsAndRelationshipWritesPreservePaginationAndPublicIdentity() throws Exception {
         var peer=new SocialUserDTO();peer.setId("synthetic-public-id");peer.setNickname("合成昵称");var page=new PageDTO<>(List.of(peer),"synthetic-cursor",true);
         when(relations.getMe("synthetic-session")).thenReturn(peer);when(relations.searchUsers("synthetic-session","name","next",10)).thenReturn(page);

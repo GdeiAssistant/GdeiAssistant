@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.capability.impl;
 import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ocr.CaptchaRecognizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
@@ -12,8 +11,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class FallbackCaptchaRecognizer implements CaptchaRecognizer {
 
-    @Autowired
-    private OcrService ocrService;
+    private final OcrService ocrService;
+
+    public FallbackCaptchaRecognizer(OcrService ocrService) {
+        this.ocrService = ocrService;
+    }
 
     @Override
     public String recognize(String imageBase64, CheckCodeTypeEnum typeEnum, int length) throws RecognitionException {

@@ -4,7 +4,6 @@ import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.jsoup.internal.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +17,14 @@ import java.util.Properties;
 @Configuration
 public class JavaMailConfig {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Autowired
-    private ModuleUtils moduleUtils;
+    private final ModuleUtils moduleUtils;
+
+    public JavaMailConfig(Environment environment, ModuleUtils moduleUtils) {
+        this.environment = environment;
+        this.moduleUtils = moduleUtils;
+    }
 
     @PostConstruct
     public void disableEmailModuleWhenSmtpMissing() {

@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.userlogin.service;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
@@ -21,7 +23,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -34,14 +35,17 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class TeacherLoginService {
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
-    private String eduBaseUrl = "http://jwgl.gdei.edu.cn";
+    private final String eduBaseUrl;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
-    @Autowired
-    private ImageRecognitionService imageRecognitionService;
+    private final ImageRecognitionService imageRecognitionService;
+
+    public TeacherLoginService(@Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}") String eduBaseUrl, HttpClientUtils httpClientUtils, ImageRecognitionService imageRecognitionService) {
+        this.eduBaseUrl = eduBaseUrl;
+        this.httpClientUtils = httpClientUtils;
+        this.imageRecognitionService = imageRecognitionService;
+    }
 
     private final Logger logger = LoggerFactory.getLogger(TeacherLoginService.class);
 

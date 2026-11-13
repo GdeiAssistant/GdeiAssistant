@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -22,13 +21,8 @@ class PrivacyServiceTest {
     private final GradeDao grades = mock(GradeDao.class);
     private final ScheduleDao schedules = mock(ScheduleDao.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
-    private final PrivacyService service = new PrivacyService();
+    private final PrivacyService service = new PrivacyService(certificates, mapper, converter, grades, schedules);
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "privacyMapper", mapper);
-        ReflectionTestUtils.setField(service, "privacyConverter", converter);
-        ReflectionTestUtils.setField(service, "gradeDao", grades);
-        ReflectionTestUtils.setField(service, "scheduleDao", schedules);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
     }
     @Test void missingUserIsNotAnImplicitPublicPrivacyProfile() throws Exception {

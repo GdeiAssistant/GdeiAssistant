@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.cardquery.service;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
@@ -32,7 +34,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -44,26 +45,29 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class CardQueryService {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
-    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}")
-    private String cardLoginUrl = "http://ecard.gdei.edu.cn:8050/LoginCas.aspx";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
-    private String cardBaseUrl = "http://ecard.gdei.edu.cn";
+    private final String casLoginUrl;
+    private final String cardLoginUrl;
+    private final String cardBaseUrl;
 
     private final Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
-    @Autowired
-    private ImageRecognitionService imageRecognitionService;
+    private final ImageRecognitionService imageRecognitionService;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private CardClient cardClient;
+    private final CardClient cardClient;
+
+    public CardQueryService(HttpClientUtils httpClientUtils, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}") String cardLoginUrl, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String cardBaseUrl, ImageRecognitionService imageRecognitionService, UserCertificateService userCertificateService, CardClient cardClient) {
+        this.httpClientUtils = httpClientUtils;
+        this.casLoginUrl = casLoginUrl;
+        this.cardLoginUrl = cardLoginUrl;
+        this.cardBaseUrl = cardBaseUrl;
+        this.imageRecognitionService = imageRecognitionService;
+        this.userCertificateService = userCertificateService;
+        this.cardClient = cardClient;
+    }
 
     /**
      * 查询饭卡基本信息

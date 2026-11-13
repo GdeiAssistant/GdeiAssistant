@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.schedulequery.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
 import cn.gdeiassistant.common.pojo.entity.User;
@@ -11,7 +13,6 @@ import cn.gdeiassistant.core.cron.mapper.CronMapper;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,27 +32,29 @@ import java.util.concurrent.Semaphore;
 @Profile("production")
 public class ScheduleCronService {
 
-    @Autowired
-    @org.springframework.beans.factory.annotation.Qualifier("campusSyncExecutor")
-    private java.util.concurrent.Executor campusSyncExecutor;
+    private final java.util.concurrent.Executor campusSyncExecutor;
     private final java.util.concurrent.atomic.AtomicBoolean running = new java.util.concurrent.atomic.AtomicBoolean();
 
     private final Logger logger = LoggerFactory.getLogger(ScheduleCronService.class);
 
-    @Autowired
-    private UserLoginService userLoginService;
+    private final UserLoginService userLoginService;
 
-    @Autowired
-    private ScheduleService scheduleService;
+    private final ScheduleService scheduleService;
 
-    @Autowired
-    private CronMapper cronMapper;
+    private final CronMapper cronMapper;
 
-    @Autowired
-    private ScheduleDao scheduleDao;
+    private final ScheduleDao scheduleDao;
 
-    @Autowired
-    private CampusCredentialService campusCredentialService;
+    private final CampusCredentialService campusCredentialService;
+
+    public ScheduleCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, ScheduleService scheduleService, CronMapper cronMapper, ScheduleDao scheduleDao, CampusCredentialService campusCredentialService) {
+        this.campusSyncExecutor = campusSyncExecutor;
+        this.userLoginService = userLoginService;
+        this.scheduleService = scheduleService;
+        this.cronMapper = cronMapper;
+        this.scheduleDao = scheduleDao;
+        this.campusCredentialService = campusCredentialService;
+    }
 
     /**
      * 同步教务系统实时课表信息（可由 Scheduler 或 HTTP /cron/schedule 触发）。

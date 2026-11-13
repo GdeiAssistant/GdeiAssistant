@@ -37,11 +37,19 @@ class CardQueryServiceTest {
     @Mock CardClient cards;
     @Mock ImageRecognitionService recognition;
     @Mock CloseableHttpClient http;
-    @InjectMocks CardQueryService service;
+    CardQueryService service;
     BasicCookieStore cookies = new BasicCookieStore();
 
     @BeforeEach
     void setup() throws Exception {
+        service = new CardQueryService(
+                clients,
+                "https://security.gdei.edu.cn/cas/login",
+                "http://ecard.gdei.edu.cn:8050/LoginCas.aspx",
+                "http://ecard.gdei.edu.cn",
+                recognition,
+                certificates,
+                cards);
         User u = new User("owner");
         u.setPassword("synthetic-password");
         UserCertificateEntity e = new UserCertificateEntity();

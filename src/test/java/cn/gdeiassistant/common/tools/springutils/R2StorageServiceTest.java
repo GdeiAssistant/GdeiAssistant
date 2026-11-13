@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.tools.springutils;
 import cn.gdeiassistant.common.pojo.config.R2Config;
 import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
 import org.junit.jupiter.api.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
@@ -15,9 +14,9 @@ import static org.mockito.Mockito.*;
 
 class R2StorageServiceTest {
     R2StorageService storage;S3Client client;S3Presigner signer;R2Config config;
-    @BeforeEach void setup(){storage=new R2StorageService();client=mock(S3Client.class);signer=mock(S3Presigner.class);config=mock(R2Config.class);
+    @BeforeEach void setup(){client=mock(S3Client.class);signer=mock(S3Presigner.class);config=mock(R2Config.class);
         when(config.isEnabled()).thenReturn(true);when(config.getBucketName()).thenReturn("synthetic-bucket");
-        ReflectionTestUtils.setField(storage,"r2Config",config);ReflectionTestUtils.setField(storage,"s3Client",client);ReflectionTestUtils.setField(storage,"s3Presigner",signer);}
+        storage=new R2StorageService(config, client, signer);}
     @Test void deletionDoesNotHidePermissionOrNetworkFailure(){when(client.deleteObject(any(DeleteObjectRequest.class))).thenThrow(new IllegalStateException("synthetic outage"));assertThrows(IllegalStateException.class,()->storage.deleteObject("avatar/synthetic.jpg"));}
     @Test void missingObjectIsAnIdempotentSuccessfulDeletion(){when(client.deleteObject(any(DeleteObjectRequest.class))).thenThrow(NoSuchKeyException.builder().message("missing").build());assertDoesNotThrow(()->storage.deleteObject("avatar/synthetic.jpg"));}
     @Test void disabledStorageDoesNotPretendCleanupSucceeded(){when(config.isEnabled()).thenReturn(false);assertThrows(FeatureNotEnabledException.class,()->storage.deleteObject("avatar/synthetic.jpg"));}

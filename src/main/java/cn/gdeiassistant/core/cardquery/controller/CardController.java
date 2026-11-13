@@ -8,7 +8,6 @@ import cn.gdeiassistant.common.pojo.entity.CardInfo;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.cardquery.service.CardQueryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +16,11 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestController
 public class CardController {
 
-    @Autowired
-    private CardQueryService cardQueryService;
+    private final CardQueryService cardQueryService;
+
+    public CardController(CardQueryService cardQueryService) {
+        this.cardQueryService = cardQueryService;
+    }
 
     /**
      * 查询校园卡基本信息

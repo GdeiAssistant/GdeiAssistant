@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.privacy.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.commonexception.CacheClearException;
 import cn.gdeiassistant.common.exception.databaseexception.UserNotExistException;
 import cn.gdeiassistant.common.pojo.entity.User;
@@ -13,10 +15,8 @@ import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import cn.gdeiassistant.common.i18n.Messages;
 
 @Service
@@ -24,20 +24,23 @@ public class PrivacyService {
 
     private static final Logger logger = LoggerFactory.getLogger(PrivacyService.class);
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Resource(name = "privacyMapper")
-    private PrivacyMapper privacyMapper;
+    private final PrivacyMapper privacyMapper;
 
-    @Autowired
-    private PrivacyConverter privacyConverter;
+    private final PrivacyConverter privacyConverter;
 
-    @Autowired
-    private GradeDao gradeDao;
+    private final GradeDao gradeDao;
 
-    @Autowired
-    private ScheduleDao scheduleDao;
+    private final ScheduleDao scheduleDao;
+
+    public PrivacyService(UserCertificateService userCertificateService, @Qualifier("privacyMapper") PrivacyMapper privacyMapper, PrivacyConverter privacyConverter, GradeDao gradeDao, ScheduleDao scheduleDao) {
+        this.userCertificateService = userCertificateService;
+        this.privacyMapper = privacyMapper;
+        this.privacyConverter = privacyConverter;
+        this.gradeDao = gradeDao;
+        this.scheduleDao = scheduleDao;
+    }
 
     public PrivacyVO getSelfUserPrivacySetting(String sessionId) throws UserNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);

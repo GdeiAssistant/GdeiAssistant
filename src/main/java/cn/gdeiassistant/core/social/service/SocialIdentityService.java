@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.social.pojo.dto.SocialUserDTO;
 import cn.gdeiassistant.core.user.mapper.UserMapper;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -27,16 +26,11 @@ public class SocialIdentityService {
     public static final String REL_FOLLOWED_BY = "FOLLOWED_BY";
     public static final String REL_MUTUAL = "MUTUAL";
 
-    @Autowired
-    private UserCertificateService userCertificateService;
-    @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private ProfileMapper profileMapper;
-    @Autowired
-    private PrivacyMapper privacyMapper;
-    @Autowired
-    private SocialRelationMapper socialRelationMapper;
+    private final UserCertificateService userCertificateService;
+    private final UserMapper userMapper;
+    private final ProfileMapper profileMapper;
+    private final PrivacyMapper privacyMapper;
+    private final SocialRelationMapper socialRelationMapper;
 
     public CampusAccountView requireActiveViewer(String sessionId) {
         if (sessionId == null || sessionId.isBlank()) {
@@ -86,8 +80,16 @@ public class SocialIdentityService {
         }
     }
 
-    @Autowired
-    private cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper summaries;
+    private final cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper summaries;
+
+    public SocialIdentityService(UserCertificateService userCertificateService, UserMapper userMapper, ProfileMapper profileMapper, PrivacyMapper privacyMapper, SocialRelationMapper socialRelationMapper, cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper summaries) {
+        this.userCertificateService = userCertificateService;
+        this.userMapper = userMapper;
+        this.profileMapper = profileMapper;
+        this.privacyMapper = privacyMapper;
+        this.socialRelationMapper = socialRelationMapper;
+        this.summaries = summaries;
+    }
 
     public java.util.Map<Long, String> findPublicIds(java.util.Collection<Long> ids) {
         var result = new java.util.HashMap<Long, String>();

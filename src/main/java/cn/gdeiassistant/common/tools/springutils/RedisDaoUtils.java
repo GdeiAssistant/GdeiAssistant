@@ -1,5 +1,6 @@
 package cn.gdeiassistant.common.tools.springutils;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -15,9 +16,20 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class RedisDaoUtils {
 
-    @Autowired(required = false)
-    @Qualifier("redisTemplate")
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public RedisDaoUtils() {
+        this.redisTemplate = null;
+    }
+
+    public RedisDaoUtils(RedisTemplate<String, String> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
+
+    @Autowired
+    public RedisDaoUtils(@Qualifier("redisTemplate") ObjectProvider<RedisTemplate<String, String>> redisTemplate) {
+        this(redisTemplate.getIfAvailable());
+    }
 
     public String get(String key) {
         if (redisTemplate != null) {

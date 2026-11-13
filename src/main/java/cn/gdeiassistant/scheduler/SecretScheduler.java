@@ -1,6 +1,7 @@
 package cn.gdeiassistant.scheduler;
 
 import cn.gdeiassistant.core.secret.service.SecretService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class SecretScheduler {
 
-    @Autowired(required = false)
-    private SecretService secretService;
+    private final SecretService secretService;
+
+        public SecretScheduler() {
+        this.secretService = null;
+    }
+
+    public SecretScheduler(SecretService secretService) {
+        this.secretService = secretService;
+    }
+
+    @Autowired
+    public SecretScheduler(ObjectProvider<SecretService> secretService) {
+        this(secretService.getIfAvailable());
+    }
 
     @Scheduled(fixedDelay = 300000)
     public void deleteTimerSecretInfos() throws Exception {

@@ -2,7 +2,6 @@ package cn.gdeiassistant.common.redis.exportdata;
 
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -14,8 +13,11 @@ public class ExportDataDaoImpl implements ExportDataDao {
 
     private final String EXPORTING_PREFIX = "EXPORTING_DATA_";
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
+
+    public ExportDataDaoImpl(RedisDaoUtils redisDaoUtils) {
+        this.redisDaoUtils = redisDaoUtils;
+    }
 
     @Override
     public String queryExportingDataToken(String username) {

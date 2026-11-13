@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +39,7 @@ class ExpressServiceAnonymityOutputTest {
 
     @BeforeEach
     void setUp() {
-        expressService = new ExpressService();
-        ReflectionTestUtils.setField(expressService, "expressMapper", expressMapper);
-        ReflectionTestUtils.setField(expressService, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(expressService, "interactionNotificationService", interactionNotificationService);
-        ReflectionTestUtils.setField(expressService, "expressConverter", new ExpressConverterImpl());
-        ReflectionTestUtils.setField(expressService, "expressCommentConverter", new ExpressCommentConverterImpl());
+        expressService = new ExpressService(expressMapper, new ExpressConverterImpl(), new ExpressCommentConverterImpl(), userCertificateService, interactionNotificationService);
     }
 
     @Test

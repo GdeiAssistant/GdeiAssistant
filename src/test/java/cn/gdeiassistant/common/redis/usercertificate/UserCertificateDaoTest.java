@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.*;
 import org.springframework.data.redis.core.*;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -25,9 +24,8 @@ class UserCertificateDaoTest {
             RedisTemplate<String, String> redis = mock(RedisTemplate.class);
             ValueOperations<String, String> values = mock(ValueOperations.class);
             when(redis.opsForValue()).thenReturn(values);
-            UserCertificateDaoImpl dao = new UserCertificateDaoImpl();
-            ReflectionTestUtils.setField(dao, "redisTemplate", redis);
-            ReflectionTestUtils.setField(dao, "objectMapper", new ObjectMapper());
+            UserCertificateDaoImpl dao = new UserCertificateDaoImpl(null, new ObjectMapper(), redis);
+
             dao.saveUserLoginCertificate("session", "owner", "synthetic-password");
             verify(values).set(anyString(), anyString(), eq(java.time.Duration.ofHours(1)));
             verify(redis, never()).expire(anyString(), anyLong(), any(TimeUnit.class));
@@ -56,9 +54,8 @@ class UserCertificateDaoTest {
         when(redis.execute(any(RedisCallback.class)))
                 .thenAnswer(i -> ((RedisCallback<?>) i.getArgument(0)).doInRedis(connection));
         doThrow(new IllegalStateException("synthetic Redis unavailable")).when(redis).delete(key);
-        UserCertificateDaoImpl dao = new UserCertificateDaoImpl();
-        ReflectionTestUtils.setField(dao, "redisTemplate", redis);
-        ReflectionTestUtils.setField(dao, "objectMapper", new ObjectMapper());
+        UserCertificateDaoImpl dao = new UserCertificateDaoImpl(null, new ObjectMapper(), redis);
+
         assertThrows(
                 RuntimeException.class, () -> dao.deleteUserLoginCertificatesByUsername("owner"));
     }

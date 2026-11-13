@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.userdata.service.UserDataService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -45,12 +44,7 @@ class AuthContractTest {
         campusCredentialService = mock(CampusCredentialService.class);
         userDataService = mock(UserDataService.class);
 
-        AuthController controller = new AuthController();
-        ReflectionTestUtils.setField(controller, "userLoginService", userLoginService);
-        ReflectionTestUtils.setField(controller, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(controller, "jwtUtil", jwtUtil);
-        ReflectionTestUtils.setField(controller, "campusCredentialService", campusCredentialService);
-        ReflectionTestUtils.setField(controller, "userDataService", userDataService);
+        AuthController controller = new AuthController(null, userLoginService, userCertificateService, jwtUtil, campusCredentialService, userDataService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }

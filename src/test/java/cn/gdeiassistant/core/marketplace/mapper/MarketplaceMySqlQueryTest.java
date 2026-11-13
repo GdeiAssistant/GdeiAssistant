@@ -13,7 +13,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.nio.file.*;
 import java.sql.Connection;
 import java.util.*;
@@ -75,8 +74,8 @@ class MarketplaceMySqlQueryTest {
     @Test void publicPageRunsOneSqlAndOneBatchedAuthorLookupRegardlessOfItemCount() throws Exception {
         try(var sql=factory.openSession()) {
             var authors=mock(PublicAuthorMapper.class);when(authors.selectAuthors(anyList())).thenReturn(List.of(new PublicAuthorMapper.AuthorRow("synthetic-owner","synthetic-public-id","合成昵称")));
-            var resolver=new PublicAuthorResolver();ReflectionTestUtils.setField(resolver,"publicAuthorMapper",authors);
-            var service=new MarketplaceService();ReflectionTestUtils.setField(service,"marketplaceMapper",sql.getMapper(MarketplaceMapper.class));ReflectionTestUtils.setField(service,"publicAuthorResolver",resolver);
+            var resolver=new PublicAuthorResolver(null, null, authors);
+            var service=new MarketplaceService(sql.getMapper(MarketplaceMapper.class), null, null, null, null, null, resolver);
             count.statements=0;var items=service.queryItems(0);assertEquals(10,items.size());assertEquals(1,count.statements);verify(authors,times(1)).selectAuthors(anyList());
             assertTrue(items.stream().anyMatch(item->"synthetic-public-id".equals(item.getAuthorId())));assertTrue(items.stream().anyMatch(item->"用户".equals(item.getDisplayName())));
         }

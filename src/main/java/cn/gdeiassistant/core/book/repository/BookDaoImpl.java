@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.book.repository;
 
 import cn.gdeiassistant.common.pojo.document.BookListDocument;
 import cn.gdeiassistant.common.pojo.entity.Book;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,8 +15,17 @@ import java.util.List;
 @Repository
 public class BookDaoImpl implements BookDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    /** Direct injection for tests that already resolved Mongo (or null). */
+    public BookDaoImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Autowired
+    public BookDaoImpl(ObjectProvider<MongoTemplate> mongoTemplate) {
+        this(mongoTemplate.getIfAvailable());
+    }
 
     @Override
     public List<Book> queryBookListByUsername(String username) {

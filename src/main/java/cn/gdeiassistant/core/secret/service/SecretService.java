@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.secret.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.exception.databaseexception.DataNotExistException;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.secret.converter.SecretCommentConverter;
@@ -15,11 +17,9 @@ import cn.gdeiassistant.core.message.service.InteractionNotificationService;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -35,27 +35,30 @@ public class SecretService {
 
     private static final Logger logger = LoggerFactory.getLogger(SecretService.class);
     private static final int PROFILE_SECRET_LIMIT = 50;
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Resource(name = "secretMapper")
-    private SecretMapper secretMapper;
+    private final SecretMapper secretMapper;
 
-    @Autowired
-    private SecretConverter secretConverter;
+    private final SecretConverter secretConverter;
 
-    @Autowired
-    private SecretCommentConverter secretCommentConverter;
+    private final SecretCommentConverter secretCommentConverter;
 
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
+
+    public SecretService(UserCertificateService userCertificateService, @Qualifier("secretMapper") SecretMapper secretMapper, SecretConverter secretConverter, SecretCommentConverter secretCommentConverter, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, InteractionNotificationService interactionNotificationService) {
+        this.userCertificateService = userCertificateService;
+        this.secretMapper = secretMapper;
+        this.secretConverter = secretConverter;
+        this.secretCommentConverter = secretCommentConverter;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.interactionNotificationService = interactionNotificationService;
+    }
 
     public List<SecretVO> getSecretInfo(int start, int size, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);

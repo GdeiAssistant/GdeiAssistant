@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
 import cn.gdeiassistant.core.gradequery.service.GradeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +16,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class GradeQueryController {
 
-    @Autowired
-    private GradeService gradeService;
+    private final GradeService gradeService;
+
+    public GradeQueryController(GradeService gradeService) {
+        this.gradeService = gradeService;
+    }
 
     /**
      * 成绩查询（RESTful GET，供前端直接调用）

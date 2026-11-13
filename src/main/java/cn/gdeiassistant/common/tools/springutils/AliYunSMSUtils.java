@@ -13,15 +13,17 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
 
 @Component
 public class AliYunSMSUtils {
 
-    @Autowired
-    private AliYunSMSConfig aliyunSMSConfig;
+    private final AliYunSMSConfig aliyunSMSConfig;
+
+    public AliYunSMSUtils(AliYunSMSConfig aliyunSMSConfig) {
+        this.aliyunSMSConfig = aliyunSMSConfig;
+    }
 
     /**
      * 国内手机发送短信验证码

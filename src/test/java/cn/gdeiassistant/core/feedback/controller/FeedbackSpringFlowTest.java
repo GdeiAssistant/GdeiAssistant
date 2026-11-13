@@ -9,6 +9,7 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.mail.MailSendException;
@@ -35,9 +36,12 @@ class FeedbackSpringFlowTest {
 
     @Configuration @EnableAsync
     static class TestConfig {
-        @Bean FeedbackController controller(){return new FeedbackController();}
-        @Bean FeedbackService service(){return new FeedbackService();}
-        @Bean EmailUtils emailUtils(){return new EmailUtils();}
+        @Bean FeedbackController controller(FeedbackService service){return new FeedbackController(service);}
+        @Bean FeedbackService service(EmailUtils emailUtils, UserCertificateService certificates, FeedbackMapper feedbackMapper,
+                @Value("${email.from:}") String senderEmail, @Value("${email.feedback:}") String feedbackEmail, @Value("${email.ticket:}") String ticketEmail){
+            return new FeedbackService(emailUtils, certificates, feedbackMapper, senderEmail, feedbackEmail, ticketEmail);
+        }
+        @Bean EmailUtils emailUtils(JavaMailSender transport){return new EmailUtils(transport);}
     }
     @BeforeEach void setup(){
         context=new AnnotationConfigApplicationContext();
@@ -74,7 +78,10 @@ class FeedbackSpringFlowTest {
     }
 
     @Test void disabledMailIsReportedBeforeReturningEvenWithAsyncEnabled() throws Exception {
-        context.getBean(FeedbackService.class).setTicketEmail("");
+        var certificates=context.getBean(UserCertificateService.class);
+        var disabled=new FeedbackService(context.getBean(EmailUtils.class), certificates, context.getBean(FeedbackMapper.class),
+                "sender@example.invalid", "feedback@example.invalid", "");
+        http=MockMvcBuilders.standaloneSetup(new FeedbackController(disabled)).setControllerAdvice(new GlobalRestExceptionHandler()).build();
         http.perform(multipart("/api/feedback/ticket").requestAttr("sessionId","synthetic-session").param("content","synthetic").param("type","network"))
                 .andExpect(jsonPath("$.success").value(false));verifyNoInteractions(transport);
     }

@@ -14,7 +14,6 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -28,12 +27,8 @@ class TopicServiceTest {
     private final StoredAssetService assets = mock(StoredAssetService.class);
     private final UploadService uploads = mock(UploadService.class);
     private final InteractionNotificationService notifications = mock(InteractionNotificationService.class);
-    private final TopicService service = new TopicService();
+    private final TopicService service = new TopicService(certificates, mapper, Mappers.getMapper(TopicConverter.class), null, uploads, assets, notifications, null, null, authors);
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service,"topicMapper",mapper); ReflectionTestUtils.setField(service,"topicConverter",Mappers.getMapper(TopicConverter.class));
-        ReflectionTestUtils.setField(service,"userCertificateService",certificates); ReflectionTestUtils.setField(service,"publicAuthors",authors);
-        ReflectionTestUtils.setField(service,"storedAssets",assets); ReflectionTestUtils.setField(service,"uploads",uploads);
-        ReflectionTestUtils.setField(service,"interactionNotificationService",notifications);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("viewer"));
     }
     private TopicEntity item() { var item=new TopicEntity();item.setId(1);item.setUsername("author");item.setTopic("合成话题");item.setContent("合成内容");item.setCount(2);return item; }

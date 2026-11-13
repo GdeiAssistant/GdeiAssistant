@@ -6,7 +6,6 @@ import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -14,7 +13,7 @@ import static org.mockito.Mockito.*;
 class TeacherScheduleParsingTest {
     private final EduSystemClient client=mock(EduSystemClient.class);
     private final TeacherLoginService login=mock(TeacherLoginService.class);
-    private ScheduleService service(){var s=new ScheduleService();ReflectionTestUtils.setField(s,"eduSystemClient",client);ReflectionTestUtils.setField(s,"teacherLoginService",login);return s;}
+    private ScheduleService service(){var s=new ScheduleService(login, null, null, client);return s;}
     private org.jsoup.nodes.Document table(String course,String span){return Jsoup.parse("<table id='Table6'><tr><td>header</td></tr><tr><td>header</td></tr><tr><td>上午</td><td>一</td><td "+span+">"+course+"</td></tr><tr><td>二</td><td>合成课二 必修 9-16周(3节) 教师 地点二 班二</td></tr></table>");}
     @Test void parsesFieldsAndRowspanWithoutDuplicatingCoveredCell() throws Exception {
         when(client.fetchTeacherScheduleDocument("sid","teacher","name","2026","1")).thenReturn(table("合成课 必修 1-8周(1,2节) 教师 地点 班级","rowspan='2'"));

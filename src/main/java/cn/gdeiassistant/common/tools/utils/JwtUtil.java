@@ -7,7 +7,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -25,8 +24,11 @@ public class JwtUtil {
     private static final String ISSUER = "gdeiassistant";
     private static final int EXPIRE_DAYS = 7;
 
-    @Autowired
-    private JWTConfig jwtConfig;
+    private final JWTConfig jwtConfig;
+
+    public JwtUtil(JWTConfig jwtConfig) {
+        this.jwtConfig = jwtConfig;
+    }
 
     /**
      * 为指定用户签发 JWT（载荷含 sessionId，供移动端或兼容场景使用）

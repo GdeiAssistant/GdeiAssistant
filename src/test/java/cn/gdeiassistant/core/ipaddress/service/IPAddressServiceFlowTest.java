@@ -5,14 +5,12 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.pojo.entity.*;
 import cn.gdeiassistant.common.enums.ipaddress.IPAddressEnum;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 class IPAddressServiceFlowTest {
     @Test void historyOwnershipAndPublicAreaCoarseningRemainDistinct(){
-        var db=mock(IPAddressMapper.class);var login=mock(UserCertificateService.class);var resolver=mock(IPLocationResolver.class);var service=new IPAddressService();
-        ReflectionTestUtils.setField(service,"ipAddressMapper",db);ReflectionTestUtils.setField(service,"userCertificateService",login);ReflectionTestUtils.setField(service,"ipLocationResolver",resolver);
+        var db=mock(IPAddressMapper.class);var login=mock(UserCertificateService.class);var resolver=mock(IPLocationResolver.class);var service = new IPAddressService(resolver, db, login);
         when(login.getUserLoginCertificate("sid")).thenReturn(new User("synthetic-owner"));
         assertTrue(service.getSelfUserAddressRecord("sid",0,0,10).isEmpty());
         var record=new IPAddressRecord();record.setIp("192.0.2.1");when(db.selectIPAddressRecordByType("synthetic-owner",0,0,10)).thenReturn(List.of(record));assertSame(record,service.getSelfUserAddressRecord("sid",0,0,10).get(0));

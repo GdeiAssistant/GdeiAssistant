@@ -21,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,15 +47,8 @@ class SecretServiceAnonymityOutputTest {
     @BeforeEach
     void setUp() {
         SecretCommentConverter commentConverter = new SecretCommentConverterImpl();
-        SecretConverterImpl converter = new SecretConverterImpl();
-        ReflectionTestUtils.setField(converter, "secretCommentConverter", commentConverter);
-        secretService = new SecretService();
-        ReflectionTestUtils.setField(secretService, "secretMapper", secretMapper);
-        ReflectionTestUtils.setField(secretService, "userCertificateService", userCertificateService);
-        ReflectionTestUtils.setField(secretService, "storedAssets", storedAssets);
-        ReflectionTestUtils.setField(secretService, "interactionNotificationService", interactionNotificationService);
-        ReflectionTestUtils.setField(secretService, "secretConverter", converter);
-        ReflectionTestUtils.setField(secretService, "secretCommentConverter", commentConverter);
+        SecretConverterImpl converter = new SecretConverterImpl(commentConverter);
+        secretService = new SecretService(userCertificateService, secretMapper, converter, commentConverter, null, storedAssets, interactionNotificationService);
     }
 
     @Test

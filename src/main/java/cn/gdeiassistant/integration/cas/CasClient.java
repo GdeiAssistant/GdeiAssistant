@@ -33,8 +33,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class CasClient {
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
-    private String CAS_LOGIN_URL = "https://security.gdei.edu.cn/cas/login";
+    private final String CAS_LOGIN_URL;
+
+    public CasClient(@Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String CAS_LOGIN_URL) {
+        this.CAS_LOGIN_URL = CAS_LOGIN_URL;
+    }
     private static final int TIMEOUT_MS = 10000;
 
     private static final Set<String> ALLOWED_REDIRECT_HOSTS = Set.of(

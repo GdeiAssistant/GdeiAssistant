@@ -7,7 +7,6 @@ import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.objectstorage.service.UploadService;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,8 +47,11 @@ public class ObjectStorageController {
             Map.entry(".webm", Set.of("audio/webm"))
     );
 
-    @Autowired
-    private UploadService uploadService;
+    private final UploadService uploadService;
+
+    public ObjectStorageController(UploadService uploadService) {
+        this.uploadService = uploadService;
+    }
 
     /**
      * 生成前端直传 Cloudflare R2 的预签名 PUT URL。

@@ -5,7 +5,6 @@ import cn.gdeiassistant.core.evaluate.pojo.dto.EvaluateSubmitDTO;
 import cn.gdeiassistant.core.evaluate.service.EvaluateService;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,8 +16,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class EvaluateController {
 
-    @Autowired
-    private EvaluateService evaluateService;
+    private final EvaluateService evaluateService;
+
+    public EvaluateController(EvaluateService evaluateService) {
+        this.evaluateService = evaluateService;
+    }
 
     /**
      * 教学评价提交。统一走 /api/evaluate/submit，从请求头 token 鉴权，返回 JSON。

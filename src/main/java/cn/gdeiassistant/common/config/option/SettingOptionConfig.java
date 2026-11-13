@@ -1,6 +1,5 @@
 package cn.gdeiassistant.common.config.option;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
@@ -11,11 +10,14 @@ import java.util.Objects;
 @Configuration
 public class SettingOptionConfig {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Autowired
-    private ServletContext servletContext;
+    private final ServletContext servletContext;
+
+    public SettingOptionConfig(Environment environment, ServletContext servletContext) {
+        this.environment = environment;
+        this.servletContext = servletContext;
+    }
 
     /**
      * 检查是否使用黑白网页（theme.grayscale 来自 application.yml，缺省为 0）

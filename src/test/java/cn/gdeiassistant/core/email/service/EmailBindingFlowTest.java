@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,17 +22,12 @@ class EmailBindingFlowTest {
     private final EmailVerificationSender sender = mock(EmailVerificationSender.class);
     private final EmailMapper mapper = mock(EmailMapper.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
-    private final EmailService service = new EmailService();
-    private final EmailController controller = new EmailController();
+    private final EmailService service = new EmailService(mapper, codes, certificates, sender);
+    private final EmailController controller = new EmailController(service);
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private static final String EMAIL = "synthetic@example.invalid";
 
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "verificationCodeDao", codes);
-        ReflectionTestUtils.setField(service, "emailVerificationSender", sender);
-        ReflectionTestUtils.setField(service, "emailMapper", mapper);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(controller, "emailService", service);
         request.setAttribute("sessionId", "session");
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
     }

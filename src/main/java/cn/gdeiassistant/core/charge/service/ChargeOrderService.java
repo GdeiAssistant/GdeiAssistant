@@ -7,7 +7,6 @@ import cn.gdeiassistant.core.charge.mapper.ChargeOrderMapper;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderEntity;
 import cn.gdeiassistant.core.charge.pojo.entity.ChargeOrderStatus;
 import cn.gdeiassistant.core.charge.pojo.vo.ChargeOrderVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -27,11 +26,14 @@ public class ChargeOrderService {
     private static final int MAX_REQUEST_ID_LENGTH = 64;
     private static final int MAX_ERROR_CODE_LENGTH = 64;
 
-    @Autowired
-    private ChargeOrderMapper chargeOrderMapper;
+    private final ChargeOrderMapper chargeOrderMapper;
 
-    @Autowired
-    private ChargeIdempotencyService chargeIdempotencyService;
+    private final ChargeIdempotencyService chargeIdempotencyService;
+
+    public ChargeOrderService(ChargeOrderMapper chargeOrderMapper, ChargeIdempotencyService chargeIdempotencyService) {
+        this.chargeOrderMapper = chargeOrderMapper;
+        this.chargeIdempotencyService = chargeIdempotencyService;
+    }
 
     public ChargeOrderEntity createOrder(String username, int amount, String rawIdempotencyKey,
                                          String payloadFingerprint, String requestId,

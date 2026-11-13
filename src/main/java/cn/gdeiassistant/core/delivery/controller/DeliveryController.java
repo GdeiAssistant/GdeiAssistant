@@ -13,7 +13,6 @@ import cn.gdeiassistant.core.delivery.pojo.dto.DeliveryPublishDTO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryOrderVO;
 import cn.gdeiassistant.core.delivery.pojo.vo.DeliveryTradeVO;
 import cn.gdeiassistant.core.delivery.service.DeliveryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,8 +25,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Validated
 public class DeliveryController {
 
-    @Autowired
-    private DeliveryService deliveryService;
+    private final DeliveryService deliveryService;
+
+    public DeliveryController(DeliveryService deliveryService) {
+        this.deliveryService = deliveryService;
+    }
 
     private int requirePositiveId(Integer id) {
         if (id == null || id < 1) {

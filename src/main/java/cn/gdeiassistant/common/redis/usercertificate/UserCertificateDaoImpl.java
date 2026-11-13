@@ -1,5 +1,7 @@
 package cn.gdeiassistant.common.redis.usercertificate;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
@@ -7,14 +9,12 @@ import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Repository;
 
-import jakarta.annotation.Resource;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,14 +48,17 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         }
     }
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-    @Resource(name = "redisTemplate")
-    private RedisTemplate<String, String> redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    public UserCertificateDaoImpl(RedisDaoUtils redisDaoUtils, ObjectMapper objectMapper, @Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+        this.redisDaoUtils = redisDaoUtils;
+        this.objectMapper = objectMapper;
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     public User queryUserCookieCertificate(String cookieId) {

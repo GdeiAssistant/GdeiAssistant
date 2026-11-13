@@ -14,8 +14,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class SmtpEmailVerificationSender implements EmailVerificationSender {
 
-    @Autowired(required = false)
-    private EmailUtils emailUtils;
+    private final EmailUtils emailUtils;
+
+    public SmtpEmailVerificationSender(@Autowired(required = false) EmailUtils emailUtils) {
+        this.emailUtils = emailUtils;
+    }
 
     private String smtpHost;
     private String senderEmail;

@@ -23,7 +23,6 @@ import org.mybatis.spring.*;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.transaction.support.*;
@@ -53,15 +52,15 @@ class DeletionLifecycleMySqlTest {
         sessionFactory.getConfiguration().getTypeHandlerRegistry().register(MybatisEncryptionTypeHandler.class);
         sessionFactory.getConfiguration().addMapper(UserMapper.class);sessionFactory.getConfiguration().addMapper(DeletionCleanupMapper.class);
         var sessions=new SqlSessionTemplate(sessionFactory);users=sessions.getMapper(UserMapper.class);cleanup=sessions.getMapper(DeletionCleanupMapper.class);
-        var target=new UserDataService();ReflectionTestUtils.setField(target,"userMapper",users);ReflectionTestUtils.setField(target,"deletionCleanupMapper",cleanup);
-        ReflectionTestUtils.setField(target,"profileMapper",mock(ProfileMapper.class));ReflectionTestUtils.setField(target,"privacyMapper",mock(PrivacyMapper.class));
+        var target=new UserDataService(null, cleanup, users, null, mock(ProfileMapper.class), mock(PrivacyMapper.class), null, null, null, null, null, null, null);
+
         var proxy=new ProxyFactory(target);proxy.addAdvice(new TransactionInterceptor(transactions,new AnnotationTransactionAttributeSource()));data=(UserDataService)proxy.getProxy();
         certificates=mock(UserCertificateService.class);grades=mock(GradeDao.class);schedules=mock(ScheduleDao.class);profiles=mock(UserProfileService.class);
         worker=new DeletionCleanupWorker(cleanup,users,transactions,certificates,mock(CloseMapper.class),List.of(
                 new GradeAccountContributor(grades),new ScheduleAccountContributor(schedules),
                 new ProfileAccountContributor(mock(ProfileMapper.class),profiles),
                 new AnnouncementAccountContributor(mock(cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper.class))));
-        login=new UserLoginService();ReflectionTestUtils.setField(login,"userCertificateService",certificates);ReflectionTestUtils.setField(login,"userDataService",data);
+        login=new UserLoginService(certificates, data);
         executor=Executors.newFixedThreadPool(3);
     }
     @AfterEach void close() throws Exception {

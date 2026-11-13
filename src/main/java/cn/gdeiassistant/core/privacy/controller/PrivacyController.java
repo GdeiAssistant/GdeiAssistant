@@ -7,7 +7,6 @@ import cn.gdeiassistant.core.privacy.pojo.dto.PrivacyUpdateDTO;
 import cn.gdeiassistant.core.privacy.pojo.vo.PrivacyVO;
 import cn.gdeiassistant.core.privacy.service.PrivacyService;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,8 +18,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RestController
 public class PrivacyController {
 
-    @Autowired
-    private PrivacyService privacyService;
+    private final PrivacyService privacyService;
+
+    public PrivacyController(PrivacyService privacyService) {
+        this.privacyService = privacyService;
+    }
 
     /**
      * 获取用户隐私设置

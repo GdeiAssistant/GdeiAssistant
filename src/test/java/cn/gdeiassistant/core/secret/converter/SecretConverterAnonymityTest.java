@@ -7,7 +7,6 @@ import cn.gdeiassistant.core.secret.pojo.vo.SecretCommentVO;
 import cn.gdeiassistant.core.secret.pojo.vo.SecretVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -25,9 +24,7 @@ class SecretConverterAnonymityTest {
     @BeforeEach
     void setUp() {
         commentConverter = new SecretCommentConverterImpl();
-        SecretConverterImpl impl = new SecretConverterImpl();
-        ReflectionTestUtils.setField(impl, "secretCommentConverter", commentConverter);
-        converter = impl;
+        converter = new SecretConverterImpl(commentConverter);
     }
 
     @Test

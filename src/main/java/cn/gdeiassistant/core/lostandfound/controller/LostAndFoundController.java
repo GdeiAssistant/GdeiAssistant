@@ -17,7 +17,6 @@ import cn.gdeiassistant.core.lostandfound.service.LostAndFoundService;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,8 +34,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Validated
 public class LostAndFoundController {
 
-    @Autowired
-    private LostAndFoundService lostAndFoundService;
+    private final LostAndFoundService lostAndFoundService;
+
+    public LostAndFoundController(LostAndFoundService lostAndFoundService) {
+        this.lostAndFoundService = lostAndFoundService;
+    }
 
     @RequestMapping(value = "/api/lostandfound/lostitem/start/{start}", method = RequestMethod.GET)
     public DataJsonResult<List<LostAndFoundItemVO>> getLostItem(HttpServletRequest request, @PathVariable("start") @Min(0) int start) throws Exception {

@@ -16,7 +16,6 @@ import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -31,15 +30,10 @@ class DatingPrivacyFlowTest {
     private final StoredAssetService assets = mock(StoredAssetService.class);
     private final UploadService uploads = mock(UploadService.class);
     private final InteractionNotificationService notifications = mock(InteractionNotificationService.class);
-    private final DatingService service = new DatingService();
+    private DatingService service ;
 
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "datingMapper", mapper);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "publicAuthorResolver", authors);
-        ReflectionTestUtils.setField(service, "storedAssets", assets);
-        ReflectionTestUtils.setField(service, "uploads", uploads);
-        ReflectionTestUtils.setField(service, "interactionNotificationService", notifications);
+        service = new DatingService(certificates, mapper, null, uploads, assets, notifications, authors);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("viewer"));
         when(authors.resolve("author")).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称"));
         when(assets.generatePresignedUrl("dating/7.jpg", 30, TimeUnit.MINUTES)).thenReturn("signed:picture");

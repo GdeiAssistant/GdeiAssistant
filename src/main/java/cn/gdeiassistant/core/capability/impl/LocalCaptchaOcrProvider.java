@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.capability.impl;
 import cn.gdeiassistant.common.exception.ProviderException;
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ServiceProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
@@ -12,8 +11,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Order(5)
 public class LocalCaptchaOcrProvider implements ServiceProvider<OcrRequest, String> {
 
-    @Autowired
-    private LocalTemplateOcrEngine localTemplateOcrEngine;
+    private final LocalTemplateOcrEngine localTemplateOcrEngine;
+
+    public LocalCaptchaOcrProvider(LocalTemplateOcrEngine localTemplateOcrEngine) {
+        this.localTemplateOcrEngine = localTemplateOcrEngine;
+    }
 
     @Override
     public String providerName() {

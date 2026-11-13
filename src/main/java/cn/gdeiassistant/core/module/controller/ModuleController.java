@@ -4,7 +4,6 @@ import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
 import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,8 +14,11 @@ import java.util.Map;
 @RestController
 public class ModuleController {
 
-    @Autowired
-    private ModuleUtils moduleUtils;
+    private final ModuleUtils moduleUtils;
+
+    public ModuleController(ModuleUtils moduleUtils) {
+        this.moduleUtils = moduleUtils;
+    }
 
     /**
      * 检查功能模块启用状态

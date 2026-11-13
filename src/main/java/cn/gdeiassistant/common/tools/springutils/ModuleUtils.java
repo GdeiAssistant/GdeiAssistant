@@ -1,20 +1,31 @@
 package cn.gdeiassistant.common.tools.springutils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import cn.gdeiassistant.common.enums.module.CoreModuleEnum;
 import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.Resource;
 import java.util.Map;
 
 @Service
 public class ModuleUtils {
 
-    @Resource(name = "moduleStateMap")
-    private Map<ModuleEnum, Boolean> moduleStateMap;
+    private final Map<ModuleEnum, Boolean> moduleStateMap;
 
-    @Resource(name = "coreModuleStateMap")
-    private Map<CoreModuleEnum, Boolean> coreModuleEnumBooleanMap;
+    private final Map<CoreModuleEnum, Boolean> coreModuleEnumBooleanMap;
+
+        public ModuleUtils() {
+        this(new java.util.EnumMap<>(cn.gdeiassistant.common.enums.module.ModuleEnum.class), new java.util.EnumMap<>(cn.gdeiassistant.common.enums.module.CoreModuleEnum.class));
+    }
+
+    @Autowired
+    public ModuleUtils(@Qualifier("moduleStateMap") Map<ModuleEnum, Boolean> moduleStateMap, @Qualifier("coreModuleStateMap") Map<CoreModuleEnum, Boolean> coreModuleEnumBooleanMap) {
+        this.moduleStateMap = moduleStateMap;
+        this.coreModuleEnumBooleanMap = coreModuleEnumBooleanMap;
+    }
 
     /**
      * 标记功能模块已停用

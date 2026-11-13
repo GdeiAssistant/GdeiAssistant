@@ -17,7 +17,6 @@ import cn.gdeiassistant.core.userprofile.service.ProfileMajorCatalog;
 import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import org.springframework.web.util.HtmlUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,20 +34,23 @@ import java.util.List;
 @RestController
 public class ProfileController {
 
-    @Autowired
-    private UserProfileService userProfileService;
+    private final UserProfileService userProfileService;
 
-    @Autowired
-    private ProfileResponseMapper profileResponseMapper;
+    private final ProfileResponseMapper profileResponseMapper;
 
-    @Autowired
-    private ProfileOptionsFacade profileOptionsFacade;
+    private final ProfileOptionsFacade profileOptionsFacade;
 
-    @Autowired
-    private ProfileLocationValidator profileLocationValidator;
+    private final ProfileLocationValidator profileLocationValidator;
 
-    @Autowired
-    private ProfileLocalizationService profileLocalizationService;
+    private final ProfileLocalizationService profileLocalizationService;
+
+    public ProfileController(UserProfileService userProfileService, ProfileResponseMapper profileResponseMapper, ProfileOptionsFacade profileOptionsFacade, ProfileLocationValidator profileLocationValidator, ProfileLocalizationService profileLocalizationService) {
+        this.userProfileService = userProfileService;
+        this.profileResponseMapper = profileResponseMapper;
+        this.profileOptionsFacade = profileOptionsFacade;
+        this.profileLocationValidator = profileLocationValidator;
+        this.profileLocalizationService = profileLocalizationService;
+    }
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
 

@@ -12,9 +12,7 @@ import cn.gdeiassistant.core.user.service.PublicAuthorResolver;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -28,19 +26,12 @@ class PhotographReadFlowTest {
     private final PublicAuthorResolver authors = mock(PublicAuthorResolver.class);
     private final StoredAssetService assets = mock(StoredAssetService.class);
     private final UploadService uploads = mock(UploadService.class);
-    private final PhotographService service = new PhotographService();
+    private PhotographService service;
 
     @BeforeEach void setup() {
-        var converter = Mappers.getMapper(PhotographConverter.class);
-        var comments = Mappers.getMapper(PhotographCommentConverter.class);
-        ReflectionTestUtils.setField(converter, "photographCommentConverter", comments);
-        ReflectionTestUtils.setField(service, "photographMapper", mapper);
-        ReflectionTestUtils.setField(service, "photographConverter", converter);
-        ReflectionTestUtils.setField(service, "photographCommentConverter", comments);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "publicAuthorResolver", authors);
-        ReflectionTestUtils.setField(service, "storedAssets", assets);
-        ReflectionTestUtils.setField(service, "uploads", uploads);
+        var comments = new cn.gdeiassistant.core.photograph.converter.PhotographCommentConverterImpl();
+        var converter = new cn.gdeiassistant.core.photograph.converter.PhotographConverterImpl(comments);
+        service = new PhotographService(mapper, converter, comments, certificates, null, uploads, assets, null, authors);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("viewer"));
         when(authors.resolve("author")).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称"));
         when(assets.generatePresignedUrl(anyString(), eq(30L), eq(TimeUnit.MINUTES))).thenAnswer(a -> "signed:" + a.getArgument(0));

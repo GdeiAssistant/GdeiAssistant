@@ -10,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -22,11 +21,9 @@ import static org.mockito.Mockito.*;
 class SchoolNewsCronServiceTest {
     private final NewsClient client = mock(NewsClient.class);
     private final NewsRepository repository = mock(NewsRepository.class);
-    private final SchoolNewsCronService service = new SchoolNewsCronService();
+    private final SchoolNewsCronService service = new SchoolNewsCronService(repository, client);
     private static final String BASE = "https://synthetic.invalid/";
     @BeforeEach void setup() throws Exception {
-        ReflectionTestUtils.setField(service, "newsClient", client);
-        ReflectionTestUtils.setField(service, "newsRepository", repository);
         when(client.fetchPage(anyString())).thenReturn(doc("<div>no news</div>"));
     }
     private static Document doc(String html) { return Jsoup.parse(html, BASE); }

@@ -2,7 +2,6 @@ package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ocr.OcrNumberRecognizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
@@ -11,8 +10,11 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class FallbackOcrNumberRecognizer implements OcrNumberRecognizer {
 
-    @Autowired
-    private OcrService ocrService;
+    private final OcrService ocrService;
+
+    public FallbackOcrNumberRecognizer(OcrService ocrService) {
+        this.ocrService = ocrService;
+    }
 
     @Override
     public String recognizeNumbers(String imageBase64) throws RecognitionException {

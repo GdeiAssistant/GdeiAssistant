@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 
@@ -37,9 +36,7 @@ class JwtSessionIdFilterTest {
 
     @BeforeEach
     void setUp() {
-        filter = new JwtSessionIdFilter();
-        ReflectionTestUtils.setField(filter, "jwtUtil", jwtUtil);
-        ReflectionTestUtils.setField(filter, "userCertificateService", userCertificateService);
+        filter = new JwtSessionIdFilter(jwtUtil, userCertificateService);
         org.mockito.Mockito.lenient()
                 .when(userCertificateService.isAccountActive(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(true);

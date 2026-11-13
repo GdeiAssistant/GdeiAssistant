@@ -18,7 +18,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -33,11 +32,14 @@ public class LoginTokenAspect {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginTokenAspect.class);
 
-    @Autowired
-    private LoginTokenValidator loginTokenService;
+    private final LoginTokenValidator loginTokenService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    public LoginTokenAspect(LoginTokenValidator loginTokenService, JwtUtil jwtUtil) {
+        this.loginTokenService = loginTokenService;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.DeviceUpdateRequirement)")
     public void loginAction() {

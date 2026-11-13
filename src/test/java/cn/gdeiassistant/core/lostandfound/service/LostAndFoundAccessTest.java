@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,13 +26,9 @@ class LostAndFoundAccessTest {
     private final PublicAuthorResolver authors = mock(PublicAuthorResolver.class);
     private final StoredAssetService assets = mock(StoredAssetService.class);
     private final UploadService uploads = mock(UploadService.class);
-    private final LostAndFoundService service = new LostAndFoundService();
+    private LostAndFoundService service ;
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(service, "lostAndFoundMapper", mapper);
-        ReflectionTestUtils.setField(service, "lostAndFoundItemConverter", Mappers.getMapper(LostAndFoundItemConverter.class));
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "publicAuthorResolver", authors);
-        ReflectionTestUtils.setField(service, "storedAssets", assets); ReflectionTestUtils.setField(service, "uploads", uploads);
+        service = new LostAndFoundService(mapper, Mappers.getMapper(LostAndFoundItemConverter.class), null, certificates, null, null, uploads, assets, authors);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
     }
     private LostAndFoundDetailEntity detail(String owner, int state) {

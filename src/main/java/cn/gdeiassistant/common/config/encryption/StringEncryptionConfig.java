@@ -5,7 +5,6 @@ import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
 import cn.gdeiassistant.common.pojo.encryption.EncryptConfig;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -15,11 +14,14 @@ import java.io.IOException;
 @Configuration
 public class StringEncryptionConfig {
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    @Autowired
-    private ModuleUtils moduleUtils;
+    private final ModuleUtils moduleUtils;
+
+    public StringEncryptionConfig(Environment environment, ModuleUtils moduleUtils) {
+        this.environment = environment;
+        this.moduleUtils = moduleUtils;
+    }
 
     /**
      * 加载加密配置

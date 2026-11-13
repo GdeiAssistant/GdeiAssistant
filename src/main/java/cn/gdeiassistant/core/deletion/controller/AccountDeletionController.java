@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.deletion.controller;
 import cn.gdeiassistant.common.pojo.result.DataJsonResult;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.core.deletion.service.AccountDeletionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +13,11 @@ import java.util.Map;
 @RestController
 public class AccountDeletionController {
 
-    @Autowired
-    private AccountDeletionService accountDeletionService;
+    private final AccountDeletionService accountDeletionService;
+
+    public AccountDeletionController(AccountDeletionService accountDeletionService) {
+        this.accountDeletionService = accountDeletionService;
+    }
 
     /**
      * 删除账号（强拦截测试用户）

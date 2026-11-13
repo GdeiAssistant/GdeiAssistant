@@ -2,14 +2,13 @@ package cn.gdeiassistant.core.module.controller;
 import cn.gdeiassistant.common.enums.module.*;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 class ModuleStateFlowTest {
     @Test void detailedStateAndDiagnosticsReflectEnableDisableIncludingModulesWithoutConfig(){
         var extensions=new EnumMap<ModuleEnum,Boolean>(ModuleEnum.class);var core=new EnumMap<CoreModuleEnum,Boolean>(CoreModuleEnum.class);
-        var utility=new ModuleUtils();ReflectionTestUtils.setField(utility,"moduleStateMap",extensions);ReflectionTestUtils.setField(utility,"coreModuleEnumBooleanMap",core);
-        var controller=new ModuleController();ReflectionTestUtils.setField(controller,"moduleUtils",utility);
+        var utility=new ModuleUtils(extensions, core);
+        var controller=new ModuleController(utility);
         assertEquals("",controller.getModuleState().getData());assertEquals("",controller.getCoreModuleState().getData());
         assertTrue(utility.checkModuleState(ModuleEnum.NEWS));assertTrue(utility.checkCoreModuleState(CoreModuleEnum.MYSQL));
         utility.disableModule(ModuleEnum.NEWS);assertTrue(controller.getModuleState().getData().contains("无需额外配置"));

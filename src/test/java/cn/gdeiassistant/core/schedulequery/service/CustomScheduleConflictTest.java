@@ -7,14 +7,13 @@ import cn.gdeiassistant.common.tools.utils.ScheduleUtils;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 class CustomScheduleConflictTest {
     private CustomSchedule course(int position,int length,int min,int max){var c=new CustomSchedule();c.setPosition(position);c.setScheduleLength(length);c.setMinScheduleWeek(min);c.setMaxScheduleWeek(max);c.setScheduleName("合成课程");c.setScheduleLocation("合成教室");return c;}
     @Test void overlappingDayLessonsAndWeeksAreRejectedButAdjacentWeeksDaysAndRowsAreAllowed() throws Exception {
-        var service=new ScheduleService();var mapper=mock(ScheduleDao.class);var certificate=mock(UserCertificateService.class);ReflectionTestUtils.setField(service,"scheduleDao",mapper);ReflectionTestUtils.setField(service,"userCertificateService",certificate);when(certificate.getUserLoginCertificate("session")).thenReturn(new User("synthetic-owner"));
+        var mapper=mock(ScheduleDao.class);var certificate=mock(UserCertificateService.class);var service=new ScheduleService(null, certificate, mapper, null);when(certificate.getUserLoginCertificate("session")).thenReturn(new User("synthetic-owner"));
         var document=new CustomScheduleDocument();var existing=ScheduleUtils.generateCustomSchedule(course(0,2,1,8));document.setScheduleMap(Map.of("existing",existing));when(mapper.queryCustomSchedule("synthetic-owner")).thenReturn(document);
         assertThrows(NotAvailableConditionException.class,()->service.addCustomSchedule("session",course(7,2,8,10)));verify(mapper,never()).addCustomSchedule(anyString(),any());
         service.addCustomSchedule("session",course(7,2,9,10));service.addCustomSchedule("session",course(1,2,1,8));service.addCustomSchedule("session",course(14,1,1,8));verify(mapper,times(3)).addCustomSchedule(eq("synthetic-owner"),any());

@@ -37,11 +37,7 @@ class CampusHttpFixtureTest {
             byte[] body=reply.text().getBytes(StandardCharsets.UTF_8);exchange.sendResponseHeaders(reply.status(),body.length);try(var output=exchange.getResponseBody()){output.write(body);}
         });server.start();base="http://127.0.0.1:"+server.getAddress().getPort();
         cookies=mock(CookieStoreDao.class);pool=new HttpClientUtils();pool.setCookieStoreDao(cookies);
-        edu=new EduSystemClient();card=new CardClient();library=new LibraryClient();cas=new CasClient();
-        for(var client:List.of(edu,card,library))ReflectionTestUtils.setField(client,"httpClientUtils",pool);
-        ReflectionTestUtils.setField(edu,"JWGL_BASE",base);ReflectionTestUtils.setField(card,"ECARD_BASE",base);
-        for(String field:List.of("OPAC_RENEW_BASE","OPAC_SEARCH_BASE","FIVEREAD_M","FIVEREAD_MC"))ReflectionTestUtils.setField(library,field,base);
-        ReflectionTestUtils.setField(cas,"CAS_LOGIN_URL",base+"/cas/login");
+        edu=new EduSystemClient(pool, base);card=new CardClient(pool, base);library=new LibraryClient(pool, base, base, base, base);cas=new CasClient(base+"/cas/login");
     }
     @AfterEach void close(){server.stop(0);pool.closePool();}
     void reply(String method,String path,int status,String text){replies.put(method+" "+path,new Reply(status,text,Map.of()));}
@@ -100,10 +96,7 @@ class CampusHttpFixtureTest {
         assertTrue(seen.stream().allMatch(s->s.uri().startsWith("/cas/login")));
     }
     @Test void chsiUsesSessionCookiesEncodesFormsAndRejectsErrorResponses() throws Exception {
-        var chsi = new cn.gdeiassistant.integration.chsi.ChsiClient();
-        ReflectionTestUtils.setField(chsi, "httpClientUtils", pool);
-        ReflectionTestUtils.setField(chsi, "CET_BASE", base + "/cet");
-        ReflectionTestUtils.setField(chsi, "KAOYAN_CJCX", base + "/graduate");
+        var chsi = new cn.gdeiassistant.integration.chsi.ChsiClient(pool, base + "/cet", base + "/graduate");
         replies.put("GET /cet/", new Reply(200, "index", Map.of("Set-Cookie", "synthetic=1; Path=/")));
         reply("GET", "/cet/ValidatorIMG.JPG", 200, "synthetic-image");
         assertEquals(Base64.getEncoder().encodeToString("synthetic-image".getBytes(StandardCharsets.UTF_8)), chsi.fetchCetCaptchaImageBase64("session"));
@@ -137,11 +130,8 @@ class CampusHttpFixtureTest {
         assertEquals(0, manager.getTotalStats().getLeased());
     }
     @Test void teacherLoginPreservesFormRoleClassifiesFailuresAndClosesClients() throws Exception {
-        var teacher = new cn.gdeiassistant.core.userlogin.service.TeacherLoginService();
         var ocr = mock(cn.gdeiassistant.core.imagerecognition.service.ImageRecognitionService.class);
-        ReflectionTestUtils.setField(teacher, "httpClientUtils", pool);
-        ReflectionTestUtils.setField(teacher, "eduBaseUrl", base);
-        ReflectionTestUtils.setField(teacher, "imageRecognitionService", ocr);
+        var teacher = new cn.gdeiassistant.core.userlogin.service.TeacherLoginService(base, pool, ocr);
         when(ocr.checkCodeRecognize(anyString(), any(), eq(4))).thenReturn("ab12");
         String login = "<title>欢迎使用正方教务管理系统！请登录</title><input name='__VIEWSTATE' value='state'>";
         reply("GET", "/", 200, login); reply("GET", "/CheckCode.aspx", 200, "image");
@@ -164,15 +154,8 @@ class CampusHttpFixtureTest {
                 () -> teacher.teacherLogin("session", "synthetic", "synthetic"));
     }
     @Test void chargeConfirmationChecksIdentityAmountAndStopsBeforePaymentOnMismatch() throws Exception {
-        var service = new cn.gdeiassistant.core.charge.service.ChargeService();
         var certificates = mock(cn.gdeiassistant.core.userlogin.service.UserCertificateService.class);
-        ReflectionTestUtils.setField(service, "httpClientUtils", pool);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
-        ReflectionTestUtils.setField(service, "casLoginUrl", base + "/cas/login");
-        ReflectionTestUtils.setField(service, "cardLoginUrl", base + "/card-login");
-        ReflectionTestUtils.setField(service, "cardBaseUrl", base);
-        ReflectionTestUtils.setField(service, "paymentBaseUrl", base + "/payment");
-        ReflectionTestUtils.setField(service, "alipayGatewayUrl", base + "/gateway");
+        var service = new cn.gdeiassistant.core.charge.service.ChargeService(pool, base + "/cas/login", base + "/card-login", base, base + "/payment", base + "/gateway", null, certificates);
         var certificate = new cn.gdeiassistant.common.pojo.entity.UserCertificateEntity();
         certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic", "synthetic-password"));
         when(certificates.getUserSessionCertificate("session")).thenReturn(certificate);

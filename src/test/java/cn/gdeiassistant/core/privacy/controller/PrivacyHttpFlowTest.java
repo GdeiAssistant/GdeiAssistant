@@ -11,7 +11,6 @@ import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.*;
 import org.mapstruct.factory.Mappers;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.Mockito.*;
@@ -25,9 +24,9 @@ class PrivacyHttpFlowTest {
     private MockMvc http;
     @BeforeEach void setup() {
         var certificate=mock(UserCertificateService.class);when(certificate.getUserLoginCertificate("synthetic-session")).thenReturn(new User("synthetic-owner"));
-        var service=new PrivacyService();ReflectionTestUtils.setField(service,"privacyMapper",database);ReflectionTestUtils.setField(service,"userCertificateService",certificate);
-        ReflectionTestUtils.setField(service,"privacyConverter",Mappers.getMapper(PrivacyConverter.class));ReflectionTestUtils.setField(service,"gradeDao",grades);ReflectionTestUtils.setField(service,"scheduleDao",schedules);
-        var controller=new PrivacyController();ReflectionTestUtils.setField(controller,"privacyService",service);
+        var service=new PrivacyService(certificate, database, Mappers.getMapper(PrivacyConverter.class), grades, schedules);
+
+        var controller=new PrivacyController(service);
         http=MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new GlobalRestExceptionHandler()).build();
     }
     @Test void booleanDefaultsClosePrivacyAndSaveExplicitChoices() throws Exception {

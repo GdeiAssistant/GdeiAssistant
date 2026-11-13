@@ -5,7 +5,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.concurrent.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,7 +18,7 @@ class RedisAtomicConsumptionTest {
         factory = new LettuceConnectionFactory("127.0.0.1", Integer.parseInt(System.getenv("GDEI_REDIS_TEST_PORT")));
         factory.afterPropertiesSet(); factory.start();
         redis = new RedisConfig().redisTemplate(factory);
-        utils = new RedisDaoUtils(); ReflectionTestUtils.setField(utils,"redisTemplate",redis);
+        utils = new RedisDaoUtils(redis);
     }
     @AfterEach void close() { try { redis.delete(key); } finally { factory.destroy(); } }
     @Test void wrongGuessDoesNotConsumeAndConcurrentCorrectGuessesSucceedOnce() throws Exception {
@@ -38,5 +37,5 @@ class RedisAtomicConsumptionTest {
         assertEquals(java.util.List.of("synthetic-cookie"),utils.getSerializable(key));
         assertTrue(redis.getExpire(key,TimeUnit.SECONDS)>0); assertTrue(redis.getExpire(key,TimeUnit.SECONDS)<=30);
     }
-    @Test void unconfiguredStoreNeverAcceptsACode() { assertFalse(new RedisDaoUtils().compareAndDelete(key,"123456")); }
+    @Test void unconfiguredStoreNeverAcceptsACode() { assertFalse(new RedisDaoUtils((RedisTemplate<String, String>) null).compareAndDelete(key,"123456")); }
 }

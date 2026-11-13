@@ -1,5 +1,9 @@
 package cn.gdeiassistant.core.userlogin.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.spi.SessionCertificateProvider;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
@@ -23,7 +27,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -36,19 +39,15 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class UserCertificateService implements SessionCertificateProvider {
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}")
-    private String eduBaseUrl = "http://jwgl.gdei.edu.cn";
+    private final String eduBaseUrl;
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private final Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
 
-    @Autowired
-    private UserCertificateDao userCertificateDao;
+    private final UserCertificateDao userCertificateDao;
 
-    @Autowired
-    private cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
+    private final cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
 
     /**
      * Account state is a userlogin concern. The servlet filter asks for a boolean
@@ -63,10 +62,22 @@ public class UserCertificateService implements SessionCertificateProvider {
         return account != null && account.isActive();
     }
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
-    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}")
-    private String portalLoginUrl = "http://portal.gdei.edu.cn:8001/Login";
+    private final String casLoginUrl;
+    private final String portalLoginUrl;
+
+        public UserCertificateService() {
+        this(null, null, null, null, null, null);
+    }
+
+    @Autowired
+    public UserCertificateService(@Value("${campus.upstream.edu-base-url:http://jwgl.gdei.edu.cn}") String eduBaseUrl, HttpClientUtils httpClientUtils, UserCertificateDao userCertificateDao, cn.gdeiassistant.core.user.mapper.UserMapper userMapper, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.portal-login-url:http://portal.gdei.edu.cn:8001/Login}") String portalLoginUrl) {
+        this.eduBaseUrl = eduBaseUrl;
+        this.httpClientUtils = httpClientUtils;
+        this.userCertificateDao = userCertificateDao;
+        this.userMapper = userMapper;
+        this.casLoginUrl = casLoginUrl;
+        this.portalLoginUrl = portalLoginUrl;
+    }
 
     /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize sensitive actions. */
     public void verifyCurrentPassword(String username, String password) throws Exception {

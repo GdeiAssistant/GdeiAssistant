@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.redis.cookiestore;
 import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import org.apache.http.client.CookieStore;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
@@ -14,8 +13,11 @@ public class CookieStoreDaoImpl implements CookieStoreDao {
 
     private final String PREFIX = "COOKIE_STORE_";
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
+
+    public CookieStoreDaoImpl(RedisDaoUtils redisDaoUtils) {
+        this.redisDaoUtils = redisDaoUtils;
+    }
 
     /**
      * 存储CookieStore

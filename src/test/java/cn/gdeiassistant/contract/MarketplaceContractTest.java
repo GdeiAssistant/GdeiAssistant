@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -41,8 +40,7 @@ class MarketplaceContractTest {
     void setUp() {
         marketplaceService = mock(MarketplaceService.class);
 
-        MarketplaceController controller = new MarketplaceController();
-        ReflectionTestUtils.setField(controller, "marketplaceService", marketplaceService);
+        MarketplaceController controller = new MarketplaceController(marketplaceService, null);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

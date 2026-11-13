@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.secret.service.SecretService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -37,8 +36,7 @@ class SecretContractTest {
     void setUp() {
         secretService = mock(SecretService.class);
 
-        SecretController controller = new SecretController();
-        ReflectionTestUtils.setField(controller, "secretService", secretService);
+        SecretController controller = new SecretController(secretService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

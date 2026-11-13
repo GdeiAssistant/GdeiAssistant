@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.dataquery.service.DataQueryService;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Range;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,8 +21,11 @@ import java.util.List;
 @RestController
 public class DataQueryController {
 
-    @Autowired
-    private DataQueryService dataQueryService;
+    private final DataQueryService dataQueryService;
+
+    public DataQueryController(DataQueryService dataQueryService) {
+        this.dataQueryService = dataQueryService;
+    }
 
     /**
      * 查询电费数据

@@ -10,7 +10,7 @@ class FallbackRecognizersTest {
 
     @Test
     void shouldThrowFriendlyMessageWhenOcrReturnsEmpty() {
-        FallbackCaptchaRecognizer recognizer = new FallbackCaptchaRecognizer();
+        FallbackCaptchaRecognizer recognizer = new FallbackCaptchaRecognizer(null);
         // Without an OcrService injected, recognize should throw NPE from missing OcrService
         assertThrows(NullPointerException.class,
                 () -> recognizer.recognize("image", CheckCodeTypeEnum.NUMBER, 4));
@@ -18,7 +18,7 @@ class FallbackRecognizersTest {
 
     @Test
     void shouldThrowWhenOcrNumberReturnsEmpty() {
-        FallbackOcrNumberRecognizer recognizer = new FallbackOcrNumberRecognizer();
+        FallbackOcrNumberRecognizer recognizer = new FallbackOcrNumberRecognizer(null);
         assertThrows(NullPointerException.class,
                 () -> recognizer.recognizeNumbers("image"));
     }

@@ -8,7 +8,6 @@ import cn.gdeiassistant.core.delivery.service.DeliveryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -36,8 +35,7 @@ class DeliveryContractTest {
     void setUp() {
         deliveryService = mock(DeliveryService.class);
 
-        DeliveryController controller = new DeliveryController();
-        ReflectionTestUtils.setField(controller, "deliveryService", deliveryService);
+        DeliveryController controller = new DeliveryController(deliveryService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

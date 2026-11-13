@@ -9,7 +9,6 @@ import cn.gdeiassistant.common.tools.utils.IPAddressUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -20,11 +19,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @Order(1)
 public class IPAddressAspect {
 
-    @Autowired
-    private IPAddressRecorder ipAddressService;
+    private final IPAddressRecorder ipAddressService;
 
-    @Autowired
-    private SessionCertificateProvider userCertificateService;
+    private final SessionCertificateProvider userCertificateService;
+
+    public IPAddressAspect(IPAddressRecorder ipAddressService, SessionCertificateProvider userCertificateService) {
+        this.ipAddressService = ipAddressService;
+        this.userCertificateService = userCertificateService;
+    }
 
     @After("@annotation(annotation)")
     public void saveLoginIPAddress(JoinPoint joinPoint, RecordIPAddress annotation) {

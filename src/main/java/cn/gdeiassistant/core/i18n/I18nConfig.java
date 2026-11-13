@@ -15,14 +15,17 @@ import java.util.concurrent.Executor;
 @Configuration
 public class I18nConfig {
 
-    @Value("${i18n.deepl.api-key:}")
-    private String deeplApiKey;
+    private final String deeplApiKey;
 
-    @Value("${i18n.deepl.api-url:https://api-free.deepl.com/v2/translate}")
-    private String deeplApiUrl;
+    private final String deeplApiUrl;
 
-    @Value("${i18n.cache.ttl-days:7}")
-    private int cacheTtlDays;
+    private final int cacheTtlDays;
+
+    public I18nConfig(@Value("${i18n.deepl.api-key:}") String deeplApiKey, @Value("${i18n.deepl.api-url:https://api-free.deepl.com/v2/translate}") String deeplApiUrl, @Value("${i18n.cache.ttl-days:7}") int cacheTtlDays) {
+        this.deeplApiKey = deeplApiKey;
+        this.deeplApiUrl = deeplApiUrl;
+        this.cacheTtlDays = cacheTtlDays;
+    }
 
     public boolean isEnabled() {
         return deeplApiKey != null && !deeplApiKey.isBlank();
@@ -46,8 +49,10 @@ public class I18nConfig {
 
     @Bean
     @ConditionalOnProperty(name = "i18n.deepl.api-key")
-    public I18nTranslationService i18nTranslationService() {
-        return new I18nTranslationService(this);
+    public I18nTranslationService i18nTranslationService(
+            org.springframework.data.redis.core.RedisTemplate<String, String> redisTemplate,
+            @org.springframework.beans.factory.annotation.Qualifier("i18nExecutor") java.util.concurrent.Executor i18nExecutor) {
+        return new I18nTranslationService(this, redisTemplate, i18nExecutor);
     }
 
     @Bean

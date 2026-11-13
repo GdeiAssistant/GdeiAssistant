@@ -34,35 +34,38 @@ public class TopicService {
 
     private static final Logger logger = LoggerFactory.getLogger(TopicService.class);
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private TopicMapper topicMapper;
+    private final TopicMapper topicMapper;
 
-    @Autowired
-    private TopicConverter topicConverter;
+    private final TopicConverter topicConverter;
 
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final R2StorageService r2StorageService;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
+    private final cn.gdeiassistant.core.objectstorage.service.UploadService uploads;
 
-    @Autowired
-    private cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
+    private final cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets;
 
-    @Autowired
-    private InteractionNotificationService interactionNotificationService;
+    private final InteractionNotificationService interactionNotificationService;
 
-    @Autowired(required = false)
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Autowired(required = false)
-    private ProfileMapper profileMapper;
+    private final ProfileMapper profileMapper;
 
-    @Autowired
-    private cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthors;
+    private final cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthors;
+
+    public TopicService(UserCertificateService userCertificateService, TopicMapper topicMapper, TopicConverter topicConverter, R2StorageService r2StorageService, cn.gdeiassistant.core.objectstorage.service.UploadService uploads, cn.gdeiassistant.core.objectstorage.service.StoredAssetService storedAssets, InteractionNotificationService interactionNotificationService, @Autowired(required = false) UserMapper userMapper, @Autowired(required = false) ProfileMapper profileMapper, cn.gdeiassistant.core.user.service.PublicAuthorResolver publicAuthors) {
+        this.userCertificateService = userCertificateService;
+        this.topicMapper = topicMapper;
+        this.topicConverter = topicConverter;
+        this.r2StorageService = r2StorageService;
+        this.uploads = uploads;
+        this.storedAssets = storedAssets;
+        this.interactionNotificationService = interactionNotificationService;
+        this.userMapper = userMapper;
+        this.profileMapper = profileMapper;
+        this.publicAuthors = publicAuthors;
+    }
 
     public List<TopicVO> queryTopic(String sessionId, int start, int size) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);

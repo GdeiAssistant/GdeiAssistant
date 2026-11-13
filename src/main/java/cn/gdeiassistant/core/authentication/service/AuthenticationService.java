@@ -8,7 +8,6 @@ import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.authentication.mapper.AuthenticationMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.common.tools.springutils.AliYunAPIUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,14 +25,17 @@ public class AuthenticationService {
     private static final Map<Integer, AuthenticationEnum> AUTHENTICATION_TYPES = Arrays.stream(AuthenticationEnum.values())
             .collect(Collectors.toUnmodifiableMap(AuthenticationEnum::getValue, Function.identity()));
 
-    @Autowired
-    private AuthenticationMapper authenticationMapper;
+    private final AuthenticationMapper authenticationMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private AliYunAPIUtils aliYunAPIUtils;
+    private final AliYunAPIUtils aliYunAPIUtils;
+
+    public AuthenticationService(AuthenticationMapper authenticationMapper, UserCertificateService userCertificateService, AliYunAPIUtils aliYunAPIUtils) {
+        this.authenticationMapper = authenticationMapper;
+        this.userCertificateService = userCertificateService;
+        this.aliYunAPIUtils = aliYunAPIUtils;
+    }
 
     /**
      * 查询实名认证状态

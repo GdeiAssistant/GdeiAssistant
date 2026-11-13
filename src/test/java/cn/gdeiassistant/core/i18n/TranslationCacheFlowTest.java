@@ -6,7 +6,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.*;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -18,18 +17,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class TranslationCacheFlowTest {
-    private final I18nConfig config = new I18nConfig();
+    private final I18nConfig config = new I18nConfig("synthetic-key", "https://translation.example.invalid", 7);
     private final RestTemplate http = mock(RestTemplate.class);
     private final RedisTemplate<String, String> redis = mock(RedisTemplate.class);
     private final ValueOperations<String, String> values = mock(ValueOperations.class);
-    private final I18nTranslationService service = new I18nTranslationService(config);
+    private I18nTranslationService service;
 
     @BeforeEach void setup() {
-        ReflectionTestUtils.setField(config, "deeplApiKey", "synthetic-key");
-        ReflectionTestUtils.setField(config, "deeplApiUrl", "https://translation.example.invalid");
-        ReflectionTestUtils.setField(config, "cacheTtlDays", 7);
-        ReflectionTestUtils.setField(service, "restTemplate", http);
-        ReflectionTestUtils.setField(service, "redisTemplate", redis);
+        service = new I18nTranslationService(config, redis, null, http);
         when(redis.opsForValue()).thenReturn(values);
     }
 
@@ -70,7 +65,7 @@ class TranslationCacheFlowTest {
 
     @Test void queuedDuplicateUnicodeTextsUseOneRequestAndReleaseTheirSlotAfterCompletion() {
         var queue = new ArrayList<Runnable>();
-        ReflectionTestUtils.setField(service, "i18nExecutor", (java.util.concurrent.Executor) queue::add);
+        service = new I18nTranslationService(config, redis, queue::add, http);
         when(http.exchange(anyString(), eq(HttpMethod.POST), any(HttpEntity.class), eq(Map.class)))
                 .thenReturn(ResponseEntity.ok(Map.of("translations", List.of(Map.of("text", "后台")))));
         service.enqueueTranslation(" e\u0301 ", "zh-HK"); service.enqueueTranslation("é", "zh-HK");

@@ -12,7 +12,6 @@ import cn.gdeiassistant.core.social.service.SocialChatService;
 import cn.gdeiassistant.core.social.service.SocialIdentityService;
 import cn.gdeiassistant.core.social.service.SocialRelationService;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,14 +32,17 @@ import cn.gdeiassistant.common.i18n.Messages;
 @RequestMapping("/api/social")
 public class SocialController {
 
-    @Autowired
-    private SocialRelationService relationService;
-    @Autowired
-    private SocialChatService chatService;
-    @Autowired
-    private SocialIdentityService identityService;
-    @Autowired
-    private R2StorageService r2StorageService;
+    private final SocialRelationService relationService;
+    private final SocialChatService chatService;
+    private final SocialIdentityService identityService;
+    private final R2StorageService r2StorageService;
+
+    public SocialController(SocialRelationService relationService, SocialChatService chatService, SocialIdentityService identityService, R2StorageService r2StorageService) {
+        this.relationService = relationService;
+        this.chatService = chatService;
+        this.identityService = identityService;
+        this.r2StorageService = r2StorageService;
+    }
 
     @ExceptionHandler(SocialException.class)
     public DataJsonResult<Void> handleSocialException(SocialException ex, HttpServletResponse response, HttpServletRequest request) {

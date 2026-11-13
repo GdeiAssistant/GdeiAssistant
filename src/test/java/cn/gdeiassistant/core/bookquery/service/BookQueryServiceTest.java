@@ -11,7 +11,6 @@ import cn.gdeiassistant.integration.library.pojo.LibraryRenewResult;
 import org.jsoup.Jsoup;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -20,11 +19,8 @@ class BookQueryServiceTest {
     private final LibraryClient client = mock(LibraryClient.class);
     private final CollectionQueryService collections = mock(CollectionQueryService.class);
     private final UserCertificateService certificates = mock(UserCertificateService.class);
-    private final BookQueryService service = new BookQueryService();
+    private final BookQueryService service = new BookQueryService(certificates, collections, client);
     @BeforeEach void setup() throws Exception {
-        ReflectionTestUtils.setField(service, "libraryClient", client);
-        ReflectionTestUtils.setField(service, "collectionQueryService", collections);
-        ReflectionTestUtils.setField(service, "userCertificateService", certificates);
         var certificate = new UserCertificateEntity(); certificate.setNumber("synthetic-card");
         when(certificates.getUserSessionCertificate("session")).thenReturn(certificate);
     }

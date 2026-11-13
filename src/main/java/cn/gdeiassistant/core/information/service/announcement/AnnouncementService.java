@@ -5,7 +5,6 @@ import cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper;
 import cn.gdeiassistant.core.information.converter.AnnouncementConverter;
 import cn.gdeiassistant.core.information.pojo.entity.AnnouncementEntity;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +14,14 @@ import java.util.List;
 @Service
 public class AnnouncementService {
 
-    @Autowired
-    private AnnouncementMapper announcementMapper;
+    private final AnnouncementMapper announcementMapper;
 
-    @Autowired
-    private AnnouncementConverter announcementConverter;
+    private final AnnouncementConverter announcementConverter;
+
+    public AnnouncementService(AnnouncementMapper announcementMapper, AnnouncementConverter announcementConverter) {
+        this.announcementMapper = announcementMapper;
+        this.announcementConverter = announcementConverter;
+    }
 
     /**
      * 保存通知公告信息

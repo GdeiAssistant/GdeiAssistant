@@ -9,7 +9,6 @@ import cn.gdeiassistant.core.feedback.pojo.entity.FeedbackEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.mock.web.MockMultipartFile;
@@ -29,9 +28,8 @@ class FeedbackHttpFlowTest {
     private FeedbackService service;private MockMvc http;
     @BeforeEach void setup(){
         var certificate=mock(UserCertificateService.class);when(certificate.getUserLoginCertificate("synthetic-session")).thenReturn(new User("synthetic-owner"));
-        service=new FeedbackService();ReflectionTestUtils.setField(service,"feedbackMapper",database);ReflectionTestUtils.setField(service,"userCertificateService",certificate);ReflectionTestUtils.setField(service,"emailUtils",email);
-        service.setSenderEmail("sender@example.invalid");service.setFeedbackEmail("feedback@example.invalid");service.setTicketEmail("ticket@example.invalid");
-        var controller=new FeedbackController();ReflectionTestUtils.setField(controller,"feedbackService",service);
+        service=new FeedbackService(email, certificate, database, "sender@example.invalid", "feedback@example.invalid", "ticket@example.invalid");
+        var controller=new FeedbackController(service);
         http=MockMvcBuilders.standaloneSetup(controller).setControllerAdvice(new GlobalRestExceptionHandler()).build();
     }
     @Test void jsonFeedbackTrimsContentAndNeverSendsEmail() throws Exception {
@@ -59,7 +57,8 @@ class FeedbackHttpFlowTest {
         var empty=new MockMultipartFile("images","empty.png","image/png",new byte[0]);
         http.perform(multipart("/api/feedback/function").file(empty).requestAttr("sessionId","synthetic-session").param("content","synthetic"))
             .andExpect(jsonPath("$.success").value(false));verifyNoInteractions(email);
-        service.setTicketEmail("");
+        service=new FeedbackService(email, mock(UserCertificateService.class), database, "sender@example.invalid", "feedback@example.invalid", "");
+        http=MockMvcBuilders.standaloneSetup(new FeedbackController(service)).setControllerAdvice(new GlobalRestExceptionHandler()).build();
         http.perform(multipart("/api/feedback/ticket").requestAttr("sessionId","synthetic-session").param("content","synthetic").param("type","network"))
             .andExpect(jsonPath("$.success").value(false));verifyNoInteractions(email);verifyNoInteractions(database);
     }
@@ -103,7 +102,7 @@ class FeedbackHttpFlowTest {
                 };
             }
         };
-        var controller=new FeedbackController();ReflectionTestUtils.setField(controller,"feedbackService",service);
+        var controller=new FeedbackController();
         var request=new org.springframework.mock.web.MockHttpServletRequest();request.setAttribute("sessionId","synthetic-session");
         var feedback=new cn.gdeiassistant.common.pojo.entity.Feedback();feedback.setContent("synthetic");
         assertThrows(IOException.class,()->controller.postFunctionalFeedback(request,feedback,new org.springframework.web.multipart.MultipartFile[]{file}));

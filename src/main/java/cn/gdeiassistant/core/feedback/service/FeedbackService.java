@@ -24,33 +24,29 @@ public class FeedbackService {
 
     private static final Logger logger = LoggerFactory.getLogger(FeedbackService.class);
 
-    private String senderEmail;
+    private final String senderEmail;
 
-    private String feedbackEmail;
+    private final String feedbackEmail;
 
-    private String ticketEmail;
+    private final String ticketEmail;
 
-    @Autowired(required = false)
-    private EmailUtils emailUtils;
+    private final EmailUtils emailUtils;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private FeedbackMapper feedbackMapper;
+    private final FeedbackMapper feedbackMapper;
 
-    @Value("${email.from:${email.smtp.username:}}")
-    public void setSenderEmail(String senderEmail) {
+    public FeedbackService(@Autowired(required = false) EmailUtils emailUtils,
+                           UserCertificateService userCertificateService,
+                           FeedbackMapper feedbackMapper,
+                           @Value("${email.from:${email.smtp.username:}}") String senderEmail,
+                           @Value("${email.feedback:}") String feedbackEmail,
+                           @Value("${email.ticket:}") String ticketEmail) {
+        this.emailUtils = emailUtils;
+        this.userCertificateService = userCertificateService;
+        this.feedbackMapper = feedbackMapper;
         this.senderEmail = senderEmail;
-    }
-
-    @Value("${email.feedback:}")
-    public void setFeedbackEmail(String feedbackEmail) {
         this.feedbackEmail = feedbackEmail;
-    }
-
-    @Value("${email.ticket:}")
-    public void setTicketEmail(String ticketEmail) {
         this.ticketEmail = ticketEmail;
     }
 

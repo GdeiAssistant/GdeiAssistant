@@ -13,7 +13,6 @@ import cn.gdeiassistant.core.social.pojo.entity.ConversationEntity;
 import cn.gdeiassistant.core.social.pojo.entity.ConversationMemberEntity;
 import cn.gdeiassistant.core.social.websocket.SocialRealtimeHub;
 import cn.gdeiassistant.core.user.pojo.entity.CampusAccountView;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -43,14 +42,17 @@ public class SocialChatService {
     private static final ZoneId ZONE = ZoneId.of("Asia/Shanghai");
     private static final DateTimeFormatter ISO = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 
-    @Autowired
-    private SocialIdentityService identityService;
-    @Autowired
-    private SocialChatMapper chatMapper;
-    @Autowired
-    private SocialRealtimeHub realtimeHub;
-    @Autowired
-    private SocialChatImageService chatImageService;
+    private final SocialIdentityService identityService;
+    private final SocialChatMapper chatMapper;
+    private final SocialRealtimeHub realtimeHub;
+    private final SocialChatImageService chatImageService;
+
+    public SocialChatService(SocialIdentityService identityService, SocialChatMapper chatMapper, SocialRealtimeHub realtimeHub, SocialChatImageService chatImageService) {
+        this.identityService = identityService;
+        this.chatMapper = chatMapper;
+        this.realtimeHub = realtimeHub;
+        this.chatImageService = chatImageService;
+    }
 
     public Map<String, Object> unreadTotal(String sessionId) {
         CampusAccountView me = identityService.requireActiveViewer(sessionId);

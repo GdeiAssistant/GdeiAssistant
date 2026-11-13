@@ -14,7 +14,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,9 +43,7 @@ class AuthWebFlowIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        JwtSessionIdFilter jwtSessionIdFilter = new JwtSessionIdFilter();
-        ReflectionTestUtils.setField(jwtSessionIdFilter, "jwtUtil", jwtUtil);
-        ReflectionTestUtils.setField(jwtSessionIdFilter, "userCertificateService", userCertificateService);
+        JwtSessionIdFilter jwtSessionIdFilter = new JwtSessionIdFilter(jwtUtil, userCertificateService);
         org.mockito.Mockito.lenient()
                 .when(userCertificateService.isAccountActive(org.mockito.ArgumentMatchers.anyString()))
                 .thenReturn(true);

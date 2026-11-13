@@ -11,7 +11,6 @@ import cn.gdeiassistant.core.library.controller.LibraryController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -34,11 +33,9 @@ class LibraryControllerContractTest {
 
     @BeforeEach
     void setUp() {
-        LibraryController controller = new LibraryController();
         bookQueryService = mock(BookQueryService.class);
         collectionQueryService = mock(CollectionQueryService.class);
-        ReflectionTestUtils.setField(controller, "bookQueryService", bookQueryService);
-        ReflectionTestUtils.setField(controller, "collectionQueryService", collectionQueryService);
+        LibraryController controller = new LibraryController(collectionQueryService, bookQueryService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 

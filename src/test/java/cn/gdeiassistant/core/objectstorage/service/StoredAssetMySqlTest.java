@@ -18,7 +18,6 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.interceptor.*;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.aop.framework.ProxyFactory;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.mock.web.MockMultipartFile;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -59,10 +58,10 @@ class StoredAssetMySqlTest {
     }
 
     @Test void failedPublicationRollsBackBusinessRowButLeavesDurableCleanup() throws Exception {
-        var target=new TopicService();var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic"));
+        var certificates=mock(UserCertificateService.class);when(certificates.getUserLoginCertificate("session")).thenReturn(new User("synthetic"));
         var authors=mock(PublicAuthorResolver.class);when(authors.resolve("synthetic")).thenReturn(new PublicAuthorResolver.AuthorPublic(null,"用户"));
-        ReflectionTestUtils.setField(target,"userCertificateService",certificates);ReflectionTestUtils.setField(target,"topicMapper",sessions.getMapper(TopicMapper.class));
-        ReflectionTestUtils.setField(target,"topicConverter",org.mapstruct.factory.Mappers.getMapper(TopicConverter.class));ReflectionTestUtils.setField(target,"publicAuthors",authors);ReflectionTestUtils.setField(target,"storedAssets",assets);
+        var target=new TopicService(certificates, sessions.getMapper(TopicMapper.class), org.mapstruct.factory.Mappers.getMapper(TopicConverter.class), null, null, assets, null, null, null, authors);
+
         var source=new AnnotationTransactionAttributeSource();var proxy=new ProxyFactory(target);proxy.addAdvice(new TransactionInterceptor(transactions,source));
         TopicService service=(TopicService)proxy.getProxy();var dto=new TopicPublishDTO();dto.setTopic("synthetic");dto.setContent("synthetic");dto.setCount(1);
         doThrow(new IllegalStateException("synthetic storage outage")).when(storage).uploadBytesStrict(isNull(),anyString(),any(byte[].class),eq("image/png"));
@@ -122,8 +121,7 @@ class StoredAssetMySqlTest {
         sql.update("INSERT INTO introduction VALUES('synthetic-a','visible'),('synthetic-b','private')");
         sql.update("INSERT INTO user_follow VALUES(1,2),(2,1),(4,2),(2,4)");sql.update("INSERT INTO user_block VALUES(1,3)");
         sessions.getConfiguration().addMapper(cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper.class);
-        var identity=new cn.gdeiassistant.core.social.service.SocialIdentityService();
-        ReflectionTestUtils.setField(identity,"summaries",sessions.getMapper(cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper.class));
+        var identity=new cn.gdeiassistant.core.social.service.SocialIdentityService(null,null,null,null,null,sessions.getMapper(cn.gdeiassistant.core.social.mapper.SocialUserSummaryMapper.class));
         var viewer=new cn.gdeiassistant.core.user.pojo.entity.CampusAccountView();viewer.setId(1L);viewer.setStatus("ACTIVE");
         var peers=identity.buildSocialUsers(viewer,List.of(2L,3L,4L));
         assertTrue(peers.get(2L).isCanMessage());assertEquals("visible",peers.get(2L).getIntroduction());

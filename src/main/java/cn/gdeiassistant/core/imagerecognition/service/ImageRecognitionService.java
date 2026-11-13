@@ -4,17 +4,19 @@ import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ocr.CaptchaRecognizer;
 import cn.gdeiassistant.core.capability.ocr.OcrNumberRecognizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ImageRecognitionService {
 
-    @Autowired
-    private CaptchaRecognizer captchaRecognizer;
+    private final CaptchaRecognizer captchaRecognizer;
 
-    @Autowired
-    private OcrNumberRecognizer ocrNumberRecognizer;
+    private final OcrNumberRecognizer ocrNumberRecognizer;
+
+    public ImageRecognitionService(CaptchaRecognizer captchaRecognizer, OcrNumberRecognizer ocrNumberRecognizer) {
+        this.captchaRecognizer = captchaRecognizer;
+        this.ocrNumberRecognizer = ocrNumberRecognizer;
+    }
 
     /**
      * 神经网络识别验证码图片，返回验证码

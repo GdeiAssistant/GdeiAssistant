@@ -6,7 +6,6 @@ import cn.gdeiassistant.core.dataquery.controller.DataQueryController;
 import cn.gdeiassistant.core.dataquery.service.DataQueryService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -26,8 +25,7 @@ class DataQueryContractTest {
     void setUp() {
         dataQueryService = mock(DataQueryService.class);
 
-        DataQueryController controller = new DataQueryController();
-        ReflectionTestUtils.setField(controller, "dataQueryService", dataQueryService);
+        DataQueryController controller = new DataQueryController(dataQueryService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

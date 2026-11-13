@@ -1,5 +1,7 @@
 package cn.gdeiassistant.integration.library;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
@@ -40,18 +42,21 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class LibraryClient {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
     private static final Logger logger = LoggerFactory.getLogger(LibraryClient.class);
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-opac-base-url:http://agentdockingopac.featurelib.libsou.com}")
-    private String OPAC_RENEW_BASE = "http://agentdockingopac.featurelib.libsou.com";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-opac-search-base-url:http://agentdockingopac.featurelib.libsou.com}")
-    private String OPAC_SEARCH_BASE = "http://agentdockingopac.featurelib.libsou.com";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-mobile-base-url:http://m.5read.com}")
-    private String FIVEREAD_M = "http://m.5read.com";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.library-mobile-account-base-url:http://mc.m.5read.com}")
-    private String FIVEREAD_MC = "http://mc.m.5read.com";
+    private final String OPAC_RENEW_BASE;
+    private final String OPAC_SEARCH_BASE;
+    private final String FIVEREAD_M;
+    private final String FIVEREAD_MC;
+
+    public LibraryClient(HttpClientUtils httpClientUtils, @Value("${campus.upstream.library-opac-base-url:http://agentdockingopac.featurelib.libsou.com}") String OPAC_RENEW_BASE, @Value("${campus.upstream.library-opac-search-base-url:http://agentdockingopac.featurelib.libsou.com}") String OPAC_SEARCH_BASE, @Value("${campus.upstream.library-mobile-base-url:http://m.5read.com}") String FIVEREAD_M, @Value("${campus.upstream.library-mobile-account-base-url:http://mc.m.5read.com}") String FIVEREAD_MC) {
+        this.httpClientUtils = httpClientUtils;
+        this.OPAC_RENEW_BASE = OPAC_RENEW_BASE;
+        this.OPAC_SEARCH_BASE = OPAC_SEARCH_BASE;
+        this.FIVEREAD_M = FIVEREAD_M;
+        this.FIVEREAD_MC = FIVEREAD_MC;
+    }
     private static final int LIBRARY_TIMEOUT_SEC = 15;
     private static final int OKHTTP_TIMEOUT_SEC = 10;
 

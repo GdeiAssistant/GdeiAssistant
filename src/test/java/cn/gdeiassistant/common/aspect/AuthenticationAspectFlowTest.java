@@ -10,19 +10,18 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.jupiter.api.*;
 import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.util.ReflectionTestUtils;
 import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class AuthenticationAspectFlowTest {
-    private final LoginTokenAspect aspect=new LoginTokenAspect();
     private final LoginTokenService tokens=mock(LoginTokenService.class);
     private final JwtUtil jwt=mock(JwtUtil.class);
+    private final LoginTokenAspect aspect=new LoginTokenAspect(tokens, jwt);
     private final JoinPoint call=mock(JoinPoint.class);
     private final MethodSignature signature=mock(MethodSignature.class);
     private final MockHttpServletRequest request=new MockHttpServletRequest();
-    @BeforeEach void setup(){ReflectionTestUtils.setField(aspect,"loginTokenService",tokens);ReflectionTestUtils.setField(aspect,"jwtUtil",jwt);when(call.getSignature()).thenReturn(signature);when(call.getArgs()).thenReturn(new Object[]{request});when(signature.getParameterNames()).thenReturn(new String[]{"request"});}
+    @BeforeEach void setup(){when(call.getSignature()).thenReturn(signature);when(call.getArgs()).thenReturn(new Object[]{request});when(signature.getParameterNames()).thenReturn(new String[]{"request"});}
     private void validClaim(){var claim=mock(Claim.class);when(claim.asString()).thenReturn("synthetic-session");when(jwt.verifyAndParse("synthetic-token")).thenReturn(Map.of("sessionId",claim));}
     @Test void missingOrLegacyHeadersNeverAuthenticate() {
         for(String header:new String[]{"", "Bearer ", "Basic synthetic"}){request.removeHeader("Authorization");request.addHeader("Authorization",header);assertThrows(TokenExpiredException.class,()->aspect.authenticateToken(call));}

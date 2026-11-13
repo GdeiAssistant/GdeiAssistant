@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -37,8 +36,7 @@ class LostAndFoundContractTest {
     void setUp() {
         lostAndFoundService = mock(LostAndFoundService.class);
 
-        LostAndFoundController controller = new LostAndFoundController();
-        ReflectionTestUtils.setField(controller, "lostAndFoundService", lostAndFoundService);
+        LostAndFoundController controller = new LostAndFoundController(lostAndFoundService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

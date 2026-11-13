@@ -15,7 +15,6 @@ import cn.gdeiassistant.common.tools.utils.PageUtils;
 import cn.gdeiassistant.core.express.service.ExpressService;
 import org.hibernate.validator.constraints.Length;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,8 +27,11 @@ import java.util.List;
 @RestController
 public class ExpressController {
 
-    @Autowired
-    private ExpressService expressService;
+    private final ExpressService expressService;
+
+    public ExpressController(ExpressService expressService) {
+        this.expressService = expressService;
+    }
 
     /**
      * 我的表白列表。GET /api/express/profile/start/{start}/size/{size}

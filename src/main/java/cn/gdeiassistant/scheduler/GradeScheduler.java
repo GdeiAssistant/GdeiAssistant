@@ -1,6 +1,7 @@
 package cn.gdeiassistant.scheduler;
 
 import cn.gdeiassistant.core.gradequery.service.GradeCronService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,8 +14,20 @@ import org.springframework.stereotype.Component;
 @Profile("production")
 public class GradeScheduler {
 
-    @Autowired(required = false)
-    private GradeCronService gradeCronService;
+    private final GradeCronService gradeCronService;
+
+        public GradeScheduler() {
+        this.gradeCronService = null;
+    }
+
+    public GradeScheduler(GradeCronService gradeCronService) {
+        this.gradeCronService = gradeCronService;
+    }
+
+    @Autowired
+    public GradeScheduler(ObjectProvider<GradeCronService> gradeCronService) {
+        this(gradeCronService.getIfAvailable());
+    }
 
     @Scheduled(fixedDelay = 7200000)
     public void synchronizeGradeData() {

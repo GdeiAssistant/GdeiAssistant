@@ -2,6 +2,7 @@ package cn.gdeiassistant.core.spare.repository;
 
 import cn.gdeiassistant.common.pojo.document.SpareTestDocument;
 import cn.gdeiassistant.common.pojo.entity.SpareRoom;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,8 +15,17 @@ import java.util.List;
 @Repository
 public class SpareDaoImpl implements SpareDao {
 
-    @Autowired(required = false)
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    /** Direct injection for tests that already resolved Mongo (or null). */
+    public SpareDaoImpl(MongoTemplate mongoTemplate) {
+        this.mongoTemplate = mongoTemplate;
+    }
+
+    @Autowired
+    public SpareDaoImpl(ObjectProvider<MongoTemplate> mongoTemplate) {
+        this(mongoTemplate.getIfAvailable());
+    }
 
     @Override
     public List<SpareRoom> querySpareListByUsername(String username) {

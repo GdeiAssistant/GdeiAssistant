@@ -2,15 +2,17 @@ package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.recognitionexception.RecognitionException;
 import cn.gdeiassistant.core.capability.ocr.OcrNumberRecognizer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import cn.gdeiassistant.common.i18n.Messages;
 
 @Component("localOcrNumberRecognizer")
 public class LocalOcrNumberRecognizer implements OcrNumberRecognizer {
 
-    @Autowired
-    private LocalTemplateOcrEngine localTemplateOcrEngine;
+    private final LocalTemplateOcrEngine localTemplateOcrEngine;
+
+    public LocalOcrNumberRecognizer(LocalTemplateOcrEngine localTemplateOcrEngine) {
+        this.localTemplateOcrEngine = localTemplateOcrEngine;
+    }
 
     @Override
     public String recognizeNumbers(String imageBase64) throws RecognitionException {

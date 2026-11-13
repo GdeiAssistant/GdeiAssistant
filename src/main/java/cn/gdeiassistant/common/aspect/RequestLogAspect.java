@@ -12,7 +12,6 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -33,11 +32,14 @@ public class RequestLogAspect {
     private static final Set<String> HTTP_METHODS = Set.of(
             "GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS", "TRACE");
 
-    @Autowired
-    private ObservabilityConstants observabilityConstants;
+    private final ObservabilityConstants observabilityConstants;
 
-    @Autowired
-    private MeterRegistry meterRegistry;
+    private final MeterRegistry meterRegistry;
+
+    public RequestLogAspect(ObservabilityConstants observabilityConstants, MeterRegistry meterRegistry) {
+        this.observabilityConstants = observabilityConstants;
+        this.meterRegistry = meterRegistry;
+    }
 
     @Pointcut("@annotation(cn.gdeiassistant.common.annotation.RequestLogPersistence)")
     public void requestAction() {

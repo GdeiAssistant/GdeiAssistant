@@ -14,7 +14,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -24,11 +23,14 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class GraduateExamService {
 
-    @Autowired
-    private ImageRecognitionService imageRecognitionService;
+    private final ImageRecognitionService imageRecognitionService;
 
-    @Autowired
-    private ChsiClient chsiClient;
+    private final ChsiClient chsiClient;
+
+    public GraduateExamService(ImageRecognitionService imageRecognitionService, ChsiClient chsiClient) {
+        this.imageRecognitionService = imageRecognitionService;
+        this.chsiClient = chsiClient;
+    }
 
     private final Logger logger = LoggerFactory.getLogger(GraduateExamService.class);
 

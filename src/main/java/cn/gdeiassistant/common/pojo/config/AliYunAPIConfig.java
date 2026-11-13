@@ -3,7 +3,6 @@ package cn.gdeiassistant.common.pojo.config;
 import cn.gdeiassistant.common.enums.module.ModuleEnum;
 import cn.gdeiassistant.common.tools.springutils.ModuleUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,8 +11,11 @@ import org.springframework.stereotype.Component;
 @Scope("singleton")
 public class AliYunAPIConfig {
 
-    @Autowired
-    private ModuleUtils moduleUtils;
+    private final ModuleUtils moduleUtils;
+
+    public AliYunAPIConfig(ModuleUtils moduleUtils) {
+        this.moduleUtils = moduleUtils;
+    }
 
     private String official_appCode;
 

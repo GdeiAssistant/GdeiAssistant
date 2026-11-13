@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignReques
 import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,14 +29,24 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Component
 public class R2StorageService {
 
+    private final R2Config r2Config;
+
+    private final S3Client s3Client;
+
+    private final S3Presigner s3Presigner;
+
+    /** Direct injection for tests that already resolved optional S3 beans. */
+    public R2StorageService(R2Config r2Config, S3Client s3Client, S3Presigner s3Presigner) {
+        this.r2Config = r2Config;
+        this.s3Client = s3Client;
+        this.s3Presigner = s3Presigner;
+    }
+
     @Autowired
-    private R2Config r2Config;
-
-    @Autowired(required = false)
-    private S3Client s3Client;
-
-    @Autowired(required = false)
-    private S3Presigner s3Presigner;
+    public R2StorageService(R2Config r2Config, ObjectProvider<S3Client> s3Client,
+                            ObjectProvider<S3Presigner> s3Presigner) {
+        this(r2Config, s3Client.getIfAvailable(), s3Presigner.getIfAvailable());
+    }
 
     public boolean isEnabled() {
         return r2Config.isEnabled() && s3Client != null && s3Presigner != null;

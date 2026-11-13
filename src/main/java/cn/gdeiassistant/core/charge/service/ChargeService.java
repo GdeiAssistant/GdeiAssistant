@@ -1,5 +1,7 @@
 package cn.gdeiassistant.core.charge.service;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
@@ -29,7 +31,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,27 +44,30 @@ import cn.gdeiassistant.common.i18n.Messages;
 @Service
 public class ChargeService {
 
-    @org.springframework.beans.factory.annotation.Autowired
-    private HttpClientUtils httpClientUtils;
+    private final HttpClientUtils httpClientUtils;
 
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}")
-    private String casLoginUrl = "https://security.gdei.edu.cn/cas/login";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}")
-    private String cardLoginUrl = "http://ecard.gdei.edu.cn:8050/LoginCas.aspx";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}")
-    private String cardBaseUrl = "http://ecard.gdei.edu.cn";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.payment-base-url:https://epay.gdei.edu.cn:8443/synpay/web}")
-    private String paymentBaseUrl = "https://epay.gdei.edu.cn:8443/synpay/web";
-    @org.springframework.beans.factory.annotation.Value("${campus.upstream.alipay-gateway-url:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}")
-    private String alipayGatewayUrl = "https://mapi.alipay.com/gateway.do?_input_charset=utf-8";
+    private final String casLoginUrl;
+    private final String cardLoginUrl;
+    private final String cardBaseUrl;
+    private final String paymentBaseUrl;
+    private final String alipayGatewayUrl;
 
     private final Logger logger = LoggerFactory.getLogger(ChargeService.class);
 
-    @Autowired
-    private ChargeMapper chargeMapper;
+    private final ChargeMapper chargeMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public ChargeService(HttpClientUtils httpClientUtils, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}") String cardLoginUrl, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String cardBaseUrl, @Value("${campus.upstream.payment-base-url:https://epay.gdei.edu.cn:8443/synpay/web}") String paymentBaseUrl, @Value("${campus.upstream.alipay-gateway-url:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}") String alipayGatewayUrl, ChargeMapper chargeMapper, UserCertificateService userCertificateService) {
+        this.httpClientUtils = httpClientUtils;
+        this.casLoginUrl = casLoginUrl;
+        this.cardLoginUrl = cardLoginUrl;
+        this.cardBaseUrl = cardBaseUrl;
+        this.paymentBaseUrl = paymentBaseUrl;
+        this.alipayGatewayUrl = alipayGatewayUrl;
+        this.chargeMapper = chargeMapper;
+        this.userCertificateService = userCertificateService;
+    }
 
     /**
      * 提交校园卡充值请求并自动确认，返回支付宝URL和Cookie列表

@@ -7,7 +7,6 @@ import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.ipaddress.mapper.IPAddressMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.capability.ip.IPLocationResolver;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,14 +15,17 @@ import java.util.List;
 @Service
 public class IPAddressService implements IPAddressRecorder {
 
-    @Autowired
-    private IPLocationResolver ipLocationResolver;
+    private final IPLocationResolver ipLocationResolver;
 
-    @Autowired
-    private IPAddressMapper ipAddressMapper;
+    private final IPAddressMapper ipAddressMapper;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
+
+    public IPAddressService(IPLocationResolver ipLocationResolver, IPAddressMapper ipAddressMapper, UserCertificateService userCertificateService) {
+        this.ipLocationResolver = ipLocationResolver;
+        this.ipAddressMapper = ipAddressMapper;
+        this.userCertificateService = userCertificateService;
+    }
 
     /**
      * 根据IP地址查询IP地址归属地

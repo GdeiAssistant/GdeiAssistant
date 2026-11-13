@@ -4,14 +4,13 @@ import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.userprofile.pojo.ProfileLocationValueVO;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class ProfileLocalizationServiceTest {
 
-    private final ProfileLocalizationService service = new ProfileLocalizationService();
+    private final ProfileLocalizationService service = new ProfileLocalizationService((I18nTranslationService) null);
 
     @Test
     void normalizeLanguage_supportsSixLocalesAndFallback() {
@@ -52,7 +51,7 @@ class ProfileLocalizationServiceTest {
     void localizeText_usesSynchronousTranslationBeforeReturningOriginalText() {
         I18nTranslationService translationService = mock(I18nTranslationService.class);
         when(translationService.translate("软件工程", "en")).thenReturn("Software Engineering");
-        ReflectionTestUtils.setField(service, "translationService", translationService);
+        ProfileLocalizationService service = new ProfileLocalizationService(translationService);
 
         String localized = service.localizeText("软件工程", "en-US");
 

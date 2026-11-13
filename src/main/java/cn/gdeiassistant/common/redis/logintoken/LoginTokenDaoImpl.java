@@ -7,7 +7,6 @@ import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.concurrent.TimeUnit;
@@ -22,11 +21,14 @@ public class LoginTokenDaoImpl implements LoginTokenDao {
 
     private final String DEVICE_DATA_PREFIX = "DEVICE_DATA_";
 
-    @Autowired
-    private RedisDaoUtils redisDaoUtils;
+    private final RedisDaoUtils redisDaoUtils;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
+    public LoginTokenDaoImpl(RedisDaoUtils redisDaoUtils, ObjectMapper objectMapper) {
+        this.redisDaoUtils = redisDaoUtils;
+        this.objectMapper = objectMapper;
+    }
 
     /**
      * 查找令牌签名对应的记录信息（Value 存 JSON 字符串，与 redisTemplate 的 StringRedisSerializer 一致）

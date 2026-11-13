@@ -7,7 +7,6 @@ import cn.gdeiassistant.core.express.pojo.vo.ExpressVO;
 import cn.gdeiassistant.core.express.service.ExpressService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -31,8 +30,7 @@ class ExpressContractTest {
     void setUp() {
         expressService = mock(ExpressService.class);
 
-        ExpressController controller = new ExpressController();
-        ReflectionTestUtils.setField(controller, "expressService", expressService);
+        ExpressController controller = new ExpressController(expressService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new GlobalRestExceptionHandler())

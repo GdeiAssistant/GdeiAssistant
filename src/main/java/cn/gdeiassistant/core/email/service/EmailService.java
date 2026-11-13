@@ -8,7 +8,6 @@ import cn.gdeiassistant.common.redis.verificationcode.VerificationCodeDao;
 import cn.gdeiassistant.core.email.mapper.EmailMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.capability.email.EmailVerificationSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -17,18 +16,21 @@ public class EmailService {
 
     private static final java.security.SecureRandom VERIFICATION_CODE_RANDOM = new java.security.SecureRandom();
 
-    @Autowired
-    private EmailMapper emailMapper;
+    private final EmailMapper emailMapper;
 
-    @Autowired
-    private VerificationCodeDao verificationCodeDao;
+    private final VerificationCodeDao verificationCodeDao;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
 
-    @Autowired
-    private EmailVerificationSender emailVerificationSender;
+    private final EmailVerificationSender emailVerificationSender;
+
+    public EmailService(EmailMapper emailMapper, VerificationCodeDao verificationCodeDao, UserCertificateService userCertificateService, EmailVerificationSender emailVerificationSender) {
+        this.emailMapper = emailMapper;
+        this.verificationCodeDao = verificationCodeDao;
+        this.userCertificateService = userCertificateService;
+        this.emailVerificationSender = emailVerificationSender;
+    }
 
     /**
      * 查询用户绑定的电子邮箱地址信息

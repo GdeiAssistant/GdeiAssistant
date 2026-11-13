@@ -10,7 +10,6 @@ import cn.gdeiassistant.core.phone.pojo.entity.PhoneEntity;
 import cn.gdeiassistant.core.phone.pojo.vo.PhoneVO;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import cn.gdeiassistant.core.capability.sms.SmsVerificationSender;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,17 +17,20 @@ public class PhoneService {
 
     private static final java.security.SecureRandom VERIFICATION_CODE_RANDOM = new java.security.SecureRandom();
 
-    @Autowired
-    private PhoneMapper phoneMapper;
+    private final PhoneMapper phoneMapper;
 
-    @Autowired
-    private VerificationCodeDao verificationCodeDao;
+    private final VerificationCodeDao verificationCodeDao;
 
-    @Autowired
-    private UserCertificateService userCertificateService;
+    private final UserCertificateService userCertificateService;
 
-    @Autowired
-    private SmsVerificationSender smsVerificationSender;
+    private final SmsVerificationSender smsVerificationSender;
+
+    public PhoneService(PhoneMapper phoneMapper, VerificationCodeDao verificationCodeDao, UserCertificateService userCertificateService, SmsVerificationSender smsVerificationSender) {
+        this.phoneMapper = phoneMapper;
+        this.verificationCodeDao = verificationCodeDao;
+        this.userCertificateService = userCertificateService;
+        this.smsVerificationSender = smsVerificationSender;
+    }
 
     /**
      * 查询用户绑定的手机号信息（返回 VO，手机号脱敏）

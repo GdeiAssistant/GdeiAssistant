@@ -1,6 +1,7 @@
 package cn.gdeiassistant.scheduler;
 
 import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsCronService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -19,12 +20,16 @@ public class NewsScheduler {
     private final SchoolNewsCronService schoolNewsCronService;
 
         public NewsScheduler() {
-        this(null);
+        this.schoolNewsCronService = null;
+    }
+
+    public NewsScheduler(SchoolNewsCronService schoolNewsCronService) {
+        this.schoolNewsCronService = schoolNewsCronService;
     }
 
     @Autowired
-    public NewsScheduler(@Autowired(required = false) SchoolNewsCronService schoolNewsCronService) {
-        this.schoolNewsCronService = schoolNewsCronService;
+    public NewsScheduler(ObjectProvider<SchoolNewsCronService> schoolNewsCronService) {
+        this(schoolNewsCronService.getIfAvailable());
     }
 
     @Scheduled(cron = "0 0 0,9,18 * * ?")

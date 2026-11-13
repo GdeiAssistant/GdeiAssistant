@@ -7,6 +7,7 @@ import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.userprofile.pojo.ProfileLocationValueVO;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,12 +20,16 @@ public class ProfileLocalizationService {
     private final I18nTranslationService translationService;
 
         public ProfileLocalizationService() {
-        this(null);
+        this.translationService = null;
+    }
+
+    public ProfileLocalizationService(I18nTranslationService translationService) {
+        this.translationService = translationService;
     }
 
     @Autowired
-    public ProfileLocalizationService(@Autowired(required = false) I18nTranslationService translationService) {
-        this.translationService = translationService;
+    public ProfileLocalizationService(ObjectProvider<I18nTranslationService> translationService) {
+        this(translationService.getIfAvailable());
     }
 
     public String normalizeLanguage(String header) {

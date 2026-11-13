@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.grade.repository;
 
 import cn.gdeiassistant.common.pojo.document.GradeDocument;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -12,8 +13,14 @@ public class GradeDaoImpl implements GradeDao {
 
     private final MongoTemplate mongoTemplate;
 
-    public GradeDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+    /** Direct injection for tests that already resolved Mongo (or null). */
+    public GradeDaoImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+    }
+
+    @Autowired
+    public GradeDaoImpl(ObjectProvider<MongoTemplate> mongoTemplate) {
+        this(mongoTemplate.getIfAvailable());
     }
 
     /**

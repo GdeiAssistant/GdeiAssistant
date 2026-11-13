@@ -37,5 +37,5 @@ class RedisAtomicConsumptionTest {
         assertEquals(java.util.List.of("synthetic-cookie"),utils.getSerializable(key));
         assertTrue(redis.getExpire(key,TimeUnit.SECONDS)>0); assertTrue(redis.getExpire(key,TimeUnit.SECONDS)<=30);
     }
-    @Test void unconfiguredStoreNeverAcceptsACode() { assertFalse(new RedisDaoUtils(null).compareAndDelete(key,"123456")); }
+    @Test void unconfiguredStoreNeverAcceptsACode() { assertFalse(new RedisDaoUtils((RedisTemplate<String, String>) null).compareAndDelete(key,"123456")); }
 }

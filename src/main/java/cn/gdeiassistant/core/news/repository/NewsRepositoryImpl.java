@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.news.repository;
 
 import cn.gdeiassistant.common.pojo.entity.NewsItem;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -15,8 +16,14 @@ public class NewsRepositoryImpl implements NewsRepository {
 
     private final MongoTemplate mongoTemplate;
 
-    public NewsRepositoryImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+    /** Direct injection for tests that already resolved Mongo (or null). */
+    public NewsRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+    }
+
+    @Autowired
+    public NewsRepositoryImpl(ObjectProvider<MongoTemplate> mongoTemplate) {
+        this(mongoTemplate.getIfAvailable());
     }
 
     @Override

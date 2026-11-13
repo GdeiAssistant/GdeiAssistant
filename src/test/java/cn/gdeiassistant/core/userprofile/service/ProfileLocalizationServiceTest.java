@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 
 class ProfileLocalizationServiceTest {
 
-    private final ProfileLocalizationService service = new ProfileLocalizationService(null);
+    private final ProfileLocalizationService service = new ProfileLocalizationService((I18nTranslationService) null);
 
     @Test
     void normalizeLanguage_supportsSixLocalesAndFallback() {

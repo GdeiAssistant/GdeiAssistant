@@ -1,6 +1,7 @@
 package cn.gdeiassistant.scheduler;
 
 import cn.gdeiassistant.core.schedulequery.service.ScheduleCronService;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,12 +17,16 @@ public class ScheduleScheduler {
     private final ScheduleCronService scheduleCronService;
 
         public ScheduleScheduler() {
-        this(null);
+        this.scheduleCronService = null;
+    }
+
+    public ScheduleScheduler(ScheduleCronService scheduleCronService) {
+        this.scheduleCronService = scheduleCronService;
     }
 
     @Autowired
-    public ScheduleScheduler(@Autowired(required = false) ScheduleCronService scheduleCronService) {
-        this.scheduleCronService = scheduleCronService;
+    public ScheduleScheduler(ObjectProvider<ScheduleCronService> scheduleCronService) {
+        this(scheduleCronService.getIfAvailable());
     }
 
     @Scheduled(fixedDelay = 7200000)

@@ -4,6 +4,7 @@ import cn.gdeiassistant.common.pojo.document.CollectionDetailEntry;
 import cn.gdeiassistant.common.pojo.document.CollectionTestDocument;
 import cn.gdeiassistant.common.pojo.entity.Collection;
 import cn.gdeiassistant.common.pojo.entity.CollectionDetail;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -18,8 +19,14 @@ public class CollectionDaoImpl implements CollectionDao {
 
     private final MongoTemplate mongoTemplate;
 
-    public CollectionDaoImpl(@Autowired(required = false) MongoTemplate mongoTemplate) {
+    /** Direct injection for tests that already resolved Mongo (or null). */
+    public CollectionDaoImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
+    }
+
+    @Autowired
+    public CollectionDaoImpl(ObjectProvider<MongoTemplate> mongoTemplate) {
+        this(mongoTemplate.getIfAvailable());
     }
 
     @Override

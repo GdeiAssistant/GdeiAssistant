@@ -7,6 +7,7 @@ import cn.gdeiassistant.core.schedulequery.service.ScheduleCronService;
 import cn.gdeiassistant.core.information.service.schoolnews.SchoolNewsCronService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,11 +30,17 @@ public class CronController {
 
     private final String cronSecret;
 
-    public CronController(@Autowired(required = false) GradeCronService gradeCronService, @Autowired(required = false) ScheduleCronService scheduleCronService, @Autowired(required = false) SchoolNewsCronService schoolNewsCronService, @Value("${app.cron.secret}") String cronSecret) {
+    /** Direct injection for tests that already resolved cron services (or null). */
+    public CronController(GradeCronService gradeCronService, ScheduleCronService scheduleCronService, SchoolNewsCronService schoolNewsCronService, String cronSecret) {
         this.gradeCronService = gradeCronService;
         this.scheduleCronService = scheduleCronService;
         this.schoolNewsCronService = schoolNewsCronService;
         this.cronSecret = cronSecret;
+    }
+
+    @Autowired
+    public CronController(ObjectProvider<GradeCronService> gradeCronService, ObjectProvider<ScheduleCronService> scheduleCronService, ObjectProvider<SchoolNewsCronService> schoolNewsCronService, @Value("${app.cron.secret}") String cronSecret) {
+        this(gradeCronService.getIfAvailable(), scheduleCronService.getIfAvailable(), schoolNewsCronService.getIfAvailable(), cronSecret);
     }
 
     /**

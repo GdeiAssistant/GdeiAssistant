@@ -188,7 +188,11 @@
     "todayNoCourse": "No classes today. Enjoy the break.",
     "todayUnavailable": "Timetable is unavailable right now. Open the timetable to retry.",
     "todayUnread": "Unread messages: {count}",
-    "todayAllRead": "No unread messages"
+    "todayAllRead": "No unread messages",
+    "openCommandPalette": "Quick Jump",
+    "weekLabel": "Week {week}",
+    "railShortcutsTitle": "Campus Desk",
+    "railNoticeTitle": "Today & Notices"
   },
   "profile": {
     "title": "Profile",
@@ -259,7 +263,10 @@
     "loading": "Signing in...",
     "failed": "Login failed",
     "thirdPartyUnavailable": "This login method is not available yet",
-    "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable."
+    "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable.",
+    "mockCredentialHint": "Demo account: gdeiassistant / gdeiassistant",
+    "fillMockAction": "Fill Demo",
+    "editionLabel": "Lingnan Academy · Campus Portal"
   },
   "libraryPage": {
     "title": "Library",
@@ -496,7 +503,8 @@
   "sidebar": {
     "settings": "Settings",
     "about": "About",
-    "notLoggedIn": "Not signed in"
+    "notLoggedIn": "Not signed in",
+    "accentLabel": "Accent"
   },
   "commandPalette": {
     "searchPlaceholder": "Search features...",
@@ -1473,6 +1481,13 @@
       "system": "Follow System",
       "light": "Light Mode",
       "dark": "Dark Mode"
+    },
+    "accent": {
+      "label": "Theme Accent",
+      "banyan": "Banyan Emerald",
+      "kapok": "Kapok Terracotta",
+      "haizhu": "Haizhu Blue",
+      "bauhinia": "Bauhinia Violet"
     },
     "font": {
       "label": "Font Size",

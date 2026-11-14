@@ -56,7 +56,8 @@ function goTo(path) {
   display: flex;
   padding: 0 8px env(safe-area-inset-bottom, 0px);
   border-top: 1px solid var(--c-border);
-  background: var(--c-surface);
+  background: color-mix(in srgb, var(--c-surface) 94%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 .community-tabbar__item {

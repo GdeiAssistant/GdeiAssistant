@@ -2,7 +2,9 @@
 
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen.svg)
 ![JDK](https://img.shields.io/badge/JDK-17-blue.svg)
-![Vue](https://img.shields.io/badge/Vue.js-3.x-4FC08D.svg)
+![Vue](https://img.shields.io/badge/Vue-3.5-4FC08D.svg)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF.svg)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4.svg)
 ![License](https://img.shields.io/badge/License-Apache%202.0-orange.svg)
 
 广东第二师范学院校园助手系统的服务端与网页端，配套 Android、iOS 和微信小程序客户端。
@@ -17,11 +19,12 @@
 - [快速开始](#快速开始)
 - [配置](#配置)
 - [技术栈](#技术栈)
+- [设计系统](#设计系统)
 - [AI 服务](#ai-服务)
 - [项目结构](#项目结构)
 - [测试](#测试)
 - [多端契约](#多端契约)
-- [预览](#预览)
+- [界面预览](#界面预览)
 - [客户端与官网](#客户端与官网)
 - [法律、隐私与安全提示](#法律隐私与安全提示)
 - [贡献](#贡献)
@@ -74,7 +77,7 @@ npm install
 npm run dev
 ```
 
-前端开发服务器默认在 `http://localhost:5173`，需要把接口代理指向本地后端，见 `frontend/vite.config.*` 或 `frontend/.env*`。
+前端开发服务器默认运行在 `http://localhost:5173`，如需直连本地后端，可在 `frontend/vite.config.js` 或环境变量中配置接口代理；无本地教务服务时，也可在登录页或数据源开关中切换为本地 Mock 演示模式。详见 [frontend/README.md](frontend/README.md)。
 
 ## 配置
 
@@ -112,9 +115,13 @@ npm run dev
 | 端 | 技术 |
 | --- | --- |
 | 后端 | JDK 17、Spring Boot 4.0、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 8.14、GraalVM Native Image（可选） |
-| 前端 | Vue 3、Vue Router、Vite、Axios、WeUI、Node.js 24.14.1 LTS |
+| 前端 | Vue 3.5、Vue Router 5、Vue I18n 11、Vite 8、Tailwind CSS 4、Reka UI 2、Axios、Vitest 5、Playwright、Node.js 24.14.1 LTS |
 
 项目适配了 Docker 容器化和 GraalVM Native Image，可以编译成原生二进制运行。
+
+## 设计系统
+
+全端采用「岭南书院人文风（Warm Editorial Lingnan Academy）」统一设计语言：以温润纸感与人文排版为核心，配合全端同源生成的 `design/tokens.json` 色彩、字号与间距规范。支持浅色「岭南晨纸」与深色「珠江夜读」双模式，以及「榕荫翠」「木棉丹」「海珠蓝」「紫荆紫」四款正交校园主题色和多语言切换。详见 [design/README.md](design/README.md)。
 
 ## AI 服务
 
@@ -127,7 +134,9 @@ npm run dev
 ```text
 GdeiAssistant/
 ├── src/main/java/             # 后端 Java 源码
-├── frontend/                  # 前端 Vue 3 源码
+├── frontend/                  # 前端 Vue 3.5 + Vite 8 源码
+├── design/                    # 多端共享 Design Tokens 与生成器
+├── assets/screenshots/        # README 界面预览截图
 ├── db-init/                   # 数据库初始化
 │   ├── mysql/                 # 结构与 Mock 数据
 │   └── mongodb/
@@ -146,11 +155,14 @@ GdeiAssistant/
 cd frontend
 npm ci
 npm run build
-npm run test:unit
+npm run check:design-tokens
+npm run check:location-names
+npm run check:syntax
+npm run test:coverage
 npm run test:e2e
 ```
 
-后端 CI 跑 `./gradlew test`，覆盖单元、契约和集成边界。前端 CI 跑依赖安装、生产构建、Vitest 单元测试和 Playwright smoke E2E。本地 Playwright 想复用系统 Chrome 时，把 `PLAYWRIGHT_CHROME_EXECUTABLE_PATH` 指向 Chrome 可执行文件。
+后端 CI 运行 `./gradlew test`，覆盖单元、契约与集成边界。前端 CI 运行依赖安装、生产构建、设计令牌与多语言校验、语法检查、Vitest 覆盖率测试及 Playwright E2E。本地 Playwright 想复用系统 Chrome 时，把 `PLAYWRIGHT_CHROME_EXECUTABLE_PATH` 指向 Chrome 可执行文件。
 
 ## 多端契约
 
@@ -163,12 +175,28 @@ npm run test:e2e
 ./gradlew test checkOpenApi architectureCoverage jacocoTestReport
 ```
 
-## 预览
+## 界面预览
+
+以下为 Web 端在 Mock 演示模式下的界面截图，涵盖桌面浅色/深色模式、多主题色切换、校园社区广场与移动端视口。
+
+- 桌面首页：浅色「岭南晨纸（榕荫翠）」与深色「珠江夜读」模式
 
 <p>
-  <img src="assets/screenshots/function.png" width="250">
-  <img src="assets/screenshots/ershou.png" width="250">
-  <img src="assets/screenshots/secret.png" width="250">
+  <img src="assets/screenshots/web-home-light.png" alt="Web 桌面首页浅色模式" width="410">
+  <img src="assets/screenshots/web-home-dark.png" alt="Web 桌面首页深色模式" width="410">
+</p>
+
+- 外观设置（木棉丹主题色切换）与校园生活广场（二手交易）
+
+<p>
+  <img src="assets/screenshots/web-appearance-themes.png" alt="Web 界面与外观主题切换" width="410">
+  <img src="assets/screenshots/web-community-plaza.png" alt="Web 校园社区二手交易" width="410">
+</p>
+
+- 移动端响应式首页视口
+
+<p>
+  <img src="assets/screenshots/web-mobile-home.png" alt="Web 移动端首页" width="260">
 </p>
 
 ## 客户端与官网

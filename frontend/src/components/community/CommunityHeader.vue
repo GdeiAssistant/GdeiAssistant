@@ -64,7 +64,7 @@ function handleBack() {
   column-gap: 8px;
   padding: 8px 16px;
   border-bottom: 1px solid var(--c-border);
-  background: color-mix(in srgb, var(--c-surface) 92%, transparent);
+  background: color-mix(in srgb, var(--c-bg) 92%, transparent);
   backdrop-filter: blur(10px);
 }
 
@@ -96,8 +96,9 @@ function handleBack() {
   overflow: hidden;
   margin: 0;
   color: var(--c-text-1);
+  font-family: var(--font-serif);
   font-size: 16px;
-  font-weight: 650;
+  font-weight: 700;
   text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;

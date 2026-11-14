@@ -19,7 +19,7 @@ const { t } = useI18n()
     </div>
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
-      <div class="ui-panel bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+      <div class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] divide-y divide-[var(--c-divider)]">
         <button
           type="button"
           class="w-full flex items-center justify-between px-4 py-3.5 text-sm hover:bg-[var(--c-surface-hover)] transition-colors text-[var(--c-text)]"

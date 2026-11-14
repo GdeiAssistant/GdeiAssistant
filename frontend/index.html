@@ -5,8 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#F4F7F6" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0E1513" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0D1311" media="(prefers-color-scheme: dark)" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>广东第二师范学院校园助手系统</title>
     <script>
@@ -15,6 +15,10 @@
         try{t=localStorage.getItem('theme')||'system'}catch(e){}
         var dark=t==='dark'||(t==='system'&&window.matchMedia('(prefers-color-scheme:dark)').matches);
         document.documentElement.setAttribute('data-theme',dark?'dark':'light');
+        var accents=['banyan','kapok','haizhu','bauhinia'];
+        var a='banyan';
+        try{var ra=localStorage.getItem('gdei-theme-accent');if(accents.indexOf(ra)!==-1)a=ra}catch(e){}
+        document.documentElement.dataset.accent=a;
         var step=1;
         try{var raw=localStorage.getItem('font_scale_step');if(raw!==null){var p=parseInt(raw,10);if(p>=0&&p<=3)step=p}}catch(e){}
         var scales=[0.85,1.0,1.15,1.3];

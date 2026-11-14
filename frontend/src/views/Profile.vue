@@ -13,123 +13,123 @@
           </div>
         </RouterLink>
         <div class="min-w-0 flex-1">
-          <p class="text-lg font-semibold text-[var(--c-text-primary)] truncate">
+          <p class="editorial-serif text-xl font-semibold text-[var(--c-text-1)] truncate">
             {{ userInfo.nickname || userInfo.username }}
           </p>
-          <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
+          <p class="text-sm text-[var(--c-text-3)] mt-0.5 truncate tabular-num">
             {{ $t('profile.username') }}：{{ userInfo.username }}
           </p>
-          <p class="text-sm text-[var(--c-text-tertiary)] mt-0.5 truncate">
+          <p class="text-sm text-[var(--c-text-3)] mt-0.5 truncate">
             {{ $t('profile.ipArea') }}：{{ localizedIpArea || '-' }}
           </p>
         </div>
       </div>
-      <div class="grid grid-cols-3 gap-2 px-4 pb-3 text-center text-sm">
+      <div class="grid grid-cols-3 gap-2.5 px-4 pb-3.5 text-center text-sm">
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=following` : '/social/search'"
-          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          class="profile-stat-link min-h-11 rounded-[var(--radius-control)] border border-[var(--c-divider)] bg-[var(--c-surface-subtle)] py-2.5 px-1 flex flex-col items-center justify-center transition-colors hover:border-[var(--c-border)]"
           :aria-disabled="!socialMeId"
           :tabindex="socialMeId ? 0 : -1"
           @click.capture="!socialMeId && $event.preventDefault()"
         >
-          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followingCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.following') }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)] tabular-num">{{ socialStats.followingCount }}</div>
+          <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ $t('social.following') }}</div>
         </RouterLink>
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=followers` : '/social/search'"
-          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          class="profile-stat-link min-h-11 rounded-[var(--radius-control)] border border-[var(--c-divider)] bg-[var(--c-surface-subtle)] py-2.5 px-1 flex flex-col items-center justify-center transition-colors hover:border-[var(--c-border)]"
           :aria-disabled="!socialMeId"
           :tabindex="socialMeId ? 0 : -1"
           @click.capture="!socialMeId && $event.preventDefault()"
         >
-          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.followerCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.followers') }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)] tabular-num">{{ socialStats.followerCount }}</div>
+          <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ $t('social.followers') }}</div>
         </RouterLink>
         <RouterLink
           :to="socialMeId ? `/social/users/${socialMeId}/relationships?kind=friends` : '/social/search'"
-          class="profile-stat-link min-h-11 rounded-lg bg-[var(--c-bg)] py-2 px-1 flex flex-col items-center justify-center"
+          class="profile-stat-link min-h-11 rounded-[var(--radius-control)] border border-[var(--c-divider)] bg-[var(--c-surface-subtle)] py-2.5 px-1 flex flex-col items-center justify-center transition-colors hover:border-[var(--c-border)]"
           :aria-disabled="!socialMeId"
           :tabindex="socialMeId ? 0 : -1"
           @click.capture="!socialMeId && $event.preventDefault()"
         >
-          <div class="text-base font-semibold text-[var(--c-text-1)]">{{ socialStats.friendCount }}</div>
-          <div class="text-[var(--c-text-tertiary)]">{{ $t('social.friends') }}</div>
+          <div class="text-base font-semibold text-[var(--c-text-1)] tabular-num">{{ socialStats.friendCount }}</div>
+          <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ $t('social.friends') }}</div>
         </RouterLink>
       </div>
       <RouterLink
         to="/social/search"
-        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-border-light)]"
+        class="campus-list-row flex items-center gap-3 min-h-11 px-4 py-3 border-t border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] transition-colors"
       >
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('social.searchTitle') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('social.searchTitle') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </RouterLink>
     </AppCard>
 
     <!-- Profile Info -->
-    <p class="px-4 py-2 text-xs text-[var(--c-text-3)]">{{ t('profile.avatarImmediate') }}</p>
+    <p class="px-1 py-1 text-xs text-[var(--c-text-3)]">{{ t('profile.avatarImmediate') }}</p>
     <fieldset class="profile-editor" :disabled="saving || !profileLoaded">
     <AppCard>
       <template #header>
         <div class="flex items-center gap-2">
-          <User class="w-4 h-4 text-[var(--c-text-tertiary)]" />
-          <span class="text-sm font-medium text-[var(--c-text-secondary)]">{{ $t('profile.title') }}</span>
+          <User class="w-4 h-4 text-[var(--c-text-3)]" />
+          <span class="editorial-eyebrow">{{ $t('profile.title') }}</span>
         </div>
       </template>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openNicknameDialog">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.nickname') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.nickname || $t('common.clickToSet') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.nickname') }}</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ userInfo.nickname || $t('common.clickToSet') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openBirthdayPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.birthday') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.birthday || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.birthday') }}</span>
+        <span class="text-sm text-[var(--c-text-3)] tabular-num">{{ userInfo.birthday || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openFacultyPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.faculty') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedFaculty || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.faculty') }}</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ localizedFaculty || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openMajorPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.major') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedMajor || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.major') }}</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ localizedMajor || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openEnrollmentPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.enrollmentYear') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ userInfo.enrollment || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.enrollmentYear') }}</span>
+        <span class="text-sm text-[var(--c-text-3)] tabular-num">{{ userInfo.enrollment || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openLocationPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.location') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedLocation || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.location') }}</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ localizedLocation || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
-      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-border-light)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
+      <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 border-b border-[var(--c-divider)] hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-x-0 border-t-0 text-left font-inherit"
               @click="openHometownPicker">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.hometown') }}</span>
-        <span class="text-sm text-[var(--c-text-tertiary)]">{{ localizedHometown || $t('common.unselected') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.hometown') }}</span>
+        <span class="text-sm text-[var(--c-text-3)]">{{ localizedHometown || $t('common.unselected') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
       <button type="button" class="campus-list-row w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--c-surface-hover)] cursor-pointer bg-transparent border-0 text-left font-inherit"
               @click="openIntroDialog">
-        <span class="flex-1 text-[var(--c-text-primary)]">{{ $t('profile.introduction') }}</span>
-        <span class="profile-introduction-preview text-sm text-[var(--c-text-tertiary)]" :title="userInfo.introduction">{{ userInfo.introduction || $t('common.notFilled') }}</span>
-        <ChevronRight class="w-4 h-4 text-[var(--c-text-quaternary)]" />
+        <span class="flex-1 text-[var(--c-text-1)]">{{ $t('profile.introduction') }}</span>
+        <span class="profile-introduction-preview text-sm text-[var(--c-text-3)]" :title="userInfo.introduction">{{ userInfo.introduction || $t('common.notFilled') }}</span>
+        <ChevronRight class="w-4 h-4 text-[var(--c-text-3)]" />
       </button>
 
     </AppCard>
@@ -543,7 +543,8 @@ onMounted(() => {
 .profile-introduction-preview { max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .profile-editor { border: 0; padding: 0; margin: 0; min-width: 0; }
 .profile-save-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; color: var(--c-text-2); font-size: 14px; }
-.profile-save-button { min-height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius-control); background: var(--c-primary); color: white; font: inherit; cursor: pointer; }
+.profile-save-button { min-height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius-control); background: var(--c-primary); color: var(--c-on-primary); font: inherit; font-weight: 600; cursor: pointer; transition: background-color 0.16s ease; }
+.profile-save-button:hover:not(:disabled) { background: var(--c-primary-hover); }
 .profile-save-button:disabled { opacity: .5; cursor: default; }
 
 .profile-page {

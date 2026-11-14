@@ -113,19 +113,19 @@ onMounted(() => {
           {{ t('card.list.empty') }}
         </div>
 
-        <!-- Transaction list -->
-        <div v-if="list.length > 0" class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)]">
+        <!-- Transaction ledger -->
+        <div v-if="list.length > 0" class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)]">
           <div
             v-for="(item, index) in list"
             :key="index"
-            class="flex items-center justify-between px-4 py-3"
-            :class="{ 'border-b border-[var(--c-border-light)]': index < list.length - 1 }"
+            class="flex items-center justify-between px-4 py-3.5"
+            :class="{ 'border-b border-[var(--c-divider)]': index < list.length - 1 }"
           >
             <div class="min-w-0 flex-1">
               <div class="text-sm font-medium truncate">{{ item.merchantName || t('card.list.unknownMerchant') }} <span class="text-[var(--c-text-3)]">{{ item.tradeName || '' }}</span></div>
-              <div class="text-xs text-[var(--c-text-3)] mt-0.5">{{ item.tradeTime || '' }}</div>
+              <div class="tabular-num font-mono text-xs text-[var(--c-text-3)] mt-0.5">{{ item.tradeTime || '' }}</div>
             </div>
-            <div class="shrink-0 ml-3 font-mono text-sm font-semibold"
+            <div class="shrink-0 ml-3 font-mono tabular-num text-sm font-semibold"
                  :class="isPositive(item.tradePrice) ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-2)]'"
             >{{ amountText(item.tradePrice) }}</div>
           </div>

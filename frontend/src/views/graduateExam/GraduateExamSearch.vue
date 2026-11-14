@@ -86,12 +86,12 @@ function doQuery() {
 
       <!-- External link -->
       <div class="mt-8">
-        <p class="text-xs text-[var(--c-text-secondary)] mb-2">{{ t('graduateExam.altEntry') }}</p>
+        <p class="editorial-eyebrow mb-2">{{ t('graduateExam.altEntry') }}</p>
         <a
           href="https://yz.chsi.com.cn/apply/cjcxa/"
           target="_blank"
           rel="noopener noreferrer"
-          class="ui-panel flex items-center justify-between bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] px-4 py-3.5 text-sm text-[var(--c-text)] hover:bg-[var(--c-surface-hover)] transition-colors"
+          class="ui-panel flex items-center justify-between bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] px-4 py-3.5 text-sm text-[var(--c-text)] hover:bg-[var(--c-surface-hover)] transition-colors"
         >
           <span>{{ t('graduateExam.chsiLink') }}</span>
           <span class="text-[var(--c-text-tertiary)]">&rsaquo;</span>

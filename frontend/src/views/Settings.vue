@@ -114,8 +114,8 @@
       <button type="button"
               class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-transparent border-0 cursor-pointer font-inherit"
               @click="handleLogoutClick">
-        <LogOut class="w-5 h-5 text-red-500" />
-        <span class="text-red-500 font-medium">{{ $t('profile.logout') }}</span>
+        <LogOut class="w-5 h-5 text-[var(--c-danger)]" />
+        <span class="text-[var(--c-danger)] font-medium">{{ $t('profile.logout') }}</span>
       </button>
     </AppCard>
 
@@ -198,9 +198,10 @@ function confirmLogout() {
 }
 
 .settings-page :deep(.app-card__header) span {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--c-text-3);
 }
 

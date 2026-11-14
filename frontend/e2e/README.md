@@ -4,10 +4,11 @@ Run the existing suite with `npm run test:e2e` from `frontend`.
 
 All specs import `test` and `expect` from `./fixtures.js`. The shared context
 fixture fulfills only the exact optional WeUI CDN script URL in `index.html`
-with a no-op JavaScript response. It defines no SDK globals and exercises the
-app's existing built-in controls, independently of CDN availability. The
-production HTML and application behavior are unchanged. Existing assertions,
-local-data setup and API/upload mocks remain in their individual specs.
+with a no-op JavaScript response, keeping tests independent of CDN availability.
+
+It defines no SDK globals and exercises the app's built-in controls. The
+production HTML, assertions, local-data setup, and API/upload mocks remain
+unchanged in their individual specs.
 
 The smoke suite verifies rendered application interactions with this SDK
 unavailable. Passing it does not verify the external SDK, its network delivery

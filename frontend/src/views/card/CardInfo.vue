@@ -87,42 +87,42 @@ onMounted(() => {
     </div>
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6" v-if="info">
-      <!-- 余额卡片 -->
-      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)] mb-4">
+      <!-- Balance highlight panel -->
+      <div class="ui-panel bg-[var(--c-surface)] p-6 border border-[var(--c-border)] mb-5">
         <div class="text-center">
-          <div class="text-xs text-[var(--c-text-2)] mb-1">{{ t('card.info.balanceTitle') }}</div>
-          <div class="font-mono text-2xl font-bold text-[var(--c-primary)]">{{ info.cardBalance ?? '--' }}</div>
-          <div class="text-xs text-[var(--c-text-3)] mt-1">{{ t('card.info.interimBalance') }}{{ info.cardInterimBalance ?? '--' }}</div>
+          <div class="editorial-eyebrow mb-2">{{ t('card.info.balanceTitle') }}</div>
+          <div class="editorial-serif tabular-num text-3xl font-bold text-[var(--c-primary)]">{{ info.cardBalance ?? '--' }}</div>
+          <div class="tabular-num text-xs text-[var(--c-text-3)] mt-2">{{ t('card.info.interimBalance') }}{{ info.cardInterimBalance ?? '--' }}</div>
         </div>
       </div>
 
-      <!-- 基本信息 -->
-      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-4">
-        <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
-          <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">{{ t('card.info.basicInfoTitle') }}</span>
+      <!-- Basic ledger info -->
+      <div class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] mb-4">
+        <div class="px-4 py-2.5 border-b border-[var(--c-divider)]">
+          <span class="editorial-eyebrow">{{ t('card.info.basicInfoTitle') }}</span>
         </div>
-        <div class="divide-y divide-[var(--c-border-light)]">
+        <div class="divide-y divide-[var(--c-divider)]">
           <div class="flex justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-2)]">{{ t('card.info.field.name') }}</span>
             <span class="text-sm font-medium">{{ info.name || '--' }}</span>
           </div>
           <div class="flex justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-2)]">{{ t('card.info.field.number') }}</span>
-            <span class="text-sm font-medium">{{ info.number ?? '--' }}</span>
+            <span class="text-sm font-medium font-mono tabular-num">{{ info.number ?? '--' }}</span>
           </div>
           <div class="flex justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-2)]">{{ t('card.info.field.cardNumber') }}</span>
-            <span class="text-sm font-medium">{{ info.cardNumber ?? '--' }}</span>
+            <span class="text-sm font-medium font-mono tabular-num">{{ info.cardNumber ?? '--' }}</span>
           </div>
         </div>
       </div>
 
-      <!-- 状态信息 -->
-      <div class="ui-panel bg-[var(--c-surface)] rounded-2xl shadow-sm border border-[var(--c-border)] mb-6">
-        <div class="px-4 py-2.5 border-b border-[var(--c-border)]">
-          <span class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide">{{ t('card.info.statusTitle') }}</span>
+      <!-- Status ledger -->
+      <div class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] mb-6">
+        <div class="px-4 py-2.5 border-b border-[var(--c-divider)]">
+          <span class="editorial-eyebrow">{{ t('card.info.statusTitle') }}</span>
         </div>
-        <div class="divide-y divide-[var(--c-border-light)]">
+        <div class="divide-y divide-[var(--c-divider)]">
           <div class="flex justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-2)]">{{ t('card.info.field.lostState') }}</span>
             <span class="text-sm font-medium">{{ info.cardLostState ?? '--' }}</span>

@@ -287,10 +287,10 @@ onBeforeUnmount(() => {
       <!-- 树洞卡片 -->
       <div
         :id="secret.id"
-        class="mx-2.5 mt-5 text-center text-headline leading-[25px] relative h-[240px] rounded-lg border-l-4 border-[var(--c-secret)] shadow-sm"
+        class="mx-2.5 mt-5 text-center text-headline leading-[26px] relative h-[240px] rounded-[var(--radius-card)] border border-[var(--c-border)] border-l-[3px] border-l-[var(--c-secret)]"
         :style="{ backgroundColor: noteBg(secret.theme), color: noteText(secret.theme) }"
       >
-        <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
+        <section class="editorial-serif flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
           <template v-if="secret.type === 0">
             {{ secret.content }}
           </template>
@@ -345,7 +345,7 @@ onBeforeUnmount(() => {
       <div
         v-for="(comment, index) in comments"
         :key="comment.id"
-        class="leading-6 mx-2.5 mt-2 bg-[var(--c-surface)] p-2 border-l-4 border-[var(--c-secret)] rounded-lg shadow-sm flex gap-2.5 animate-[community-slide-up_0.3s_ease_both]"
+        class="leading-6 mx-2.5 mt-2 bg-[var(--c-surface)] p-2.5 border border-[var(--c-border)] border-l-[3px] border-l-[var(--c-secret)] rounded-[var(--radius-card)] flex gap-2.5 animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: index * 0.05 + 's' }"
       >
         <img :src="`/img/avatar/${comment.avatarTheme || 1}.png`" alt="" class="w-10 h-10 rounded-full shrink-0" />

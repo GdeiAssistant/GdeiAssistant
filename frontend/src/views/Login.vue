@@ -89,9 +89,11 @@ function handleThirdPartyLogin(type) {
     <section class="login-visual" aria-hidden="true">
       <div class="login-visual__top">
         <img class="login-visual__mark" src="/favicon.svg" alt="" width="40" height="40" />
+        <span class="login-visual__edition">{{ t('loginPage.editionLabel') }}</span>
       </div>
       <div class="login-visual__card">
-        <h2>{{ t('loginPage.title') }}</h2>
+        <p class="login-visual__eyebrow editorial-eyebrow">{{ t('loginPage.subtitle') }}</p>
+        <h2 class="editorial-serif">{{ t('loginPage.title') }}</h2>
       </div>
       <svg class="login-visual__grid" viewBox="0 0 400 400" preserveAspectRatio="none" focusable="false">
         <defs>
@@ -104,23 +106,48 @@ function handleThirdPartyLogin(type) {
     </section>
 
     <section class="login-panel" aria-labelledby="login-title">
-      <div class="login-panel__brand">
-        <img class="login-panel__logo" src="/favicon.svg" alt="" width="44" height="44" />
-        <div>
-          <h1 id="login-title">{{ t('loginPage.title') }}</h1>
-          <p>{{ t('loginPage.subtitle') }}</p>
+      <div class="login-panel__top">
+        <div class="login-panel__brand">
+          <img class="login-panel__logo" src="/favicon.svg" alt="" width="44" height="44" />
+          <div>
+            <p class="editorial-eyebrow login-panel__kicker">{{ t('loginPage.editionLabel') }}</p>
+            <h1 id="login-title" class="editorial-serif">{{ t('loginPage.title') }}</h1>
+            <p>{{ t('loginPage.subtitle') }}</p>
+          </div>
         </div>
+
+        <label class="login-locale">
+          <span class="sr-only">{{ t('appearance.language.label') }}</span>
+          <select :value="locale" @change="onLocaleChange">
+            <option v-for="option in localeOptions" :key="option.code" :value="option.code" :lang="option.code">{{ option.label }}</option>
+          </select>
+        </label>
       </div>
 
-      <label class="login-locale">
-        <span>{{ t('appearance.language.label') }}</span>
-        <select :value="locale" @change="onLocaleChange">
-          <option v-for="option in localeOptions" :key="option.code" :value="option.code" :lang="option.code">{{ option.label }}</option>
-        </select>
-      </label>
-
-      <div class="login-panel__notice">
-        {{ t('loginPage.credentialNotice') }}
+      <div v-if="isDev" class="login-mock" :class="{ 'login-mock--active': mockMode }">
+        <div class="login-mock__top">
+          <div class="login-mock__title">
+            <span>{{ t('loginPage.mockMode') }}</span>
+            <strong v-if="mockMode" class="login-mock__badge">{{ t('loginPage.mockActive') }}</strong>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            :aria-checked="mockMode"
+            :aria-label="t('loginPage.mockMode')"
+            class="login-switch"
+            :class="{ 'login-switch--on': mockMode }"
+            @click="toggleMock"
+          >
+            <span />
+          </button>
+        </div>
+        <div v-if="mockMode" class="login-mock__hint">
+          <p class="tabular-num">{{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}</p>
+          <button type="button" class="login-mock__fill" @click="fillMockCredentials">
+            {{ t('loginPage.fillMockAction') }}
+          </button>
+        </div>
       </div>
 
       <form class="login-form" @submit.prevent="handleLogin">
@@ -156,25 +183,8 @@ function handleThirdPartyLogin(type) {
         </button>
       </form>
 
-      <div v-if="isDev" class="login-mock">
-        <div class="login-mock__top">
-          <span>{{ t('loginPage.mockMode') }}</span>
-          <button
-            type="button"
-            role="switch"
-            :aria-checked="mockMode"
-            :aria-label="t('loginPage.mockMode')"
-            class="login-switch"
-            :class="{ 'login-switch--on': mockMode }"
-            @click="toggleMock"
-          >
-            <span />
-          </button>
-        </div>
-        <div v-if="mockMode" class="login-mock__hint">
-          <p>{{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}</p>
-          <strong>{{ t('loginPage.mockActive') }}</strong>
-        </div>
+      <div class="login-panel__notice">
+        {{ t('loginPage.credentialNotice') }}
       </div>
 
       <div class="login-links">
@@ -239,6 +249,19 @@ function handleThirdPartyLogin(type) {
   z-index: 1;
 }
 
+.login-visual__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-visual__edition {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  opacity: 0.85;
+}
+
 .login-visual__mark {
   width: 40px;
   height: 40px;
@@ -248,24 +271,39 @@ function handleThirdPartyLogin(type) {
 
 .login-visual__card {
   max-width: 480px;
+  padding-top: 24px;
+  border-top: 1px solid color-mix(in srgb, var(--c-on-brand-deep) 24%, transparent);
+}
+
+.login-visual__eyebrow {
+  margin: 0 0 10px;
+  color: color-mix(in srgb, var(--c-on-brand-deep) 78%, transparent);
 }
 
 .login-visual h2 {
   margin: 0;
   color: var(--c-on-brand-deep);
-  font-size: clamp(36px, 4.4vw, 56px);
+  font-size: clamp(36px, 4.4vw, 54px);
   font-weight: 700;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+  line-height: 1.12;
+}
+
+.login-panel__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.login-panel__kicker {
+  margin: 0 0 4px;
 }
 
 /* Language switch, available before sign-in */
 .login-locale {
   display: flex;
   align-items: center;
-  align-self: flex-end;
   gap: 8px;
-  margin-bottom: -8px;
   color: var(--c-text-2);
   font-size: 13px;
 }
@@ -421,6 +459,12 @@ function handleThirdPartyLogin(type) {
   padding: 12px 14px;
   border: 1px solid var(--c-border);
   border-radius: var(--radius-control);
+  background: var(--c-bg);
+}
+
+.login-mock--active {
+  border-color: color-mix(in srgb, var(--c-primary) 38%, var(--c-border));
+  background: var(--c-primary-soft);
 }
 
 .login-mock__top {
@@ -431,6 +475,34 @@ function handleThirdPartyLogin(type) {
   color: var(--c-text-1);
   font-size: 13px;
   font-weight: 600;
+}
+
+.login-mock__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-mock__badge {
+  border-radius: 999px;
+  background: var(--c-surface);
+  color: var(--c-primary);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+}
+
+.login-mock__fill {
+  flex: none;
+  border: 1px solid color-mix(in srgb, var(--c-primary) 32%, var(--c-border));
+  border-radius: 6px;
+  background: var(--c-surface);
+  color: var(--c-primary);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 8px;
+  cursor: pointer;
 }
 
 .login-switch {

@@ -1,23 +1,41 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { setLocale as setI18nLocale } from '@/i18n'
 import {
   getThemeMode,
   setThemeMode,
-  getThemeAccent,
-  setThemeAccent,
   getFontScaleStep,
   setFontScaleStep
 } from '@/theme'
+import { useThemeAccent } from '@/composables/useThemeAccent'
 import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
 import { Check, ChevronLeft } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
 
 const theme = ref(getThemeMode())
-const accent = ref(getThemeAccent())
+const { accent, updateAccent: onAccentChange } = useThemeAccent()
 const fontStep = ref(getFontScaleStep())
+let themeObserver = null
+
+function syncThemeMode() {
+  theme.value = getThemeMode()
+}
+
+onMounted(() => {
+  syncThemeMode()
+  themeObserver = new MutationObserver(syncThemeMode)
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  })
+})
+
+onBeforeUnmount(() => {
+  themeObserver?.disconnect()
+  themeObserver = null
+})
 
 const themeOptions = [
   { value: 'system', labelKey: 'appearance.theme.system' },
@@ -48,10 +66,6 @@ const selectedLocale = computed(() => resolveSupportedLocale(locale.value))
 function onThemeChange(value) {
   theme.value = value
   setThemeMode(value)
-}
-
-function onAccentChange(value) {
-  accent.value = setThemeAccent(value)
 }
 
 function onFontChange(e) {

@@ -70,4 +70,22 @@ test.describe('Appearance page', () => {
     const theme = await page.evaluate(() => document.documentElement.getAttribute('data-theme'))
     expect(theme).toBe('dark')
   })
+
+  test('accent selection stays synchronized between external updates, sidebar, and appearance page', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 })
+    await page.goto('/appearance')
+
+    // Simulate an external root attribute mutation while AppearancePage is open
+    await page.evaluate(() => {
+      document.documentElement.dataset.accent = 'bauhinia'
+    })
+    const appearanceBauhinia = page.locator('.accent-option').nth(3)
+    await expect(appearanceBauhinia).toHaveAttribute('aria-checked', 'true')
+
+    // Switching back via sidebar on home keeps appearance page synchronized
+    await page.goto('/')
+    await page.locator('.campus-sidebar__accent-btn').nth(1).click()
+    await page.goto('/appearance')
+    await expect(page.locator('.accent-option').nth(1)).toHaveAttribute('aria-checked', 'true')
+  })
 })

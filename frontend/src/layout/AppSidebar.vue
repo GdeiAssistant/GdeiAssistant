@@ -1,10 +1,10 @@
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { ChevronRight } from 'lucide-vue-next'
 import { getCurrentUserProfile } from '@/api/user'
-import { getThemeAccent, setThemeAccent } from '@/theme'
+import { useThemeAccent } from '@/composables/useThemeAccent'
 import { createFooterItems, createNavItems } from './navigation'
 
 const emit = defineEmits(['navigate'])
@@ -13,8 +13,7 @@ const route = useRoute()
 const { t } = useI18n()
 
 const profile = ref(null)
-const currentAccent = ref(getThemeAccent())
-let accentObserver = null
+const { accent: currentAccent, updateAccent: selectAccent } = useThemeAccent()
 
 const accentSwatches = [
   { id: 'banyan', lightHex: '#0E7C61', darkHex: '#2DD4BF' },
@@ -23,30 +22,11 @@ const accentSwatches = [
   { id: 'bauhinia', lightHex: '#6D28D9', darkHex: '#A78BFA' },
 ]
 
-function syncAccent() {
-  currentAccent.value = document.documentElement.dataset.accent || getThemeAccent()
-}
-
-function selectAccent(id) {
-  currentAccent.value = setThemeAccent(id)
-}
-
 onMounted(async () => {
-  syncAccent()
-  accentObserver = new MutationObserver(syncAccent)
-  accentObserver.observe(document.documentElement, {
-    attributes: true,
-    attributeFilter: ['data-accent']
-  })
   try {
     const res = await getCurrentUserProfile()
     profile.value = res?.data || null
   } catch (_) {}
-})
-
-onBeforeUnmount(() => {
-  accentObserver?.disconnect()
-  accentObserver = null
 })
 
 const navItems = computed(() => createNavItems(t))

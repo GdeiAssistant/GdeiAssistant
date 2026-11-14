@@ -165,13 +165,13 @@ const resetQuery = () => {
 
       <!-- Query result -->
       <div v-if="isQueried">
-        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">{{ t('electricityFees.result.title') }}</h3>
+        <h3 class="editorial-eyebrow mb-2.5">{{ t('electricityFees.result.title') }}</h3>
 
-        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
-          <div class="divide-y divide-[var(--c-border-light)]">
+        <div class="ui-panel bg-[var(--c-surface)] px-5 py-2 border border-[var(--c-border)]">
+          <div class="divide-y divide-[var(--c-divider)]">
             <div v-for="field in resultFields" :key="field.key" class="flex justify-between py-3">
               <span class="text-sm text-[var(--c-text-2)]">{{ field.label }}</span>
-              <span class="text-sm font-semibold">
+              <span class="tabular-num font-mono text-sm font-semibold">
                 {{ field.key === 'dormitory' ? `${result.buildingNumber}${result.roomNumber}` : result[field.key] }}
               </span>
             </div>

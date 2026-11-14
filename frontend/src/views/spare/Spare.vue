@@ -201,21 +201,23 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
           <span class="text-sm">{{ t('common.loading') }}</span>
         </div>
 
-        <!-- Results list -->
+        <!-- Results ledger -->
         <template v-else>
-          <p class="text-xs text-[var(--c-text-secondary)] mb-3">{{ t('spare.resultList') }}</p>
-          <div class="space-y-3">
+          <p class="editorial-eyebrow mb-3">{{ t('spare.resultList') }}</p>
+          <div v-if="spareList.length > 0" class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] divide-y divide-[var(--c-divider)]">
             <div
               v-for="(item, index) in spareList"
               :key="item.number || index"
-              class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] p-4"
+              class="px-4 py-3.5"
             >
-              <h4 class="text-body font-medium text-[var(--c-text)] mb-2">{{ item.name || item.number || '—' }}</h4>
-              <div class="space-y-1 text-xs text-[var(--c-text-secondary)]">
-                <p>{{ t('spare.result.number') }}：{{ item.number || '—' }}</p>
+              <div class="flex items-baseline justify-between gap-3 mb-1.5">
+                <h4 class="editorial-serif text-base font-semibold text-[var(--c-text-1)]">{{ item.name || item.number || '—' }}</h4>
+                <span class="font-mono tabular-num text-xs text-[var(--c-primary)]">{{ item.number || '—' }}</span>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 text-xs text-[var(--c-text-2)]">
                 <p>{{ t('spare.result.type') }}：{{ item.type || '—' }}</p>
                 <p>{{ t('spare.result.campus') }}：{{ item.zone || '—' }}</p>
-                <p>{{ t('spare.result.seats') }}：{{ item.classSeating || '—' }}</p>
+                <p class="tabular-num">{{ t('spare.result.seats') }}：{{ item.classSeating || '—' }}</p>
               </div>
             </div>
           </div>

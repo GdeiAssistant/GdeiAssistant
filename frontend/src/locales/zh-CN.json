@@ -188,7 +188,11 @@
     "todayNoCourse": "今天没有课，好好休息。",
     "todayUnavailable": "课表暂时无法获取，可打开课表页重试。",
     "todayUnread": "{count} 条未读消息",
-    "todayAllRead": "暂无未读消息"
+    "todayAllRead": "暂无未读消息",
+    "openCommandPalette": "命令面板",
+    "weekLabel": "第 {week} 周",
+    "railShortcutsTitle": "校园直达",
+    "railNoticeTitle": "近期与公告"
   },
   "profile": {
     "title": "个人中心",
@@ -259,7 +263,10 @@
     "loading": "登录中……",
     "failed": "登录失败",
     "thirdPartyUnavailable": "该登录方式暂未开放",
-    "credentialNotice": "校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。"
+    "credentialNotice": "校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。",
+    "mockCredentialHint": "示例账号：gdeiassistant / gdeiassistant",
+    "fillMockAction": "填入示例",
+    "editionLabel": "岭南书院版 · 校园门户"
   },
   "libraryPage": {
     "title": "图书馆",
@@ -496,7 +503,8 @@
   "sidebar": {
     "settings": "设置",
     "about": "关于",
-    "notLoggedIn": "未登录"
+    "notLoggedIn": "未登录",
+    "accentLabel": "主题色"
   },
   "commandPalette": {
     "searchPlaceholder": "搜索功能……",
@@ -1473,6 +1481,13 @@
       "system": "跟随系统",
       "light": "浅色模式",
       "dark": "深色模式"
+    },
+    "accent": {
+      "label": "主题色",
+      "banyan": "榕荫翠",
+      "kapok": "木棉丹",
+      "haizhu": "海珠蓝",
+      "bauhinia": "紫荆紫"
     },
     "font": {
       "label": "字体大小",

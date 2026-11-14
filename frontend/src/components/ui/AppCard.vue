@@ -19,7 +19,7 @@ const slots = useSlots()
   border: 1px solid var(--c-border);
   border-radius: var(--radius-card);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .app-card__header {

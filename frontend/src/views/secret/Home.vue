@@ -127,11 +127,11 @@ onMounted(() => {
           v-for="(item, index) in list"
           :key="item.id"
           :id="item.id"
-          class="community-desktop-note-card mx-2.5 my-5 text-center text-headline leading-[25px] relative h-[240px] px-2.5 rounded-lg border-l-4 border-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
+          class="community-desktop-note-card mx-2.5 my-5 text-center text-headline leading-[26px] relative h-[240px] px-3 rounded-[var(--radius-card)] border border-[var(--c-border)] border-l-[3px] border-l-[var(--c-secret)] animate-[community-slide-up_0.3s_ease_both]"
           :style="{ backgroundColor: noteBg(item.theme), color: noteText(item.theme), animationDelay: index * 0.05 + 's' }"
         >
           <a href="javascript:;" class="community-secret-note-link block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">
-            <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
+            <section class="editorial-serif flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
               <template v-if="item.type === 0">
                 {{ item.content }}
               </template>

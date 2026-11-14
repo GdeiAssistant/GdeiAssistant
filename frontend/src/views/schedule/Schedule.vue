@@ -354,7 +354,7 @@ onMounted(() => {
         <div
           v-for="row in 12"
           :key="'index-' + row"
-          class="flex items-center justify-center text-xs font-mono text-[var(--c-text-3)] bg-[var(--c-surface)] border-[0.5px] border-[var(--c-divider)] border-r-[1px] min-w-[30px]"
+          class="flex items-center justify-center text-xs font-mono tabular-num text-[var(--c-text-3)] bg-[var(--c-surface)] border-[0.5px] border-[var(--c-divider)] border-r-[1px] min-w-[30px]"
           :style="{ gridColumn: 1, gridRow: row + 1 }"
         >
           {{ row }}
@@ -397,7 +397,7 @@ onMounted(() => {
           v-for="(course, index) in filteredList"
           :key="'course-' + index"
           type="button"
-          class="m-[2px] px-1 py-1.5 rounded-r-lg border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer shadow-sm transition duration-[0.12s] active:scale-[0.98]"
+          class="m-[2px] px-1 py-1.5 rounded-r-md border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer transition duration-[0.12s] active:scale-[0.98]"
           :style="getCourseStyle(course)"
           @click="openCourseDetail(course)"
         >

@@ -242,28 +242,28 @@ onMounted(() => {
       <div class="subpage-body max-w-lg mx-auto px-4 py-6" v-if="cetResult">
         <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('cetPage.resultDisclaimer') }}</p>
 
-        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
-          <h2 class="text-lg font-bold text-center mb-1">{{ cetResult.name }}</h2>
+        <div class="ui-panel bg-[var(--c-surface)] p-6 border border-[var(--c-border)]">
+          <h2 class="editorial-serif text-xl font-bold text-center mb-1">{{ cetResult.name }}</h2>
           <p class="text-sm text-[var(--c-text-2)] text-center">{{ cetResult.type }}</p>
           <p class="text-sm text-[var(--c-text-2)] text-center mb-4">{{ cetResult.school }}</p>
 
-          <div class="bg-[var(--c-primary)]/5 rounded-xl p-4 text-center mb-4">
-            <div class="text-xs text-[var(--c-text-2)] mb-1">{{ t('cetPage.totalScore') }}</div>
-            <div class="font-mono text-3xl font-bold text-[var(--c-primary)]">{{ cetResult.totalScore }}</div>
+          <div class="bg-[var(--c-primary-soft)] rounded-xl p-4 text-center mb-4">
+            <div class="editorial-eyebrow mb-1">{{ t('cetPage.totalScore') }}</div>
+            <div class="editorial-serif tabular-num text-4xl font-bold text-[var(--c-primary)]">{{ cetResult.totalScore }}</div>
           </div>
 
-          <div class="divide-y divide-[var(--c-border-light)]">
+          <div class="divide-y divide-[var(--c-divider)]">
             <div class="flex justify-between py-3">
               <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.listeningScore') }}</span>
-              <span class="text-sm font-semibold">{{ cetResult.listeningScore }}</span>
+              <span class="tabular-num font-mono text-sm font-semibold">{{ cetResult.listeningScore }}</span>
             </div>
             <div class="flex justify-between py-3">
               <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.readingScore') }}</span>
-              <span class="text-sm font-semibold">{{ cetResult.readingScore }}</span>
+              <span class="tabular-num font-mono text-sm font-semibold">{{ cetResult.readingScore }}</span>
             </div>
             <div class="flex justify-between py-3">
               <span class="text-sm text-[var(--c-text-2)]">{{ t('cetPage.writingScore') }}</span>
-              <span class="text-sm font-semibold">{{ cetResult.writingAndTranslatingScore }}</span>
+              <span class="tabular-num font-mono text-sm font-semibold">{{ cetResult.writingAndTranslatingScore }}</span>
             </div>
           </div>
         </div>

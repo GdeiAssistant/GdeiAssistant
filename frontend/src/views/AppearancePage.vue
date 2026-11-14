@@ -2,19 +2,34 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { setLocale as setI18nLocale } from '@/i18n'
-import { getThemeMode, setThemeMode, getFontScaleStep, setFontScaleStep } from '@/theme'
+import {
+  getThemeMode,
+  setThemeMode,
+  getThemeAccent,
+  setThemeAccent,
+  getFontScaleStep,
+  setFontScaleStep
+} from '@/theme'
 import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
 import { Check, ChevronLeft } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
 
 const theme = ref(getThemeMode())
+const accent = ref(getThemeAccent())
 const fontStep = ref(getFontScaleStep())
 
 const themeOptions = [
   { value: 'system', labelKey: 'appearance.theme.system' },
   { value: 'light', labelKey: 'appearance.theme.light' },
   { value: 'dark', labelKey: 'appearance.theme.dark' },
+]
+
+const accentOptions = [
+  { value: 'banyan', labelKey: 'appearance.accent.banyan', lightHex: '#0E7C61', darkHex: '#2DD4BF', softHex: '#E4F3EE' },
+  { value: 'kapok', labelKey: 'appearance.accent.kapok', lightHex: '#C85A32', darkHex: '#FB923C', softHex: '#FBECE6' },
+  { value: 'haizhu', labelKey: 'appearance.accent.haizhu', lightHex: '#1D4ED8', darkHex: '#60A5FA', softHex: '#E8EFFD' },
+  { value: 'bauhinia', labelKey: 'appearance.accent.bauhinia', lightHex: '#6D28D9', darkHex: '#A78BFA', softHex: '#F1EAFF' },
 ]
 
 const fontLabels = [
@@ -35,6 +50,10 @@ function onThemeChange(value) {
   setThemeMode(value)
 }
 
+function onAccentChange(value) {
+  accent.value = setThemeAccent(value)
+}
+
 function onFontChange(e) {
   const step = Number(e.target.value)
   fontStep.value = step
@@ -47,6 +66,10 @@ function onLocaleChange(code) {
 
 function isThemeSelected(value) {
   return theme.value === value
+}
+
+function isAccentSelected(value) {
+  return accent.value === value
 }
 
 function isLocaleSelected(code) {
@@ -88,6 +111,32 @@ function isLocaleSelected(code) {
               <span>{{ t(opt.labelKey) }}</span>
               <Check v-if="isThemeSelected(opt.value)" class="check-icon" :size="16" aria-hidden="true" />
             </span>
+          </button>
+        </div>
+      </section>
+
+      <section class="appearance-section">
+        <h3 class="section-title">{{ t('appearance.accent.label') }}</h3>
+        <div class="accent-grid" role="radiogroup" :aria-label="t('appearance.accent.label')">
+          <button
+            v-for="opt in accentOptions"
+            :key="opt.value"
+            type="button"
+            role="radio"
+            :aria-checked="isAccentSelected(opt.value)"
+            class="option-item accent-option"
+            :class="{ 'option-item--active': isAccentSelected(opt.value) }"
+            @click="onAccentChange(opt.value)"
+          >
+            <span class="accent-option__meta">
+              <span
+                class="accent-swatch"
+                :style="{ backgroundColor: opt.lightHex, '--swatch-dark': opt.darkHex, '--swatch-soft': opt.softHex }"
+                aria-hidden="true"
+              ></span>
+              <span class="accent-option__name">{{ t(opt.labelKey) }}</span>
+            </span>
+            <Check v-if="isAccentSelected(opt.value)" class="check-icon" :size="16" aria-hidden="true" />
           </button>
         </div>
       </section>
@@ -154,9 +203,10 @@ function isLocaleSelected(code) {
 .appearance-heading {
   display: none;
   margin: 0 0 24px;
-  font-size: 26px;
+  font-family: var(--font-serif);
+  font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .appearance-section + .appearance-section {
@@ -165,9 +215,10 @@ function isLocaleSelected(code) {
 
 .section-title {
   margin: 0 0 10px 2px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--c-text-3);
 }
 
@@ -175,6 +226,56 @@ function isLocaleSelected(code) {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
+}
+
+.accent-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.accent-option {
+  min-height: 52px;
+  padding: 12px 14px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-card);
+  background: var(--c-surface);
+}
+
+.accent-option:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 40%, var(--c-border));
+}
+
+.accent-option.option-item--active {
+  border-color: var(--c-primary);
+  background: var(--c-primary-soft);
+  box-shadow: 0 0 0 1px var(--c-primary);
+}
+
+.accent-option__meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.accent-option__name {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.accent-swatch {
+  position: relative;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--c-text-1) 14%, transparent);
+  box-shadow: inset 0 0 0 2px var(--c-surface);
+}
+
+[data-theme="dark"] .accent-swatch {
+  background-color: var(--swatch-dark) !important;
 }
 
 .option-item {

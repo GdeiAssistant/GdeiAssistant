@@ -114,7 +114,11 @@
     "todayNoCourse": "오늘은 수업이 없습니다.",
     "todayUnavailable": "시간표를 불러올 수 없습니다. 시간표 화면에서 다시 시도하세요.",
     "todayUnread": "읽지 않은 메시지 {count}개",
-    "todayAllRead": "읽지 않은 메시지가 없습니다"
+    "todayAllRead": "읽지 않은 메시지가 없습니다",
+    "openCommandPalette": "빠른 이동",
+    "weekLabel": "{week}주차",
+    "railShortcutsTitle": "캠퍼스 바로가기",
+    "railNoticeTitle": "오늘의 안내 및 공지"
   },
   "profile": {
     "title": "프로필",
@@ -212,7 +216,8 @@
   "sidebar": {
     "settings": "설정",
     "about": "정보",
-    "notLoggedIn": "로그인되지 않음"
+    "notLoggedIn": "로그인되지 않음",
+    "accentLabel": "강조색"
   },
   "about": {
     "appName": "광둥이사 어시스턴트",
@@ -341,6 +346,13 @@
       "system": "시스템 설정 따르기",
       "light": "라이트 모드",
       "dark": "다크 모드"
+    },
+    "accent": {
+      "label": "테마 색상",
+      "banyan": "반얀 에메랄드",
+      "kapok": "카폭 테라코타",
+      "haizhu": "하이주 블루",
+      "bauhinia": "바우히니아 바이올렛"
     },
     "font": {
       "label": "글꼴 크기",
@@ -1365,7 +1377,10 @@
     "title": "GdeiAssistant",
     "usernameLabel": "계정",
     "usernamePlaceholder": "캠퍼스 네트워크 계정을 입력하세요",
-    "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다."
+    "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다.",
+    "mockCredentialHint": "데모 계정: gdeiassistant / gdeiassistant",
+    "fillMockAction": "데모 채우기",
+    "editionLabel": "영남서원 에디션 · 캠퍼스 포털"
   },
   "loginRecord": {
     "clientDevice": "{network} 클라이언트",

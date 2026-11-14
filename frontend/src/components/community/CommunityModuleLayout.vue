@@ -150,9 +150,10 @@ onMounted(async () => {
 .community-module-layout__hero h1 {
   margin: 0;
   color: var(--c-text-1);
+  font-family: var(--font-serif);
   font-size: 28px;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   line-height: 1.2;
 }
 
@@ -220,7 +221,7 @@ onMounted(async () => {
   border: 1px solid var(--c-border);
   border-radius: var(--radius-card);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .community-module-layout__rail {

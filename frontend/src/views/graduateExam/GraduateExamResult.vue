@@ -81,35 +81,35 @@ onMounted(() => {
       <template v-if="!isLoading && hasData">
         <!-- Total score highlight -->
         <div class="text-center mb-6">
-          <p class="text-sm text-[var(--c-primary)] mb-1">{{ t('graduateExam.totalScore') }}</p>
-          <p class="text-4xl font-semibold text-[var(--c-primary)]">{{ scoreData.totalScore }}</p>
+          <p class="editorial-eyebrow text-[var(--c-primary)] mb-1">{{ t('graduateExam.totalScore') }}</p>
+          <p class="editorial-serif tabular-num text-4xl font-bold text-[var(--c-primary)]">{{ scoreData.totalScore }}</p>
         </div>
 
-        <!-- Score details card -->
-        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+        <!-- Score details ledger -->
+        <div class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] divide-y divide-[var(--c-divider)]">
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.name') }}</span>
             <span class="text-sm text-[var(--c-text)]">{{ scoreData.name ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.candidateNo') }}</span>
-            <span class="text-sm text-[var(--c-text)]">{{ scoreData.candidateNo ?? '—' }}</span>
+            <span class="font-mono tabular-num text-sm text-[var(--c-text)]">{{ scoreData.candidateNo ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.politics') }}</span>
-            <span class="text-sm text-[var(--c-text)]">{{ scoreData.politics ?? '—' }}</span>
+            <span class="font-mono tabular-num text-sm font-semibold text-[var(--c-text)]">{{ scoreData.politics ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.foreignLanguage') }}</span>
-            <span class="text-sm text-[var(--c-text)]">{{ scoreData.foreignLanguage ?? '—' }}</span>
+            <span class="font-mono tabular-num text-sm font-semibold text-[var(--c-text)]">{{ scoreData.foreignLanguage ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.business1') }}</span>
-            <span class="text-sm text-[var(--c-text)]">{{ scoreData.business1 ?? '—' }}</span>
+            <span class="font-mono tabular-num text-sm font-semibold text-[var(--c-text)]">{{ scoreData.business1 ?? '—' }}</span>
           </div>
           <div class="flex items-center justify-between px-4 py-3">
             <span class="text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.business2') }}</span>
-            <span class="text-sm text-[var(--c-text)]">{{ scoreData.business2 ?? '—' }}</span>
+            <span class="font-mono tabular-num text-sm font-semibold text-[var(--c-text)]">{{ scoreData.business2 ?? '—' }}</span>
           </div>
         </div>
 

@@ -177,26 +177,20 @@ npm run test:e2e
 
 ## 界面预览
 
-以下为 Web 端在 Mock 演示模式下的界面截图，涵盖桌面浅色/深色模式、多主题色切换、校园社区广场与移动端视口。
+以下为 Web 端基于 Lingnan Editorial 设计系统的矢量界面预览，展示桌面浅色/深色模式、多主题色外观设置与移动端响应式布局：
 
 - 桌面首页：浅色「岭南晨纸（榕荫翠）」与深色「珠江夜读」模式
 
 <p>
-  <img src="assets/screenshots/web-home-light.png" alt="Web 桌面首页浅色模式" width="410">
-  <img src="assets/screenshots/web-home-dark.png" alt="Web 桌面首页深色模式" width="410">
+  <img src="assets/screenshots/web-home-light.svg" alt="Web 桌面首页浅色模式预览" width="410">
+  <img src="assets/screenshots/web-home-dark.svg" alt="Web 桌面首页深色模式预览" width="410">
 </p>
 
-- 外观设置（木棉丹主题色切换）与校园生活广场（二手交易）
+- 外观设置（木棉丹主题色、字体与多语言切换）与移动端首页视口
 
 <p>
-  <img src="assets/screenshots/web-appearance-themes.png" alt="Web 界面与外观主题切换" width="410">
-  <img src="assets/screenshots/web-community-plaza.png" alt="Web 校园社区二手交易" width="410">
-</p>
-
-- 移动端响应式首页视口
-
-<p>
-  <img src="assets/screenshots/web-mobile-home.png" alt="Web 移动端首页" width="260">
+  <img src="assets/screenshots/web-appearance-themes.svg" alt="Web 界面与外观主题切换预览" width="410">
+  <img src="assets/screenshots/web-mobile-home.svg" alt="Web 移动端首页预览" width="210">
 </p>
 
 ## 客户端与官网

@@ -1,0 +1,11 @@
+{
+  "repository-hygiene": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 -c 'import json, pathlib, subprocess, sys; raw = sys.stdin.read().strip(); data = json.loads(raw) if raw else {};\nif data.get(\"continuationActive\"): print(json.dumps({\"decision\": \"allow\"})); raise SystemExit(0)\ncwd = pathlib.Path.cwd(); root = cwd.parent if (cwd.parent / \"scripts/check_hygiene.py\").exists() and not (cwd / \"scripts/check_hygiene.py\").exists() else cwd; res = subprocess.run([sys.executable, \"scripts/check_hygiene.py\"], cwd=root, capture_output=True, text=True); print(json.dumps({\"decision\": \"allow\"} if res.returncode == 0 else {\"decision\": \"continue\", \"reason\": \"scripts/check_hygiene.py failed:\\n\" + (res.stdout + res.stderr).strip()}))'",
+        "timeout": 10
+      }
+    ]
+  }
+}

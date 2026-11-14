@@ -1,11 +1,12 @@
 <script setup>
-import { computed, ref, provide, onMounted, onUnmounted, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, provide, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { Home, Bell, UserRound } from 'lucide-vue-next'
 import AppSidebar from './AppSidebar.vue'
 import AppTopbar from './AppTopbar.vue'
-import CommandPalette from '@/components/ui/CommandPalette.vue'
+
+const CommandPalette = defineAsyncComponent(() => import('@/components/ui/CommandPalette.vue'))
 
 const router = useRouter()
 const route = useRoute()
@@ -109,12 +110,13 @@ onUnmounted(() => {
       </button>
     </nav>
 
-    <CommandPalette :open="showCommandPalette" @close="showCommandPalette = false" />
+    <CommandPalette v-if="showCommandPalette" :open="showCommandPalette" @close="showCommandPalette = false" />
   </div>
 </template>
 
 <style scoped>
 .campus-app-shell {
+  --rail-width: 232px;
   position: relative;
   min-height: 100vh;
   background: var(--c-bg);
@@ -122,14 +124,14 @@ onUnmounted(() => {
 
 .campus-main {
   min-height: 100vh;
-  margin-left: var(--rail-width, 248px);
+  margin-left: var(--rail-width);
 }
 
 .campus-content {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 28px 40px calc(88px + env(safe-area-inset-bottom, 0px));
+  padding: 32px 44px calc(88px + env(safe-area-inset-bottom, 0px));
 }
 
 .campus-sidebar-backdrop {
@@ -138,20 +140,21 @@ onUnmounted(() => {
   z-index: 45;
   display: none;
   border: 0;
-  background: rgb(10 20 17 / 42%);
+  background: var(--c-scrim);
 }
 
 .campus-mobile-tabbar {
   position: fixed;
   right: 0;
   bottom: 0;
-  left: var(--rail-width, 248px);
+  left: var(--rail-width);
   z-index: 50;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   padding: 6px 8px calc(6px + env(safe-area-inset-bottom, 0px));
   border-top: 1px solid var(--c-border);
-  background: var(--c-surface);
+  background: color-mix(in srgb, var(--c-surface) 94%, transparent);
+  backdrop-filter: blur(12px);
 }
 
 .campus-mobile-tabbar__item {
@@ -196,6 +199,7 @@ onUnmounted(() => {
 
 @media (max-width: 1023px) {
   .campus-mobile-tabbar {
+    display: grid;
     left: 0;
   }
 
@@ -204,7 +208,7 @@ onUnmounted(() => {
   }
 
   .campus-content {
-    max-width: 42rem;
+    max-width: 48rem;
     padding: 24px 24px calc(88px + env(safe-area-inset-bottom, 0px));
   }
 

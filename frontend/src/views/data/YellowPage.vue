@@ -76,8 +76,8 @@ onMounted(() => {
           v-for="(group, groupIndex) in groupedData"
           :key="groupIndex"
         >
-          <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">{{ group.typeName }}</h3>
-          <div class="ui-panel bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+          <h3 class="editorial-eyebrow mb-2.5">{{ group.typeName }}</h3>
+          <div class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] divide-y divide-[var(--c-divider)]">
             <a
               v-for="(item, index) in group.items"
               :key="index"

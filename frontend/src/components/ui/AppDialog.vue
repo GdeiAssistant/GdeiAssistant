@@ -7,7 +7,7 @@ import {
   DialogDescription,
   DialogClose,
   DialogPortal,
-} from 'radix-vue'
+} from 'reka-ui'
 import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
@@ -105,8 +105,10 @@ function onOpenChange(val) {
 .dialog-title {
   margin: 0 0 8px;
   color: var(--c-text-1);
-  font-size: 17px;
-  font-weight: 650;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
 }
 
 .dialog-description,

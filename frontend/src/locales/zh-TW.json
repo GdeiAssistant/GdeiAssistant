@@ -114,7 +114,11 @@
     "todayNoCourse": "今天沒有課，好好休息。",
     "todayUnavailable": "課表暫時無法取得，可開啟課表頁重試。",
     "todayUnread": "{count} 則未讀訊息",
-    "todayAllRead": "暫無未讀訊息"
+    "todayAllRead": "暫無未讀訊息",
+    "openCommandPalette": "命令面板",
+    "weekLabel": "第 {week} 週",
+    "railShortcutsTitle": "校園直達",
+    "railNoticeTitle": "近期與公告"
   },
   "profile": {
     "title": "個人中心",
@@ -212,7 +216,8 @@
   "sidebar": {
     "settings": "設定",
     "about": "關於",
-    "notLoggedIn": "未登入"
+    "notLoggedIn": "未登入",
+    "accentLabel": "主題色"
   },
   "about": {
     "appName": "廣東二師助手",
@@ -341,6 +346,13 @@
       "system": "跟隨系統",
       "light": "淺色模式",
       "dark": "深色模式"
+    },
+    "accent": {
+      "label": "主題色",
+      "banyan": "榕蔭翠",
+      "kapok": "木棉丹",
+      "haizhu": "海珠藍",
+      "bauhinia": "紫荊紫"
     },
     "font": {
       "label": "字體大小",
@@ -1365,7 +1377,10 @@
     "title": "廣東二師助手",
     "usernameLabel": "帳號",
     "usernamePlaceholder": "請輸入你的校園網帳號",
-    "credentialNotice": "校園帳號憑證可能用於校園認證、快速認證與工作階段同步。請僅使用本人帳號；若您拒絕儲存相關憑證，或後續透過帳號設定、回饋管道申請刪除，部分校園查詢或快速認證功能可能無法使用。"
+    "credentialNotice": "校園帳號憑證可能用於校園認證、快速認證與工作階段同步。請僅使用本人帳號；若您拒絕儲存相關憑證，或後續透過帳號設定、回饋管道申請刪除，部分校園查詢或快速認證功能可能無法使用。",
+    "mockCredentialHint": "範例帳號：gdeiassistant / gdeiassistant",
+    "fillMockAction": "填入範例",
+    "editionLabel": "嶺南書院版 · 校園入口"
   },
   "loginRecord": {
     "clientDevice": "{network} 客戶端",

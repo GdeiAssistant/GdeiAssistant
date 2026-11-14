@@ -159,8 +159,8 @@ onMounted(() => {
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.first') }}</span>
-              <span class="text-xs text-[var(--c-text-3)]">
+              <span class="editorial-serif text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.first') }}</span>
+              <span class="tabular-num font-mono text-xs text-[var(--c-text-2)]">
                 GPA: {{ gradeResult.firstTermGPA != null ? gradeResult.firstTermGPA : '—' }}
               </span>
             </div>
@@ -168,7 +168,7 @@ onMounted(() => {
 
           <template v-if="(gradeResult.firstTermGradeList || []).length > 0">
             <!-- Table header -->
-            <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5">
+            <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5 border-b border-[var(--c-divider)]">
               <span>{{ tableHeaders.course }}</span>
               <span class="text-center">{{ tableHeaders.credit }}</span>
               <span class="text-right">{{ tableHeaders.score }}</span>
@@ -177,18 +177,18 @@ onMounted(() => {
             <div
               v-for="(item, index) in gradeResult.firstTermGradeList"
               :key="'1-' + index"
-              class="grid grid-cols-[1fr_56px_64px] items-center px-5 py-3 text-sm border-b border-[var(--c-border-light)] last:border-b-0"
+              class="grid grid-cols-[1fr_56px_64px] items-center px-5 py-3 text-sm border-b border-[var(--c-divider)] last:border-b-0"
             >
               <div>
                 <span class="font-semibold text-[var(--c-text-1)]">{{ item.gradeName }}</span>
                 <span
                   v-if="item.gradeType"
-                  class="ml-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--c-border-light)] text-[var(--c-text-2)]"
+                  class="ml-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--c-fill-2)] text-[var(--c-text-2)]"
                 >{{ item.gradeType }}</span>
               </div>
-              <span class="text-center text-xs text-[var(--c-text-3)]">{{ item.gradeCredit }}</span>
+              <span class="tabular-num text-center text-xs text-[var(--c-text-3)]">{{ item.gradeCredit }}</span>
               <span
-                :class="['text-right font-semibold text-base', scoreColorClass(item.gradeScore)]"
+                :class="['tabular-num text-right font-semibold text-base', scoreColorClass(item.gradeScore)]"
                 style="font-family: var(--font-mono, ui-monospace, monospace)"
               >{{ item.gradeScore }}</span>
             </div>
@@ -200,8 +200,8 @@ onMounted(() => {
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.second') }}</span>
-              <span class="text-xs text-[var(--c-text-3)]">
+              <span class="editorial-serif text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.second') }}</span>
+              <span class="tabular-num font-mono text-xs text-[var(--c-text-2)]">
                 GPA: {{ gradeResult.secondTermGPA != null ? gradeResult.secondTermGPA : '—' }}
               </span>
             </div>
@@ -209,7 +209,7 @@ onMounted(() => {
 
           <template v-if="(gradeResult.secondTermGradeList || []).length > 0">
             <!-- Table header -->
-            <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5">
+            <div class="grid grid-cols-[1fr_56px_64px] text-[11px] font-semibold uppercase tracking-wide text-[var(--c-text-3)] bg-[var(--c-bg)] px-5 py-2.5 border-b border-[var(--c-divider)]">
               <span>{{ tableHeaders.course }}</span>
               <span class="text-center">{{ tableHeaders.credit }}</span>
               <span class="text-right">{{ tableHeaders.score }}</span>
@@ -218,18 +218,18 @@ onMounted(() => {
             <div
               v-for="(item, index) in gradeResult.secondTermGradeList"
               :key="'2-' + index"
-              class="grid grid-cols-[1fr_56px_64px] items-center px-5 py-3 text-sm border-b border-[var(--c-border-light)] last:border-b-0"
+              class="grid grid-cols-[1fr_56px_64px] items-center px-5 py-3 text-sm border-b border-[var(--c-divider)] last:border-b-0"
             >
               <div>
                 <span class="font-semibold text-[var(--c-text-1)]">{{ item.gradeName }}</span>
                 <span
                   v-if="item.gradeType"
-                  class="ml-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--c-border-light)] text-[var(--c-text-2)]"
+                  class="ml-1.5 inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--c-fill-2)] text-[var(--c-text-2)]"
                 >{{ item.gradeType }}</span>
               </div>
-              <span class="text-center text-xs text-[var(--c-text-3)]">{{ item.gradeCredit }}</span>
+              <span class="tabular-num text-center text-xs text-[var(--c-text-3)]">{{ item.gradeCredit }}</span>
               <span
-                :class="['text-right font-semibold text-base', scoreColorClass(item.gradeScore)]"
+                :class="['tabular-num text-right font-semibold text-base', scoreColorClass(item.gradeScore)]"
                 style="font-family: var(--font-mono, ui-monospace, monospace)"
               >{{ item.gradeScore }}</span>
             </div>

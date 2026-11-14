@@ -2,7 +2,7 @@
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { DialogRoot, DialogOverlay, DialogContent, DialogPortal } from 'radix-vue'
+import { DialogRoot, DialogOverlay, DialogContent, DialogPortal } from 'reka-ui'
 import {
   Search, Star, Calendar, CreditCard, FileText, GraduationCap,
   BookOpen, DoorOpen, Dumbbell, PenLine, Database, ShoppingCart,
@@ -54,7 +54,7 @@ watch(() => props.open, (val) => {
     selectedIndex.value = 0
     nextTick(() => inputRef.value?.focus())
   }
-})
+}, { immediate: true })
 
 watch(query, () => {
   selectedIndex.value = 0
@@ -105,12 +105,12 @@ function getFlatIndex(item) {
       <Transition name="cp-overlay">
         <DialogOverlay
           v-if="open"
-          class="fixed inset-0 bg-[rgb(10_20_17/42%)] z-[500] flex items-start justify-center pt-[20vh]"
+          class="fixed inset-0 bg-[var(--c-scrim)] z-[500] flex items-start justify-center pt-[18vh]"
           @click.self="emit('close')"
         >
           <Transition name="cp-content" appear>
             <DialogContent
-              class="w-[520px] max-w-[90vw] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[var(--radius-card)] shadow-[var(--shadow-lg)] overflow-hidden"
+              class="w-[540px] max-w-[92vw] bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[var(--radius-card)] shadow-[var(--shadow-lg)] overflow-hidden"
               @keydown="onKeydown"
               @escape-key-down="emit('close')"
             >
@@ -123,17 +123,18 @@ function getFlatIndex(item) {
                   :placeholder="t('commandPalette.searchPlaceholder')"
                   class="flex-1 bg-transparent outline-none text-sm font-medium text-[var(--c-text-1)] placeholder:text-[var(--c-text-3)]"
                 />
-                <span
-                  class="text-[10px] bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1.5 py-0.5 text-[var(--c-text-3)] cursor-pointer select-none"
+                <button
+                  type="button"
+                  class="font-mono text-[10px] bg-[var(--c-bg)] border border-[var(--c-border)] rounded px-1.5 py-0.5 text-[var(--c-text-3)] cursor-pointer select-none"
                   @click="emit('close')"
-                >ESC</span>
+                >ESC</button>
               </div>
 
               <!-- Results -->
-              <div class="max-h-[340px] overflow-y-auto overscroll-contain">
+              <div class="max-h-[340px] overflow-y-auto overscroll-contain py-1">
                 <!-- Academic group -->
                 <template v-if="academicItems.length">
-                  <div class="text-[10px] font-semibold uppercase tracking-wider text-[var(--c-text-3)] px-4 pt-2.5 pb-1">
+                  <div class="editorial-eyebrow px-4 pt-2.5 pb-1">
                     {{ t('commandPalette.academicGroup') }}
                   </div>
                   <div
@@ -147,17 +148,18 @@ function getFlatIndex(item) {
                     <component
                       :is="iconMap[item.id]"
                       v-if="iconMap[item.id]"
-                      class="w-5 text-center text-[var(--c-text-3)]"
+                      class="w-5 text-center shrink-0"
+                      :class="getFlatIndex(item) === selectedIndex ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-3)]'"
                       :size="16"
                     />
                     <span class="text-sm font-medium">{{ item.name }}</span>
-                    <span class="ml-auto text-[11px] text-[var(--c-text-3)]">{{ item.path }}</span>
+                    <span class="ml-auto font-mono text-[11px] tabular-num text-[var(--c-text-3)]">{{ item.path }}</span>
                   </div>
                 </template>
 
                 <!-- Community group -->
                 <template v-if="communityItems.length">
-                  <div class="text-[10px] font-semibold uppercase tracking-wider text-[var(--c-text-3)] px-4 pt-2.5 pb-1">
+                  <div class="editorial-eyebrow px-4 pt-3 pb-1 border-t border-[var(--c-divider)] mt-1">
                     {{ t('commandPalette.communityGroup') }}
                   </div>
                   <div
@@ -171,11 +173,12 @@ function getFlatIndex(item) {
                     <component
                       :is="iconMap[item.id]"
                       v-if="iconMap[item.id]"
-                      class="w-5 text-center text-[var(--c-text-3)]"
+                      class="w-5 text-center shrink-0"
+                      :class="getFlatIndex(item) === selectedIndex ? 'text-[var(--c-primary)]' : 'text-[var(--c-text-3)]'"
                       :size="16"
                     />
                     <span class="text-sm font-medium">{{ item.name }}</span>
-                    <span class="ml-auto text-[11px] text-[var(--c-text-3)]">{{ item.path }}</span>
+                    <span class="ml-auto font-mono text-[11px] tabular-num text-[var(--c-text-3)]">{{ item.path }}</span>
                   </div>
                 </template>
 

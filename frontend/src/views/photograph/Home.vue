@@ -129,7 +129,7 @@ onMounted(() => {
         <div
           v-for="(item, index) in list"
           :key="item.id"
-          class="ui-panel community-desktop-photo-card bg-[var(--c-surface)] rounded-xl shadow-sm w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
+          class="ui-panel community-desktop-photo-card bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] w-full mb-4 overflow-hidden animate-[slide-up_0.4s_ease_both] cursor-pointer"
           :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
           @click="goDetail(item.id)"
         >
@@ -144,7 +144,7 @@ onMounted(() => {
           </div>
 
           <!-- Title -->
-          <div class="mx-4 mt-4 text-2xl font-semibold text-[var(--c-text-1)]">{{ item.title }}</div>
+          <div class="editorial-serif mx-4 mt-4 text-2xl font-semibold text-[var(--c-text-1)]">{{ item.title }}</div>
 
           <!-- Description -->
           <div class="mx-4 mb-4 mt-1 text-base text-[var(--c-text-2)] leading-relaxed">{{ item.description }}</div>

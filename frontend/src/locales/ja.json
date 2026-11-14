@@ -114,7 +114,11 @@
     "todayNoCourse": "今日は授業がありません。",
     "todayUnavailable": "時間割を取得できません。時間割ページで再試行してください。",
     "todayUnread": "未読メッセージ {count} 件",
-    "todayAllRead": "未読メッセージはありません"
+    "todayAllRead": "未読メッセージはありません",
+    "openCommandPalette": "クイック移動",
+    "weekLabel": "第 {week} 週",
+    "railShortcutsTitle": "学内ショートカット",
+    "railNoticeTitle": "本日の連絡・お知らせ"
   },
   "profile": {
     "title": "マイページ",
@@ -212,7 +216,8 @@
   "sidebar": {
     "settings": "設定",
     "about": "このアプリについて",
-    "notLoggedIn": "未ログイン"
+    "notLoggedIn": "未ログイン",
+    "accentLabel": "アクセント"
   },
   "about": {
     "appName": "広東二師アシスタント",
@@ -341,6 +346,13 @@
       "system": "システムに従う",
       "light": "ライトモード",
       "dark": "ダークモード"
+    },
+    "accent": {
+      "label": "テーマカラー",
+      "banyan": "ガジュマル翠",
+      "kapok": "木棉テラコッタ",
+      "haizhu": "海珠ブルー",
+      "bauhinia": "バウヒニア紫"
     },
     "font": {
       "label": "フォントサイズ",
@@ -1365,7 +1377,10 @@
     "title": "GdeiAssistant",
     "usernameLabel": "アカウント",
     "usernamePlaceholder": "キャンパスネットのアカウントを入力",
-    "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。"
+    "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。",
+    "mockCredentialHint": "デモ用アカウント：gdeiassistant / gdeiassistant",
+    "fillMockAction": "自動入力",
+    "editionLabel": "嶺南書院版 · キャンパスポータル"
   },
   "loginRecord": {
     "clientDevice": "{network} クライアント",

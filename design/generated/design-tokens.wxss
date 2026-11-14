@@ -1,31 +1,31 @@
 /* Generated from design/tokens.json; do not edit. */
 page,
 .theme-light {
-  --c-primary: #0E8F6E;
-  --c-primary-soft: #E3F3EE;
-  --c-bg: #F4F7F6;
+  --c-primary: #0E7C61;
+  --c-primary-soft: #E4F3EE;
+  --c-bg: #F7F6F2;
   --c-surface: #FFFFFF;
-  --c-text-1: #11201C;
-  --c-text-2: #4E5F5A;
+  --c-text-1: #14231F;
+  --c-text-2: #5C6662;
   --c-danger: #D14343;
-  --c-warning: #B7791F;
-  --ds-font-display: 60rpx;
-  --ds-font-title: 48rpx;
+  --c-warning: #C85A32;
+  --ds-font-display: 56rpx;
+  --ds-font-title: 44rpx;
   --ds-font-headline: 34rpx;
   --ds-font-body: 30rpx;
-  --ds-font-callout: 26rpx;
+  --ds-font-callout: 28rpx;
   --ds-font-caption: 24rpx;
-  --radius-card: 28rpx;
+  --radius-card: 20rpx;
   --space-page: 32rpx;
 }
 
 .theme-dark {
-  --c-primary: #34C79A;
+  --c-primary: #2DD4BF;
   --c-primary-soft: #12332A;
-  --c-bg: #0E1513;
+  --c-bg: #0D1311;
   --c-surface: #151E1B;
-  --c-text-1: #E6EEEB;
-  --c-text-2: #A3B3AE;
+  --c-text-1: #F1EFEA;
+  --c-text-2: #8D9B95;
   --c-danger: #F07171;
   --c-warning: #E0A54A;
 }

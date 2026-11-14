@@ -1,8 +1,10 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { Moon, Sun, Menu } from 'lucide-vue-next'
+import { Moon, Sun, Menu, Search } from 'lucide-vue-next'
+import { useThemeMode } from '@/composables/useThemeMode'
+import { setThemeMode } from '@/theme'
 import { resolveRouteTitle } from './navigation'
 
 defineProps({ sidebarOpen: Boolean })
@@ -10,30 +12,18 @@ const route = useRoute()
 const { t } = useI18n()
 const emit = defineEmits(['toggle-sidebar'])
 
+const isDark = useThemeMode()
+
 const pageTitle = computed(() => {
   return resolveRouteTitle(route, t)
 })
 
-const isDark = ref(false)
-
-onMounted(() => {
-  const saved = localStorage.getItem('theme')
-  if (saved) {
-    isDark.value = saved === 'dark'
-  } else {
-    isDark.value = document.documentElement.dataset.theme === 'dark'
-  }
-  applyTheme()
-})
-
-function applyTheme() {
-  document.documentElement.dataset.theme = isDark.value ? 'dark' : 'light'
-  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+function toggleTheme() {
+  setThemeMode(isDark.value ? 'light' : 'dark')
 }
 
-function toggleTheme() {
-  isDark.value = !isDark.value
-  applyTheme()
+function openPalette() {
+  window.dispatchEvent(new CustomEvent('open-command-palette'))
 }
 </script>
 
@@ -49,10 +39,23 @@ function toggleTheme() {
       >
         <Menu class="w-4 h-4" />
       </button>
-      <span class="campus-topbar__title"><span class="campus-topbar__desktop-title">{{ pageTitle }}</span><span class="campus-topbar__mobile-title">{{ $t('about.appName') }}</span></span>
+      <span class="campus-topbar__title editorial-serif">
+        <span class="campus-topbar__desktop-title">{{ pageTitle }}</span>
+        <span class="campus-topbar__mobile-title">{{ $t('about.appName') }}</span>
+      </span>
     </div>
 
     <div class="campus-topbar__actions">
+      <button
+        type="button"
+        class="campus-topbar__search-trigger"
+        :aria-label="t('home.openCommandPalette')"
+        @click="openPalette"
+      >
+        <Search class="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+        <span class="campus-topbar__search-label">{{ t('home.openCommandPalette') }}</span>
+        <kbd class="campus-topbar__kbd tabular-num">⌘K</kbd>
+      </button>
       <button
         class="campus-topbar__icon-button"
         type="button"
@@ -76,10 +79,10 @@ function toggleTheme() {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0 40px;
+  padding: 0 44px;
   border-bottom: 1px solid var(--c-border);
-  background: color-mix(in srgb, var(--c-bg) 92%, transparent);
-  backdrop-filter: saturate(1.2) blur(10px);
+  background: color-mix(in srgb, var(--c-bg) 90%, transparent);
+  backdrop-filter: saturate(1.1) blur(10px);
 }
 
 .campus-topbar__left,
@@ -87,20 +90,52 @@ function toggleTheme() {
   display: flex;
   min-width: 0;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .campus-topbar__title {
   overflow: hidden;
   color: var(--c-text-1);
   font-size: 16px;
-  font-weight: 650;
+  font-weight: 700;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .campus-topbar__mobile-title {
   display: none;
+}
+
+.campus-topbar__search-trigger {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-surface);
+  color: var(--c-text-2);
+  cursor: pointer;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.campus-topbar__search-trigger:hover {
+  border-color: color-mix(in srgb, var(--c-primary) 45%, var(--c-border));
+  color: var(--c-primary);
+}
+
+.campus-topbar__kbd {
+  border: 1px solid var(--c-divider);
+  border-radius: 5px;
+  background: var(--c-bg);
+  padding: 1px 5px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--c-text-3);
 }
 
 .campus-topbar__icon-button {
@@ -150,6 +185,18 @@ function toggleTheme() {
 
   .campus-topbar__mobile-title {
     display: inline;
+  }
+
+  .campus-topbar__search-label,
+  .campus-topbar__kbd {
+    display: none;
+  }
+
+  .campus-topbar__search-trigger {
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    padding: 0;
   }
 }
 </style>

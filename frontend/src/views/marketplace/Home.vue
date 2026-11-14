@@ -91,7 +91,7 @@ onMounted(() => {
 
     <!-- 搜索栏 -->
     <div class="flex items-center px-4 py-2.5 bg-[var(--c-bg)]">
-      <div class="flex-1 flex items-center bg-[var(--c-surface)] rounded-full px-3 py-1.5 shadow-sm">
+      <div class="flex-1 flex items-center bg-[var(--c-surface)] border border-[var(--c-border)] rounded-full px-3 py-1.5">
         <i class="inline-block w-4 h-4 shrink-0 mr-1.5 bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2024%2024%27%20fill=%27%239ca3af%27%3E%3Cpath%20d=%27M15.5%2014h-.79l-.28-.27C15.41%2012.59%2016%2011.11%2016%209.5%2016%205.91%2013.09%203%209.5%203S3%205.91%203%209.5%205.91%2016%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%27/%3E%3C/svg%3E')] bg-center bg-contain bg-no-repeat"></i>
         <input type="text" :placeholder="t('marketplace.searchPlaceholder')" v-model="keyword" @keyup.enter="doSearch" class="flex-1 border-none outline-none text-sm bg-transparent min-w-0 text-[var(--c-text-1)]" />
       </div>
@@ -99,7 +99,7 @@ onMounted(() => {
     </div>
 
     <!-- 分类宫格 -->
-    <div class="grid! grid-cols-4 w-[calc(100%-20px)] mx-2.5 mb-4 marketplace-category-grid bg-[var(--c-surface)] rounded-lg overflow-hidden shadow-sm">
+    <div class="grid! grid-cols-4 w-[calc(100%-20px)] mx-2.5 mb-4 marketplace-category-grid bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[var(--radius-card)] overflow-hidden">
       <div
         v-for="(cat, index) in categories"
         :key="cat.typeId"
@@ -135,7 +135,7 @@ onMounted(() => {
         <div
           v-for="item in list"
           :key="item.id"
-          class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] overflow-hidden cursor-pointer"
+          class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] transition-transform duration-[0.12s] active:scale-[0.98] overflow-hidden cursor-pointer"
           @click="goDetail(item.id)"
         >
           <div class="w-full aspect-square overflow-hidden bg-[var(--c-border)]">
@@ -143,7 +143,7 @@ onMounted(() => {
           </div>
           <h3 class="text-sm font-medium text-[var(--c-text-1)] mx-2 mt-2 p-0 line-clamp-2 leading-snug">{{ item.title }}</h3>
           <p class="text-xs text-[var(--c-text-3)] mx-2 mt-1 p-0 truncate">{{ item.desc }}</p>
-          <em class="block text-base font-semibold marketplace-price mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
+          <em class="block text-base font-semibold marketplace-price tabular-num mx-2 mt-1.5 mb-2 p-0 not-italic">{{ item.price }}</em>
         </div>
       </div>
 

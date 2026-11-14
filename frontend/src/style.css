@@ -14,6 +14,8 @@
   --color-primary-100: var(--c-primary-100);
   --color-surface: var(--c-surface);
   --color-surface-raised: var(--c-surface-raised);
+  --color-surface-elevated: var(--c-surface-elevated);
+  --color-surface-subtle: var(--c-surface-subtle);
   --color-surface-hover: var(--c-surface-hover);
   --color-background: var(--c-bg);
   --color-border: var(--c-border);
@@ -41,8 +43,9 @@
   --color-amber-600: var(--c-warning);
   --color-amber-50: color-mix(in srgb, var(--c-warning) 10%, var(--c-surface));
 
-  --font-sans: 'PingFang SC', 'HarmonyOS Sans SC', 'MiSans', system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
+  --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
 
   /* Type scale shared with the apps: display 30 / title 24 / headline 17 / body 15 / callout 13 / caption 12 */
   --text-headline: 17px;
@@ -70,17 +73,23 @@
   --text-caption: var(--ds-font-caption);
 }
 
-/* ── Light Theme (default) ──────────────────────────────── */
+/* ── Light Theme (Warm Unbleached Paper, Default) ──────── */
 :root,
 [data-theme="light"] {
   color-scheme: light;
 
   /* Audited shared palette comes from design/tokens.json. Extra Web roles stay here. */
-  --c-primary-hover: #0A7559;
-  --c-surface-raised: #FFFFFF;
-  --c-text-3: #6F7F7A;
-  --c-border: #DDE6E3;
-  --c-divider: #E9EFED;
+  --c-bg: #F7F6F2;
+  --c-surface: #FFFFFF;
+  --c-surface-elevated: #FFFFFF;
+  --c-surface-subtle: #F0EEE8;
+  --c-surface-raised: var(--c-surface-elevated);
+  --c-border: #E5E2DC;
+  --c-divider: #ECE9E2;
+  --c-text-1: #14231F;
+  --c-text-2: #5C6662;
+  --c-text-3: #78827E;
+  --c-primary-hover: #0A634E;
   --c-info: var(--c-text-2);
   --c-on-primary: #FFFFFF;
 
@@ -92,37 +101,37 @@
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 18%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #EEF3F1;
+  --c-surface-hover: #F0EEE8;
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
-  --c-fill-2: #EEF3F1;
-  --c-fill-3: #E4ECE9;
-  --c-shadow: rgb(17 32 28 / 8%);
+  --c-fill-2: #F0EEE8;
+  --c-fill-3: #E6E3DC;
+  --c-shadow: rgb(20 35 31 / 6%);
   --color-bg-primary: var(--c-surface);
   --color-bg-secondary: var(--c-bg);
   --color-bg-tertiary: var(--c-fill-2);
-  --color-surface-raised: var(--c-surface-raised);
+  --color-surface-raised: var(--c-surface-elevated);
   --color-divider: var(--c-divider);
   --color-text-tertiary: var(--c-text-3);
-  --c-purple: #7A6F9B;
+  --c-purple: #6D28D9;
   --c-pink: #A8687C;
-  --c-cyan: #4F8796;
-  --c-orange: #A9844A;
+  --c-cyan: #0E7C61;
+  --c-orange: #C85A32;
 
   /* Shared scrim behind modal layers (dark in both themes so content above stays readable) */
-  --c-scrim: rgb(10 20 17 / 48%);
+  --c-scrim: rgb(13 19 17 / 50%);
 
   /* Timetable course block palette: content colors for distinguishing courses */
   --c-course-1: #2F8FA6;
-  --c-course-2: #17937E;
-  --c-course-3: #C38A49;
+  --c-course-2: #0E7C61;
+  --c-course-3: #C85A32;
   --c-course-4: #C56E64;
-  --c-course-5: #6E88C9;
-  --c-course-6: #C78BA3;
+  --c-course-5: #1D4ED8;
+  --c-course-6: #6D28D9;
   --c-course-7: #3A9FB4;
   --c-course-8: #D08A63;
-  --c-course-9: #5C86BE;
+  --c-course-9: #4B6FA5;
   --c-course-10: #2F9E95;
   --c-course-11: #B96F84;
   --c-course-12: #7B8FCB;
@@ -139,8 +148,8 @@
   --c-dating: var(--c-primary);
   --c-photograph: var(--c-primary);
 
-  /* Solid deep brand surface (login visual column) */
-  --c-brand-deep: #0A7559;
+  /* Solid deep brand surface (login visual column & editorial highlight rail) */
+  --c-brand-deep: #0E7C61;
   --c-on-brand-deep: #FFFFFF;
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
@@ -151,10 +160,10 @@
   --c-tip-icon-bg: rgba(255, 237, 213, 0.92);
   --c-tip-icon: #B45309;
 
-  /* Green-gray tinted shadows */
-  --shadow-sm: 0 1px 2px rgb(17 32 28 / 4%), 0 2px 8px rgb(17 32 28 / 4%);
-  --shadow-md: 0 1px 3px rgb(17 32 28 / 5%), 0 8px 24px rgb(17 32 28 / 7%);
-  --shadow-lg: 0 4px 12px rgb(17 32 28 / 6%), 0 20px 48px rgb(17 32 28 / 12%);
+  /* Restrained editorial paper shadows */
+  --shadow-sm: 0 1px 2px rgb(20 35 31 / 3%);
+  --shadow-md: 0 2px 8px rgb(20 35 31 / 5%);
+  --shadow-lg: 0 10px 32px rgb(20 35 31 / 10%);
 
   /* Spacing */
   --space-xs: 4px;
@@ -181,44 +190,50 @@
   --c-text-quaternary: var(--c-text-3);
 }
 
-/* ── Dark Theme ─────────────────────────────────────────── */
+/* ── Dark Theme (Nocturnal Ink) ─────────────────────────── */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-primary-hover: #5AD6AE;
-  --c-surface-raised: #1C2724;
-  --c-text-3: #84948F;
-  --c-border: #2A3733;
-  --c-divider: #222D2A;
+  --c-bg: #0D1311;
+  --c-surface: #151E1B;
+  --c-surface-elevated: #1C2724;
+  --c-surface-subtle: #111916;
+  --c-surface-raised: var(--c-surface-elevated);
+  --c-border: #22302B;
+  --c-divider: #1D2925;
+  --c-text-1: #F1EFEA;
+  --c-text-2: #8D9B95;
+  --c-text-3: #6E7D78;
+  --c-primary-hover: #5EEAD4;
   --c-info: var(--c-text-2);
-  --c-on-primary: #0B1A15;
+  --c-on-primary: #091512;
 
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 22%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #1F2B27;
+  --c-surface-hover: #1C2724;
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
   --c-fill-2: #1C2724;
-  --c-fill-3: #24312D;
-  --c-shadow: rgb(2 8 6 / 40%);
+  --c-fill-3: #24322D;
+  --c-shadow: rgb(0 0 0 / 38%);
   --color-bg-primary: var(--c-bg);
   --color-bg-secondary: var(--c-bg);
   --color-bg-tertiary: var(--c-fill-2);
-  --color-surface-raised: var(--c-surface-raised);
+  --color-surface-raised: var(--c-surface-elevated);
   --color-divider: var(--c-divider);
   --color-text-tertiary: var(--c-text-3);
-  --c-purple: #A99FC6;
+  --c-purple: #A78BFA;
   --c-pink: #D39CAD;
-  --c-cyan: #84B5C2;
-  --c-orange: #D2AE72;
+  --c-cyan: #2DD4BF;
+  --c-orange: #FB923C;
 
-  --c-scrim: rgb(10 20 17 / 48%);
+  --c-scrim: rgb(5 10 8 / 60%);
 
-  /* Solid deep brand surface (login visual column) */
+  /* Solid deep brand surface (login visual column & editorial highlight rail) */
   --c-brand-deep: #0F3A2E;
-  --c-on-brand-deep: #FFFFFF;
+  --c-on-brand-deep: #F1EFEA;
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
   --c-tip-bg: linear-gradient(135deg, rgba(84, 28, 28, 0.92), rgba(63, 24, 34, 0.94));
@@ -231,10 +246,10 @@
   /* Dark timetable course blocks: same hues, darkened to sit on the dark surface */
   --c-course-1: #2A6E7E;
   --c-course-2: #1E6B5C;
-  --c-course-3: #8A6536;
+  --c-course-3: #8A4A30;
   --c-course-4: #8A5049;
-  --c-course-5: #55679B;
-  --c-course-6: #8F6076;
+  --c-course-5: #29468E;
+  --c-course-6: #5B2E94;
   --c-course-7: #2E7484;
   --c-course-8: #8F5F42;
   --c-course-9: #4A6891;
@@ -253,9 +268,78 @@
   --c-dating: var(--c-primary);
   --c-photograph: var(--c-primary);
 
-  --shadow-sm: 0 1px 2px rgb(2 8 6 / 30%);
-  --shadow-md: 0 2px 6px rgb(2 8 6 / 30%), 0 10px 28px rgb(2 8 6 / 32%);
-  --shadow-lg: 0 6px 16px rgb(2 8 6 / 34%), 0 24px 56px rgb(2 8 6 / 44%);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 28%);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 32%);
+  --shadow-lg: 0 12px 36px rgb(0 0 0 / 48%);
+}
+
+/* ── Orthogonal Campus Theme Accents (Light × Dark) ─────── */
+:root[data-accent="banyan"],
+[data-theme="light"][data-accent="banyan"] {
+  --c-primary: #0E7C61;
+  --c-primary-soft: #E4F3EE;
+  --c-primary-hover: #0A634E;
+  --c-on-primary: #FFFFFF;
+  --c-brand-deep: #0E7C61;
+}
+
+[data-theme="dark"][data-accent="banyan"] {
+  --c-primary: #2DD4BF;
+  --c-primary-soft: #12332A;
+  --c-primary-hover: #5EEAD4;
+  --c-on-primary: #091512;
+  --c-brand-deep: #0F3A2E;
+}
+
+:root[data-accent="kapok"],
+[data-theme="light"][data-accent="kapok"] {
+  --c-primary: #C85A32;
+  --c-primary-soft: #FBECE6;
+  --c-primary-hover: #A94824;
+  --c-on-primary: #FFFFFF;
+  --c-brand-deep: #9F4322;
+}
+
+[data-theme="dark"][data-accent="kapok"] {
+  --c-primary: #FB923C;
+  --c-primary-soft: #361F14;
+  --c-primary-hover: #FDBA74;
+  --c-on-primary: #1A0D06;
+  --c-brand-deep: #3B2014;
+}
+
+:root[data-accent="haizhu"],
+[data-theme="light"][data-accent="haizhu"] {
+  --c-primary: #1D4ED8;
+  --c-primary-soft: #E8EFFD;
+  --c-primary-hover: #1E40AF;
+  --c-on-primary: #FFFFFF;
+  --c-brand-deep: #1E3A8A;
+}
+
+[data-theme="dark"][data-accent="haizhu"] {
+  --c-primary: #60A5FA;
+  --c-primary-soft: #142642;
+  --c-primary-hover: #93C5FD;
+  --c-on-primary: #081121;
+  --c-brand-deep: #142645;
+}
+
+:root[data-accent="bauhinia"],
+[data-theme="light"][data-accent="bauhinia"] {
+  --c-primary: #6D28D9;
+  --c-primary-soft: #F1EAFF;
+  --c-primary-hover: #5B21B6;
+  --c-on-primary: #FFFFFF;
+  --c-brand-deep: #4C1D95;
+}
+
+[data-theme="dark"][data-accent="bauhinia"] {
+  --c-primary: #A78BFA;
+  --c-primary-soft: #24183D;
+  --c-primary-hover: #C4B5FD;
+  --c-on-primary: #120A24;
+  --c-brand-deep: #251942;
 }
 
 /* ── Base Resets ────────────────────────────────────────── */
@@ -263,13 +347,13 @@
 /* Fixed samples for theme-preview swatches: they depict both palettes and
    therefore must not flip with the active theme. */
 :root {
-  --c-preview-bg: #F4F7F6;
-  --c-preview-line: #DBE4E0;
-  --c-preview-dark-bg: #0E1513;
-  --c-preview-dark-surface: #26332F;
-  --c-preview-muted: #9AA8A3;
-  --c-preview-brand: #0E8F6E;
-  --c-preview-brand-dark: #34C79A;
+  --c-preview-bg: #F7F6F2;
+  --c-preview-line: #E5E2DC;
+  --c-preview-dark-bg: #0D1311;
+  --c-preview-dark-surface: #1C2724;
+  --c-preview-muted: #8D9B95;
+  --c-preview-brand: #0E7C61;
+  --c-preview-brand-dark: #2DD4BF;
 }
 
 :root {
@@ -335,12 +419,37 @@ a:focus-visible {
   color: var(--c-on-primary);
 }
 
+/* ── Lingnan Editorial Typography & Hairline Utilities ──── */
+.editorial-serif {
+  font-family: var(--font-serif);
+  letter-spacing: -0.015em;
+}
+
+.tabular-num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+.hairline-divider {
+  height: 1px;
+  border: 0;
+  background-color: var(--c-divider);
+}
+
+.editorial-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
 /* ── Shared campus surface primitives ─────────────────────── */
 .campus-page-card {
   border: 1px solid var(--c-border);
   border-radius: var(--radius-card);
   background: var(--c-surface);
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 /* Unified press feedback: quick 0.12s scale-down on activation */
@@ -354,9 +463,10 @@ a:focus-visible {
 
 .campus-page-title {
   color: var(--c-text-1);
+  font-family: var(--font-serif);
   font-size: 20px;
   font-weight: 650;
-  letter-spacing: 0;
+  letter-spacing: -0.01em;
 }
 
 .campus-list-row {
@@ -531,7 +641,7 @@ select {
   height: 56px;
   padding: 0 16px;
   border-bottom: 1px solid var(--c-border);
-  background: color-mix(in srgb, var(--c-surface) 92%, transparent);
+  background: color-mix(in srgb, var(--c-bg) 90%, transparent);
   backdrop-filter: blur(10px);
 }
 
@@ -597,7 +707,7 @@ select {
   border: 1px solid var(--c-border) !important;
   border-radius: var(--radius-card) !important;
   background-color: var(--c-surface);
-  box-shadow: var(--shadow-sm) !important;
+  box-shadow: none !important;
 }
 
 .ui-panel.divide-y > :not(:last-child) { border-color: var(--c-divider); }

@@ -24,11 +24,15 @@ worktrees/
 docs/**
 !docs/compliance-todo.md
 !docs/environment-matrix.md
-!docs/AI_SERVICES.zh-CN.md
+!docs/ai-services.zh-CN.md
 !docs/openapi.yaml
 !docs/api-conventions.md
-!docs/SOCIAL_MESSAGING_DESIGN.zh-CN.md
-!docs/SOCIAL_MESSAGING_IMPLEMENTATION.zh-CN.md
+!docs/i18n/
+!docs/i18n/location-names.md
+!docs/operations/
+!docs/operations/free-smtp.zh-CN.md
+!docs/social-messaging-design.zh-CN.md
+!docs/social-messaging-implementation.zh-CN.md
 
 # ==================================
 # Spring Boot & Java

@@ -49,9 +49,9 @@ onMounted(() => {
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <template v-if="!loading && detail">
-        <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
-          <h2 class="text-lg font-bold text-[var(--c-text)] mb-3">{{ detail.bookname || '—' }}</h2>
-          <div class="divide-y divide-[var(--c-border-light)]">
+        <div class="ui-panel bg-[var(--c-surface)] p-5 border border-[var(--c-border)]">
+          <h2 class="editorial-serif text-xl font-bold text-[var(--c-text-1)] mb-3">{{ detail.bookname || '—' }}</h2>
+          <div class="divide-y divide-[var(--c-divider)]">
             <div class="flex justify-between py-3">
               <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.detail.author') }}</span>
               <span class="text-sm font-medium text-[var(--c-text)]">{{ detail.author || '—' }}</span>

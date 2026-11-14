@@ -98,7 +98,7 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="ui-panel bg-[var(--c-surface)] rounded-xl p-4 shadow-sm animate-[community-slide-up_0.3s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] p-4 animate-[community-slide-up_0.3s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
       >
         <!-- 卡片头部 -->

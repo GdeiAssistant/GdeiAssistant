@@ -89,9 +89,9 @@ onMounted(() => {
       <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('libraryPage.list.description') }}</p>
 
-        <h3 class="text-xs font-semibold text-[var(--c-text-2)] uppercase tracking-wide mb-2">{{ t('libraryPage.list.resultTitle') }}</h3>
+        <h3 class="editorial-eyebrow mb-2.5">{{ t('libraryPage.list.resultTitle') }}</h3>
 
-        <div class="ui-panel bg-[var(--c-surface)] rounded-xl border border-[var(--c-border)] divide-y divide-[var(--c-border)]">
+        <div class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] divide-y divide-[var(--c-divider)]">
           <a
             v-for="item in list"
             :key="item.detailURL || item.bookname"
@@ -99,7 +99,7 @@ onMounted(() => {
             class="block px-4 py-3.5 hover:bg-[var(--c-surface-hover)] transition-colors no-underline"
             @click.prevent="openDetail(item)"
           >
-            <h4 class="text-base font-medium text-[var(--c-text)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
+            <h4 class="editorial-serif text-base font-semibold text-[var(--c-text-1)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
             <p class="mt-1 text-sm text-[var(--c-text-2)]">
               <span class="text-[var(--c-text-3)]">{{ t('libraryPage.list.author') }}</span>{{ item.author || '—' }}
             </p>

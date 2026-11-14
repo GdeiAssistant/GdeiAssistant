@@ -95,14 +95,14 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] p-5 cursor-pointer animate-[slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index * 0.05) + 's' }"
         @click="goDetail(item.id)"
       >
         <!-- Header -->
         <div class="flex justify-between items-center mb-4">
-          <div class="text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
-          <div class="community-delivery-reward-block flex items-baseline">
+          <div class="editorial-serif text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+          <div class="community-delivery-reward-block flex items-baseline tabular-num">
             <span class="text-lg font-bold mr-0.5">&#xffe5;</span>
             <span class="text-2xl font-bold">{{ item.reward.toFixed(2) }}</span>
           </div>

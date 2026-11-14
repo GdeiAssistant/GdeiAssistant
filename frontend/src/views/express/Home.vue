@@ -149,7 +149,7 @@ onUnmounted(() => {
     <CommunityHeader :title="t('express.title')" moduleColor="var(--c-express)" />
 
     <!-- 导航栏正下方：居中的浅粉色粗体标题 -->
-    <h2 class="express-banner-title text-center text-[22px] font-bold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title editorial-serif text-center text-[22px] font-semibold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 下拉刷新指示器 -->
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">
@@ -165,7 +165,7 @@ onUnmounted(() => {
       <div
         v-for="(item, index) in list"
         :key="item.id"
-        class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm mx-4 mt-4 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
+        class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] border border-[var(--c-border)] mx-4 mt-4 overflow-hidden animate-[community-slide-up_0.4s_ease_both]"
         :style="{ animationDelay: (index % 10) * 0.05 + 's' }"
         @click="goToDetail(item.id)"
       >

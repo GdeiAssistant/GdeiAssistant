@@ -10,7 +10,9 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
+  # createComment on a pull request needs pull-requests:write; issues:write
+  # alone returns 403 Resource not accessible by integration.
+  pull-requests: write
   issues: write
 
 concurrency:

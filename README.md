@@ -177,20 +177,18 @@ npm run test:e2e
 
 ## 界面预览
 
-以下为 Web 端基于 Lingnan Editorial 设计系统的矢量界面预览，展示桌面浅色/深色模式、多主题色外观设置与移动端响应式布局：
+以下为 Web 端基于《岭南书院人文风》（Lingnan Editorial）设计系统的 6 张统一尺寸移动端矢量界面预览，展示不同校园功能视图、浅色「岭南晨纸」与深色「珠江夜读」模式，以及四套校园主题色（榕荫翠、木棉丹、海珠蓝、紫荆紫）；Android、iOS 与微信小程序各自在对应仓库展示本端预览图：
 
-- 桌面首页：浅色「岭南晨纸（榕荫翠）」与深色「珠江夜读」模式
-
-<p>
-  <img src="assets/screenshots/web-home-light.svg" alt="Web 桌面首页浅色模式预览" width="410">
-  <img src="assets/screenshots/web-home-dark.svg" alt="Web 桌面首页深色模式预览" width="410">
+<p align="center">
+  <img src="assets/screenshots/web-home-light.svg" alt="Web 今日总览浅色预览（榕荫翠）" width="260" />
+  <img src="assets/screenshots/web-home-dark.svg" alt="Web 今日总览深色预览（榕荫翠）" width="260" />
+  <img src="assets/screenshots/web-schedule-light.svg" alt="Web 我的课表浅色预览（木棉丹）" width="260" />
 </p>
 
-- 外观设置（木棉丹主题色、字体与多语言切换）与移动端首页视口
-
-<p>
-  <img src="assets/screenshots/web-appearance-themes.svg" alt="Web 界面与外观主题切换预览" width="410">
-  <img src="assets/screenshots/web-mobile-home.svg" alt="Web 移动端首页预览" width="210">
+<p align="center">
+  <img src="assets/screenshots/web-grade-dark.svg" alt="Web 成绩查询深色预览（海珠蓝）" width="260" />
+  <img src="assets/screenshots/web-marketplace-light.svg" alt="Web 二手市场浅色预览（紫荆紫）" width="260" />
+  <img src="assets/screenshots/web-appearance-dark.svg" alt="Web 外观设置深色预览（木棉丹）" width="260" />
 </p>
 
 ## 客户端与官网

@@ -1,73 +1,120 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750">
-  <rect width="1200" height="750" fill="#F7F6F2"/>
-  <rect x="0" y="0" width="220" height="750" fill="#FFFFFF"/>
-  <line x1="220" y1="0" x2="220" y2="750" stroke="#E5E4DE" stroke-width="1"/>
-  <rect x="20" y="24" width="32" height="32" rx="8" fill="#0B6E4F"/>
-  <text x="64" y="46" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#141816">广东二师助手</text>
-  <rect x="16" y="84" width="188" height="44" rx="10" fill="#EBF5F0"/>
-  <rect x="16" y="96" width="3" height="20" rx="2" fill="#0B6E4F"/>
-  <text x="44" y="112" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#0B6E4F">首页</text>
-  <text x="20" y="616" font-family="system-ui, sans-serif" font-size="12" fill="#6F7A73">主题色</text>
-  <circle cx="96" cy="612" r="9" fill="none" stroke="#0B6E4F" stroke-width="2"/>
-  <circle cx="96" cy="612" r="5" fill="#0B6E4F"/>
-  <circle cx="122" cy="612" r="5" fill="#C83E2B"/>
-  <circle cx="148" cy="612" r="5" fill="#1D5CC9"/>
-  <circle cx="174" cy="612" r="5" fill="#7038CC"/>
-  <text x="28" y="656" font-family="system-ui, sans-serif" font-size="13" fill="#4B554F">设置</text>
-  <text x="28" y="688" font-family="system-ui, sans-serif" font-size="13" fill="#4B554F">关于</text>
-  <rect x="16" y="704" width="188" height="36" rx="10" fill="#F7F6F2" stroke="#E5E4DE"/>
-  <circle cx="38" cy="722" r="12" fill="#EBF5F0"/>
-  <text x="38" y="726" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#0B6E4F">林</text>
-  <text x="60" y="727" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#141816">林知远</text>
-  <line x1="220" y1="64" x2="1200" y2="64" stroke="#E5E4DE" stroke-width="1"/>
-  <text x="260" y="38" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#141816">首页</text>
-  <rect x="980" y="16" width="150" height="32" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="1055" y="37" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6F7A73">命令面板</text>
-  <circle cx="1160" cy="32" r="16" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="264" y="108" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#0B6E4F">11月15日 · 第 5 周</text>
-  <text x="264" y="152" font-family="Georgia, serif" font-size="32" font-weight="600" fill="#141816">早上好</text>
-  <rect x="640" y="122" width="110" height="34" rx="17" fill="#EBF5F0" stroke="#0B6E4F" stroke-opacity="0.35"/>
-  <text x="695" y="144" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#0B6E4F">今日课程</text>
-  <rect x="762" y="122" width="110" height="34" rx="17" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="817" y="144" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#4B554F">校园卡</text>
-  <rect x="264" y="182" width="608" height="106" rx="12" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <rect x="284" y="202" width="32" height="32" rx="8" fill="#EBF5F0"/>
-  <text x="330" y="224" font-family="Georgia, serif" font-size="17" font-weight="600" fill="#141816">今日课程</text>
-  <rect x="760" y="200" width="94" height="34" rx="8" fill="#0B6E4F"/>
-  <text x="807" y="222" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#FFFFFF">完整课表</text>
-  <line x1="284" y1="248" x2="852" y2="248" stroke="#E5E4DE"/>
-  <text x="284" y="272" font-family="system-ui, sans-serif" font-size="13" fill="#6F7A73">今天没有课，好好休息。</text>
-  <text x="264" y="330" font-family="Georgia, serif" font-size="18" font-weight="600" fill="#141816">校园服务 10</text>
-  <text x="264" y="352" font-family="system-ui, sans-serif" font-size="12" fill="#6F7A73">查成绩、课表、四六级、图书馆与常用查询工具</text>
-  <rect x="264" y="370" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="308" y="398" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">成绩查询</text>
-  <rect x="578" y="370" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="622" y="398" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">课表查询</text>
-  <rect x="264" y="428" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="308" y="456" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">四六级查询</text>
-  <rect x="578" y="428" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="622" y="456" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">考研查询</text>
-  <rect x="264" y="486" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="308" y="514" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">教室查询</text>
-  <rect x="578" y="486" width="294" height="46" rx="8" fill="#FFFFFF" stroke="#E5E4DE"/>
-  <text x="622" y="514" font-family="system-ui, sans-serif" font-size="14" font-weight="500" fill="#141816">图书馆</text>
-  <rect x="908" y="96" width="256" height="148" rx="12" fill="#0B6E4F"/>
-  <text x="928" y="128" font-family="system-ui, sans-serif" font-size="12" fill="#FFFFFF" fill-opacity="0.82">校园卡</text>
-  <text x="928" y="172" font-family="Georgia, serif" font-size="28" font-weight="600" fill="#FFFFFF">128.50</text>
-  <text x="1028" y="172" font-family="system-ui, sans-serif" font-size="12" fill="#FFFFFF" fill-opacity="0.82">元</text>
-  <text x="928" y="198" font-family="system-ui, sans-serif" font-size="12" fill="#FFFFFF" fill-opacity="0.82">正常</text>
-  <text x="928" y="226" font-family="system-ui, sans-serif" font-size="12" font-weight="500" fill="#FFFFFF">去查看</text>
-  <text x="908" y="294" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#4B554F">近期与公告</text>
-  <text x="1110" y="294" font-family="system-ui, sans-serif" font-size="12" fill="#0B6E4F">查看更多</text>
-  <line x1="908" y1="308" x2="1164" y2="308" stroke="#E5E4DE"/>
-  <text x="926" y="336" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#141816">系统维护通知</text>
-  <text x="926" y="354" font-family="system-ui, sans-serif" font-size="11" fill="#6F7A73">1小时前</text>
-  <line x1="908" y1="368" x2="1164" y2="368" stroke="#E5E4DE"/>
-  <text x="926" y="396" font-family="system-ui, sans-serif" font-size="13" font-weight="500" fill="#141816">春季双选会入场安排</text>
-  <text x="926" y="414" font-family="system-ui, sans-serif" font-size="11" fill="#6F7A73">今天 09:10</text>
-  <rect x="220" y="690" width="980" height="60" fill="#FFFFFF"/>
-  <line x1="220" y1="690" x2="1200" y2="690" stroke="#E5E4DE"/>
-  <text x="380" y="726" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#0B6E4F">首页</text>
-  <text x="710" y="726" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6F7A73">消息 12</text>
-  <text x="1040" y="726" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#6F7A73">个人中心</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 844" width="390" height="844">
+  <defs>
+    <clipPath id="screen-clip">
+      <rect x="0.5" y="0.5" width="389" height="843" rx="22" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#screen-clip)">
+    <rect width="390" height="844" fill="#F7F6F2" />
+    <rect x="0" y="0" width="390" height="56" fill="#FFFFFF" />
+    <line x1="0" y1="56" x2="390" y2="56" stroke="#E5E2DC" stroke-width="1" />
+    <rect x="16" y="10" width="36" height="36" rx="9" fill="#FFFFFF" stroke="#E5E2DC" />
+    <g transform="translate(25 19) scale(0.75)" fill="none" stroke="#5C6662" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16" /><path d="M4 12h16" /><path d="M4 19h16" /></g>
+    <text x="64" y="34" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="16" font-weight="700" fill="#14231F" text-anchor="start">广东二师助手</text>
+    <rect x="294" y="10" width="36" height="36" rx="9" fill="#FFFFFF" stroke="#E5E2DC" />
+    <g transform="translate(303 19) scale(0.75)" fill="none" stroke="#5C6662" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></g>
+    <rect x="338" y="10" width="36" height="36" rx="9" fill="#FFFFFF" stroke="#E5E2DC" />
+    <g transform="translate(347 19) scale(0.75)" fill="none" stroke="#5C6662" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></g>
+    <text x="16" y="86" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="11.5" font-weight="600" fill="#0E7C61" text-anchor="start">11月16日 星期一 · 第 11 周</text>
+    <text x="16" y="124" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="26" font-weight="700" fill="#14231F" text-anchor="start">早上好，林知远</text>
+    <rect x="16" y="140" width="102" height="32" rx="16" fill="#E4F3EE" stroke="#0E7C61" stroke-opacity="0.35" />
+    <g transform="translate(28 149) scale(0.5833)" fill="none" stroke="#0E7C61" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="m9 16 2 2 4-4" /></g>
+    <text x="47" y="160.5" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="600" fill="#0E7C61" text-anchor="start">今日课程</text>
+    <rect x="128" y="140" width="90" height="32" rx="16" fill="#FFFFFF" stroke="#E5E2DC" />
+    <g transform="translate(140 149) scale(0.5833)" fill="none" stroke="#5C6662" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" /><path d="M3 11h3c.8 0 1.6.3 2.1.9l1.1.9c1.6 1.6 4.1 1.6 5.7 0l1.1-.9c.5-.5 1.3-.9 2.1-.9H21" /></g>
+    <text x="159" y="160.5" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="500" fill="#5C6662" text-anchor="start">校园卡</text>
+    <rect x="228" y="140" width="104" height="32" rx="16" fill="#FFFFFF" stroke="#E5E2DC" />
+    <g transform="translate(240 149) scale(0.5833)" fill="none" stroke="#5C6662" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></g>
+    <text x="259" y="160.5" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="500" fill="#5C6662" text-anchor="start">快捷指令</text>
+    <rect x="16" y="188" width="358" height="202" rx="14" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="32" y="204" width="32" height="32" rx="8" fill="#E4F3EE" />
+    <g transform="translate(39 211) scale(0.75)" fill="none" stroke="#0E7C61" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="m9 16 2 2 4-4" /></g>
+    <text x="74" y="219" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="16" font-weight="700" fill="#14231F" text-anchor="start">今日课程</text>
+    <text x="74" y="235" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11.5" font-weight="400" fill="#78827E" text-anchor="start">今天共有 2 节课程安排</text>
+    <rect x="278" y="204" width="80" height="30" rx="8" fill="#0E7C61" />
+    <text x="318" y="223" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="12" font-weight="600" fill="#FFFFFF" text-anchor="middle">完整课表</text>
+    <line x1="32" y1="248" x2="358" y2="248" stroke="#ECE9E2" />
+    <rect x="32" y="260" width="326" height="54" rx="10" fill="#E4F3EE" opacity="0.55" />
+    <rect x="42" y="271" width="54" height="22" rx="6" fill="#0E7C61" />
+    <text x="69" y="286" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#FFFFFF" text-anchor="middle">第 1-2 节</text>
+    <text x="108" y="282" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="14" font-weight="600" fill="#14231F" text-anchor="start">操作系统原理</text>
+    <text x="108" y="301" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11.5" font-weight="400" fill="#5C6662" text-anchor="start">教学楼 A302 · 08:00 - 09:40</text>
+    <rect x="32" y="324" width="326" height="52" rx="10" fill="#F0EEE8" />
+    <rect x="42" y="335" width="54" height="22" rx="6" fill="#FFFFFF" stroke="#E5E2DC" />
+    <text x="69" y="350" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="10.5" font-weight="600" fill="#5C6662" text-anchor="middle">第 3-4 节</text>
+    <text x="108" y="346" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="14" font-weight="600" fill="#14231F" text-anchor="start">计算机网络实验</text>
+    <text x="108" y="365" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11.5" font-weight="400" fill="#5C6662" text-anchor="start">实验楼 B204 · 10:10 - 11:50</text>
+    <text x="16" y="422" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="18" font-weight="700" fill="#14231F" text-anchor="start">校园服务</text>
+    <rect x="94" y="407" width="24" height="18" rx="9" fill="#E4F3EE" />
+    <text x="106" y="420" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="11" font-weight="600" fill="#0E7C61" text-anchor="middle">10</text>
+    <text x="16" y="441" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11.5" font-weight="400" fill="#78827E" text-anchor="start">查成绩、课表、四六级、馆藏图书与常用工具</text>
+    <rect x="16" y="454" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="26" y="464" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(32 470) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></g>
+    <text x="62" y="483" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">成绩查询</text>
+    <g transform="translate(166 470) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="200" y="454" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="210" y="464" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(216 470) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></g>
+    <text x="246" y="483" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">课表查询</text>
+    <g transform="translate(350 470) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="16" y="512" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="26" y="522" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(32 528) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></g>
+    <text x="62" y="541" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">四六级查询</text>
+    <g transform="translate(166 528) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="200" y="512" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="210" y="522" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(216 528) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14" /><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" /></g>
+    <text x="246" y="541" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">馆藏图书</text>
+    <g transform="translate(350 528) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="16" y="570" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="26" y="580" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(32 586) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20H2" /><path d="M11 4.562v16.157a1 1 0 0 0 1.242.97L19 20V5.562a2 2 0 0 0-1.515-1.94l-4-1A2 2 0 0 0 11 4.561z" /><path d="M11 4H8a2 2 0 0 0-2 2v14" /><path d="M14 12h.01" /><path d="M22 20h-3" /></g>
+    <text x="62" y="599" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">空教室查询</text>
+    <g transform="translate(166 586) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="200" y="570" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="210" y="580" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(216 586) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M3 9a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2" /><path d="M3 11h3c.8 0 1.6.3 2.1.9l1.1.9c1.6 1.6 4.1 1.6 5.7 0l1.1-.9c.5-.5 1.3-.9 2.1-.9H21" /></g>
+    <text x="246" y="599" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">校园卡</text>
+    <g transform="translate(350 586) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="16" y="628" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="26" y="638" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(32 644) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M13 21h8" /><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></g>
+    <text x="62" y="657" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">教学评价</text>
+    <g transform="translate(166 644) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="200" y="628" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="210" y="638" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(216 644) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g>
+    <text x="246" y="657" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">数据中心</text>
+    <g transform="translate(350 644) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <text x="16" y="708" font-family="'Songti SC', 'STSong', 'Noto Serif CJK SC', Georgia, serif" font-size="18" font-weight="700" fill="#14231F" text-anchor="start">校园生活</text>
+    <rect x="94" y="693" width="22" height="18" rx="9" fill="#F0EEE8" />
+    <text x="105" y="706" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="11" font-weight="600" fill="#5C6662" text-anchor="middle">8</text>
+    <rect x="16" y="720" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="26" y="730" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(32 736) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></g>
+    <text x="62" y="749" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">二手市场</text>
+    <g transform="translate(166 736) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="200" y="720" width="174" height="48" rx="10" fill="#FFFFFF" stroke="#E5E2DC" />
+    <rect x="210" y="730" width="28" height="28" rx="7" fill="#E4F3EE" />
+    <g transform="translate(216 736) scale(0.6667)" fill="none" stroke="#0E7C61" stroke-width="1.85" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" /><path d="M15 18H9" /><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" /><circle cx="17" cy="18" r="2" /><circle cx="7" cy="18" r="2" /></g>
+    <text x="246" y="749" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="13.5" font-weight="500" fill="#14231F" text-anchor="start">全民快递</text>
+    <g transform="translate(350 736) scale(0.625)" fill="none" stroke="#78827E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></g>
+    <rect x="0" y="782" width="390" height="62" fill="#FFFFFF" />
+    <line x1="0" y1="782" x2="390" y2="782" stroke="#E5E2DC" stroke-width="1" />
+    <rect x="53" y="782" width="24" height="2.5" rx="1.25" fill="#0E7C61" />
+    <g transform="translate(55 793) scale(0.8333)" fill="none" stroke="#0E7C61" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></g>
+    
+    <text x="65" y="830" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11" font-weight="600" fill="#0E7C61" text-anchor="middle">首页</text>
+    
+    <g transform="translate(185 793) scale(0.8333)" fill="none" stroke="#78827E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.268 21a2 2 0 0 0 3.464 0" /><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /></g>
+    <rect x="201" y="790" width="20" height="14" rx="7" fill="#D14343" /><text x="211" y="800.5" font-family="'SF Mono', ui-monospace, Menlo, monospace" font-size="9" font-weight="700" fill="#FFFFFF" text-anchor="middle">12</text>
+    <text x="195" y="830" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11" font-weight="500" fill="#78827E" text-anchor="middle">消息</text>
+    
+    <g transform="translate(315 793) scale(0.8333)" fill="none" stroke="#78827E" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></g>
+    
+    <text x="325" y="830" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', system-ui, sans-serif" font-size="11" font-weight="500" fill="#78827E" text-anchor="middle">个人中心</text>
+  </g>
+  <rect x="0.5" y="0.5" width="389" height="843" rx="22" fill="none" stroke="#DCD9CF" stroke-width="1" />
 </svg>

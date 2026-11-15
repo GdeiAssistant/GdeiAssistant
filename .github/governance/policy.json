@@ -1,11 +1,11 @@
 {
   "version": "pr-governance/v3",
   "mode": "enforce",
-  "reviewer": {
-    "provider": "codex",
-    "app_id": 1144995,
-    "user_id": 199175422,
-    "login": "chatgpt-codex-connector[bot]"
+  "review_routing": {
+    "dispatch_mentions": [
+      "@codex review",
+      "@claude review"
+    ]
   },
   "r0_paths": [],
   "r2_paths": [],

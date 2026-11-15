@@ -1,7 +1,9 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@4c296692ae2efbce09bc21b6641299f368435c40.
-# Keep the job names; they are required status check contexts.
-
 name: Secret scan
+
+# Copy to .github/workflows/gitleaks.yml and replace Pigbibi/PrGovernance.
+# The job name is the required status check context; keep it as `Gitleaks`.
+# The scanner, its config and its pinned binary come from the governance
+# repository, so a pull request cannot change the rules that judge it.
 
 on:
   pull_request:
@@ -22,6 +24,6 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Scan added commits
-        uses: GdeiAssistant/.github/pr-governance@4c296692ae2efbce09bc21b6641299f368435c40
+        uses: Pigbibi/PrGovernance/pr-governance@ccda8de572d2893272b0137526ef3e2d45e5eee7
         with:
           mode: scan

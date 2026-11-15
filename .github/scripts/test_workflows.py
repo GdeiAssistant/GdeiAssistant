@@ -50,20 +50,22 @@ class WorkflowSafetyTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subprocess.run(['git', 'init', '--quiet', directory], check=True)
+            (root / 'AGENTS.md').write_text('local-only policy')
             (root / '.github').mkdir()
-            for name in ['engineering.md', 'copilot-instructions.md', 'CODEOWNERS']:
+            for name in ['copilot-instructions.md', 'CODEOWNERS']:
                 (root / '.github' / name).write_text('local-only policy')
-            (root / '.gitignore').write_text('.github/\n')
+            (root / '.gitignore').write_text('AGENTS.md\n.github/\n')
             self.assertTrue(check_entries(root))
 
     def test_tracked_policy_is_a_delivery(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             subprocess.run(['git', 'init', '--quiet', directory], check=True)
+            (root / 'AGENTS.md').write_text('versioned policy')
             (root / '.github').mkdir()
-            for name in ['engineering.md', 'copilot-instructions.md', 'CODEOWNERS']:
+            for name in ['copilot-instructions.md', 'CODEOWNERS']:
                 (root / '.github' / name).write_text('versioned policy')
-            subprocess.run(['git', '-C', directory, 'add', '-f', '.github'], check=True)
+            subprocess.run(['git', '-C', directory, 'add', '-f', 'AGENTS.md', '.github'], check=True)
             self.assertEqual(check_entries(root), [])
 
 

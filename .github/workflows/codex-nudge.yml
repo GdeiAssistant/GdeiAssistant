@@ -1,7 +1,9 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc.
-# Keep the job names; they are required status check contexts.
-
 name: Review request
+
+# Copy to .github/workflows/codex-nudge.yml and replace Pigbibi/PrGovernance.
+# Nudges Codex then Claude (see policy.review_routing). Cursor Bugbot must be
+# triggered by a human (`cursor review` / `bugbot run`); bot-posted triggers are ignored.
+# Optional org var GOVERNANCE_REVIEWERS_JSON overrides reviewer identities.
 
 on:
   schedule:
@@ -26,6 +28,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Request
-        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
+        uses: Pigbibi/PrGovernance/pr-governance@ccda8de572d2893272b0137526ef3e2d45e5eee7
+        env:
+          GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
+          GOVERNANCE_DISPATCH_MENTIONS_JSON: ${{ vars.GOVERNANCE_DISPATCH_MENTIONS_JSON }}
         with:
           mode: nudge

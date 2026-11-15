@@ -858,7 +858,7 @@ function handleSecret(path, method, data, token, utils) {
 }
 
 function handleExpress(path, method, data, token, utils) {
-  if (!/^\/api\/express\//.test(path)) {
+  if (!/^\/api\/express(\/|$)/.test(path)) {
     return null
   }
 

@@ -126,6 +126,7 @@ services:
       args:
         VITE_APP_BASE_API: "${VITE_APP_BASE_API:-/api}"
         VITE_PE_EXTERNAL_URL: "${VITE_PE_EXTERNAL_URL:-}"
+        VITE_ENABLE_DEMO_MOCK: "${VITE_ENABLE_DEMO_MOCK:-false}"
     image: gdeiassistant-frontend:staging
     container_name: gdeiassistant-frontend-staging
     networks:

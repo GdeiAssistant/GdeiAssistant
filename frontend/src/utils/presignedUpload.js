@@ -1,4 +1,5 @@
 import request from './request'
+import { isMockMode } from '../services/data-source'
 
 export function resolveFileName(file, overrideFileName) {
   if (overrideFileName && String(overrideFileName).trim()) {
@@ -34,6 +35,9 @@ export async function uploadFileByPresignedUrl(file, options = {}, deps = {}) {
   const objectKey = response?.data?.objectKey
   if (!uploadUrl || !objectKey) {
     throw new Error('未获取到上传地址')
+  }
+  if (!deps.fetchFn && isMockMode()) {
+    return objectKey
   }
   const uploadResponse = await fetchFn(uploadUrl, {
     method: 'PUT',

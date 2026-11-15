@@ -15,4 +15,34 @@ describe('recorded audio upload contract', () => {
   it('retains an explicit missing-MIME failure at the whitelist boundary', () => {
     expect(resolveContentType({})).toBe('application/octet-stream')
   })
+  it('skips PUT fetch to mock uploadUrl when running in mock mode', async () => {
+    localStorage.setItem('gdei_data_source_mode', 'mock')
+    const originalFetch = globalThis.fetch
+    let fetched = false
+    globalThis.fetch = async () => {
+      fetched = true
+      return { ok: true }
+    }
+    try {
+      const result = await uploadFileByPresignedUrl(
+        { name: 'photo.jpg', type: 'image/jpeg' },
+        {},
+        {
+          requestClient: {
+            get: async () => ({
+              data: {
+                url: 'https://mock-storage.example.com/mock-uploads/1/photo.jpg',
+                objectKey: 'mock-uploads/1/photo.jpg'
+              }
+            })
+          }
+        }
+      )
+      expect(result).toBe('mock-uploads/1/photo.jpg')
+      expect(fetched).toBe(false)
+    } finally {
+      globalThis.fetch = originalFetch
+      localStorage.removeItem('gdei_data_source_mode')
+    }
+  })
 })

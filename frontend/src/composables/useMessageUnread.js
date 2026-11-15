@@ -17,9 +17,9 @@ export async function refreshMessageUnread() {
   if (current !== identity) { resetMessageUnread(); identity = current }
   const epoch = ++generation
   const results = await Promise.allSettled([
-    request.get('/information/message/categories/unread'),
-    request.get('/information/announcement/unread'),
-    request.get('/social/unread')
+    request.get('/information/message/categories/unread', { skipErrorTip: true }),
+    request.get('/information/announcement/unread', { skipErrorTip: true }),
+    request.get('/social/unread', { skipErrorTip: true })
   ])
   if (epoch !== generation || current !== `${localStorage.getItem('token') || ''}:${getDataSourceMode()}`) return
   const keys = [['interaction', 'service'], ['announcement'], ['direct']]

@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.userprofile.service;
 
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
+import cn.gdeiassistant.core.profile.service.ProfileMajorCatalog;
 import cn.gdeiassistant.core.userprofile.pojo.ProfileOptionsVO;
 import org.springframework.stereotype.Service;
 

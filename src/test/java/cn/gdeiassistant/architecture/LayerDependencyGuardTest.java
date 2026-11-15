@@ -1,5 +1,7 @@
 package cn.gdeiassistant.architecture;
 
+import cn.gdeiassistant.common.spi.AnnouncementStore;
+import cn.gdeiassistant.common.spi.CacheAllowUserProvider;
 import cn.gdeiassistant.common.spi.IPAddressRecorder;
 import cn.gdeiassistant.common.spi.LoginTokenValidator;
 import cn.gdeiassistant.common.spi.SessionCertificateProvider;
@@ -41,14 +43,10 @@ class LayerDependencyGuardTest {
             "campuscredential/service/CampusCredentialService.java -> user.mapper.UserMapper",
             "cetquery/service/CetQueryService.java -> cet.mapper.CetMapper",
             "dataquery/service/DataQueryService.java -> electricfees.mapper.ElectricFeesMapper",
-            "dataquery/service/DataQueryService.java -> yellowpage.mapper.YellowPageMapper",
             "deletion/service/AccountDeletionService.java -> user.mapper.UserMapper",
             "deletion/service/DeletionCleanupWorker.java -> close.mapper.CloseMapper",
             "deletion/service/DeletionCleanupWorker.java -> user.mapper.UserMapper",
-            "gradequery/service/GradeCronService.java -> cron.mapper.CronMapper",
-            "information/service/announcement/AnnouncementService.java -> announcement.mapper.AnnouncementMapper",
             "message/service/InteractionNotificationService.java -> user.mapper.UserMapper",
-            "schedulequery/service/ScheduleCronService.java -> cron.mapper.CronMapper",
             "social/service/SocialIdentityService.java -> privacy.mapper.PrivacyMapper",
             "social/service/SocialIdentityService.java -> profile.mapper.ProfileMapper",
             "social/service/SocialIdentityService.java -> user.mapper.UserMapper",
@@ -69,12 +67,7 @@ class LayerDependencyGuardTest {
     );
 
     private static final Set<String> LEGACY_BIDIRECTIONAL_CYCLES = Set.of(
-            "announcement<->information",
             "campuscredential<->userlogin",
-            "cron<->gradequery",
-            "cron<->schedulequery",
-            "dataquery<->yellowpage",
-            "profile<->userprofile",
             "userdata<->userlogin"
     );
 
@@ -192,6 +185,10 @@ class LayerDependencyGuardTest {
                 Class.forName("cn.gdeiassistant.core.ipaddress.service.IPAddressService")));
         assertTrue(LoginTokenValidator.class.isAssignableFrom(
                 Class.forName("cn.gdeiassistant.core.token.service.LoginTokenService")));
+        assertTrue(CacheAllowUserProvider.class.isAssignableFrom(
+                Class.forName("cn.gdeiassistant.core.cron.service.CronCacheUserService")));
+        assertTrue(AnnouncementStore.class.isAssignableFrom(
+                Class.forName("cn.gdeiassistant.core.announcement.service.AnnouncementStoreService")));
     }
 
     @Test
@@ -211,6 +208,7 @@ class LayerDependencyGuardTest {
     @Test
     void sharedDataTypesHaveExactlyOneHomeInCommon() {
         for (String fqn : List.of(
+                "cn.gdeiassistant.common.pojo.entity.AnnouncementEntity",
                 "cn.gdeiassistant.common.pojo.entity.UserCertificateEntity",
                 "cn.gdeiassistant.common.pojo.delaytask.DelayTask",
                 "cn.gdeiassistant.common.pojo.delaytask.DelayTaskElement",
@@ -222,6 +220,7 @@ class LayerDependencyGuardTest {
             }
         }
         for (String stale : List.of(
+                "core/information/pojo/entity/AnnouncementEntity.java",
                 "core/userlogin/pojo/entity/UserCertificateEntity.java",
                 "core/delaytask/pojo/DelayTask.java",
                 "core/delaytask/pojo/DelayTaskElement.java",

@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userprofile.service;
+package cn.gdeiassistant.core.profile.service;
 
 import cn.gdeiassistant.common.constant.OptionConstantUtils;
 
@@ -113,11 +113,11 @@ public final class ProfileMajorCatalog {
             this.label = label;
         }
 
-        String getCode() {
+        public String getCode() {
             return code;
         }
 
-        String getLabel() {
+        public String getLabel() {
             return label;
         }
     }

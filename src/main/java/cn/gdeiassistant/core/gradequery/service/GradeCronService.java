@@ -10,7 +10,7 @@ import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.gradequery.pojo.GradeCacheResult;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
-import cn.gdeiassistant.core.cron.mapper.CronMapper;
+import cn.gdeiassistant.common.spi.CacheAllowUserProvider;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,17 +43,17 @@ public class GradeCronService {
 
     private final GradeService gradeService;
 
-    private final CronMapper cronMapper;
+    private final CacheAllowUserProvider cacheAllowUserProvider;
 
     private final GradeDao gradeDao;
 
     private final CampusCredentialService campusCredentialService;
 
-    public GradeCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, GradeService gradeService, CronMapper cronMapper, GradeDao gradeDao, CampusCredentialService campusCredentialService) {
+    public GradeCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, GradeService gradeService, CacheAllowUserProvider cacheAllowUserProvider, GradeDao gradeDao, CampusCredentialService campusCredentialService) {
         this.campusSyncExecutor = campusSyncExecutor;
         this.userLoginService = userLoginService;
         this.gradeService = gradeService;
-        this.cronMapper = cronMapper;
+        this.cacheAllowUserProvider = cacheAllowUserProvider;
         this.gradeDao = gradeDao;
         this.campusCredentialService = campusCredentialService;
     }
@@ -68,7 +68,7 @@ public class GradeCronService {
         try {
             //获取所有允许教务缓存的用户
             List<User> userList = campusCredentialService.filterUsersWithEffectiveQuickAuth(
-                    cronMapper.selectCacheAllowUsers()
+                    cacheAllowUserProvider.listCacheAllowUsers()
             );
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);

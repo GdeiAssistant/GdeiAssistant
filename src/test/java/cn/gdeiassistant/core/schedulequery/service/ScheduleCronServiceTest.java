@@ -3,7 +3,7 @@ package cn.gdeiassistant.core.schedulequery.service;
 import cn.gdeiassistant.common.pojo.document.ScheduleDocument;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import cn.gdeiassistant.core.cron.mapper.CronMapper;
+import cn.gdeiassistant.common.spi.CacheAllowUserProvider;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class ScheduleCronServiceTest {
     private ScheduleService scheduleService;
 
     @Mock
-    private CronMapper cronMapper;
+    private CacheAllowUserProvider cacheAllowUserProvider;
 
     @Mock
     private ScheduleDao scheduleDao;
@@ -41,7 +41,7 @@ class ScheduleCronServiceTest {
 
     @BeforeEach
     void setUp() {
-        scheduleCronService = new ScheduleCronService(Runnable::run, userLoginService, scheduleService, cronMapper, scheduleDao, campusCredentialService);
+        scheduleCronService = new ScheduleCronService(Runnable::run, userLoginService, scheduleService, cacheAllowUserProvider, scheduleDao, campusCredentialService);
     }
 
     @Test
@@ -55,14 +55,14 @@ class ScheduleCronServiceTest {
         freshSchedule.setUsername("active-user");
         freshSchedule.setUpdateDateTime(new Date());
 
-        when(cronMapper.selectCacheAllowUsers()).thenReturn(cacheAllowUsers);
+        when(cacheAllowUserProvider.listCacheAllowUsers()).thenReturn(cacheAllowUsers);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(cacheAllowUsers))
                 .thenReturn(List.of(activeUser));
         when(scheduleDao.querySchedule("active-user")).thenReturn(freshSchedule);
 
         scheduleCronService.synchronizeScheduleData();
 
-        verify(cronMapper).selectCacheAllowUsers();
+        verify(cacheAllowUserProvider).listCacheAllowUsers();
         verify(campusCredentialService).filterUsersWithEffectiveQuickAuth(cacheAllowUsers);
         verify(scheduleDao).querySchedule("active-user");
         verifyNoMoreInteractions(scheduleDao);
@@ -70,7 +70,7 @@ class ScheduleCronServiceTest {
 
     @Test void staleCacheRefreshRetainsIdentityAndNewCachesAreCreated() throws Exception {
         var users = java.util.stream.IntStream.range(0, 6).mapToObj(i -> new User("synthetic-" + i, "synthetic-password")).toList();
-        when(cronMapper.selectCacheAllowUsers()).thenReturn(users);
+        when(cacheAllowUserProvider.listCacheAllowUsers()).thenReturn(users);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(users)).thenReturn(users);
         ScheduleDocument old = new ScheduleDocument(); old.setId("existing-id");
         old.setUpdateDateTime(new Date(System.currentTimeMillis() - java.time.Duration.ofDays(4).toMillis()));

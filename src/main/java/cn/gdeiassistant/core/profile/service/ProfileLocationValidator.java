@@ -1,4 +1,4 @@
-package cn.gdeiassistant.core.userprofile.controller.support;
+package cn.gdeiassistant.core.profile.service;
 
 import cn.gdeiassistant.common.pojo.entity.City;
 import cn.gdeiassistant.common.pojo.entity.State;
@@ -6,12 +6,10 @@ import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * Validates region/state/city codes against the location dictionary.
- * Extracted from ProfileController to keep location validation rules
- * in a single, testable place.
+ * Domain rule shared across profile mutation services and controllers.
  */
 @Component
 public class ProfileLocationValidator {

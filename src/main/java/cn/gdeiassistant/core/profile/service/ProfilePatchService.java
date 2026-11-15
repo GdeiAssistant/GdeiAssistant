@@ -5,8 +5,6 @@ import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.profile.pojo.entity.ProfileEntity;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
-import cn.gdeiassistant.core.userprofile.service.ProfileMajorCatalog;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;

@@ -1,9 +1,9 @@
 package cn.gdeiassistant.core.information.service.announcement;
 
 import cn.gdeiassistant.common.pojo.entity.Announcement;
-import cn.gdeiassistant.core.announcement.mapper.AnnouncementMapper;
+import cn.gdeiassistant.common.pojo.entity.AnnouncementEntity;
+import cn.gdeiassistant.common.spi.AnnouncementStore;
 import cn.gdeiassistant.core.information.converter.AnnouncementConverter;
-import cn.gdeiassistant.core.information.pojo.entity.AnnouncementEntity;
 import cn.gdeiassistant.core.information.pojo.vo.AnnouncementVO;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +14,12 @@ import java.util.List;
 @Service
 public class AnnouncementService {
 
-    private final AnnouncementMapper announcementMapper;
+    private final AnnouncementStore announcementStore;
 
     private final AnnouncementConverter announcementConverter;
 
-    public AnnouncementService(AnnouncementMapper announcementMapper, AnnouncementConverter announcementConverter) {
-        this.announcementMapper = announcementMapper;
+    public AnnouncementService(AnnouncementStore announcementStore, AnnouncementConverter announcementConverter) {
+        this.announcementStore = announcementStore;
         this.announcementConverter = announcementConverter;
     }
 
@@ -33,11 +33,11 @@ public class AnnouncementService {
         entity.setTitle(announcement.getTitle());
         entity.setContent(announcement.getContent());
         entity.setPublishTime(new Date());
-        announcementMapper.insertAnnouncement(entity);
+        announcementStore.insertAnnouncement(entity);
     }
 
     public AnnouncementVO queryLatestAnnouncement() {
-        AnnouncementEntity entity = announcementMapper.queryLatestAnnouncement();
+        AnnouncementEntity entity = announcementStore.queryLatestAnnouncement();
         return entity == null ? null : announcementConverter.toVO(entity);
     }
 
@@ -45,7 +45,7 @@ public class AnnouncementService {
         if (id == null) {
             return null;
         }
-        AnnouncementEntity entity = announcementMapper.queryAnnouncementById(id);
+        AnnouncementEntity entity = announcementStore.queryAnnouncementById(id);
         return entity == null ? null : announcementConverter.toVO(entity);
     }
 
@@ -53,7 +53,7 @@ public class AnnouncementService {
         if (start == null || start < 0 || size == null || size <= 0) {
             return new ArrayList<>();
         }
-        List<AnnouncementEntity> entityList = announcementMapper.queryAnnouncementPage(start, size);
+        List<AnnouncementEntity> entityList = announcementStore.queryAnnouncementPage(start, size);
         return entityList == null ? new ArrayList<>() : announcementConverter.toVOList(entityList);
     }
 }

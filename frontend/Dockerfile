@@ -6,6 +6,7 @@ FROM node:24.14.1-alpine AS builder
 WORKDIR /app
 ARG VITE_APP_BASE_API=/api
 ARG VITE_PE_EXTERNAL_URL=
+ARG VITE_ENABLE_DEMO_MOCK=false
 
 COPY package.json package-lock.json* ./
 RUN npm ci
@@ -14,6 +15,7 @@ COPY . .
 # 生产构建变量统一由根目录 .env 传入；默认仍使用相对路径 /api。
 ENV VITE_APP_BASE_API=${VITE_APP_BASE_API}
 ENV VITE_PE_EXTERNAL_URL=${VITE_PE_EXTERNAL_URL}
+ENV VITE_ENABLE_DEMO_MOCK=${VITE_ENABLE_DEMO_MOCK}
 RUN npm run build
 
 # -----------------------------------------------------------------------------

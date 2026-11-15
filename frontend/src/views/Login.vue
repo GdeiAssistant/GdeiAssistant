@@ -16,8 +16,8 @@ const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
 const password = ref('')
-// 数据源切换和模拟账号提示只在本地开发构建中显示
-const isDev = import.meta.env.DEV
+// 数据源切换和模拟账号提示在本地开发构建或显式开启演示开关时显示
+const isDemoMockEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEMO_MOCK === 'true'
 const mockMode = ref(isMockMode())
 const campusCredentialConsent = ref(false)
 
@@ -124,7 +124,7 @@ function handleThirdPartyLogin(type) {
         </label>
       </div>
 
-      <div v-if="isDev" class="login-mock" :class="{ 'login-mock--active': mockMode }">
+      <div v-if="isDemoMockEnabled" class="login-mock" :class="{ 'login-mock--active': mockMode }">
         <div class="login-mock__top">
           <div class="login-mock__title">
             <span>{{ t('loginPage.mockMode') }}</span>

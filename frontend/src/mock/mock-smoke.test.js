@@ -77,6 +77,10 @@ describe('mock smoke', () => {
   it('covers auth, profile and account center flows', async () => {
     const token = await login()
 
+    const presigned = await request('/api/upload/presignedUrl?fileName=demo.jpg', { token })
+    expect(presigned.data.objectKey).toContain('mock-uploads/')
+    expect(presigned.data.url).toContain('https://mock-storage.example.com/')
+
     const profile = await request('/api/user/profile', { token })
     expect(profile.data.username).toBeTruthy()
 

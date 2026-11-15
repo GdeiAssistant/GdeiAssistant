@@ -24,7 +24,7 @@ export function handlePresignedUrl(query, utils) {
   const fileName = query.fileName || 'upload_' + Date.now() + '.jpg'
   const mockKey = 'mock-uploads/' + Date.now() + '/' + fileName
   return utils.resolveWithDelay(utils.buildSuccess({
-    key: mockKey,
+    objectKey: mockKey,
     url: 'https://mock-storage.example.com/' + mockKey + '?X-Mock-Signature=mock_token_' + Date.now(),
     token: 'mock_upload_token_' + Date.now()
   }))

@@ -11,12 +11,19 @@ public class AiModelProvider implements ServiceProvider<AiRequest, String> {
     private final AiProperties.Endpoint endpoint;
     private final String model;
     private final RestTemplate http;
+    private final AiProperties.RoutePolicy policy;
 
     public AiModelProvider(AiProperties settings, AiProperties.Endpoint endpoint, String model, RestTemplate http) {
+        this(settings, endpoint, model, http, new AiProperties.RoutePolicy());
+    }
+
+    public AiModelProvider(AiProperties settings, AiProperties.Endpoint endpoint, String model, RestTemplate http,
+                           AiProperties.RoutePolicy policy) {
         this.settings = settings;
         this.endpoint = endpoint;
         this.model = model;
         this.http = http;
+        this.policy = policy != null ? policy : new AiProperties.RoutePolicy();
     }
     @Override public String providerName() { return endpoint.getId() + "/" + model; }
     @Override public int priority() { return endpoint.getPriority(); }
@@ -26,8 +33,13 @@ public class AiModelProvider implements ServiceProvider<AiRequest, String> {
         if (!isConfigured()) throw new ProviderException("AI endpoint unavailable under the configured region policy");
         try {
             AiProtocol protocol = endpoint.getProtocol();
-            var response = http.exchange(protocol.inferenceUri(endpoint, model), org.springframework.http.HttpMethod.POST,
-                    new HttpEntity<>(protocol.request(model, request), protocol.headers(endpoint)), String.class);
+            int timeoutMs = policy.getTimeoutMs() > 0 && policy.getTimeoutMs() <= Integer.MAX_VALUE
+                    ? (int) policy.getTimeoutMs() : 0;
+            var response = AiProviderRegistry.withReadTimeoutOverride(timeoutMs, () ->
+                    http.exchange(protocol.inferenceUri(endpoint, model), org.springframework.http.HttpMethod.POST,
+                            new HttpEntity<>(protocol.request(model, request, endpoint, policy.getThinking()),
+                                    protocol.headers(endpoint)),
+                            String.class));
             if (!response.getStatusCode().is2xxSuccessful()) throw new IllegalStateException("AI HTTP status");
             return protocol.text(response.getBody());
         } catch (Exception failure) {

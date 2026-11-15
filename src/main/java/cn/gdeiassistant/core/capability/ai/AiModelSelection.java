@@ -29,17 +29,30 @@ public class AiModelSelection {
     AiModelSelection(AiProperties settings, RestTemplate http) { this.settings = settings; this.http = http; }
 
     public List<String> models(AiProperties.Endpoint endpoint, String route, boolean images) {
-        List<String> explicit = endpoint.getRoutes().getOrDefault(route, List.of());
-        if (!explicit.isEmpty() || !settings.isAutoUpdate()) return explicit;
+        String effectiveRoute = route;
+        if ("translate".equals(route)
+                && endpoint.getRoutes().getOrDefault(route, List.of()).isEmpty()
+                && endpoint.getAutomaticRoutes().getOrDefault(route, List.of()).isEmpty()) {
+            effectiveRoute = "chat";
+        }
+        Set<String> disabled = endpoint.getDisabledModels();
+        List<String> explicit = endpoint.getRoutes().getOrDefault(effectiveRoute, List.of());
+        if (!explicit.isEmpty() || !settings.isAutoUpdate()) {
+            return disabled.isEmpty() ? explicit
+                    : explicit.stream().filter(model -> !disabled.contains(model)).toList();
+        }
         Snapshot snapshot = snapshots.get(endpoint.getId());
         var selected = new LinkedHashSet<String>();
-        for (AiProperties.Selection rule : endpoint.getAutomaticRoutes().getOrDefault(route, List.of())) {
+        for (AiProperties.Selection rule : endpoint.getAutomaticRoutes().getOrDefault(effectiveRoute, List.of())) {
             if (images && !rule.isImageInput()) continue;
             if (!rule.getAlias().isBlank()) {
-                selected.add(rule.getAlias());
+                if (!disabled.contains(rule.getAlias())) {
+                    selected.add(rule.getAlias());
+                }
             } else if (snapshot != null) {
                 Pattern pattern = Pattern.compile(rule.getPattern());
                 snapshot.models().stream().filter(model -> !images || model.imageInput())
+                        .filter(model -> !disabled.contains(model.id()))
                         .filter(model -> pattern.matcher(model.id()).matches())
                         .max((a, b) -> {
                             int compared = compareVersions(version(pattern, a.id()), version(pattern, b.id()));

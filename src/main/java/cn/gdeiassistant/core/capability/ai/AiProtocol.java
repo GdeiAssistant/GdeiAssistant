@@ -39,6 +39,10 @@ public enum AiProtocol {
     }
 
     public JSONObject request(String model, AiRequest request) {
+        return request(model, request, null, AiProperties.ThinkingMode.DEFAULT);
+    }
+
+    public JSONObject request(String model, AiRequest request, AiProperties.Endpoint endpoint, AiProperties.ThinkingMode thinking) {
         JSONObject body = new JSONObject();
         JSONArray messages = new JSONArray();
         StringBuilder system = new StringBuilder();
@@ -67,13 +71,27 @@ public enum AiProtocol {
             messages.add(JSONObject.of("role", role, this == GEMINI ? "parts" : "content",
                     this == OPENAI_RESPONSES && message.images().isEmpty() ? message.text() : content));
         }
+        boolean disableThinking = thinking == AiProperties.ThinkingMode.DISABLED;
+        String endpointId = endpoint != null && endpoint.getId() != null ? endpoint.getId() : "";
         switch (this) {
             case OPENAI_RESPONSES -> {
                 body.put("model", model); body.put("input", messages); body.put("store", false);
                 body.put("max_output_tokens", request.maxOutputTokens());
+                if (disableThinking) {
+                    body.put("reasoning", JSONObject.of("effort", "low"));
+                }
             }
             case OPENAI_CHAT -> {
                 body.put("model", model); body.put("messages", messages); body.put("max_tokens", request.maxOutputTokens());
+                if (disableThinking) {
+                    if (endpointId.equals("doubao") || endpointId.startsWith("doubao-")
+                            || endpointId.equals("zhipu") || endpointId.startsWith("zhipu-")) {
+                        body.put("thinking", JSONObject.of("type", "disabled"));
+                    } else if (endpointId.equals("qwen") || endpointId.startsWith("qwen-")
+                            || endpointId.equals("siliconflow") || endpointId.startsWith("siliconflow-")) {
+                        body.put("enable_thinking", false);
+                    }
+                }
             }
             case ANTHROPIC -> {
                 body.put("model", model); body.put("messages", messages); body.put("max_tokens", request.maxOutputTokens());
@@ -81,7 +99,11 @@ public enum AiProtocol {
             }
             case GEMINI -> {
                 body.put("contents", messages);
-                body.put("generationConfig", JSONObject.of("maxOutputTokens", request.maxOutputTokens()));
+                JSONObject generationConfig = JSONObject.of("maxOutputTokens", request.maxOutputTokens());
+                if (disableThinking) {
+                    generationConfig.put("thinkingConfig", JSONObject.of("thinkingBudget", 0));
+                }
+                body.put("generationConfig", generationConfig);
                 if (!system.isEmpty()) body.put("systemInstruction", JSONObject.of("parts", new JSONArray(JSONObject.of("text", system.toString()))));
             }
         }

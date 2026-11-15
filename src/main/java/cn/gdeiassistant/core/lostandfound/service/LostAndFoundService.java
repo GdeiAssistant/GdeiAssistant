@@ -224,9 +224,15 @@ public class LostAndFoundService {
     private List<LostAndFoundItemVO> toItemVOList(List<LostAndFoundItemEntity> list) {
         if (list == null || list.isEmpty()) return new ArrayList<>();
         List<LostAndFoundItemVO> vos = lostAndFoundItemConverter.toVOList(list);
+        java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolved = publicAuthorResolver == null
+                ? java.util.Map.of()
+                : publicAuthorResolver.resolveAll(list.stream()
+                        .map(LostAndFoundItemEntity::getUsername)
+                        .toList());
+        PublicAuthorResolver.AuthorPublic fallback = new PublicAuthorResolver.AuthorPublic(null, "用户");
         for (int i = 0; i < vos.size(); i++) {
             LostAndFoundItemEntity entity = list.get(i);
-            PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(entity.getUsername());
+            PublicAuthorResolver.AuthorPublic author = resolved.getOrDefault(entity.getUsername(), fallback);
             LostAndFoundItemVO vo = vos.get(i);
             vo.setAuthorId(author.authorId());
             vo.setUsername(author.displayName());

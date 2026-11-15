@@ -42,26 +42,52 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         long now = System.currentTimeMillis();
         long windowMillis = rateLimit.windowSeconds() * 1000L;
 
-        Deque<Long> timestamps = requestLog.computeIfAbsent(key, k -> new ConcurrentLinkedDeque<>());
-
-        // 清理窗口外的旧记录
-        while (!timestamps.isEmpty() && now - timestamps.peekFirst() > windowMillis) {
-            timestamps.pollFirst();
+        // 清理其他已过期的 key，防止 map 无限增长，且通过 computeIfPresent 协调桶访问
+        if (requestLog.size() > 1000) {
+            for (String candidateKey : requestLog.keySet()) {
+                if (key.equals(candidateKey)) {
+                    continue;
+                }
+                requestLog.computeIfPresent(candidateKey, (k, q) -> {
+                    Long head;
+                    while ((head = q.peekFirst()) != null && now - head > windowMillis) {
+                        q.pollFirst();
+                    }
+                    return q.isEmpty() ? null : q;
+                });
+            }
         }
 
-        if (timestamps.size() >= rateLimit.maxRequests()) {
+        boolean[] allowed = new boolean[1];
+        int[] currentCount = new int[1];
+        requestLog.compute(key, (k, existing) -> {
+            Deque<Long> timestamps = existing != null ? existing : new ConcurrentLinkedDeque<>();
+            Long head;
+            while ((head = timestamps.peekFirst()) != null && now - head > windowMillis) {
+                timestamps.pollFirst();
+            }
+            if (timestamps.size() >= rateLimit.maxRequests()) {
+                allowed[0] = false;
+                currentCount[0] = timestamps.size();
+            } else {
+                timestamps.addLast(now);
+                allowed[0] = true;
+            }
+            return timestamps;
+        });
+
+        if (!allowed[0]) {
             log.warn("请求限流: maxRequests={}, windowSeconds={}, currentRequests={}",
-                    rateLimit.maxRequests(), rateLimit.windowSeconds(), timestamps.size());
+                    rateLimit.maxRequests(), rateLimit.windowSeconds(), currentCount[0]);
             String message = Messages.forLanguage("request.tooFrequent", request.getHeader("Accept-Language"));
             response.setStatus(429);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            response.getWriter().print("{\"code\":429,\"message\":\"" + jsonEscape(message) + "\"}");
+            response.getWriter().print("{\"success\":false,\"code\":429,\"message\":\"" + jsonEscape(message) + "\"}");
             response.getWriter().flush();
             return false;
         }
 
-        timestamps.addLast(now);
         return true;
     }
 
@@ -85,7 +111,42 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         if (sessionId != null && !sessionId.toString().isEmpty()) {
             return "session:" + sessionId;
         }
-        // For unauthenticated requests, use remote addr (not forwarded headers)
-        return "ip:" + request.getRemoteAddr();
+        // Only trust X-Forwarded-For when the immediate peer is a loopback or private proxy
+        String remoteAddr = request.getRemoteAddr();
+        if (isTrustedProxy(remoteAddr)) {
+            String forwarded = request.getHeader("X-Forwarded-For");
+            if (forwarded != null && !forwarded.isEmpty()) {
+                String clientIp = forwarded.split(",")[0].trim();
+                if (!clientIp.isEmpty()) {
+                    return "ip:" + clientIp;
+                }
+            }
+        }
+        return "ip:" + remoteAddr;
+    }
+
+    private static boolean isTrustedProxy(String addr) {
+        if (addr == null || addr.isEmpty()) {
+            return false;
+        }
+        if ("127.0.0.1".equals(addr) || addr.startsWith("127.")
+                || "::1".equals(addr) || "0:0:0:0:0:0:0:1".equals(addr)) {
+            return true;
+        }
+        if (addr.startsWith("10.") || addr.startsWith("192.168.")) {
+            return true;
+        }
+        if (addr.startsWith("172.")) {
+            int secondDot = addr.indexOf('.', 4);
+            if (secondDot > 4) {
+                try {
+                    int secondOctet = Integer.parseInt(addr.substring(4, secondDot));
+                    return secondOctet >= 16 && secondOctet <= 31;
+                } catch (NumberFormatException ignored) {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 }

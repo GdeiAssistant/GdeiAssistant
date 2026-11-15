@@ -140,6 +140,24 @@ class RateLimitInterceptorTest {
     }
 
     @Test
+    void shouldIgnoreXForwardedForHeaderFromUntrustedPublicRemoteAddr() throws Exception {
+        HandlerMethod handler = mockHandlerWithRateLimit(1, 60);
+
+        MockHttpServletRequest request1 = new MockHttpServletRequest("POST", "/api/auth/login");
+        request1.setRemoteAddr("203.0.113.10");
+        request1.addHeader("X-Forwarded-For", "1.1.1.1");
+        assertTrue(interceptor.preHandle(request1, new MockHttpServletResponse(), handler));
+
+        // 即使伪造了不同的 X-Forwarded-For，非受信任公网直连仍按 remoteAddr 限流
+        MockHttpServletRequest request2 = new MockHttpServletRequest("POST", "/api/auth/login");
+        request2.setRemoteAddr("203.0.113.10");
+        request2.addHeader("X-Forwarded-For", "2.2.2.2");
+        MockHttpServletResponse response2 = new MockHttpServletResponse();
+        assertFalse(interceptor.preHandle(request2, response2, handler));
+        assertEquals(429, response2.getStatus());
+    }
+
+    @Test
     void shouldTrackDifferentPathsSeparately() throws Exception {
         HandlerMethod handler = mockHandlerWithRateLimit(1, 60);
 
@@ -177,5 +195,26 @@ class RateLimitInterceptorTest {
         assertTrue(output.getAll().contains("请求限流"));
         assertFalse(output.getAll().contains(syntheticSessionId));
         assertFalse(output.getAll().contains("session:"));
+    }
+
+    @Test
+    void shouldPreserveCurrentBucketWhenExceedingCleanupThreshold() throws Exception {
+        HandlerMethod handler = mockHandlerWithRateLimit(1, 60);
+
+        for (int i = 0; i < 1005; i++) {
+            MockHttpServletRequest req = new MockHttpServletRequest("POST", "/api/auth/login");
+            req.setAttribute("sessionId", "active-session-" + i);
+            assertTrue(interceptor.preHandle(req, new MockHttpServletResponse(), handler));
+        }
+
+        MockHttpServletRequest first = new MockHttpServletRequest("POST", "/api/auth/login");
+        first.setAttribute("sessionId", "target-session-1006");
+        assertTrue(interceptor.preHandle(first, new MockHttpServletResponse(), handler));
+
+        MockHttpServletRequest second = new MockHttpServletRequest("POST", "/api/auth/login");
+        second.setAttribute("sessionId", "target-session-1006");
+        MockHttpServletResponse blocked = new MockHttpServletResponse();
+        assertFalse(interceptor.preHandle(second, blocked, handler));
+        assertEquals(429, blocked.getStatus());
     }
 }

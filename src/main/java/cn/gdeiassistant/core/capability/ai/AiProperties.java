@@ -14,11 +14,47 @@ public class AiProperties {
     public enum Region { MAINLAND, OVERSEAS }
     public enum AccessMode { DIRECT, AGGREGATOR }
     public enum Authentication { NATIVE, BEARER }
+    public enum ThinkingMode { DEFAULT, ENABLED, DISABLED }
+
+    /** Route-level execution policy (Layer 3): timeout budget and reasoning preference. */
+    public static class RoutePolicy {
+        private long timeoutMs;
+        private ThinkingMode thinking = ThinkingMode.DEFAULT;
+
+        public RoutePolicy() {}
+
+        public RoutePolicy(long timeoutMs, ThinkingMode thinking) {
+            this.timeoutMs = timeoutMs;
+            this.thinking = Objects.requireNonNull(thinking);
+        }
+
+        public long getTimeoutMs() { return timeoutMs; }
+        public void setTimeoutMs(long value) { timeoutMs = value; }
+        public ThinkingMode getThinking() { return thinking; }
+        public void setThinking(ThinkingMode value) { thinking = Objects.requireNonNull(value); }
+
+        void validate() {
+            if (timeoutMs < 0) throw new IllegalArgumentException("AI route timeoutMs cannot be negative");
+            if (thinking == null) throw new IllegalArgumentException("AI route thinking mode is required");
+        }
+    }
+
+    /** Resolved Layer-2 binding linking an approved Vendor endpoint, selected model, and Layer-3 RoutePolicy. */
+    public record ModelBinding(Endpoint vendor, String model, RoutePolicy policy) {}
 
     private boolean autoUpdate = true;
     private boolean regionRestrictionEnabled = true;
     private Region region = Region.MAINLAND;
+    private Map<String, RoutePolicy> routePolicies = defaultRoutePolicies();
     private List<Endpoint> endpoints = new ArrayList<>();
+
+    private static Map<String, RoutePolicy> defaultRoutePolicies() {
+        var defaults = new LinkedHashMap<String, RoutePolicy>();
+        defaults.put("ocr", new RoutePolicy(6000L, ThinkingMode.DISABLED));
+        defaults.put("chat", new RoutePolicy(25000L, ThinkingMode.DEFAULT));
+        defaults.put("translate", new RoutePolicy(25000L, ThinkingMode.DISABLED));
+        return Collections.unmodifiableMap(defaults);
+    }
 
     public boolean isAutoUpdate() { return autoUpdate; }
     public void setAutoUpdate(boolean value) { autoUpdate = value; }
@@ -26,12 +62,31 @@ public class AiProperties {
     public void setRegionRestrictionEnabled(boolean value) { regionRestrictionEnabled = value; }
     public Region getRegion() { return region; }
     public void setRegion(Region region) { this.region = Objects.requireNonNull(region); }
+    public Map<String, RoutePolicy> getRoutePolicies() { return routePolicies; }
+    public void setRoutePolicies(Map<String, RoutePolicy> value) {
+        var merged = new LinkedHashMap<>(defaultRoutePolicies());
+        if (value != null) {
+            value.forEach((route, policy) -> {
+                if (!route.matches("[a-z][a-z0-9-]{0,63}")) throw new IllegalArgumentException("Invalid AI route policy key");
+                if (policy != null) {
+                    policy.validate();
+                    merged.put(route, new RoutePolicy(policy.getTimeoutMs(), policy.getThinking()));
+                }
+            });
+        }
+        routePolicies = Collections.unmodifiableMap(merged);
+    }
+    public RoutePolicy routePolicy(String route) {
+        RoutePolicy policy = routePolicies.get(route);
+        return policy != null ? policy : new RoutePolicy(0L, ThinkingMode.DEFAULT);
+    }
     public List<Endpoint> getEndpoints() { return endpoints; }
     public void setEndpoints(List<Endpoint> value) { endpoints = List.copyOf(value); }
     public boolean permits(Endpoint endpoint) { return !regionRestrictionEnabled || endpoint.region == region; }
 
     @PostConstruct
     public void validate() {
+        routePolicies.values().forEach(RoutePolicy::validate);
         Set<String> ids = new HashSet<>();
         for (Endpoint endpoint : endpoints) {
             if (endpoint.id == null || !endpoint.id.matches("[a-z0-9-]{1,64}") || !ids.add(endpoint.id)) {
@@ -75,6 +130,8 @@ public class AiProperties {
         private String baseUrl = "";
         private String apiKey = "";
         private int priority;
+        private boolean enabled = true;
+        private Set<String> disabledModels = Set.of();
         private String catalogPath = "/models";
         private Map<String, List<Selection>> automaticRoutes = Map.of();
         private Map<String, List<String>> routes = new LinkedHashMap<>();
@@ -94,6 +151,22 @@ public class AiProperties {
         public void setApiKey(String value) { apiKey = value; }
         public int getPriority() { return priority; }
         public void setPriority(int value) { priority = value; }
+        public boolean isEnabled() { return enabled; }
+        public void setEnabled(boolean value) { enabled = value; }
+        public Set<String> getDisabledModels() { return disabledModels; }
+        public void setDisabledModels(Set<String> value) {
+            if (value == null || value.isEmpty()) {
+                disabledModels = Set.of();
+                return;
+            }
+            var copy = new LinkedHashSet<String>();
+            for (String item : value) {
+                if (item != null && !item.isBlank()) {
+                    copy.add(item.trim());
+                }
+            }
+            disabledModels = Collections.unmodifiableSet(copy);
+        }
         /** Approved model queues by business route, e.g. ocr, chat, summary. */
         public Map<String, List<String>> getRoutes() { return routes; }
         public void setRoutes(Map<String, List<String>> value) {
@@ -119,7 +192,7 @@ public class AiProperties {
             });
             automaticRoutes = Collections.unmodifiableMap(copy);
         }
-        public boolean isConfigured() { return apiKey != null && !apiKey.isBlank(); }
+        public boolean isConfigured() { return enabled && apiKey != null && !apiKey.isBlank(); }
     }
 
     /** Each rule follows one server-approved model family, using its official alias or numeric version. */

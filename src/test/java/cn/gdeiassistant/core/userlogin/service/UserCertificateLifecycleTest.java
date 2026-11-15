@@ -198,4 +198,29 @@ class UserCertificateLifecycleTest {
         verify(dao).updateUserCookieCertificateExpiration("cookie");
         verify(dao).updateUserLoginCertificateExpiration("session");
     }
+
+    @Test
+    void configuredCampusUpstreamHostIsTrustedForCasRedirects() throws Exception {
+        UserCertificateService customUpstream = new UserCertificateService(
+                "http://jwgl-mock.internal:8080",
+                clients,
+                dao,
+                null,
+                "https://cas-mock.internal:8443/cas/login",
+                "http://portal-mock.internal:8001/Login");
+        sessionClient();
+        responses(
+                response(200, "<input id='tokens'><input id='stamp'>", ""),
+                response(200, "<body bgcolor='white'><a href='https://cas-mock.internal:8443/redirect'>continue</a></body>", ""),
+                response(302, "", "newpages/b.html"),
+                response(302, "", "https://cas-mock.internal:8443/fixture"),
+                response(200, "<a href='http://jwgl-mock.internal:8080/fixture'>continue</a>", ""),
+                response(200, "<a href='fixture.aspx'>continue</a>", ""),
+                response(200, "<script>var student='10000000001';</script><form id='Form1' action='fixture?i=owner&amp;k=synthetic-key&amp;timestamp=12'></form>", ""),
+                response(200, "verified", ""),
+                response(200, "<title>正方教务管理系统</title>", ""),
+                response(200, "profile", ""));
+        customUpstream.syncUpdateSessionCertificate("session", "owner", "synthetic-password");
+        verify(dao).saveUserSessionCertificate(eq("session"), any(UserCertificateEntity.class));
+    }
 }

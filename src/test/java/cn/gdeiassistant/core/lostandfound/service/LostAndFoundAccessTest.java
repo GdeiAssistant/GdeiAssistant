@@ -59,7 +59,9 @@ class LostAndFoundAccessTest {
     }
     @Test void publicListsReplaceCampusIdentityAndPersonalListsUseFiniteUrls() throws Exception {
         var item = detail("owner", 0).getItem();
-        when(authors.resolve("owner")).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "昵称"));
+        var resolved = new PublicAuthorResolver.AuthorPublic("public-id", "昵称");
+        when(authors.resolve("owner")).thenReturn(resolved);
+        when(authors.resolveAll(anyCollection())).thenReturn(java.util.Map.of("owner", resolved));
         when(mapper.selectAvailableItem(anyInt(), anyInt(), eq(10))).thenReturn(List.of(item));
         when(mapper.selectItemWithKeyword(anyInt(), eq("keyword"), anyInt(), eq(10))).thenReturn(List.of(item));
         when(mapper.selectItemByItemType(anyInt(), eq(2), anyInt(), eq(10))).thenReturn(List.of(item));

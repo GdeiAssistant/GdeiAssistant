@@ -1,5 +1,8 @@
 package cn.gdeiassistant.core.i18n;
 
+import cn.gdeiassistant.core.capability.ai.AiProperties;
+import cn.gdeiassistant.core.capability.ai.AiRequest;
+import cn.gdeiassistant.core.capability.ai.AiService;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +42,10 @@ public class I18nTranslationService {
 
     private final Executor i18nExecutor;
 
+    private final AiService aiService;
+
+    private final AiProperties aiProperties;
+
     private static final Map<String, String> DEEPL_LANG_MAP = Map.of(
             "en", "EN",
             "ja", "JA",
@@ -47,12 +54,26 @@ public class I18nTranslationService {
             "zh-TW", "ZH-HANT"
     );
 
+    private static final Map<String, String> AI_LANG_LABELS = Map.of(
+            "en", "English",
+            "ja", "Japanese",
+            "ko", "Korean",
+            "zh-HK", "Traditional Chinese (Hong Kong)",
+            "zh-TW", "Traditional Chinese (Taiwan)"
+    );
+
     public I18nTranslationService(I18nConfig config,
                                   RedisTemplate<String, String> redisTemplate,
                                   @Autowired(required = false) @Qualifier("i18nExecutor") Executor i18nExecutor) {
-        this.config = config;
-        this.redisTemplate = redisTemplate;
-        this.i18nExecutor = i18nExecutor;
+        this(config, redisTemplate, i18nExecutor, null, null);
+    }
+
+    public I18nTranslationService(I18nConfig config,
+                                  RedisTemplate<String, String> redisTemplate,
+                                  Executor i18nExecutor,
+                                  AiService aiService,
+                                  AiProperties aiProperties) {
+        this(config, redisTemplate, i18nExecutor, null, aiService, aiProperties);
     }
 
     /** Test factory: allow RestTemplate override without field reflection. */
@@ -60,15 +81,29 @@ public class I18nTranslationService {
                            RedisTemplate<String, String> redisTemplate,
                            Executor i18nExecutor,
                            RestTemplate restTemplate) {
+        this(config, redisTemplate, i18nExecutor, restTemplate, null, null);
+    }
+
+    I18nTranslationService(I18nConfig config,
+                           RedisTemplate<String, String> redisTemplate,
+                           Executor i18nExecutor,
+                           RestTemplate restTemplate,
+                           AiService aiService,
+                           AiProperties aiProperties) {
         this.config = config;
         this.redisTemplate = redisTemplate;
         this.i18nExecutor = i18nExecutor;
+        this.aiService = aiService;
+        this.aiProperties = aiProperties;
         if (restTemplate != null) {
             this.restTemplate = restTemplate;
         }
     }
 
     public String getCachedTranslation(String text, String targetLang) {
+        if (redisTemplate == null) {
+            return null;
+        }
         String key = cacheKey(targetLang, text);
         try {
             return redisTemplate.opsForValue().get(key);
@@ -88,7 +123,7 @@ public class I18nTranslationService {
             return cached;
         }
 
-        String translated = callDeepL(text, targetLang);
+        String translated = performTranslation(text, targetLang);
         if (translated != null && !translated.isBlank()) {
             storeInCache(text, targetLang, translated);
             return translated;
@@ -106,7 +141,7 @@ public class I18nTranslationService {
         try {
             i18nExecutor.execute(() -> {
                 try {
-                    String result = callDeepL(text, targetLang);
+                    String result = performTranslation(text, targetLang);
                     if (result != null) {
                         storeInCache(text, targetLang, result);
                     }
@@ -119,6 +154,50 @@ public class I18nTranslationService {
         } catch (java.util.concurrent.RejectedExecutionException e) {
             inFlight.remove(dedupKey);
             log.warn("i18n queue full; retaining original text");
+        }
+    }
+
+    private String performTranslation(String text, String targetLang) {
+        if (isDeepLPermitted()) {
+            String deepLResult = callDeepL(text, targetLang);
+            if (deepLResult != null && !deepLResult.isBlank()) {
+                return deepLResult;
+            }
+        }
+        return callAiTranslate(text, targetLang);
+    }
+
+    private boolean isDeepLPermitted() {
+        if (config == null || config.getDeeplApiKey() == null || config.getDeeplApiKey().isBlank()) {
+            return false;
+        }
+        if (aiProperties != null && aiProperties.isRegionRestrictionEnabled()
+                && aiProperties.getRegion() == AiProperties.Region.MAINLAND) {
+            return false;
+        }
+        return true;
+    }
+
+    private String callAiTranslate(String text, String targetLang) {
+        if (config == null || !config.isAiFallbackEnabled() || aiService == null) {
+            return null;
+        }
+        String languageLabel = AI_LANG_LABELS.get(targetLang);
+        if (languageLabel == null) {
+            return null;
+        }
+        try {
+            AiRequest request = new AiRequest(List.of(
+                    AiRequest.Message.text(AiRequest.Role.SYSTEM,
+                            "You are a translation engine. Translate the user text cleanly into "
+                                    + languageLabel + ". Preserve any HTML tags or placeholders and return only the translated text."),
+                    AiRequest.Message.text(AiRequest.Role.USER, text)
+            ), 2048);
+            String translated = aiService.generate("translate", request);
+            return postProcessTraditionalChinese(translated, targetLang);
+        } catch (Exception e) {
+            log.warn("AI translation fallback failed for lang={}: {}", targetLang, e.getMessage());
+            return null;
         }
     }
 
@@ -172,6 +251,9 @@ public class I18nTranslationService {
     }
 
     private void storeInCache(String originalText, String targetLang, String translated) {
+        if (redisTemplate == null) {
+            return;
+        }
         String key = cacheKey(targetLang, originalText);
         try {
             redisTemplate.opsForValue().set(key, translated, config.getCacheTtlDays(), TimeUnit.DAYS);

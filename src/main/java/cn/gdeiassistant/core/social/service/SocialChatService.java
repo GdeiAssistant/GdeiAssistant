@@ -207,11 +207,30 @@ public class SocialChatService {
         }
 
         long peerId = peerIdOf(conversation, me.getId());
+        CampusAccountView preLockPeer = identityService.findById(peerId);
+        if (preLockPeer == null || !preLockPeer.isActive()) {
+            throw SocialException.contactUnavailable();
+        }
+        SocialIdentityService.MessagePermission preLockPermission = identityService.evaluateMessagePermission(me, preLockPeer);
+        if (!preLockPermission.allowed) {
+            if ("CONTACT_UNAVAILABLE".equals(preLockPermission.reason)) {
+                throw SocialException.contactUnavailable();
+            }
+            throw SocialException.privacyRestricted();
+        }
+
+        // Perform object storage upload before acquiring DB row locks (lockUsersInOrder / FOR UPDATE).
+        String objectKey = chatImageService.newObjectKey();
+        chatImageService.uploadCanonical(objectKey, canonical);
+        chatImageService.registerRollbackDelete(objectKey);
+
         identityService.lockUsersInOrder(me.getId(), peerId);
         me = identityService.requireActiveById(me.getId());
         existing = chatMapper.selectByClientMessageId(conversation.getId(), me.getId(), clientId);
         if (existing != null) {
-            return confirmExistingImage(existing, canonical.sha256Hex);
+            ChatMessageDTO confirmed = confirmExistingImage(existing, canonical.sha256Hex);
+            deleteOrphanImageQuietly(objectKey, "duplicate-client-message");
+            return confirmed;
         }
         CampusAccountView peer = identityService.findById(peerId);
         if (peer == null || !peer.isActive()) {
@@ -230,12 +249,10 @@ public class SocialChatService {
         }
         existing = chatMapper.selectByClientMessageId(locked.getId(), me.getId(), clientId);
         if (existing != null) {
-            return confirmExistingImage(existing, canonical.sha256Hex);
+            ChatMessageDTO confirmed = confirmExistingImage(existing, canonical.sha256Hex);
+            deleteOrphanImageQuietly(objectKey, "duplicate-client-message");
+            return confirmed;
         }
-
-        String objectKey = chatImageService.newObjectKey();
-        chatImageService.uploadCanonical(objectKey, canonical);
-        chatImageService.registerRollbackDelete(objectKey);
 
         long nextSeq = (locked.getLastSeq() == null ? 0L : locked.getLastSeq()) + 1L;
         Date now = new Date();
@@ -260,11 +277,7 @@ public class SocialChatService {
             if (raced != null) {
                 // 同 ID 已提交：返回原消息；多余对象尽量删除，失败只记诊断不改幂等成功语义。
                 ChatMessageDTO confirmed = confirmExistingImage(raced, canonical.sha256Hex);
-                try {
-                    chatImageService.deleteStrictOrDiagnose(objectKey, "duplicate-client-message");
-                } catch (SocialException ignored) {
-                    // 已留下诊断日志；原消息确认不受影响
-                }
+                deleteOrphanImageQuietly(objectKey, "duplicate-client-message");
                 return confirmed;
             }
             throw SocialException.invalidRequest("消息发送冲突，请重试");
@@ -273,6 +286,14 @@ public class SocialChatService {
         ChatMessageDTO dto = toMessageDTO(message);
         pushMessageCreated(locked.getId(), me.getId(), peerId, dto);
         return dto;
+    }
+
+    private void deleteOrphanImageQuietly(String objectKey, String reason) {
+        try {
+            chatImageService.deleteStrictOrDiagnose(objectKey, reason);
+        } catch (SocialException ignored) {
+            // 已留下诊断日志；原消息确认不受影响
+        }
     }
 
     /**

@@ -41,7 +41,13 @@ class AiRoutingTest {
                 .forEach(source -> environment.getPropertySources().addLast(source));
         var settings = Binder.get(environment).bind("api.ai", AiProperties.class).get();
         settings.setRegion(AiProperties.Region.OVERSEAS);
-        settings.getEndpoints().forEach(endpoint -> endpoint.setApiKey(endpoint.getId().startsWith("opencode-") ? "synthetic-only" : ""));
+        settings.getEndpoints().forEach(endpoint -> {
+            boolean isOpenCode = endpoint.getId().startsWith("opencode-");
+            endpoint.setApiKey(isOpenCode ? "synthetic-only" : "");
+            if (isOpenCode) {
+                endpoint.setEnabled(true);
+            }
+        });
         settings.validate();
         var registry = new AiProviderRegistry(settings, new OutboundIntegrationProperties());
         var server = MockRestServiceServer.bindTo(registry.http()).build();
@@ -129,6 +135,53 @@ class AiRoutingTest {
         var request=registry.http().getRequestFactory().createRequest(java.net.URI.create("https://synthetic.invalid/"),org.springframework.http.HttpMethod.GET);
         var connection=(java.net.HttpURLConnection)org.springframework.test.util.ReflectionTestUtils.getField(request,"connection");
         assertNotNull(connection);assertFalse(connection.getInstanceFollowRedirects());connection.disconnect();
+    }
+
+    @Test void singleOpenCodeApiKeyOnlyEnablesFreeOpencodeChatWithoutPaidSubEndpoints() throws Exception {
+        var environment = new StandardEnvironment();
+        new YamlPropertySourceLoader().load("application", new ClassPathResource("application.yml"))
+                .forEach(source -> environment.getPropertySources().addLast(source));
+        var settings = Binder.get(environment).bind("api.ai", AiProperties.class).get();
+        settings.setRegion(AiProperties.Region.OVERSEAS);
+        settings.getEndpoints().forEach(endpoint ->
+                endpoint.setApiKey(endpoint.getId().startsWith("opencode-") ? "single-opencode-key" : ""));
+        settings.validate();
+
+        List<AiProperties.Endpoint> active = settings.getEndpoints().stream()
+                .filter(settings::permits)
+                .filter(AiProperties.Endpoint::isConfigured)
+                .toList();
+        assertEquals(List.of("opencode-chat"), active.stream().map(AiProperties.Endpoint::getId).toList());
+    }
+
+    @Test void routePoliciesModelBindingsDisableModelsAndDisableThinkingWorkAcrossLayers() {
+        var settings = new AiProperties();
+        var doubao = endpoint("doubao", AiProperties.Region.MAINLAND, AiProtocol.OPENAI_CHAT);
+        doubao.setRoutes(Map.of("chat", List.of("model-a", "model-b"), "ocr", List.of("model-a", "model-b")));
+        doubao.setDisabledModels(Set.of("model-b"));
+        var gemini = endpoint("gemini", AiProperties.Region.OVERSEAS, AiProtocol.GEMINI);
+        gemini.setRoutes(Map.of("chat", List.of("gemini-flash-latest")));
+
+        settings.setEndpoints(List.of(doubao, gemini));
+        settings.validate();
+
+        var registry = new AiProviderRegistry(settings, new OutboundIntegrationProperties());
+        List<AiProperties.ModelBinding> ocrBindings = registry.bindings("ocr", false);
+        assertEquals(1, ocrBindings.size());
+        assertEquals("model-a", ocrBindings.get(0).model());
+        assertEquals(6000L, ocrBindings.get(0).policy().getTimeoutMs());
+        assertEquals(AiProperties.ThinkingMode.DISABLED, ocrBindings.get(0).policy().getThinking());
+
+        List<AiProperties.ModelBinding> translateBindings = registry.bindings("translate", false);
+        assertEquals(1, translateBindings.size());
+        assertEquals("model-a", translateBindings.get(0).model());
+        assertEquals(25000L, translateBindings.get(0).policy().getTimeoutMs());
+        assertEquals(AiProperties.ThinkingMode.DISABLED, translateBindings.get(0).policy().getThinking());
+
+        var ocrDoubaoBody = AiProtocol.OPENAI_CHAT.request("model-a", AiRequest.text("hi"), doubao, AiProperties.ThinkingMode.DISABLED);
+        assertEquals("disabled", ocrDoubaoBody.getJSONObject("thinking").getString("type"));
+        var geminiBody = AiProtocol.GEMINI.request("gemini-flash-latest", AiRequest.text("hi"), gemini, AiProperties.ThinkingMode.DISABLED);
+        assertEquals(0, geminiBody.getJSONObject("generationConfig").getJSONObject("thinkingConfig").getIntValue("thinkingBudget"));
     }
 
 }

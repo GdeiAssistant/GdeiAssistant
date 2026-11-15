@@ -48,14 +48,13 @@ function submit() {
   if (content.length > 250) { showDialog(t('express.publish.contentTooLong')); return }
 
   const mapGender = (v) => { if (v === 'male') return 0; if (v === 'female') return 1; return 2 }
-  const payload = {
-    nickname,
-    realname,
-    selfGender: mapGender(formData.value.myGender),
-    name: receiverName,
-    personGender: mapGender(formData.value.receiverGender),
-    content
-  }
+  const payload = new URLSearchParams()
+  payload.append('nickname', nickname)
+  payload.append('realname', realname)
+  payload.append('selfGender', String(mapGender(formData.value.myGender)))
+  payload.append('name', receiverName)
+  payload.append('personGender', String(mapGender(formData.value.receiverGender)))
+  payload.append('content', content)
   submitting.value = true
   toastLoading(t('express.publish.publishing'))
   postExpress(payload)

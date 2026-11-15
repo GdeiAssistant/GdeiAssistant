@@ -20,7 +20,7 @@ export function sanitizeMessage(raw) {
   const lower = s.toLowerCase()
   if (
     /status\s*code|request\s*failed|econnrefused|enetunreach|econnreset|socket hang up|network\s*error|timeout|error\s*message|stack\s*trace|axioserror|sqlException|nullpointer|at\s+\S+\s*\(/i.test(lower)
-    || /^\d{3}\b/.test(s)
+    || /^\d{3}$/.test(s)
     || /\b(500|502|503|504)\b/.test(s)
     || /^(error|exception)\s*:/i.test(s)
     || /[A-Za-z]+(Error|Exception)\b/.test(s)

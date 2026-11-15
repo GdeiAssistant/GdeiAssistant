@@ -411,7 +411,6 @@ const routes = [
       { path: 'profile', name: 'ErshouProfile', component: ErshouProfile }
     ]
   },
-  { path: '/marketplace', redirect: '/marketplace/home' },
   // 失物招领模块：详情使用独立路由
   {
     path: '/lostandfound/detail/:id',
@@ -603,6 +602,11 @@ const routes = [
         meta: { titleKey: 'social.dmPrivacyTitle' }
       }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    redirect: '/home'
   }
 ]
 

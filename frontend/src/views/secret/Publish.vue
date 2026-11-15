@@ -328,12 +328,12 @@ const submit = async () => {
     try {
       submitting.value = true
       toastLoading(t('secret.publish.publishing'))
-      await postSecretInfo({
-        content: formData.value.content,
-        theme: formData.value.theme,
-        type: 0,
-        timer: formData.value.timer
-      })
+      const payload = new FormData()
+      payload.append('content', formData.value.content)
+      payload.append('theme', String(formData.value.theme))
+      payload.append('type', '0')
+      payload.append('timer', String(formData.value.timer))
+      await postSecretInfo(payload)
       router.push('/secret/home')
     } catch (err) {
       showDialog(err?.message || t('secret.publish.submitFailed'))

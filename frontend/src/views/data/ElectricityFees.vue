@@ -71,11 +71,11 @@ const submitQuery = () => {
   isLoading.value = true
   showLoading(t('electricityFees.loading'))
 
-  postDataElectricfees({
-      name: name,
-      number: number,
-      year: year
-    })
+  const params = new URLSearchParams()
+  params.append('name', name)
+  params.append('number', number)
+  params.append('year', year)
+  postDataElectricfees(params)
     .then((res) => {
       isLoading.value = false
       hideLoading()

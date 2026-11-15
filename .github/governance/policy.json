@@ -7,6 +7,12 @@
     "user_id": 199175422,
     "login": "chatgpt-codex-connector[bot]"
   },
+  "review_routing": {
+    "dispatch_mentions": [
+      "@codex review",
+      "@claude review"
+    ]
+  },
   "r0_paths": [],
   "r2_paths": [],
   "dependabot_template_exemption": true,

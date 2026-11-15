@@ -1,7 +1,8 @@
-# Shared governance action: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc.
-# Keep the job names; they are required status check contexts.
-
 name: PR risk gate
+
+# Copy to .github/workflows/risk-gate.yml and replace Pigbibi/PrGovernance with
+# the owner's governance repository (for example Pigbibi/PrGovernance).
+# The job names in this file are the required status check contexts; keep them.
 
 on:
   pull_request_target:
@@ -50,11 +51,10 @@ jobs:
       statuses: write
     steps:
       - name: Record label head
-        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
+        uses: Pigbibi/PrGovernance/pr-governance@ccda8de572d2893272b0137526ef3e2d45e5eee7
         env:
           GOVERNANCE_OWNER_ID: ${{ vars.RISK_GATE_OWNER_ID }}
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
-          GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
         with:
           mode: gate
           record-label: 'true'
@@ -68,7 +68,8 @@ jobs:
       (github.event_name != 'issue_comment' ||
        (github.event.issue.pull_request &&
         (github.event.comment.user.type == 'Bot' ||
-         contains(github.event.comment.body || '', 'codex-review'))))
+         contains(github.event.comment.body || '', 'codex-review') ||
+         contains(github.event.comment.body || '', 'ai-review-receipt'))))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -84,10 +85,15 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Evaluate
-        uses: GdeiAssistant/.github/pr-governance@2ce8a7e6d2eab38b6fcafcb53fa403b8b2877cbc
+        uses: Pigbibi/PrGovernance/pr-governance@ccda8de572d2893272b0137526ef3e2d45e5eee7
         env:
           GOVERNANCE_OWNER_ID: ${{ vars.RISK_GATE_OWNER_ID }}
           GOVERNANCE_OWNER_LOGIN: ${{ vars.RISK_GATE_OWNER }}
+          # Optional: a repository that keeps account identifiers out of public
+          # source configures the reviewer here instead of in policy.json.
+          GOVERNANCE_REVIEWER_APP_ID: ${{ vars.RISK_GATE_REVIEWER_APP_ID }}
+          GOVERNANCE_REVIEWER_USER_ID: ${{ vars.RISK_GATE_REVIEWER_USER_ID }}
+          GOVERNANCE_REVIEWER_LOGIN: ${{ vars.RISK_GATE_REVIEWER_LOGIN }}
           GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
         with:
           mode: gate

@@ -204,5 +204,36 @@ class OpenSourceFilesTest(unittest.TestCase):
         self.assertTrue(any("ISSUE_TEMPLATE" in e for e in hygiene.errors))
 
 
+
+class AntiLeakAndReadmeHygieneTest(unittest.TestCase):
+    def _init_repo(self, repo: Path) -> None:
+        sections = "\n".join(f"## {s}\nOK" for s in hygiene.AGENTS_SECTIONS_ZH)
+        (repo / "AGENTS.md").write_text(f"{sections}\n{hygiene.CONTENT_BOUNDARY}\n", encoding="utf-8")
+        (repo / "CLAUDE.md").write_text("@AGENTS.md\n", encoding="utf-8")
+        (repo / ".gitignore").write_text("\n".join(hygiene.REQUIRED_GITIGNORE_PATTERNS) + "\n", encoding="utf-8")
+        subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
+        subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, check=True)
+        subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True)
+        subprocess.run(["git", "add", "AGENTS.md", "CLAUDE.md", ".gitignore"], cwd=repo, check=True)
+
+    def test_retired_engineering_and_changes_docs_are_rejected(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            self._init_repo(repo)
+            (repo / ".github").mkdir()
+            (repo / ".github" / "engineering.md").write_text("# Legacy\n", encoding="utf-8")
+            (repo / "docs" / "changes").mkdir(parents=True)
+            (repo / "docs" / "changes" / "note.md").write_text("# Note\n", encoding="utf-8")
+            (repo / "docs" / "acceptance-policy.md").write_text("# Policy\n", encoding="utf-8")
+            hygiene.errors.clear()
+            hygiene.warnings.clear()
+            hygiene.check_agents(repo)
+            hygiene.check_public_internal_artifacts(repo)
+            joined = "\n".join(hygiene.errors)
+            self.assertIn(".github/engineering.md is retired", joined)
+            self.assertIn("docs/changes/", joined)
+            self.assertIn("docs/acceptance-policy.md", joined)
+
+
 if __name__ == "__main__":
     unittest.main()

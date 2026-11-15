@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Repository documentation and naming check. Rules live in AI_AGENT_STANDARD.md.
+"""Repository documentation, naming, anti-leak, and agent-file hygiene checker.
 
 Usage:
-    python scripts/check_hygiene.py            # check the current repository
+    python scripts/check_hygiene.py            # check public repository
+    python scripts/check_hygiene.py --private  # check private repository
     python scripts/check_hygiene.py --strict   # treat warnings as failures
 
-Exit code 0 means pass, 1 means there is at least one violation.
+Exit code 0 means pass, 1 means at least one blocking violation.
 """
 
 from __future__ import annotations
@@ -34,14 +35,14 @@ CONVENTIONAL_ANYWHERE = {
     "AGENTS.md",
     "CLAUDE.md",
 }
-CONVENTIONAL_ROOT_ONLY = {"AGENTS.md", "CLAUDE.md", "LICENSE"}
+CONVENTIONAL_ROOT_ONLY = {"CLAUDE.md", "LICENSE"}
 
 SKIP_DIRS = {
     ".git", "node_modules", ".venv", "venv", "__pycache__",
     "build", "dist", ".next", ".gradle", ".agents",
 }
 
-# Section 1.4 — banned filename patterns.
+# Banned filename patterns.
 BANNED_PATTERNS = [
     (re.compile(r"(?<!\d)20\d{2}[-_]?\d{2}[-_]?\d{2}(?!\d)"), "filename contains a date (dates belong to commit history)"),
     (re.compile(r"[-_]v\d+(\.\d+)*$"), "filename ends with a version number (that is a document version, not content)"),
@@ -51,36 +52,70 @@ BANNED_PATTERNS = [
     (re.compile(r"(luna|handoff|superpower)", re.I), "filename contains an internal codename"),
 ]
 
-# Section 1.3 — directories split by phase rather than by subject.
+# Directories split by phase rather than by subject.
 BANNED_DIR = re.compile(
     r"^(upgrade-v\d+|v\d+|plans?|handoffs?|audits?|superpowers?|archive|old|tmp)$", re.I
 )
 
-# Section 2.2 — documents that must not enter the repository.
-# Files under prompts/ are templates, not records, so they are skipped.
+# Documents that must not enter the repository.
+# Files under prompts/, .github/, and templates/ are templates, not records.
 FORBIDDEN_DOC = re.compile(
     r"(audit|postmortem|retrospective|-review-|_review_|^review-|-handoff)", re.I
 )
-FORBIDDEN_DOC_SKIP_DIRS = {"prompts", ".github"}
+FORBIDDEN_DOC_SKIP_DIRS = {"prompts", ".github", "templates"}
 
 AGENTS_SECTIONS = ["项目是什么", "技术栈", "目录", "本地验证", "命名与文档", "不要做", "提交与 PR"]
+AGENTS_SECTIONS_ZH = AGENTS_SECTIONS
+AGENTS_SECTIONS_EN = [
+    "What this repository is",
+    "Stack",
+    "Layout",
+    "Local checks",
+    "Do not",
+    "Commits and pull requests",
+]
 
-# The block `tools/sync_agents.py` writes. A rule stated only in the guide is
-# read by whoever opens the guide; this one is read by every agent that opens
-# the repository, which is the only point early enough to matter.
 CONTENT_BOUNDARY = "<!-- content-boundary:begin -->"
+
+REQUIRED_GITIGNORE_PATTERNS = [
+    "docs/audits/",
+    "docs/plans/",
+    "docs/handoffs/",
+    "docs/changes/",
+    ".claude/",
+    ".codex/",
+    ".local/",
+    "ops-notes/",
+    "*.local.md",
+    "*.internal.md",
+]
+
+FENCED_BLOCK_RE = re.compile(r"^```.*?^```", re.DOTALL | re.MULTILINE)
+CODE_SPAN_RE = re.compile(r"`[^`\n]+`")
+RE_PATCH_PROSE = re.compile(
+    r"\b(this change|this pr|in this pr|this policy pr|remains? unchanged)\b",
+    re.IGNORECASE,
+)
+RE_PHASE_HEADING = re.compile(r"^#{1,4}\s+.*\bP0[–-]P\d+\b", re.MULTILINE)
+RE_LICENSE_HEADING = re.compile(r"^##\s+(?:License|许可证)\s*$")
+RE_H2_HEADING = re.compile(r"^##\s+\S+")
 
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 LOCALE_RE = re.compile(r"^(?P<stem>.+?)\.(?P<loc>[A-Za-z_-]+)\.md$")
 
-# Section 1.2 — only .zh-CN.md and .en.md are valid; every other variant is wrong.
 ALLOWED_LOCALES = {"zh-CN", "en"}
-# Language roots used to tell a locale suffix apart from a dotted filename.
-# A tag with a known root but a bad shape (en-us, zh_CN, zh-Hans) is reported.
 LANGUAGE_ROOTS = {"zh", "cn", "en"}
 
 MAX_PARAGRAPH = 400
+SOFT_AGENTS_LINES = 100
 MAX_AGENTS_LINES = 120
+
+REQUIRED_OPEN_SOURCE = [
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+    ".github/pull_request_template.md",
+]
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -96,20 +131,22 @@ def warn(msg: str) -> None:
 
 def iter_files(root: Path):
     for p in root.rglob("*"):
-        if any(part in SKIP_DIRS for part in p.parts):
+        if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
             continue
         if p.is_file():
             yield p
 
 
-def split_locale(name: str) -> tuple[str, str | None]:
-    """Split runbook.zh-CN.md into ('runbook', 'zh-CN').
+def strip_fenced_blocks(text: str) -> str:
+    return FENCED_BLOCK_RE.sub(lambda m: "\n" * m.group(0).count("\n"), text)
 
-    Any tag whose language root is a known one counts as a locale suffix, even
-    when the tag itself is invalid (en-us, zh_CN, zh-Hans). Otherwise a wrong
-    variant would slip through as an ordinary dotted filename and never be
-    reported.
-    """
+
+def blank_code_spans(text: str) -> str:
+    return CODE_SPAN_RE.sub(lambda m: " " * len(m.group(0)), text)
+
+
+def split_locale(name: str) -> tuple[str, str | None]:
+    """Split runbook.zh-CN.md into ('runbook', 'zh-CN')."""
     m = LOCALE_RE.match(name)
     if m:
         tag = m.group("loc")
@@ -130,7 +167,6 @@ def check_filename(root: Path, path: Path) -> None:
     rel = path.relative_to(root)
     name = path.name
 
-    # GitHub decides the filenames under .github, so they are left alone.
     if rel.parts and rel.parts[0] == ".github":
         return
 
@@ -170,7 +206,7 @@ def check_filename(root: Path, path: Path) -> None:
 
 def check_dirs(root: Path) -> None:
     for p in root.rglob("*"):
-        if any(part in SKIP_DIRS for part in p.parts):
+        if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
             continue
         if p.is_dir() and BANNED_DIR.match(p.name):
             err(f"{p.relative_to(root)}/: do not split directories by phase, see section 1.3")
@@ -190,14 +226,12 @@ def check_links(root: Path, path: Path) -> None:
         text = path.read_text(encoding="utf-8", errors="ignore")
     except OSError:
         return
-    for m in LINK_RE.finditer(text):
+    cleaned = blank_code_spans(strip_fenced_blocks(text))
+    for m in LINK_RE.finditer(cleaned):
         target = m.group(1)
         if target.startswith(("http://", "https://", "mailto:", "#", "<")):
             continue
         resolved = (path.parent / urllib.parse.unquote(target.split("#")[0])).resolve()
-        # A link that climbs out of the repository points at a sibling checkout.
-        # CI only has this repository, so the target cannot exist there — that is
-        # a reference this check cannot verify, not a broken link.
         if not resolved.is_relative_to(root):
             warn(f"{rel}: cross-repository reference, not checked -> {target}")
             continue
@@ -205,11 +239,44 @@ def check_links(root: Path, path: Path) -> None:
             err(f"{rel}: broken link -> {target}")
 
 
+def check_readme_quality(root: Path) -> None:
+    for name in ("README.md", "README.zh-CN.md"):
+        path = root / name
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        unfenced = strip_fenced_blocks(text)
+        prose = blank_code_spans(unfenced)
+
+        for m in RE_PATCH_PROSE.finditer(prose):
+            err(f"{name}: PR-diff narration in README prose -> '{m.group(0)}'")
+        for m in RE_PHASE_HEADING.finditer(prose):
+            err(f"{name}: phase-milestone heading in README -> '{m.group(0).strip()}'")
+
+        seen_license = False
+        for raw_line in unfenced.splitlines():
+            stripped = raw_line.strip()
+            if RE_LICENSE_HEADING.match(stripped):
+                seen_license = True
+                continue
+            if seen_license and RE_H2_HEADING.match(stripped):
+                err(f"{name}: section placed after License/许可证 heading -> '{stripped}'")
+
+
+def check_public_internal_artifacts(root: Path, private: bool = False) -> None:
+    if private:
+        return
+    if (root / "docs" / "changes").is_dir():
+        err("docs/changes/: internal change directory must not remain in a public repository")
+    if (root / "docs" / "acceptance-policy.md").exists():
+        err("docs/acceptance-policy.md: internal acceptance policy must not remain in a public repository")
+
+
 HEAD_LINES = 15
 
 
 def check_bilingual_pair(root: Path) -> None:
-    """Section 1.2 — when both languages exist, the two files link to each other."""
+    """When both languages exist, the two files link to each other near the top."""
     for p in iter_files(root):
         if p.suffix != ".md":
             continue
@@ -246,12 +313,7 @@ CODE_SKIP_DIRS = SKIP_DIRS | {"migrations", "testdata", "fixtures", "vendor", "t
 
 
 def check_comment_language(root: Path) -> None:
-    """Section 3.6 — comments are English. Chinese inside string literals is fine.
-
-    Existing code is grandfathered: new comments are English, and old ones get
-    translated when someone touches the surrounding code. That is why this is a
-    warning and does not affect the exit code.
-    """
+    """Comments are English; grandfathered backlog emits warnings."""
     offenders: list[tuple[str, int]] = []
     for p in iter_files(root):
         prefixes = COMMENT_SYNTAX.get(p.suffix)
@@ -288,27 +350,38 @@ def check_paragraphs(root: Path, path: Path) -> None:
         return
     in_code = False
     buf: list[str] = []
+
+    def flush() -> None:
+        if buf:
+            n = len("".join(buf))
+            if n > MAX_PARAGRAPH:
+                warn(f"{rel}: paragraph runs {n} characters, limit is {MAX_PARAGRAPH}")
+            buf.clear()
+
     for line in text.split("\n"):
         if line.strip().startswith("```"):
+            flush()
             in_code = not in_code
             continue
         if in_code:
             continue
-        if not line.strip():
-            if buf:
-                n = len("".join(buf))
-                if n > MAX_PARAGRAPH:
-                    warn(f"{rel}: paragraph runs {n} characters, limit is {MAX_PARAGRAPH}")
-                buf = []
+        stripped = line.strip()
+        if (
+            not stripped
+            or line.startswith("#")
+            or re.match(r"^(?:[|*>-]|\d+\.)(?:\s|$)", stripped)
+            or stripped.startswith("!")
+        ):
+            flush()
             continue
-        if line.startswith("#") or line.strip().startswith(("|", "-", "*", ">", "!", "1.", "2.")):
-            continue
-        buf.append(line.strip())
-    if buf and len("".join(buf)) > MAX_PARAGRAPH:
-        warn(f"{rel}: paragraph exceeds {MAX_PARAGRAPH} characters")
+        buf.append(stripped)
+    flush()
 
 
 def check_agents(root: Path) -> None:
+    if (root / ".github" / "engineering.md").exists():
+        err(".github/engineering.md is retired; keep repository rules in AGENTS.md")
+
     tracked = subprocess.run(
         ["git", "ls-files", "--cached", "-z", "--", "AGENTS.md", "CLAUDE.md"],
         cwd=root, capture_output=True, text=True, check=False,
@@ -323,17 +396,28 @@ def check_agents(root: Path) -> None:
 
     agents = root / "AGENTS.md"
     if not agents.exists():
-        err("AGENTS.md is missing, see section 4")
+        err("AGENTS.md is missing")
         return
     lines = agents.read_text(encoding="utf-8", errors="ignore").split("\n")
     if len(lines) > MAX_AGENTS_LINES:
         err(f"AGENTS.md has {len(lines)} lines, limit is {MAX_AGENTS_LINES}")
+    elif len(lines) > SOFT_AGENTS_LINES:
+        warn(f"AGENTS.md has {len(lines)} lines; keep it under {SOFT_AGENTS_LINES}")
+
     text = "\n".join(lines)
-    missing = [s for s in AGENTS_SECTIONS if f"## {s}" not in text]
+    zh_missing = [
+        s for s in AGENTS_SECTIONS_ZH
+        if not re.search(rf"^##\s+{re.escape(s)}\b", text, re.MULTILINE)
+    ]
+    en_missing = [
+        s for s in AGENTS_SECTIONS_EN
+        if not re.search(rf"^##\s+{re.escape(s)}\b", text, re.MULTILINE)
+    ]
+    missing = en_missing if len(en_missing) < len(zh_missing) else zh_missing
     if missing:
         err(f"AGENTS.md is missing sections: {', '.join(missing)}")
     if CONTENT_BOUNDARY not in text:
-        err("AGENTS.md is missing the content-boundary block, see section 5")
+        err("AGENTS.md is missing the content-boundary block")
 
     claude = root / "CLAUDE.md"
     if not claude.exists():
@@ -347,22 +431,14 @@ def check_agents(root: Path) -> None:
 def check_gitignore(root: Path) -> None:
     gi = root / ".gitignore"
     if not gi.exists():
-        warn(".gitignore is missing")
+        err(".gitignore is missing")
         return
     text = gi.read_text(encoding="utf-8", errors="ignore")
-    if "docs/audits/" not in text:
-        warn(".gitignore is missing the audit-document block, see section 5")
-
-
-# Section 5.2 item 9 — files an open-source repository must ship.
-# This is the one rule Pigbibi's private repositories must NOT follow, and the
-# reason this organisation keeps its own copy of the checker.
-REQUIRED_OPEN_SOURCE = [
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "CODE_OF_CONDUCT.md",
-    ".github/pull_request_template.md",
-]
+    missing = [pat for pat in REQUIRED_GITIGNORE_PATTERNS if pat not in text]
+    if missing:
+        err(".gitignore is missing required anti-leak patterns: " + ", ".join(missing))
+    if re.search(r"^\s*!\s*/?\.github/engineering\.md\s*$", text, re.MULTILINE):
+        err(".gitignore still unignores retired .github/engineering.md")
 
 
 def check_opensource_files(root: Path) -> None:
@@ -378,16 +454,30 @@ def check_opensource_files(root: Path) -> None:
         err(".github/ISSUE_TEMPLATE/ is missing or empty; add at least one issue form")
 
 
+def check_docs_baseline(root: Path, private: bool = False) -> None:
+    """Require community health files for public repos and SECURITY.md for private ones."""
+    has_license = any((root / name).exists() for name in ("LICENSE", "LICENSE.md", "LICENSE.txt"))
+    if not private and has_license:
+        required = ["CONTRIBUTING.md", "SECURITY.md", "CODE_OF_CONDUCT.md"]
+        kind = "public"
+    else:
+        required = ["SECURITY.md"]
+        kind = "private"
+    missing = [name for name in required if not (root / name).exists()]
+    if missing:
+        err(f"{kind} repository is missing {', '.join(missing)}")
+
+
 SECRET_PATTERNS = [
     (re.compile(r"ghp_[A-Za-z0-9]{20,}"), "GitHub PAT"),
     (re.compile(r"gho_[A-Za-z0-9]{20,}"), "GitHub OAuth token"),
     (re.compile(r"sk-[A-Za-z0-9]{32,}"), "API key"),
     (re.compile(r"AKIA[0-9A-Z]{16}"), "AWS key"),
     (re.compile(r"xox[baprs]-[A-Za-z0-9-]{20,}"), "Slack token"),
-    # The PEM header must be followed by real base64; placeholders in test
-    # fixtures are not a leak.
+    # Require base64 payload after the PEM header so header-only test fixtures stay valid.
     (re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----\s*\n[A-Za-z0-9+/=]{40,}"), "private key"),
 ]
+SYNTHETIC_SECRET_LITERALS = {"xoxb-1234567890-abcdefghij"}
 
 
 def check_secrets(root: Path) -> None:
@@ -399,16 +489,22 @@ def check_secrets(root: Path) -> None:
         except OSError:
             continue
         for pat, label in SECRET_PATTERNS:
-            for _ in pat.finditer(text):
+            for m in pat.finditer(text):
+                if m.group(0) in SYNTHETIC_SECRET_LITERALS:
+                    continue
                 # Never echo the matched value into CI logs.
                 err(f"{p.relative_to(root)}: possible hardcoded {label} (value withheld)")
 
 
-def main() -> int:
-    ap = argparse.ArgumentParser()
+def main(argv: list[str] | None = None) -> int:
+    errors.clear()
+    warnings.clear()
+
+    ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--root", default=".", help="repository root")
     ap.add_argument("--strict", action="store_true", help="treat warnings as failures")
-    args = ap.parse_args()
+    ap.add_argument("--private", action="store_true", help="skip public-only OSS baseline and leak checks")
+    args = ap.parse_args(argv)
 
     root = Path(args.root).resolve()
 
@@ -419,11 +515,13 @@ def main() -> int:
             check_doc_type(root, path)
             check_links(root, path)
             check_paragraphs(root, path)
+    check_readme_quality(root)
+    check_public_internal_artifacts(root, private=args.private)
     check_agents(root)
     check_bilingual_pair(root)
     check_comment_language(root)
     check_gitignore(root)
-    check_opensource_files(root)
+    check_docs_baseline(root, private=args.private)
     check_secrets(root)
 
     for w in sorted(set(warnings)):

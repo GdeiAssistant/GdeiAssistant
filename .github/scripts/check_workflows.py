@@ -13,12 +13,12 @@ UNTRUSTED = re.compile(r"\$\{\{\s*(?:github\.(?:head_ref|event\.(?:issue|comment
 
 
 def check_entries(root: Path) -> list[str]:
-    entries = ['.github/engineering.md', '.github/copilot-instructions.md', '.github/CODEOWNERS']
+    entries = ['AGENTS.md', '.github/copilot-instructions.md', '.github/CODEOWNERS']
     result = subprocess.run(
         ['git', 'ls-files', '--error-unmatch', '--', *entries],
         cwd=root, capture_output=True, text=True, check=False,
     )
-    return [] if result.returncode == 0 else ['Engineering instructions, AI entry point and CODEOWNERS must be tracked in Git.']
+    return [] if result.returncode == 0 else ['AGENTS.md, AI entry point and CODEOWNERS must be tracked in Git.']
 
 
 def validate(data: dict) -> list[str]:

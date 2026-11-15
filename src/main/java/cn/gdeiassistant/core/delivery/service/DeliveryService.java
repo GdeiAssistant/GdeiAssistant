@@ -58,7 +58,23 @@ public class DeliveryService {
     }
 
     private List<DeliveryOrderVO> publicOrders(List<DeliveryOrderEntity> entities) {
-        return entities.stream().map(this::publicOrder).toList();
+        if (entities == null || entities.isEmpty()) {
+            return List.of();
+        }
+        java.util.Map<String, cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic> resolved =
+                publicAuthorResolver == null
+                        ? java.util.Map.of()
+                        : publicAuthorResolver.resolveAll(entities.stream()
+                                .map(DeliveryOrderEntity::getUsername)
+                                .toList());
+        var fallback = new cn.gdeiassistant.core.user.service.PublicAuthorResolver.AuthorPublic(null, "用户");
+        return entities.stream().map(entity -> {
+            DeliveryOrderVO view = deliveryConverter.toOrderVO(entity);
+            var author = resolved.getOrDefault(entity.getUsername(), fallback);
+            view.setAuthorId(author.authorId());
+            view.setDisplayName(author.displayName());
+            return view;
+        }).toList();
     }
 
     /**
@@ -277,6 +293,13 @@ public class DeliveryService {
             deliveryMapper.insertTradeRecord(trade);
             DeliveryOrderEntity order = deliveryMapper.selectDeliveryOrderByOrderId(orderId);
             String pickupLocation = order != null && StringUtils.isNotBlank(order.getPickupLocation()) ? order.getPickupLocation() : "快递代收";
+            String actorDisplayName = "用户";
+            if (publicAuthorResolver != null) {
+                var actor = publicAuthorResolver.resolve(username);
+                if (actor != null && StringUtils.isNotBlank(actor.displayName())) {
+                    actorDisplayName = actor.displayName();
+                }
+            }
             interactionNotificationService.createInteractionNotification(
                     "delivery",
                     "order_accepted",
@@ -286,7 +309,7 @@ public class DeliveryService {
                     trade.getTradeId() == null ? null : String.valueOf(trade.getTradeId()),
                     "published",
                     "订单已被接单",
-                    username + " 接取了你发布的 " + pickupLocation + " 订单"
+                    actorDisplayName + " 接取了你发布的 " + pickupLocation + " 订单"
             );
         } else {
             //抢单失败

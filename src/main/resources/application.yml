@@ -81,6 +81,7 @@ server:
   port: ${SERVER_PORT:8080}
   servlet:
     context-path: /
+  forward-headers-strategy: native
 
 jwt:
   secret: ${JWT_SECRET:}
@@ -113,6 +114,16 @@ api:
     auto-update: ${AI_MODEL_AUTO_UPDATE:true}
     initial-delay-ms: ${AI_MODEL_INITIAL_DELAY_MS:30000}
     refresh-ms: ${AI_MODEL_REFRESH_MS:21600000}
+    route-policies:
+      ocr:
+        timeout-ms: ${AI_OCR_TIMEOUT_MS:6000}
+        thinking: DISABLED
+      chat:
+        timeout-ms: ${AI_CHAT_TIMEOUT_MS:25000}
+        thinking: DEFAULT
+      translate:
+        timeout-ms: ${AI_TRANSLATE_TIMEOUT_MS:25000}
+        thinking: DISABLED
     endpoints:
       - id: doubao
         region: MAINLAND
@@ -259,6 +270,7 @@ api:
               image-input: true
         priority: 7
       - id: opencode-openai
+        enabled: ${OPENCODE_OPENAI_ENABLED:false}
         region: OVERSEAS
         access-mode: AGGREGATOR
         protocol: OPENAI_RESPONSES
@@ -278,6 +290,7 @@ api:
         priority: 8
         authentication: BEARER
       - id: opencode-claude
+        enabled: ${OPENCODE_CLAUDE_ENABLED:false}
         region: OVERSEAS
         access-mode: AGGREGATOR
         protocol: ANTHROPIC
@@ -297,6 +310,7 @@ api:
         priority: 9
         authentication: BEARER
       - id: opencode-chat
+        enabled: ${OPENCODE_CHAT_ENABLED:true}
         region: OVERSEAS
         access-mode: AGGREGATOR
         protocol: OPENAI_CHAT
@@ -318,6 +332,7 @@ api:
         priority: 10
         authentication: BEARER
       - id: opencode-gemini
+        enabled: ${OPENCODE_GEMINI_ENABLED:false}
         region: OVERSEAS
         access-mode: AGGREGATOR
         protocol: GEMINI
@@ -466,6 +481,10 @@ sms:
       templatecode: ${ALIYUN_SMS_GLOBAL_TEMPLATE:}
 
 app:
+  demo:
+    account-enabled: ${APP_DEMO_ACCOUNT_ENABLED:false}
+    username: ${APP_DEMO_USERNAME:}
+    # APP_DEMO_PASSWORD binds to app.demo.password at runtime via Spring Environment.
   cron:
     secret: ${CRON_SECRET:}
   cors:

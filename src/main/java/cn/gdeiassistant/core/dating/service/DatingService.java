@@ -72,9 +72,11 @@ public class DatingService {
 
     public List<DatingProfileVO> queryDatingProfile(Integer start, Integer size, Integer area) {
         List<DatingProfileEntity> list = datingMapper.selectDatingProfilePage(start, size, area);
-        if (list == null) return new ArrayList<>();
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolved = resolveAuthors(
+                list.stream().map(DatingProfileEntity::getUsername).toList());
         return list.stream().map(e -> {
-            DatingProfileVO vo = profileEntityToVO(e);
+            DatingProfileVO vo = profileEntityToVO(e, resolved);
             vo.setQq("请进入详情页查看");
             vo.setWechat("请进入详情页查看");
             return vo;
@@ -84,14 +86,18 @@ public class DatingService {
     public List<DatingProfileVO> queryMyRoommateProfiles(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DatingProfileEntity> list = datingMapper.selectDatingProfileByUsername(user.getUsername());
-        if (list == null) return new ArrayList<>();
-        return list.stream()
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        List<DatingProfileEntity> visible = list.stream()
                 .filter(e -> e.getState() == null || e.getState() != 0)
-                .map(e -> {
-                    DatingProfileVO vo = profileEntityToVO(e);
-                    vo.setPictureURL(getRoommateProfilePictureURL(e.getProfileId()));
-                    return vo;
-                }).collect(Collectors.toList());
+                .toList();
+        if (visible.isEmpty()) return new ArrayList<>();
+        java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolved = resolveAuthors(
+                visible.stream().map(DatingProfileEntity::getUsername).toList());
+        return visible.stream().map(e -> {
+            DatingProfileVO vo = profileEntityToVO(e, resolved);
+            vo.setPictureURL(getRoommateProfilePictureURL(e.getProfileId()));
+            return vo;
+        }).collect(Collectors.toList());
     }
 
     public void updateRoommateProfile(DatingPublishDTO dto, Integer profileId) {
@@ -249,9 +255,10 @@ public class DatingService {
     public List<DatingPickVO> queryMySentPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DatingPickEntity> list = datingMapper.selectDatingPickListByUsername(user.getUsername(), MY_PICK_LIMIT);
-        if (list == null) return new ArrayList<>();
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolved = resolvePickProfileAuthors(list);
         return list.stream().map(e -> {
-            DatingPickVO vo = pickEntityToVO(e);
+            DatingPickVO vo = pickEntityToVO(e, resolved);
             if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null)
                 vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
             // Only expose target's contact info if the pick has been accepted (state == 1)
@@ -266,9 +273,10 @@ public class DatingService {
     public List<DatingPickVO> queryMyReceivedPicks(String sessionId) {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         List<DatingPickEntity> list = datingMapper.selectReceivedRoommatePickListByProfileOwner(user.getUsername(), MY_PICK_LIMIT);
-        if (list == null) return new ArrayList<>();
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+        java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolved = resolvePickProfileAuthors(list);
         return list.stream().map(e -> {
-            DatingPickVO vo = pickEntityToVO(e);
+            DatingPickVO vo = pickEntityToVO(e, resolved);
             if (e.getRoommateProfile() != null && e.getRoommateProfile().getProfileId() != null) {
                 vo.getRoommateProfile().setPictureURL(getRoommateProfilePictureURL(e.getRoommateProfile().getProfileId()));
             }
@@ -303,11 +311,41 @@ public class DatingService {
         entity.setArea(dto.getArea());
     }
 
+    private java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolveAuthors(List<String> usernames) {
+        if (publicAuthorResolver == null || usernames == null || usernames.isEmpty()) {
+            return java.util.Map.of();
+        }
+        return publicAuthorResolver.resolveAll(usernames);
+    }
+
+    private java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolvePickProfileAuthors(List<DatingPickEntity> list) {
+        List<String> usernames = list.stream()
+                .map(DatingPickEntity::getRoommateProfile)
+                .filter(java.util.Objects::nonNull)
+                .map(DatingProfileEntity::getUsername)
+                .toList();
+        return resolveAuthors(usernames);
+    }
+
     private DatingProfileVO profileEntityToVO(DatingProfileEntity e) {
+        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver == null
+                ? new PublicAuthorResolver.AuthorPublic(null, "用户")
+                : publicAuthorResolver.resolve(e.getUsername());
+        return profileEntityToVO(e, author);
+    }
+
+    private DatingProfileVO profileEntityToVO(
+            DatingProfileEntity e,
+            java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolvedAuthors) {
+        PublicAuthorResolver.AuthorPublic fallback = new PublicAuthorResolver.AuthorPublic(null, "用户");
+        PublicAuthorResolver.AuthorPublic author = resolvedAuthors.getOrDefault(e.getUsername(), fallback);
+        return profileEntityToVO(e, author);
+    }
+
+    private DatingProfileVO profileEntityToVO(DatingProfileEntity e, PublicAuthorResolver.AuthorPublic author) {
         DatingProfileVO vo = new DatingProfileVO();
         vo.setProfileId(e.getProfileId());
         // authorId 指向发布者，不是被介绍的室友人物
-        PublicAuthorResolver.AuthorPublic author = publicAuthorResolver.resolve(e.getUsername());
         vo.setAuthorId(author.authorId());
         vo.setUsername(author.displayName());
         vo.setNickname(e.getNickname());
@@ -329,6 +367,20 @@ public class DatingService {
         vo.setContent(e.getContent());
         vo.setState(e.getState());
         if (e.getRoommateProfile() != null) vo.setRoommateProfile(profileEntityToVO(e.getRoommateProfile()));
+        return vo;
+    }
+
+    private DatingPickVO pickEntityToVO(
+            DatingPickEntity e,
+            java.util.Map<String, PublicAuthorResolver.AuthorPublic> resolvedAuthors) {
+        DatingPickVO vo = new DatingPickVO();
+        vo.setPickId(e.getPickId());
+        vo.setUsername(e.getUsername());
+        vo.setContent(e.getContent());
+        vo.setState(e.getState());
+        if (e.getRoommateProfile() != null) {
+            vo.setRoommateProfile(profileEntityToVO(e.getRoommateProfile(), resolvedAuthors));
+        }
         return vo;
     }
 

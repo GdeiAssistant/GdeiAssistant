@@ -15,23 +15,12 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private boolean shouldSkip() {
-        return contentType != null && contentType.startsWith("application/json");
+        return contentType != null && (contentType.startsWith("application/json")
+                || contentType.startsWith("multipart/form-data"));
     }
 
     private boolean isPasswordParameter(String name) {
         return name != null && name.toLowerCase().contains("password");
-    }
-
-    @Override
-    public String getHeader(String name) {
-        String value = super.getHeader(name);
-        return value != null ? StringEscapeUtils.escapeHtml4(value) : null;
-    }
-
-    @Override
-    public String getQueryString() {
-        String value = super.getQueryString();
-        return value != null ? StringEscapeUtils.escapeHtml4(value) : null;
     }
 
     @Override

@@ -37,20 +37,13 @@ dependencies {
     implementation 'com.github.houbb:opencc4j:1.14.0'
     implementation 'commons-io:commons-io:2.22.0'
     implementation 'com.squareup.okhttp3:okhttp:5.5.1'
-    implementation 'org.apache.httpcomponents:httpasyncclient:4.1.5'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'org.jsoup:jsoup:1.23.2'
-    implementation 'com.thoughtworks.xstream:xstream:1.4.21'
     implementation 'org.dom4j:dom4j:2.2.0'
-    implementation 'com.google.code.gson:gson'
     implementation 'com.alibaba.fastjson2:fastjson2:2.0.65'
 
     // 邮件发送（Jakarta Mail）
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-    implementation 'org.apache.pdfbox:pdfbox:3.0.8'
-    implementation 'org.apache.poi:poi:5.5.1'
-    implementation 'org.apache.poi:poi-ooxml:5.5.1'
-    implementation 'org.bouncycastle:bcprov-jdk18on:1.85.2'
     implementation 'com.aliyun:aliyun-java-sdk-core:4.7.10'
     implementation 'com.tencentcloudapi:tencentcloud-sdk-java:4.0.11'
 
@@ -70,7 +63,7 @@ dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'com.google.code.gson:gson'
     testRuntimeOnly 'com.h2database:h2'
 }
 

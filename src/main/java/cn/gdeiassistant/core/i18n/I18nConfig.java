@@ -21,14 +21,30 @@ public class I18nConfig {
 
     private final int cacheTtlDays;
 
-    public I18nConfig(@Value("${i18n.deepl.api-key:}") String deeplApiKey, @Value("${i18n.deepl.api-url:https://api-free.deepl.com/v2/translate}") String deeplApiUrl, @Value("${i18n.cache.ttl-days:7}") int cacheTtlDays) {
+    private final boolean aiFallbackEnabled;
+
+    public I18nConfig(String deeplApiKey, String deeplApiUrl, int cacheTtlDays) {
+        this(deeplApiKey, deeplApiUrl, cacheTtlDays, false);
+    }
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public I18nConfig(
+            @Value("${i18n.deepl.api-key:}") String deeplApiKey,
+            @Value("${i18n.deepl.api-url:https://api-free.deepl.com/v2/translate}") String deeplApiUrl,
+            @Value("${i18n.cache.ttl-days:7}") int cacheTtlDays,
+            @Value("${i18n.ai-fallback-enabled:false}") boolean aiFallbackEnabled) {
         this.deeplApiKey = deeplApiKey;
         this.deeplApiUrl = deeplApiUrl;
         this.cacheTtlDays = cacheTtlDays;
+        this.aiFallbackEnabled = aiFallbackEnabled;
     }
 
     public boolean isEnabled() {
         return deeplApiKey != null && !deeplApiKey.isBlank();
+    }
+
+    public boolean isAiFallbackEnabled() {
+        return aiFallbackEnabled;
     }
 
     public String getDeeplApiKey() { return deeplApiKey; }
@@ -36,7 +52,7 @@ public class I18nConfig {
     public int getCacheTtlDays() { return cacheTtlDays; }
 
     @Bean("i18nExecutor")
-    @ConditionalOnProperty(name = "i18n.deepl.api-key")
+    @ConditionalOnProperty(name = "i18n.enabled", havingValue = "true", matchIfMissing = false)
     public Executor i18nExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(2);
@@ -48,15 +64,22 @@ public class I18nConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "i18n.deepl.api-key")
+    @ConditionalOnProperty(name = "i18n.enabled", havingValue = "true", matchIfMissing = false)
     public I18nTranslationService i18nTranslationService(
-            org.springframework.data.redis.core.RedisTemplate<String, String> redisTemplate,
-            @org.springframework.beans.factory.annotation.Qualifier("i18nExecutor") java.util.concurrent.Executor i18nExecutor) {
-        return new I18nTranslationService(this, redisTemplate, i18nExecutor);
+            org.springframework.beans.factory.ObjectProvider<org.springframework.data.redis.core.RedisTemplate<String, String>> redisTemplateProvider,
+            @org.springframework.beans.factory.annotation.Qualifier("i18nExecutor") java.util.concurrent.Executor i18nExecutor,
+            org.springframework.beans.factory.ObjectProvider<cn.gdeiassistant.core.capability.ai.AiService> aiServiceProvider,
+            org.springframework.beans.factory.ObjectProvider<cn.gdeiassistant.core.capability.ai.AiProperties> aiPropertiesProvider) {
+        return new I18nTranslationService(
+                this,
+                redisTemplateProvider.getIfAvailable(),
+                i18nExecutor,
+                aiServiceProvider.getIfAvailable(),
+                aiPropertiesProvider.getIfAvailable());
     }
 
     @Bean
-    @ConditionalOnProperty(name = "i18n.deepl.api-key")
+    @ConditionalOnProperty(name = "i18n.enabled", havingValue = "true", matchIfMissing = false)
     public FilterRegistrationBean<I18nTranslationFilter> i18nFilter(
             I18nTranslationService translationService, ObjectMapper objectMapper) {
         FilterRegistrationBean<I18nTranslationFilter> bean = new FilterRegistrationBean<>();

@@ -3,8 +3,11 @@ package cn.gdeiassistant.core.capability.impl;
 import cn.gdeiassistant.common.exception.ProviderException;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.capability.ServiceProvider;
+import cn.gdeiassistant.core.capability.ai.AiProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -18,9 +21,20 @@ public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
     private static final Logger log = LoggerFactory.getLogger(IpApiProvider.class);
 
     private final RestTemplate restTemplate;
+    private final AiProperties aiProperties;
 
     public IpApiProvider(RestTemplate restTemplate) {
+        this(restTemplate, (AiProperties) null);
+    }
+
+    public IpApiProvider(RestTemplate restTemplate, AiProperties aiProperties) {
         this.restTemplate = restTemplate;
+        this.aiProperties = aiProperties;
+    }
+
+    @Autowired
+    public IpApiProvider(RestTemplate restTemplate, ObjectProvider<AiProperties> aiPropertiesProvider) {
+        this(restTemplate, aiPropertiesProvider.getIfAvailable());
     }
 
     @Override
@@ -36,6 +50,9 @@ public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
     @Override
     @SuppressWarnings("unchecked")
     public IPAddressRecord execute(String ip) throws ProviderException {
+        if (!isConfigured()) {
+            throw new ProviderException("ip-api provider is disabled under MAINLAND region restriction");
+        }
         try {
             ResponseEntity<Map> response = restTemplate.getForEntity(
                     "http://ip-api.com/json/" + ip + "?fields=status,country,regionName,city,isp",
@@ -61,7 +78,9 @@ public class IpApiProvider implements ServiceProvider<String, IPAddressRecord> {
 
     @Override
     public boolean isConfigured() {
-        return true;
+        return aiProperties == null
+                || !aiProperties.isRegionRestrictionEnabled()
+                || aiProperties.getRegion() != AiProperties.Region.MAINLAND;
     }
 
     private String nullSafe(Object value) {

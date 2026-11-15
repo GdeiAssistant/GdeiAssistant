@@ -231,6 +231,10 @@ class SocialChatServiceTest {
         verify(chatImageService).uploadCanonical(eq("chat/rand"), any());
         verify(chatImageService).registerRollbackDelete("chat/rand");
         verify(identityService).lockUsersInOrder(1L, 2L);
+        org.mockito.InOrder uploadBeforeLocks = inOrder(chatImageService, identityService, chatMapper);
+        uploadBeforeLocks.verify(chatImageService).uploadCanonical(eq("chat/rand"), any());
+        uploadBeforeLocks.verify(identityService).lockUsersInOrder(1L, 2L);
+        uploadBeforeLocks.verify(chatMapper).selectConversationByIdForUpdate(10L);
         verify(realtimeHub, times(2)).pushToUserAfterCommit(anyLong(), any());
     }
 

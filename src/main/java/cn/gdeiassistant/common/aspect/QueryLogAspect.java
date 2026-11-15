@@ -16,11 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Aspect
@@ -30,7 +27,7 @@ public class QueryLogAspect {
 
     private final Logger logger = LoggerFactory.getLogger(QueryLogAspect.class);
 
-    private final DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final ObservabilityConstants observabilityConstants;
 
@@ -73,7 +70,7 @@ public class QueryLogAspect {
         HttpServletRequest request = (HttpServletRequest) args[0];
         String username = AnonymizeUtils.maskUsername((Optional.ofNullable((User) request.getAttribute("user"))
                 .orElse(new User("unknown"))).getUsername());
-        String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        String dateTime = LocalDateTime.now().format(DATE_FORMATTER);
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
             //成绩查询
@@ -106,7 +103,7 @@ public class QueryLogAspect {
         Object[] args = joinPoint.getArgs();
         String username = AnonymizeUtils.maskUsername(Optional.ofNullable((String) WebUtils.getSessionAttribute((HttpServletRequest) args[0]
                 , "username")).orElse("unknown"));
-        String dateTime = dateFormat.format(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+        String dateTime = LocalDateTime.now().format(DATE_FORMATTER);
         String functionName = joinPoint.getSignature().getName();
         switch (functionName) {
             //成绩查询

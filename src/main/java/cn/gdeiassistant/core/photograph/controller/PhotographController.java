@@ -65,9 +65,9 @@ public class PhotographController {
 
     @RequestMapping(value = "/api/photograph/type/{type}/start/{start}/size/{size}", method = RequestMethod.GET)
     public DataJsonResult<List<PhotographVO>> queryPhotographList(HttpServletRequest request
-            , @Validated @NotNull @Min(0) @Max(1) @PathVariable("type") int type
+            , @Validated @NotNull @Min(0) @Max(3) @PathVariable("type") int type
             , @PathVariable("start") int start, @PathVariable("size") int size) {
-        if (type < 0 || type > 1) {
+        if (type < 0 || type > 3) {
             throw new IllegalArgumentException(Messages.get("request.invalid"));
         }
         size = PageUtils.normalizePageSize(start, size);

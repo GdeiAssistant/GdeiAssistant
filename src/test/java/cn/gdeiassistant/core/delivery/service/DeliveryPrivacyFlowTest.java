@@ -29,7 +29,9 @@ class DeliveryPrivacyFlowTest {
 
     @BeforeEach void setup() {
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("owner"));
-        when(authors.resolve(anyString())).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称"));
+        var resolved = new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称");
+        when(authors.resolve(anyString())).thenReturn(resolved);
+        when(authors.resolveAll(anyCollection())).thenReturn(java.util.Map.of("owner", resolved));
     }
 
     private DeliveryOrderEntity order() {

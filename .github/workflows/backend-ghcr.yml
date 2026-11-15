@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - master
-      - 'codex/**'
     paths:
       - 'Dockerfile.backend'
       - 'build.gradle'

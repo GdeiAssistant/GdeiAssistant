@@ -64,6 +64,7 @@ public class UserCertificateService implements SessionCertificateProvider {
 
     private final String casLoginUrl;
     private final String portalLoginUrl;
+    private final java.util.Set<String> extraTrustedUpstreamUrls = new java.util.concurrent.CopyOnWriteArraySet<>();
 
         public UserCertificateService() {
         this(null, null, null, null, null, null);
@@ -77,6 +78,18 @@ public class UserCertificateService implements SessionCertificateProvider {
         this.userMapper = userMapper;
         this.casLoginUrl = casLoginUrl;
         this.portalLoginUrl = portalLoginUrl;
+    }
+
+    @Autowired(required = false)
+    void configureExtraTrustedUpstreams(
+            @Value("${campus.upstream.card-base-url:}") String cardBaseUrl,
+            @Value("${campus.upstream.card-login-url:}") String cardLoginUrl,
+            @Value("${campus.upstream.payment-base-url:}") String paymentBaseUrl) {
+        for (String url : new String[]{cardBaseUrl, cardLoginUrl, paymentBaseUrl}) {
+            if (url != null && !url.isBlank()) {
+                extraTrustedUpstreamUrls.add(url);
+            }
+        }
     }
 
     /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize sensitive actions. */
@@ -288,20 +301,7 @@ public class UserCertificateService implements SessionCertificateProvider {
                     if (casRedirectUrl == null || casRedirectUrl.isEmpty()) {
                         throw new ServerErrorException(Messages.get("userlogin.casRedirectEmpty"));
                     }
-                    // Validate redirect URL stays within trusted school domains
-                    try {
-                        java.net.URI uri = java.net.URI.create(casRedirectUrl);
-                        String scheme = uri.getScheme();
-                        if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
-                            throw new ServerErrorException(Messages.get("userlogin.casRedirectProtocolUnsafe"));
-                        }
-                        String host = uri.getHost();
-                        if (host != null && !host.toLowerCase().endsWith(".gdei.edu.cn") && !host.toLowerCase().equals("gdei.edu.cn")) {
-                            throw new ServerErrorException(Messages.get("userlogin.casRedirectHostUntrusted"));
-                        }
-                    } catch (IllegalArgumentException e) {
-                        throw new ServerErrorException(Messages.get("userlogin.casRedirectMalformed"));
-                    }
+                    validateTrustedRedirectUrl(casRedirectUrl);
                     httpGet = new HttpGet(casRedirectUrl);
                     httpResponse = httpClient.execute(httpGet);
                     document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -378,20 +378,7 @@ public class UserCertificateService implements SessionCertificateProvider {
             if (loginRedirect1 == null || loginRedirect1.isEmpty()) {
                 throw new ServerErrorException(Messages.get("userlogin.casRedirectEmpty"));
             }
-            // Validate redirect URL stays within trusted school domains
-            try {
-                java.net.URI uri1 = java.net.URI.create(loginRedirect1);
-                String scheme1 = uri1.getScheme();
-                if (scheme1 != null && !scheme1.equalsIgnoreCase("http") && !scheme1.equalsIgnoreCase("https")) {
-                    throw new ServerErrorException(Messages.get("userlogin.casRedirectProtocolUnsafe"));
-                }
-                String host1 = uri1.getHost();
-                if (host1 != null && !host1.toLowerCase().endsWith(".gdei.edu.cn") && !host1.toLowerCase().equals("gdei.edu.cn")) {
-                    throw new ServerErrorException(Messages.get("userlogin.casRedirectHostUntrusted"));
-                }
-            } catch (IllegalArgumentException e) {
-                throw new ServerErrorException(Messages.get("userlogin.casRedirectMalformed"));
-            }
+            validateTrustedRedirectUrl(loginRedirect1);
             httpGet = new HttpGet(loginRedirect1);
             httpResponse = httpClient.execute(httpGet);
             document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
@@ -482,6 +469,55 @@ public class UserCertificateService implements SessionCertificateProvider {
             throw new ServerErrorException(Messages.get("grade.eduSystemError"));
         }
         throw new ServerErrorException(Messages.get("grade.eduSystemError"));
+    }
+
+    private void validateTrustedRedirectUrl(String redirectUrl) throws ServerErrorException {
+        try {
+            java.net.URI uri = java.net.URI.create(redirectUrl);
+            String scheme = uri.getScheme();
+            if (scheme != null && !scheme.equalsIgnoreCase("http") && !scheme.equalsIgnoreCase("https")) {
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectProtocolUnsafe"));
+            }
+            String host = uri.getHost();
+            if (host != null && !isTrustedRedirectHost(host)) {
+                throw new ServerErrorException(Messages.get("userlogin.casRedirectHostUntrusted"));
+            }
+        } catch (IllegalArgumentException e) {
+            throw new ServerErrorException(Messages.get("userlogin.casRedirectMalformed"));
+        }
+    }
+
+    private boolean isTrustedRedirectHost(String host) {
+        String normalized = host.toLowerCase(java.util.Locale.ROOT);
+        if (normalized.equals("gdei.edu.cn") || normalized.endsWith(".gdei.edu.cn")) {
+            return true;
+        }
+        return trustedUpstreamHosts().contains(normalized);
+    }
+
+    private java.util.Set<String> trustedUpstreamHosts() {
+        java.util.Set<String> hosts = new java.util.HashSet<>();
+        addHostIfPresent(hosts, eduBaseUrl);
+        addHostIfPresent(hosts, casLoginUrl);
+        addHostIfPresent(hosts, portalLoginUrl);
+        for (String extraUrl : extraTrustedUpstreamUrls) {
+            addHostIfPresent(hosts, extraUrl);
+        }
+        return hosts;
+    }
+
+    private static void addHostIfPresent(java.util.Set<String> hosts, String url) {
+        if (url == null || url.isBlank()) {
+            return;
+        }
+        try {
+            String host = java.net.URI.create(url.trim()).getHost();
+            if (host != null && !host.isBlank()) {
+                hosts.add(host.toLowerCase(java.util.Locale.ROOT));
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Ignore malformed optional upstream URLs when assembling host allowlist
+        }
     }
 
 }

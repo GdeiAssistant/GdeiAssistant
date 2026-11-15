@@ -35,7 +35,9 @@ class DatingPrivacyFlowTest {
     @BeforeEach void setup() {
         service = new DatingService(certificates, mapper, null, uploads, assets, notifications, authors);
         when(certificates.getUserLoginCertificate("session")).thenReturn(new User("viewer"));
-        when(authors.resolve("author")).thenReturn(new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称"));
+        var resolved = new PublicAuthorResolver.AuthorPublic("public-id", "公开昵称");
+        when(authors.resolve("author")).thenReturn(resolved);
+        when(authors.resolveAll(anyCollection())).thenReturn(java.util.Map.of("author", resolved));
         when(assets.generatePresignedUrl("dating/7.jpg", 30, TimeUnit.MINUTES)).thenReturn("signed:picture");
     }
 

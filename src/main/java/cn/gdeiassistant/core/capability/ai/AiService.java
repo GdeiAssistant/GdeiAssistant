@@ -69,8 +69,10 @@ public class AiService {
             @Override public boolean isHealthy() { return provider.isHealthy(); }
             @Override public String execute(Call call) throws ProviderException { return provider.execute(call.request()); }
         }).toList();
+        long routeTimeoutMs = providers.settings() != null ? providers.settings().routePolicy(name).getTimeoutMs() : 0L;
+        Duration routeBudget = routeTimeoutMs > 0 ? Duration.ofMillis(routeTimeoutMs) : budget;
         var chain = new ProviderChain<>("ai." + name, adapters, meters, breakers,
-                (Call call, String result) -> call.validResult().test(result), executor, budget);
+                (Call call, String result) -> call.validResult().test(result), executor, routeBudget);
         routes.put(key, new Route(names, chain));
         return chain;
     }

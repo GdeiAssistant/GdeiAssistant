@@ -2,6 +2,8 @@ package cn.gdeiassistant.common.exceptionhandler;
 
 import cn.gdeiassistant.common.constant.ErrorConstantUtils;
 import cn.gdeiassistant.common.exception.authenticationexception.AuthenticationRecordExistException;
+import cn.gdeiassistant.common.exception.authenticationexception.IDPhotoCountLimitationException;
+import cn.gdeiassistant.common.exception.authenticationexception.IDPhotoSizeLimitationException;
 import cn.gdeiassistant.common.exception.authenticationexception.InconsistentAuthenticationException;
 import cn.gdeiassistant.common.exception.authenticationexception.NullIDPhotoException;
 import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
@@ -11,6 +13,7 @@ import cn.gdeiassistant.common.exception.closeaccountexception.UserStateErrorExc
 import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
 import cn.gdeiassistant.common.exception.customscheduleexception.CountOverLimitException;
 import cn.gdeiassistant.common.exception.customscheduleexception.GenerateScheduleException;
 import cn.gdeiassistant.common.exception.databaseexception.ConfirmedStateException;
@@ -41,7 +44,7 @@ import cn.gdeiassistant.common.exception.verificationexception.SendSMSException;
 import cn.gdeiassistant.common.exception.verificationexception.VerificationCodeInvalidException;
 import cn.gdeiassistant.common.pojo.result.JsonResult;
 import cn.gdeiassistant.common.i18n.MessageCatalog;
-import org.apache.http.MethodNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.TypeMismatchException;
@@ -82,7 +85,7 @@ public class GlobalRestExceptionHandler {
                 Messages.forLanguage("request.invalid", request.getHeader("Accept-Language"))));
     }
 
-    @ExceptionHandler(MethodNotSupportedException.class)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<JsonResult> handleMethodNotSupportedException(HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(false,
                 Messages.forLanguage("request.methodUnsupported", request.getHeader("Accept-Language"))));
@@ -174,10 +177,23 @@ public class GlobalRestExceptionHandler {
     }
 
     @ExceptionHandler({NullIDPhotoException.class, InconsistentAuthenticationException.class,
-            AuthenticationRecordExistException.class})
+            AuthenticationRecordExistException.class, IDPhotoCountLimitationException.class,
+            IDPhotoSizeLimitationException.class})
     public ResponseEntity<JsonResult> handleAuthenticationException(Exception e, HttpServletRequest request) {
         return ResponseEntity.ok(new JsonResult(false,
                 MessageCatalog.localizeMessage(e.getMessage(), request.getHeader("Accept-Language"))));
+    }
+
+    @ExceptionHandler(ServerErrorException.class)
+    public ResponseEntity<JsonResult> handleServerErrorException(ServerErrorException e, HttpServletRequest request) {
+        logException("服务端异常：", e);
+        String acceptLanguage = request.getHeader("Accept-Language");
+        String message = (e.getMessage() != null && !e.getMessage().isEmpty())
+                ? MessageCatalog.localizeMessage(e.getMessage(), acceptLanguage)
+                : Messages.forLanguage("system.busy", acceptLanguage);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new JsonResult(ErrorConstantUtils.INTERNAL_SERVER_ERROR, false, message));
     }
 
     @ExceptionHandler({BookRenewOvertimeException.class})

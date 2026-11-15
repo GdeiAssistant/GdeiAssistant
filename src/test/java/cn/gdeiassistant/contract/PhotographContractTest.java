@@ -82,11 +82,25 @@ class PhotographContractTest {
 
     @Test
     void listPhotographs_rejectsInvalidType() throws Exception {
-        mockMvc.perform(get("/api/photograph/type/2/start/0/size/10"))
+        mockMvc.perform(get("/api/photograph/type/4/start/0/size/10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false));
+
+        mockMvc.perform(get("/api/photograph/type/-1/start/0/size/10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(false));
 
         verifyNoInteractions(photographService);
+    }
+
+    @Test
+    void listPhotographs_allowsTypeTwo() throws Exception {
+        when(photographService.queryPhotographList(eq(0), eq(10), eq(2), any()))
+                .thenReturn(List.of());
+
+        mockMvc.perform(get("/api/photograph/type/2/start/0/size/10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
     }
 
     @Test

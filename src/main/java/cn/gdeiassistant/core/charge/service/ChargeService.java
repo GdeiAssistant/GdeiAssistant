@@ -397,10 +397,12 @@ public class ChargeService {
                     httpGet = new HttpGet(url);
                     httpResponse = httpClient.execute(httpGet);
                     if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        //获取Cookies
+                        //获取Cookies（仅保留与当前支付网关域名匹配的 Cookie，避免泄露校园网/CAS 凭证）
                         List<Cookie> cookieList = new ArrayList<>();
                         for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
-                            cookieList.add(new Cookie(cookie.getName(), cookie.getValue(), cookie.getDomain()));
+                            if (matchesPaymentGatewayHost(cookie.getDomain(), url, alipayGatewayUrl)) {
+                                cookieList.add(new Cookie(cookie.getName(), cookie.getValue(), cookie.getDomain()));
+                            }
                         }
                         //保存支付宝充值接口URL和Cookies信息
                         charge.setCookieList(cookieList);
@@ -428,6 +430,40 @@ public class ChargeService {
             chargeMapper.insertChargeLog(entity);
         } catch (Exception e) {
             logger.error("充值审计日志写入失败: amount={}", amount, e);
+        }
+    }
+
+    static boolean matchesPaymentGatewayHost(String cookieDomain, String targetUrl, String fallbackGatewayUrl) {
+        if (cookieDomain == null || cookieDomain.isBlank()) {
+            return false;
+        }
+        String targetHost = extractHost(targetUrl);
+        if (targetHost == null) {
+            targetHost = extractHost(fallbackGatewayUrl);
+        }
+        if (targetHost == null) {
+            return false;
+        }
+        String normalizedDomain = cookieDomain.trim().toLowerCase(java.util.Locale.ROOT);
+        if (normalizedDomain.startsWith(".")) {
+            normalizedDomain = normalizedDomain.substring(1);
+        }
+        if (normalizedDomain.isEmpty()) {
+            return false;
+        }
+        String normalizedHost = targetHost.toLowerCase(java.util.Locale.ROOT);
+        return normalizedHost.equals(normalizedDomain) || normalizedHost.endsWith("." + normalizedDomain);
+    }
+
+    private static String extractHost(String rawUrl) {
+        if (rawUrl == null || rawUrl.isBlank()) {
+            return null;
+        }
+        try {
+            String host = java.net.URI.create(rawUrl.trim()).getHost();
+            return (host == null || host.isBlank()) ? null : host;
+        } catch (IllegalArgumentException e) {
+            return null;
         }
     }
 }

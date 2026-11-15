@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.profile.service;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.profile.mapper.ProfileMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
-import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;

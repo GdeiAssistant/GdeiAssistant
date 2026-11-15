@@ -1,10 +1,10 @@
-package cn.gdeiassistant.core.information.pojo.entity;
+package cn.gdeiassistant.common.pojo.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 公告表 announcement 的持久化映射，column 与库表一致。
+ * Persistence entity mapped to the {@code announcement} table.
  */
 public class AnnouncementEntity implements Serializable {
 

@@ -5,9 +5,11 @@ import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
 import cn.gdeiassistant.common.pojo.entity.ElectricFees;
 import cn.gdeiassistant.common.pojo.entity.YellowPage;
 import cn.gdeiassistant.core.electricfees.mapper.ElectricFeesMapper;
-import cn.gdeiassistant.core.yellowpage.mapper.YellowPageMapper;
+import cn.gdeiassistant.core.yellowpage.pojo.entity.YellowPageCategory;
+import cn.gdeiassistant.core.yellowpage.service.YellowPageService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import cn.gdeiassistant.common.i18n.Messages;
 
@@ -16,11 +18,11 @@ public class DataQueryService {
 
     private final ElectricFeesMapper electricFeesMapper;
 
-    private final YellowPageMapper yellowPageMapper;
+    private final YellowPageService yellowPageService;
 
-    public DataQueryService(ElectricFeesMapper electricFeesMapper, YellowPageMapper yellowPageMapper) {
+    public DataQueryService(ElectricFeesMapper electricFeesMapper, YellowPageService yellowPageService) {
         this.electricFeesMapper = electricFeesMapper;
-        this.yellowPageMapper = yellowPageMapper;
+        this.yellowPageService = yellowPageService;
     }
 
     /**
@@ -46,7 +48,7 @@ public class DataQueryService {
      * @return
      */
     public List<YellowPage> queryYellowPageList() throws DataNotExistException {
-        List<YellowPage> yellowPageList = yellowPageMapper.selectAllYellowPageList();
+        List<YellowPage> yellowPageList = yellowPageService.selectAllYellowPageList();
         if (yellowPageList != null && !yellowPageList.isEmpty()) {
             return yellowPageList;
         }
@@ -60,8 +62,15 @@ public class DataQueryService {
      * @throws DataNotExistException
      */
     public List<YellowPageType> queryYellowPageType() throws DataNotExistException {
-        List<YellowPageType> yellowPageTypeList = yellowPageMapper.selectYellowPageType();
-        if (yellowPageTypeList != null && !yellowPageTypeList.isEmpty()) {
+        List<YellowPageCategory> categories = yellowPageService.selectYellowPageCategories();
+        if (categories != null && !categories.isEmpty()) {
+            List<YellowPageType> yellowPageTypeList = new ArrayList<>(categories.size());
+            for (YellowPageCategory category : categories) {
+                YellowPageType type = new YellowPageType();
+                type.setTypeCode(category.getTypeCode());
+                type.setTypeName(category.getTypeName());
+                yellowPageTypeList.add(type);
+            }
             return yellowPageTypeList;
         }
         throw new DataNotExistException(Messages.get("dataquery.yellowPagesCategoriesMissing"));
@@ -82,6 +91,6 @@ public class DataQueryService {
      * @param yellowPageList
      */
     public void insertYellowPageBatch(List<YellowPage> yellowPageList) {
-        yellowPageMapper.insertYellowPageBatch(yellowPageList);
+        yellowPageService.insertYellowPageBatch(yellowPageList);
     }
 }

@@ -5,6 +5,7 @@ import cn.gdeiassistant.common.tools.utils.LocationUtils;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.i18n.I18nTranslationService;
 import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
+import cn.gdeiassistant.core.profile.service.ProfileMajorCatalog;
 import cn.gdeiassistant.core.userprofile.pojo.ProfileLocationValueVO;
 import com.github.houbb.opencc4j.util.ZhConverterUtil;
 import org.springframework.beans.factory.ObjectProvider;

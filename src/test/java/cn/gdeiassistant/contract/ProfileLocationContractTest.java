@@ -1,9 +1,9 @@
 package cn.gdeiassistant.contract;
 
 import cn.gdeiassistant.common.exceptionhandler.GlobalRestExceptionHandler;
+import cn.gdeiassistant.core.profile.service.ProfileLocationValidator;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userprofile.controller.ProfileController;
-import cn.gdeiassistant.core.userprofile.controller.support.ProfileLocationValidator;
 import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

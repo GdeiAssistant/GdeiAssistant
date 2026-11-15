@@ -1,6 +1,6 @@
 package cn.gdeiassistant.core.announcement.mapper;
 
-import cn.gdeiassistant.core.information.pojo.entity.AnnouncementEntity;
+import cn.gdeiassistant.common.pojo.entity.AnnouncementEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Result;

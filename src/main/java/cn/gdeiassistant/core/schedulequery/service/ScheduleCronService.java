@@ -9,7 +9,7 @@ import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedulequery.pojo.vo.ScheduleQueryVO;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
-import cn.gdeiassistant.core.cron.mapper.CronMapper;
+import cn.gdeiassistant.common.spi.CacheAllowUserProvider;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,17 +41,17 @@ public class ScheduleCronService {
 
     private final ScheduleService scheduleService;
 
-    private final CronMapper cronMapper;
+    private final CacheAllowUserProvider cacheAllowUserProvider;
 
     private final ScheduleDao scheduleDao;
 
     private final CampusCredentialService campusCredentialService;
 
-    public ScheduleCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, ScheduleService scheduleService, CronMapper cronMapper, ScheduleDao scheduleDao, CampusCredentialService campusCredentialService) {
+    public ScheduleCronService(@Qualifier("campusSyncExecutor") java.util.concurrent.Executor campusSyncExecutor, UserLoginService userLoginService, ScheduleService scheduleService, CacheAllowUserProvider cacheAllowUserProvider, ScheduleDao scheduleDao, CampusCredentialService campusCredentialService) {
         this.campusSyncExecutor = campusSyncExecutor;
         this.userLoginService = userLoginService;
         this.scheduleService = scheduleService;
-        this.cronMapper = cronMapper;
+        this.cacheAllowUserProvider = cacheAllowUserProvider;
         this.scheduleDao = scheduleDao;
         this.campusCredentialService = campusCredentialService;
     }
@@ -66,7 +66,7 @@ public class ScheduleCronService {
         List<CompletableFuture<Void>> pendingTasks = new ArrayList<>();
         try {
             List<User> userList = campusCredentialService.filterUsersWithEffectiveQuickAuth(
-                    cronMapper.selectCacheAllowUsers()
+                    cacheAllowUserProvider.listCacheAllowUsers()
             );
             //设置线程信号量，限制最大同时查询的线程数为5
             Semaphore semaphore = new Semaphore(5);

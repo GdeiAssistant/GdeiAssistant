@@ -3,7 +3,7 @@ package cn.gdeiassistant.core.gradequery.service;
 import cn.gdeiassistant.common.pojo.document.GradeDocument;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.core.campuscredential.service.CampusCredentialService;
-import cn.gdeiassistant.core.cron.mapper.CronMapper;
+import cn.gdeiassistant.common.spi.CacheAllowUserProvider;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.core.userlogin.service.UserLoginService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +29,7 @@ class GradeCronServiceTest {
     private GradeService gradeService;
 
     @Mock
-    private CronMapper cronMapper;
+    private CacheAllowUserProvider cacheAllowUserProvider;
 
     @Mock
     private GradeDao gradeDao;
@@ -41,7 +41,7 @@ class GradeCronServiceTest {
 
     @BeforeEach
     void setUp() {
-        gradeCronService = new GradeCronService(Runnable::run, userLoginService, gradeService, cronMapper, gradeDao, campusCredentialService);
+        gradeCronService = new GradeCronService(Runnable::run, userLoginService, gradeService, cacheAllowUserProvider, gradeDao, campusCredentialService);
     }
 
     @Test
@@ -55,14 +55,14 @@ class GradeCronServiceTest {
         freshGrade.setUsername("active-user");
         freshGrade.setUpdateDateTime(new Date());
 
-        when(cronMapper.selectCacheAllowUsers()).thenReturn(cacheAllowUsers);
+        when(cacheAllowUserProvider.listCacheAllowUsers()).thenReturn(cacheAllowUsers);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(cacheAllowUsers))
                 .thenReturn(List.of(activeUser));
         when(gradeDao.queryGrade("active-user")).thenReturn(freshGrade);
 
         gradeCronService.synchronizeGradeData();
 
-        verify(cronMapper).selectCacheAllowUsers();
+        verify(cacheAllowUserProvider).listCacheAllowUsers();
         verify(campusCredentialService).filterUsersWithEffectiveQuickAuth(cacheAllowUsers);
         verify(gradeDao).queryGrade("active-user");
         verifyNoMoreInteractions(gradeDao);
@@ -70,7 +70,7 @@ class GradeCronServiceTest {
 
     @Test void expiredCachesRetainIdsAndOnlySuccessfulYearsAreSavedInBatches() throws Exception {
         var users = java.util.stream.IntStream.range(0, 6).mapToObj(i -> new User("synthetic-" + i, "synthetic-password")).toList();
-        when(cronMapper.selectCacheAllowUsers()).thenReturn(users);
+        when(cacheAllowUserProvider.listCacheAllowUsers()).thenReturn(users);
         when(campusCredentialService.filterUsersWithEffectiveQuickAuth(users)).thenReturn(users);
         GradeDocument old = new GradeDocument(); old.setId("existing-id");
         old.setUpdateDateTime(new Date(System.currentTimeMillis() - java.time.Duration.ofDays(8).toMillis()));

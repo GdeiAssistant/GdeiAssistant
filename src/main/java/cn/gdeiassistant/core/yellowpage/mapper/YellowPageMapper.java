@@ -1,7 +1,7 @@
 package cn.gdeiassistant.core.yellowpage.mapper;
 
-import cn.gdeiassistant.core.dataquery.pojo.YellowPageType;
 import cn.gdeiassistant.common.pojo.entity.YellowPage;
+import cn.gdeiassistant.core.yellowpage.pojo.entity.YellowPageCategory;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
@@ -31,7 +31,7 @@ public interface YellowPageMapper {
             @Result(property = "typeCode", column = "type_code"),
             @Result(property = "typeName", column = "type_name")
     })
-    List<YellowPageType> selectYellowPageType();
+    List<YellowPageCategory> selectYellowPageType();
 
     @Insert("insert into gdeiassistant_data.yellow_page (type_code,section,campus,major_phone,minor_phone,address,email,website) values " +
             "<foreach collection='list' item='yellowPage' index='index' separator=','> " +

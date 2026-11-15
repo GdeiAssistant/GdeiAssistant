@@ -103,6 +103,43 @@ function handleLogout(rawMessage, config) {
   router.push(LOGIN_PATH).catch(() => {})
 }
 
+function entriesToObject(entries) {
+  const result = {}
+  for (const [key, value] of entries) {
+    if (Object.prototype.hasOwnProperty.call(result, key)) {
+      if (Array.isArray(result[key])) {
+        result[key].push(value)
+      } else {
+        result[key] = [result[key], value]
+      }
+    } else {
+      result[key] = value
+    }
+  }
+  return result
+}
+
+function normalizeMockData(rawData) {
+  if (!rawData) return {}
+  if (typeof FormData !== 'undefined' && rawData instanceof FormData) {
+    return entriesToObject(rawData.entries())
+  }
+  if (typeof URLSearchParams !== 'undefined' && rawData instanceof URLSearchParams) {
+    return entriesToObject(rawData.entries())
+  }
+  if (typeof rawData === 'string') {
+    try {
+      return JSON.parse(rawData)
+    } catch (_) {
+      if (rawData.includes('=')) {
+        return entriesToObject(new URLSearchParams(rawData).entries())
+      }
+      return {}
+    }
+  }
+  return typeof rawData === 'object' ? rawData : {}
+}
+
 /**
  * Mock 拦截：mock 模式下不发真实请求，直接返回本地模拟数据。
  * 通过 axios adapter 实现 — 返回一个 Promise 即可跳过真实网络请求。
@@ -112,16 +149,15 @@ function createMockAdapter(config) {
   const path = (config.baseURL || '') + (config.url || '')
   const token = localStorage.getItem('token') || ''
 
-  // axios 会将 POST body 序列化为 JSON 字符串，需要解析回对象
-  let data = config.data || {}
-  if (typeof data === 'string') {
-    try { data = JSON.parse(data) } catch (_) { /* keep as-is */ }
-  }
-
   // GET 请求的 query params 在 config.params 里，合并进 data 供 mock handler 读取
   const params = config.params && typeof config.params === 'object' ? config.params : {}
-  const mergedData = /\/social\/conversations\/[^/]+\/messages\/image$/.test(path) && data instanceof FormData
-    ? data : Object.assign({}, params, data)
+  const isChatImageFormData = /\/social\/conversations\/[^/]+\/messages\/image$/.test(path)
+    && typeof FormData !== 'undefined'
+    && config.data instanceof FormData
+  const data = isChatImageFormData ? config.data : normalizeMockData(config.data)
+  const mergedData = isChatImageFormData
+    ? data
+    : Object.assign({}, params, data && typeof data === 'object' ? data : {})
 
   return import('../mock/index.js').then(({ handleRequest }) => handleRequest({
     path,

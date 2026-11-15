@@ -206,25 +206,34 @@ class OpenSourceFilesTest(unittest.TestCase):
 
 
 class AntiLeakAndReadmeHygieneTest(unittest.TestCase):
-    def _init_repo(self, repo: Path) -> None:
+    def _init_repo(self, repo: Path, public: bool = False) -> None:
         sections = "\n".join(f"## {s}\nOK" for s in hygiene.AGENTS_SECTIONS_ZH)
         (repo / "AGENTS.md").write_text(f"{sections}\n{hygiene.CONTENT_BOUNDARY}\n", encoding="utf-8")
         (repo / "CLAUDE.md").write_text("@AGENTS.md\n", encoding="utf-8")
+        (repo / "SECURITY.md").write_text("# Security\n\nReport issues privately.\n", encoding="utf-8")
+        if public:
+            (repo / "LICENSE").write_text("MIT\n", encoding="utf-8")
+            (repo / "CONTRIBUTING.md").write_text("# Contributing\n", encoding="utf-8")
+            (repo / "CODE_OF_CONDUCT.md").write_text("# Code of Conduct\n", encoding="utf-8")
+            (repo / ".github" / "ISSUE_TEMPLATE").mkdir(parents=True, exist_ok=True)
+            (repo / ".github" / "ISSUE_TEMPLATE" / "bug.yml").write_text("name: Bug\n", encoding="utf-8")
+            (repo / ".github" / "pull_request_template.md").write_text("## Summary\n", encoding="utf-8")
         (repo / ".gitignore").write_text("\n".join(hygiene.REQUIRED_GITIGNORE_PATTERNS) + "\n", encoding="utf-8")
         subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
         subprocess.run(["git", "config", "user.name", "Test User"], cwd=repo, check=True)
         subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=repo, check=True)
-        subprocess.run(["git", "add", "AGENTS.md", "CLAUDE.md", ".gitignore"], cwd=repo, check=True)
+        subprocess.run(["git", "add", "AGENTS.md", "CLAUDE.md", "SECURITY.md", ".gitignore"], cwd=repo, check=True)
 
     def test_retired_engineering_and_changes_docs_are_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
             repo = Path(tmp)
             self._init_repo(repo)
-            (repo / ".github").mkdir()
+            (repo / ".github").mkdir(exist_ok=True)
             (repo / ".github" / "engineering.md").write_text("# Legacy\n", encoding="utf-8")
             (repo / "docs" / "changes").mkdir(parents=True)
             (repo / "docs" / "changes" / "note.md").write_text("# Note\n", encoding="utf-8")
             (repo / "docs" / "acceptance-policy.md").write_text("# Policy\n", encoding="utf-8")
+            subprocess.run(["git", "add", "-f", "docs/changes/note.md", "docs/acceptance-policy.md"], cwd=repo, check=True)
             hygiene.errors.clear()
             hygiene.warnings.clear()
             hygiene.check_agents(repo)
@@ -234,6 +243,26 @@ class AntiLeakAndReadmeHygieneTest(unittest.TestCase):
             self.assertIn("docs/changes/", joined)
             self.assertIn("docs/acceptance-policy.md", joined)
 
+    def test_gitignored_notes_pass_while_public_templates_are_enforced(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            repo = Path(tmp)
+            self._init_repo(repo, public=True)
+            (repo / "docs" / "changes").mkdir(parents=True)
+            (repo / "docs" / "changes" / "note.md").write_text("# Note\n", encoding="utf-8")
+            (repo / "docs" / "plans").mkdir(parents=True)
+            (repo / "docs" / "plans" / "draft.md").write_text("# Draft\n", encoding="utf-8")
+            (repo / "docs" / "acceptance-policy.md").write_text("# Policy\n", encoding="utf-8")
+            self.assertEqual(hygiene.main(["--root", str(repo)]), 0, msg="\n".join(hygiene.errors))
+
+            (repo / ".github" / "pull_request_template.md").unlink()
+            self.assertEqual(hygiene.main(["--root", str(repo)]), 1)
+            self.assertIn(".github/pull_request_template.md", "\n".join(hygiene.errors))
+
+            (repo / ".github" / "pull_request_template.md").write_text("## Summary\n", encoding="utf-8")
+            (repo / ".github" / "ISSUE_TEMPLATE" / "bug.yml").unlink()
+            self.assertEqual(hygiene.main(["--root", str(repo)]), 1)
+            self.assertIn("ISSUE_TEMPLATE", "\n".join(hygiene.errors))
+            self.assertEqual(hygiene.main(["--root", str(repo), "--private"]), 0)
 
 if __name__ == "__main__":
     unittest.main()

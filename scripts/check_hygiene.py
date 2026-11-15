@@ -82,6 +82,7 @@ REQUIRED_GITIGNORE_PATTERNS = [
     "docs/plans/",
     "docs/handoffs/",
     "docs/changes/",
+    "docs/acceptance-policy.md",
     ".claude/",
     ".codex/",
     ".local/",
@@ -129,8 +130,58 @@ def warn(msg: str) -> None:
     warnings.append(msg)
 
 
+def git_visible_files(root: Path) -> set[Path] | None:
+    """Return tracked and unignored working-tree files when root is a Git checkout."""
+    if not (root / ".git").exists():
+        return None
+    res = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
+        cwd=root,
+        capture_output=True,
+        check=False,
+    )
+    if res.returncode != 0:
+        return None
+    visible: set[Path] = set()
+    for raw in res.stdout.split(b"\0"):
+        if not raw:
+            continue
+        rel = raw.decode("utf-8", errors="surrogateescape")
+        candidate = root / rel
+        if candidate.is_file():
+            visible.add(candidate)
+    return visible
+
+
+def is_untracked_gitignored(root: Path, rel_path: str) -> bool:
+    """Return True only when rel_path has no tracked/unignored files and is gitignored."""
+    if not (root / ".git").exists():
+        return False
+    listed = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z", "--", rel_path],
+        cwd=root,
+        capture_output=True,
+        check=False,
+    )
+    if listed.returncode == 0 and listed.stdout.strip(b"\0"):
+        return False
+    ignored = subprocess.run(
+        ["git", "check-ignore", "-q", "--", rel_path],
+        cwd=root,
+        check=False,
+    )
+    return ignored.returncode == 0
+
+
 def iter_files(root: Path):
-    for p in root.rglob("*"):
+    visible = git_visible_files(root)
+    if visible is not None:
+        for p in sorted(visible):
+            if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
+                continue
+            yield p
+        return
+    for p in sorted(root.rglob("*")):
         if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
             continue
         if p.is_file():
@@ -205,11 +256,14 @@ def check_filename(root: Path, path: Path) -> None:
 
 
 def check_dirs(root: Path) -> None:
-    for p in root.rglob("*"):
-        if any(part in SKIP_DIRS for part in p.relative_to(root).parts):
+    for p in sorted(root.rglob("*")):
+        rel = p.relative_to(root)
+        if any(part in SKIP_DIRS for part in rel.parts):
             continue
         if p.is_dir() and BANNED_DIR.match(p.name):
-            err(f"{p.relative_to(root)}/: do not split directories by phase, see section 1.3")
+            if is_untracked_gitignored(root, f"{rel.as_posix()}/"):
+                continue
+            err(f"{rel}/: do not split directories by phase, see section 1.3")
 
 
 def check_doc_type(root: Path, path: Path) -> None:
@@ -266,9 +320,11 @@ def check_readme_quality(root: Path) -> None:
 def check_public_internal_artifacts(root: Path, private: bool = False) -> None:
     if private:
         return
-    if (root / "docs" / "changes").is_dir():
+    if (root / "docs" / "changes").is_dir() and not is_untracked_gitignored(root, "docs/changes/"):
         err("docs/changes/: internal change directory must not remain in a public repository")
-    if (root / "docs" / "acceptance-policy.md").exists():
+    if (root / "docs" / "acceptance-policy.md").exists() and not is_untracked_gitignored(
+        root, "docs/acceptance-policy.md"
+    ):
         err("docs/acceptance-policy.md: internal acceptance policy must not remain in a public repository")
 
 
@@ -379,7 +435,9 @@ def check_paragraphs(root: Path, path: Path) -> None:
 
 
 def check_agents(root: Path) -> None:
-    if (root / ".github" / "engineering.md").exists():
+    if (root / ".github" / "engineering.md").exists() and not is_untracked_gitignored(
+        root, ".github/engineering.md"
+    ):
         err(".github/engineering.md is retired; keep repository rules in AGENTS.md")
 
     tracked = subprocess.run(
@@ -521,7 +579,10 @@ def main(argv: list[str] | None = None) -> int:
     check_bilingual_pair(root)
     check_comment_language(root)
     check_gitignore(root)
-    check_docs_baseline(root, private=args.private)
+    if args.private:
+        check_docs_baseline(root, private=True)
+    else:
+        check_opensource_files(root)
     check_secrets(root)
 
     for w in sorted(set(warnings)):

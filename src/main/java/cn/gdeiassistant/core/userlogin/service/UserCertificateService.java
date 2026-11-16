@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import cn.gdeiassistant.common.spi.SessionCertificateProvider;
+import cn.gdeiassistant.common.exception.commonexception.FeatureNotEnabledException;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.common.exception.commonexception.ServerErrorException;
@@ -12,6 +13,7 @@ import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.common.redis.usercertificate.UserCertificateDao;
+import cn.gdeiassistant.core.demo.DemoAccount;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -46,6 +48,7 @@ public class UserCertificateService implements SessionCertificateProvider {
     private final Logger logger = LoggerFactory.getLogger(UserCertificateService.class);
 
     private final UserCertificateDao userCertificateDao;
+    private DemoAccount demoAccount;
 
     private final cn.gdeiassistant.core.user.mapper.UserMapper userMapper;
 
@@ -92,9 +95,25 @@ public class UserCertificateService implements SessionCertificateProvider {
         }
     }
 
+    @Autowired
+    void configureDemoAccount(DemoAccount demoAccount) {
+        this.demoAccount = demoAccount;
+    }
+
+    public boolean isDemoAccount(String username) {
+        return demoAccount != null && demoAccount.matches(username);
+    }
+
+    public boolean isDemoSession(String sessionId) {
+        if (demoAccount == null || !demoAccount.isEnabled()) return false;
+        User user = getUserLoginCertificate(sessionId);
+        return user != null && demoAccount.matches(user.getUsername());
+    }
+
     /** A fresh isolated CAS exchange. Existing cookies and cached passwords cannot authorize sensitive actions. */
     public void verifyCurrentPassword(String username, String password) throws Exception {
         if (username == null || password == null || password.isBlank()) throw new PasswordIncorrectException(Messages.get("deletion.campusPasswordRequired"));
+        if (isDemoAccount(username)) throw new FeatureNotEnabledException();
         HttpClientSession isolated = httpClientUtils.getHttpClient(null, false, 15);
         try (CloseableHttpClient client = isolated.getCloseableHttpClient()) {
             try (CloseableHttpResponse page = client.execute(new HttpGet(casLoginUrl))) {
@@ -209,6 +228,7 @@ public class UserCertificateService implements SessionCertificateProvider {
      * @return
      */
     public UserCertificateEntity getUserSessionCertificate(String sessionId) throws NetWorkTimeoutException, PasswordIncorrectException, ServerErrorException {
+        if (isDemoSession(sessionId)) throw new FeatureNotEnabledException();
         UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(sessionId);
         if (userCertificate == null) {
             User user = getUserLoginCertificate(sessionId);
@@ -252,6 +272,7 @@ public class UserCertificateService implements SessionCertificateProvider {
      * @return
      */
     private void updateSessionCertificate(String sessionId, String username, String password) throws PasswordIncorrectException, NetWorkTimeoutException, ServerErrorException {
+        if (isDemoAccount(username)) throw new FeatureNotEnabledException();
         UserCertificateEntity userCertificate = userCertificateDao.queryUserSessionCertificate(sessionId);
         if (userCertificate == null) {
             CloseableHttpClient httpClient = null;

@@ -8,6 +8,7 @@ import cn.gdeiassistant.common.exception.queryexception.TimeStampIncorrectExcept
 import cn.gdeiassistant.common.pojo.document.GradeDocument;
 import cn.gdeiassistant.common.pojo.entity.Grade;
 import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.demo.DemoCampusData;
 import cn.gdeiassistant.core.gradequery.pojo.GradeQueryResult;
 import cn.gdeiassistant.core.grade.repository.GradeDao;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
@@ -64,6 +65,7 @@ public class GradeService {
     public void updateGradeCache(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
+        if (userCertificateService.isDemoAccount(username)) return;
         // 清空缓存的成绩信息，下次查询时从教务系统实时获取
         gradeDao.removeGrade(username);
         // 主动触发一次实时查询，保证本次操作后前端能看到最新成绩（结果通过前端后续 fetchGrade 再拉取）
@@ -85,7 +87,9 @@ public class GradeService {
         if (year < -1) throw new NotAvailableConditionException(Messages.get("grade.currentYearUnavailable"));
         //优先从缓存中获取
         User user = userCertificateService.getUserLoginCertificate(sessionId);
-        GradeDocument gradeDocument = gradeDao.queryGrade(user.getUsername());
+        String username = user.getUsername();
+        GradeDocument gradeDocument = userCertificateService.isDemoAccount(username)
+                ? DemoCampusData.grades() : gradeDao.queryGrade(username);
         if (gradeDocument != null) {
             // 防御性空指针处理：任何一个 List 为空都降级为安全的空 List，避免 size()/get() NPE
             List<List<Grade>> gradeLists = gradeDocument.getGradeList();

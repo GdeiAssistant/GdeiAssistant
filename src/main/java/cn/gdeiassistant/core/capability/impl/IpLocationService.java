@@ -20,7 +20,7 @@ public class IpLocationService {
     private final ProviderChain<String, IPAddressRecord> chain;
 
     @Autowired
-    public IpLocationService(MaxmindGeoIpProvider maxmindGeoIpProvider,
+    public IpLocationService(Ip2RegionGeoIpProvider ip2RegionGeoIpProvider,
                              IpApiProvider ipApiProvider,
                              IpWhoisProvider ipWhoisProvider,
                              MeterRegistry meterRegistry,
@@ -29,7 +29,7 @@ public class IpLocationService {
             cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
         this.chain = new ProviderChain<>(
                 "ip-location",
-                List.of(maxmindGeoIpProvider, ipApiProvider, ipWhoisProvider),
+                List.of(ip2RegionGeoIpProvider, ipApiProvider, ipWhoisProvider),
                 meterRegistry,
                 circuitBreakerRegistry, (request, result) -> true, executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs())
         );

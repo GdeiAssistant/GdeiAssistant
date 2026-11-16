@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderChainExhaustedException;
+import cn.gdeiassistant.common.exception.ProviderException;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
 import cn.gdeiassistant.core.capability.ProviderChain;
 import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
@@ -17,6 +18,7 @@ public class IpLocationService {
 
     private static final Logger log = LoggerFactory.getLogger(IpLocationService.class);
 
+    private final Ip2RegionGeoIpProvider localProvider;
     private final ProviderChain<String, IPAddressRecord> chain;
 
     @Autowired
@@ -27,15 +29,23 @@ public class IpLocationService {
                              CircuitBreakerRegistry circuitBreakerRegistry,
             @org.springframework.beans.factory.annotation.Qualifier("providerExecutor") java.util.concurrent.Executor executor,
             cn.gdeiassistant.common.config.application.OutboundIntegrationProperties settings) {
+        this.localProvider = ip2RegionGeoIpProvider;
         this.chain = new ProviderChain<>(
                 "ip-location",
-                List.of(ip2RegionGeoIpProvider, ipApiProvider, ipWhoisProvider),
+                List.of(ipApiProvider, ipWhoisProvider),
                 meterRegistry,
                 circuitBreakerRegistry, (request, result) -> true, executor, java.time.Duration.ofMillis(settings.getProviderBudgetMs())
         );
     }
 
     public IPAddressRecord resolve(String ip) {
+        if (localProvider.isConfigured()) {
+            try {
+                return localProvider.lookup(ip);
+            } catch (ProviderException e) {
+                log.debug("No local IP location, continuing to configured providers");
+            }
+        }
         try {
             return chain.execute(ip);
         } catch (ProviderChainExhaustedException e) {

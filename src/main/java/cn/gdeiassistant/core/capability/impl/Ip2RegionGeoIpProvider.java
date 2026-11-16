@@ -3,7 +3,6 @@ package cn.gdeiassistant.core.capability.impl;
 import cn.gdeiassistant.common.exception.ProviderException;
 import cn.gdeiassistant.common.i18n.Messages;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
-import cn.gdeiassistant.core.capability.ServiceProvider;
 import jakarta.annotation.PreDestroy;
 import org.apache.http.conn.util.InetAddressUtils;
 import org.lionsoul.ip2region.service.Config;
@@ -23,7 +22,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 @Component
-public class Ip2RegionGeoIpProvider implements ServiceProvider<String, IPAddressRecord>, AutoCloseable {
+public class Ip2RegionGeoIpProvider implements AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(Ip2RegionGeoIpProvider.class);
 
@@ -78,18 +77,7 @@ public class Ip2RegionGeoIpProvider implements ServiceProvider<String, IPAddress
         }
     }
 
-    @Override
-    public String providerName() {
-        return "ip2region";
-    }
-
-    @Override
-    public int priority() {
-        return 0;
-    }
-
-    @Override
-    public IPAddressRecord execute(String ip) throws ProviderException {
+    public IPAddressRecord lookup(String ip) throws ProviderException {
         String address = ip == null ? "" : ip.trim();
         if (searcher == null || !(InetAddressUtils.isIPv4Address(address)
                 || InetAddressUtils.isIPv6Address(address)
@@ -125,7 +113,6 @@ public class Ip2RegionGeoIpProvider implements ServiceProvider<String, IPAddress
         return value.isBlank() || "0".equals(value) ? "-" : value;
     }
 
-    @Override
     public boolean isConfigured() {
         return searcher != null;
     }

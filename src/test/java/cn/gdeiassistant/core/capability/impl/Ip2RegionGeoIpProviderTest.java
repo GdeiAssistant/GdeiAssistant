@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -52,14 +53,19 @@ class Ip2RegionGeoIpProviderTest {
             assertEquals("Japan", ipv6.getCountry());
             assertEquals("Tokyo", ipv6.getProvince());
             assertEquals("-", ipv6.getCity());
+            for (int i = 0; i < 6; i++) {
+                assertEquals("-", service.resolve("2001:db8::2").getCountry());
+            }
             assertEquals("-", service.resolve("192.0.2.2").getCountry());
-            assertThrows(ProviderException.class, () -> provider.execute("example.invalid"));
+            assertEquals("中国", service.resolve("192.0.2.1").getCountry());
+            assertThrows(ProviderException.class, () -> provider.lookup("example.invalid"));
             server.verify();
         } finally {
             metrics.close();
         }
-        verify(searcher).search("192.0.2.1");
+        verify(searcher, times(2)).search("192.0.2.1");
         verify(searcher).search("2001:db8::1");
+        verify(searcher, times(6)).search("2001:db8::2");
         verify(searcher).search("192.0.2.2");
         verify(searcher).close();
         verifyNoMoreInteractions(searcher);
@@ -71,7 +77,7 @@ class Ip2RegionGeoIpProviderTest {
         var corrupt = Files.writeString(tempDir.resolve("corrupt.xdb"), "invalid test database");
         try (var provider = new Ip2RegionGeoIpProvider(missing.toString(), corrupt.toString())) {
             assertFalse(provider.isConfigured());
-            assertThrows(ProviderException.class, () -> provider.execute("192.0.2.1"));
+            assertThrows(ProviderException.class, () -> provider.lookup("192.0.2.1"));
         }
     }
 }

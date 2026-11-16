@@ -56,7 +56,7 @@ QWEN_CHAT_MODELS=
 QWEN_OCR_MODEL=
 ```
 
-示例型号用于说明配置方式，使用前核对服务商当前目录。一个变量可以配置逗号分隔的多个型号，按列表顺序尝试。显式队列默认留空，使用下述自动规则；空 API key 不启用该端点。平台之间按 `priority` 从小到大降级。
+示例型号用于说明配置方式，使用前核对服务商当前目录。一个变量可以配置逗号分隔的多个型号，按列表顺序尝试。显式队列默认留空，使用下述自动规则；空 API key 不启用该端点。平台之间按 `priority` 从小到大尝试。可将 `SILICONFLOW_PRIORITY` 设为 `20`，让硅基流动排在智谱后面。
 
 ```java
 String answer = aiService.generate("chat", AiRequest.text("请总结这段公开资料……"));

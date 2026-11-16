@@ -19,6 +19,8 @@
 
 以上仅为技术栈类别说明，不代表完整依赖清单。
 
+`src/test/resources/geoip/GeoLite2-City-Test.mmdb` 来自 [MaxMind-DB 测试数据](https://github.com/maxmind/MaxMind-DB/tree/daf41996ce86d6822e213b342d67c8efb6620e07/test-data)。Copyright (c) 2013–2026 MaxMind, Inc.，按 Apache License 2.0 使用。
+
 ## 维护建议
 
 正式版本发布前，维护者应生成或更新第三方依赖许可证清单，并核对：

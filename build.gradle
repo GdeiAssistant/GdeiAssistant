@@ -38,6 +38,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.22.0'
     implementation 'com.squareup.okhttp3:okhttp:5.5.1'
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    implementation 'com.maxmind.db:maxmind-db:4.2.0'
     implementation 'org.jsoup:jsoup:1.23.2'
     implementation 'org.dom4j:dom4j:2.2.0'
     implementation 'com.alibaba.fastjson2:fastjson2:2.0.65'

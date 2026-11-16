@@ -110,6 +110,10 @@ npm run dev
 
 `JWT_SECRET`、`CRON_SECRET`、`ENCRYPT_PRIVATE_KEY` 需要定期轮换。轮换前先评估已签发 Token 和已加密数据的兼容策略。完整矩阵见 [`docs/environment-matrix.md`](docs/environment-matrix.md)。
 
+如需在服务端本地查询 IP 属地，从 [MaxMind GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data/) 下载 `GeoLite2-City.mmdb`，将文件通过只读挂载提供给容器。`MAXMIND_DATABASE_PATH` 默认指向 `/data/GeoLite2-City.mmdb`。数据库通过免费的 MaxMind 账号下载，应用查询只读取本地文件。按 [GeoLite 许可](https://www.maxmind.com/en/geolite/eula) 更新数据库，替换后重启服务。
+
+启用本地 IP 属地功能时，本产品使用由 [MaxMind](https://www.maxmind.com/) 创建的 GeoLite 数据。
+
 ## 技术栈
 
 | 端 | 技术 |

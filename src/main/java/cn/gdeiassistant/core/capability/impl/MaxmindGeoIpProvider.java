@@ -1,57 +1,53 @@
 package cn.gdeiassistant.core.capability.impl;
 
 import cn.gdeiassistant.common.exception.ProviderException;
+import cn.gdeiassistant.common.i18n.Messages;
 import cn.gdeiassistant.common.pojo.entity.IPAddressRecord;
-import cn.gdeiassistant.common.tools.utils.StringUtils;
 import cn.gdeiassistant.core.capability.ServiceProvider;
+import com.maxmind.db.Reader;
+import jakarta.annotation.PreDestroy;
+import org.apache.http.conn.util.InetAddressUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
-import cn.gdeiassistant.common.i18n.Messages;
+import java.util.List;
+import java.util.Map;
 
-/**
- * MaxMind GeoLite2 本地 IP 地理定位提供商。
- * 使用本地数据库文件实现零外部依赖的 IP 定位。
- *
- * 首次使用前需下载 GeoLite2-City.mmdb：
- *   wget https://git.io/GeoLite2-City.mmdb -O /data/GeoLite2-City.mmdb
- *
- * 免费注册获取 License Key：
- *   https://dev.maxmind.com/geoip/geolite2-free-geolocation-data
- */
 @Component
-public class MaxmindGeoIpProvider implements ServiceProvider<String, IPAddressRecord> {
+public class MaxmindGeoIpProvider implements ServiceProvider<String, IPAddressRecord>, AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(MaxmindGeoIpProvider.class);
 
-    private String databasePath;
+    private final Reader reader;
 
-    private boolean initialized = false;
-    private boolean dbAvailable = false;
-
-    @Value("${maxmind.database.path:/data/GeoLite2-City.mmdb}")
-    public void setDatabasePath(String databasePath) {
-        this.databasePath = databasePath;
-        initDatabase();
+    public MaxmindGeoIpProvider(@Value("${MAXMIND_DATABASE_PATH:${maxmind.database.path:/data/GeoLite2-City.mmdb}}")
+                                   String databasePath) {
+        this.reader = openCityDatabase(new File(databasePath));
     }
 
-    private synchronized void initDatabase() {
-        if (initialized) return;
-        initialized = true;
+    private static Reader openCityDatabase(File database) {
+        if (!database.isFile()) {
+            log.warn("MaxMind City database not found at {}", database);
+            return null;
+        }
         try {
-            File dbFile = new File(databasePath);
-            if (dbFile.exists() && dbFile.isFile()) {
-                dbAvailable = true;
-                log.info("MaxMind GeoLite2 数据库已加载：{}", databasePath);
-            } else {
-                log.warn("MaxMind GeoLite2 数据库未找到：{}（IP 定位将跳过此提供商）", databasePath);
+            Reader reader = new Reader(database);
+            String type = reader.getMetadata().databaseType();
+            if (!"GeoLite2-City".equals(type) && !"GeoIP2-City".equals(type)) {
+                reader.close();
+                log.warn("Unsupported MaxMind database type: {}", type);
+                return null;
             }
-        } catch (Exception e) {
-            log.warn("MaxMind GeoLite2 初始化失败：{}", e.getMessage());
+            log.info("Loaded local MaxMind City database from {}", database);
+            return reader;
+        } catch (IOException e) {
+            log.warn("Unable to open MaxMind City database at {}: {}", database, e.getMessage());
+            return null;
         }
     }
 
@@ -67,43 +63,56 @@ public class MaxmindGeoIpProvider implements ServiceProvider<String, IPAddressRe
 
     @Override
     public IPAddressRecord execute(String ip) throws ProviderException {
+        String address = ip == null ? "" : ip.trim();
+        if (reader == null || !(InetAddressUtils.isIPv4Address(address)
+                || InetAddressUtils.isIPv6Address(address)
+                || InetAddressUtils.isIPv4MappedIPv64Address(address))) {
+            throw new ProviderException(Messages.get("capability.maxmindLookupFailed"));
+        }
         try {
-            InetAddress addr = InetAddress.getByName(ip);
-            // 使用 com.maxmind.geoip2 库查询
-            // 注意：需要在 build.gradle 中添加依赖：
-            // implementation 'com.maxmind.geoip2:geoip2:4.2.0'
-            //
-            // 示例代码（取消注释后使用）：
-            // File database = new File(databasePath);
-            // DatabaseReader reader = new DatabaseReader.Builder(database).build();
-            // CityResponse response = reader.city(addr);
-            //
-            // IPAddressRecord record = new IPAddressRecord();
-            // record.setCountry(response.getCountry().getName() != null
-            //         ? response.getCountry().getName() : "-");
-            // record.setProvince(response.getMostSpecificSubdivision().getName() != null
-            //         ? response.getMostSpecificSubdivision().getName() : "-");
-            // record.setCity(response.getCity().getName() != null
-            //         ? response.getCity().getName() : "-");
-            // record.setNetwork("-");
-            // record.setArea(response.getContinent().getName() != null
-            //         ? response.getContinent().getName() : "-");
-            // record.setIp(ip);
-            // return record;
+            Map<?, ?> result = reader.get(InetAddress.getByName(address), Map.class);
+            if (result == null) {
+                throw new ProviderException(Messages.get("capability.maxmindLookupFailed"));
+            }
+            Object country = result.get("country");
+            Object subdivision = result.get("subdivisions") instanceof List<?> subdivisions && !subdivisions.isEmpty()
+                    ? subdivisions.get(0) : null;
 
-            throw new ProviderException(Messages.get("capability.maxmindDependencyMissing"));
-        } catch (Exception e) {
+            IPAddressRecord record = new IPAddressRecord();
+            record.setCountry(country instanceof Map<?, ?> fields && "CN".equals(fields.get("iso_code"))
+                    ? "中国" : localizedName(country));
+            record.setProvince(localizedName(subdivision));
+            record.setCity(localizedName(result.get("city")));
+            record.setNetwork("-");
+            record.setArea("-");
+            return record;
+        } catch (IOException e) {
             throw new ProviderException(Messages.get("capability.maxmindLookupFailed"), e);
         }
     }
 
-    @Override
-    public boolean isConfigured() {
-        return dbAvailable;
+    private static String localizedName(Object location) {
+        if (location instanceof Map<?, ?> fields && fields.get("names") instanceof Map<?, ?> names) {
+            if (names.get("zh-CN") instanceof String chinese && !chinese.isBlank()) {
+                return chinese;
+            }
+            if (names.get("en") instanceof String english && !english.isBlank()) {
+                return english;
+            }
+        }
+        return "-";
     }
 
     @Override
-    public boolean isHealthy() {
-        return dbAvailable;
+    public boolean isConfigured() {
+        return reader != null;
+    }
+
+    @PreDestroy
+    @Override
+    public void close() throws IOException {
+        if (reader != null) {
+            reader.close();
+        }
     }
 }

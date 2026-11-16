@@ -21,6 +21,7 @@ jobs:
       contents: read
     env:
       VITE_APP_BASE_API: https://gdeiassistant.azurewebsites.net/api
+      VITE_ENABLE_DEMO_MOCK: 'true'
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7

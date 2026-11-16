@@ -1380,7 +1380,10 @@
     "credentialNotice": "キャンパス認証情報は、キャンパス認証・クイック認証・セッション同期に使われる場合があります。本人のアカウントのみを使用してください。保存を拒否したり、設定やフィードバックから削除したりすると、一部の照会やクイック認証が使えなくなることがあります。",
     "mockCredentialHint": "デモ用アカウント：gdeiassistant / gdeiassistant",
     "fillMockAction": "自動入力",
-    "editionLabel": "嶺南書院版 · キャンパスポータル"
+    "editionLabel": "嶺南書院版 · キャンパスポータル",
+    "demoBadge": "デモデータ",
+    "demoDescription": "現在はローカルデモ環境です。すべてのデータはローカルで生成されたデモデータであり、学内ネットワークへの接続や実通信は行われません。実際のアカウント入力や同意は不要です。",
+    "enterDemo": "デモを開始"
   },
   "loginRecord": {
     "clientDevice": "{network} クライアント",

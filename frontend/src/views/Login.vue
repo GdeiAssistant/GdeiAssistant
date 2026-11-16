@@ -5,7 +5,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { login } from '../api/user.js'
 import { useToast } from '@/composables/useToast'
-import { isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
+import { isDemoMockBuild, isMockMode, toggleDataSourceMode } from '@/services/data-source.js'
 import { MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD, getMockCredentialsHint } from '@/constants/mock.js'
 import { LOCALE_OPTIONS, resolveSupportedLocale } from '@/constants/localeOptions'
 import { setLocale } from '@/i18n'
@@ -16,8 +16,9 @@ const { error: showError, loading: showLoading, hideLoading } = useToast()
 
 const username = ref('')
 const password = ref('')
-// 数据源切换和模拟账号提示在本地开发构建或显式开启演示开关时显示
-const isDemoMockEnabled = import.meta.env.DEV || import.meta.env.VITE_ENABLE_DEMO_MOCK === 'true'
+// 公开演示站强制启用本地演示入口；本地开发构建保留数据源开关；正式 Web 构建沿用真实登录
+const isDemoSite = isDemoMockBuild()
+const isDemoMockEnabled = import.meta.env.DEV || isDemoSite
 const mockMode = ref(isMockMode())
 const campusCredentialConsent = ref(false)
 
@@ -47,23 +48,10 @@ function toggleMock() {
   }
 }
 
-async function handleLogin() {
-  if (!username.value.trim() || !password.value.trim()) {
-    showError(t('loginPage.incompleteFields'))
-    return
-  }
-  if (!campusCredentialConsent.value) {
-    showError(t('loginPage.campusConsentRequired'))
-    return
-  }
+async function performLogin(account, secret, consentMetadata = {}) {
   showLoading(t('loginPage.loading'))
   try {
-    const res = await login(username.value.trim(), password.value, {
-      campusCredentialConsent: true,
-      consentScene: 'LOGIN',
-      policyDate: '2026-04-25',
-      effectiveDate: '2026-05-11'
-    })
+    const res = await login(account, secret, consentMetadata)
     hideLoading()
     // 仅当后端返回 code === 200 时存 Token 并跳转；401 或其他错误码展示后端 message 并停留在登录页
     if (res && res.code === 200 && res.data && res.data.token) {
@@ -77,6 +65,27 @@ async function handleLogin() {
     hideLoading()
     // 错误提示由 request.js 全局拦截器统一展示（如账号或密码错误、网络连接失败等），此处仅关闭加载态
   }
+}
+
+async function handleLogin() {
+  if (!username.value.trim() || !password.value.trim()) {
+    showError(t('loginPage.incompleteFields'))
+    return
+  }
+  if (!campusCredentialConsent.value) {
+    showError(t('loginPage.campusConsentRequired'))
+    return
+  }
+  await performLogin(username.value.trim(), password.value, {
+    campusCredentialConsent: true,
+    consentScene: 'LOGIN',
+    policyDate: '2026-04-25',
+    effectiveDate: '2026-05-11'
+  })
+}
+
+async function enterDemo() {
+  await performLogin(MOCK_ACCOUNT_USERNAME, MOCK_ACCOUNT_PASSWORD)
 }
 
 function handleThirdPartyLogin(type) {
@@ -124,68 +133,89 @@ function handleThirdPartyLogin(type) {
         </label>
       </div>
 
-      <div v-if="isDemoMockEnabled" class="login-mock" :class="{ 'login-mock--active': mockMode }">
-        <div class="login-mock__top">
-          <div class="login-mock__title">
-            <span>{{ t('loginPage.mockMode') }}</span>
-            <strong v-if="mockMode" class="login-mock__badge">{{ t('loginPage.mockActive') }}</strong>
+      <template v-if="isDemoSite">
+        <div class="login-mock login-mock--active">
+          <div class="login-mock__top">
+            <div class="login-mock__title">
+              <span>{{ t('loginPage.mockMode') }}</span>
+              <strong class="login-mock__badge">{{ t('loginPage.demoBadge') }}</strong>
+            </div>
           </div>
-          <button
-            type="button"
-            role="switch"
-            :aria-checked="mockMode"
-            :aria-label="t('loginPage.mockMode')"
-            class="login-switch"
-            :class="{ 'login-switch--on': mockMode }"
-            @click="toggleMock"
-          >
-            <span />
-          </button>
+          <p class="login-mock__desc">{{ t('loginPage.demoDescription') }}</p>
+          <div class="login-mock__hint">
+            <p class="tabular-num">{{ getMockCredentialsHint(locale) }}</p>
+          </div>
         </div>
-        <div v-if="mockMode" class="login-mock__hint">
-          <p class="tabular-num">{{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}</p>
-          <button type="button" class="login-mock__fill" @click="fillMockCredentials">
-            {{ t('loginPage.fillMockAction') }}
-          </button>
-        </div>
-      </div>
 
-      <form class="login-form" @submit.prevent="handleLogin">
-        <label class="login-field">
-          <span>{{ t('loginPage.usernameLabel') }}</span>
-          <input
-            v-model="username"
-            type="text"
-            maxlength="20"
-            autocomplete="username"
-            :placeholder="t('loginPage.usernamePlaceholder')"
-          />
-        </label>
-
-        <label class="login-field">
-          <span>{{ t('loginPage.passwordLabel') }}</span>
-          <input
-            v-model="password"
-            type="password"
-            maxlength="35"
-            autocomplete="current-password"
-            :placeholder="t('loginPage.passwordPlaceholder')"
-          />
-        </label>
-
-        <label class="login-consent">
-          <input v-model="campusCredentialConsent" type="checkbox" />
-          <span>{{ t('loginPage.campusConsentLabel') }}</span>
-        </label>
-
-        <button type="submit" class="login-submit">
-          {{ t('loginPage.submit') }}
+        <button type="button" class="login-submit" @click="enterDemo">
+          {{ t('loginPage.enterDemo') }}
         </button>
-      </form>
+      </template>
 
-      <div class="login-panel__notice">
-        {{ t('loginPage.credentialNotice') }}
-      </div>
+      <template v-else>
+        <div v-if="isDemoMockEnabled" class="login-mock" :class="{ 'login-mock--active': mockMode }">
+          <div class="login-mock__top">
+            <div class="login-mock__title">
+              <span>{{ t('loginPage.mockMode') }}</span>
+              <strong v-if="mockMode" class="login-mock__badge">{{ t('loginPage.mockActive') }}</strong>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              :aria-checked="mockMode"
+              :aria-label="t('loginPage.mockMode')"
+              class="login-switch"
+              :class="{ 'login-switch--on': mockMode }"
+              @click="toggleMock"
+            >
+              <span />
+            </button>
+          </div>
+          <div v-if="mockMode" class="login-mock__hint">
+            <p class="tabular-num">{{ `${getMockCredentialsHint(locale)}${t('loginPage.autoFilledSuffix')}` }}</p>
+            <button type="button" class="login-mock__fill" @click="fillMockCredentials">
+              {{ t('loginPage.fillMockAction') }}
+            </button>
+          </div>
+        </div>
+
+        <form class="login-form" @submit.prevent="handleLogin">
+          <label class="login-field">
+            <span>{{ t('loginPage.usernameLabel') }}</span>
+            <input
+              v-model="username"
+              type="text"
+              maxlength="20"
+              autocomplete="username"
+              :placeholder="t('loginPage.usernamePlaceholder')"
+            />
+          </label>
+
+          <label class="login-field">
+            <span>{{ t('loginPage.passwordLabel') }}</span>
+            <input
+              v-model="password"
+              type="password"
+              maxlength="35"
+              autocomplete="current-password"
+              :placeholder="t('loginPage.passwordPlaceholder')"
+            />
+          </label>
+
+          <label class="login-consent">
+            <input v-model="campusCredentialConsent" type="checkbox" />
+            <span>{{ t('loginPage.campusConsentLabel') }}</span>
+          </label>
+
+          <button type="submit" class="login-submit">
+            {{ t('loginPage.submit') }}
+          </button>
+        </form>
+
+        <div class="login-panel__notice">
+          {{ t('loginPage.credentialNotice') }}
+        </div>
+      </template>
 
       <div class="login-links">
         <p>
@@ -535,6 +565,13 @@ function handleThirdPartyLogin(type) {
 
 .login-switch--on span {
   transform: translateX(16px);
+}
+
+.login-mock__desc {
+  margin: 8px 0 0;
+  color: var(--c-text-1);
+  font-size: 13px;
+  line-height: 1.65;
 }
 
 .login-mock__hint {

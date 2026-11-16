@@ -14,6 +14,7 @@ import {
   localizeCountryCodes,
 } from './bindPhoneSupport'
 import { maskPhone } from '@/utils/mask'
+import { isMockMode } from '@/services/data-source.js'
 
 const router = useRouter()
 const { success: toastSuccess } = useToast()
@@ -54,17 +55,9 @@ function validatePhone(value, countryCode) {
   return /^\d{7,11}$/.test(value)
 }
 
-function shouldUseMockCountryCodeCatalog() {
-  try {
-    return localStorage.getItem('gdei_data_source_mode') === 'mock'
-  } catch (_) {
-    return false
-  }
-}
-
 async function loadCountryCodes() {
   rawCountryCodes.value = await loadCountryCodeCatalog({
-    apiUrl: shouldUseMockCountryCodeCatalog() ? '' : phoneAttributionApi,
+    apiUrl: isMockMode() ? '' : phoneAttributionApi,
     locale: locale.value,
   })
 }

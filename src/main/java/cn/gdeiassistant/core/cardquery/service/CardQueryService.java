@@ -11,6 +11,7 @@ import cn.gdeiassistant.core.cardquery.pojo.CardQuery;
 import cn.gdeiassistant.core.cardquery.pojo.CardQueryResult;
 import cn.gdeiassistant.common.pojo.entity.Card;
 import cn.gdeiassistant.common.pojo.entity.CardInfo;
+import cn.gdeiassistant.core.demo.DemoCampusData;
 import cn.gdeiassistant.integration.card.CardClient;
 import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
@@ -39,6 +40,8 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.DateTimeException;
+import java.time.LocalDate;
 import java.util.*;
 import cn.gdeiassistant.common.i18n.Messages;
 
@@ -73,6 +76,7 @@ public class CardQueryService {
      * 查询饭卡基本信息
      */
     public CardInfo cardInfoQuery(String sessionId) throws Exception {
+        if (userCertificateService.isDemoSession(sessionId)) return DemoCampusData.cardInfo();
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;
@@ -114,6 +118,19 @@ public class CardQueryService {
      * 查询消费流水
      */
     public CardQueryResult cardQuery(String sessionId, CardQuery cardQuery) throws Exception {
+        if (userCertificateService.isDemoSession(sessionId)) {
+            LocalDate date;
+            try {
+                date = LocalDate.of(cardQuery.getYear(), cardQuery.getMonth(), cardQuery.getDate());
+            } catch (DateTimeException e) {
+                throw new IllegalArgumentException(Messages.get("request.invalid"), e);
+            }
+            CardQueryResult result = new CardQueryResult();
+            result.setCardQuery(cardQuery);
+            result.setCardInfo(DemoCampusData.cardInfo());
+            result.setCardList(DemoCampusData.cardTransactions(date));
+            return result;
+        }
         UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
         CloseableHttpClient httpClient = null;
         CookieStore cookieStore = null;

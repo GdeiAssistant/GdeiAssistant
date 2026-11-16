@@ -43,6 +43,7 @@ GdeiAssistant 统一使用以下三套环境语义：
 
 - `staging` 用来验证上线前配置和 fail-fast 行为，因此 compose 配置与 `production` 保持一致的密钥要求。
 - 当前仅 `production` 加载定时任务与生产专用 cron Bean；`staging` 默认不启动这些任务，避免测试环境误触真实后台任务。
+- 演示后端可通过 `APP_DEMO_ACCOUNT_ENABLED`、`APP_DEMO_USERNAME` 和 `APP_DEMO_PASSWORD` 配置专用演示账号。该账号的成绩、课表、校园卡余额和消费流水使用合成数据，刷新课表和成绩会继续展示样例。演示账号无法获取校园登录会话或执行校园卡挂失。`production` 禁用演示账号。
 
 ## Deployment shape
 

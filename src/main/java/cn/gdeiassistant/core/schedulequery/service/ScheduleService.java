@@ -15,6 +15,7 @@ import cn.gdeiassistant.common.pojo.entity.CustomSchedule;
 import cn.gdeiassistant.common.pojo.entity.Schedule;
 import cn.gdeiassistant.common.pojo.entity.TeacherSchedule;
 import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.core.demo.DemoCampusData;
 import cn.gdeiassistant.core.schedulequery.pojo.ScheduleQueryResult;
 import cn.gdeiassistant.core.schedule.repository.ScheduleDao;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
@@ -150,7 +151,8 @@ public class ScheduleService {
         //优先从缓存中加载
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
-        ScheduleDocument scheduleDocument = scheduleDao.querySchedule(username);
+        ScheduleDocument scheduleDocument = userCertificateService.isDemoAccount(username)
+                ? DemoCampusData.schedule() : scheduleDao.querySchedule(username);
         if (scheduleDocument == null) {
             UserCertificateEntity userCertificate = userCertificateService.getUserSessionCertificate(sessionId);
             EduSessionCredential credential = toEduCredential(userCertificate);
@@ -373,6 +375,7 @@ public class ScheduleService {
     public void updateScheduleCache(String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         String username = user.getUsername();
+        if (userCertificateService.isDemoAccount(username)) return;
         // 清空缓存的课表信息，下次查询时从教务系统实时获取
         scheduleDao.removeSchedule(username);
         // 主动触发一次实时查询，保证本次操作后前端能看到最新课表（结果通过前端后续 getSchedule 再拉取）

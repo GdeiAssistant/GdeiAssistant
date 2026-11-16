@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.userlogin.service;
 
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
+import cn.gdeiassistant.core.demo.DemoAccount;
 import cn.gdeiassistant.core.userdata.service.UserDataService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,7 +52,7 @@ class UserLoginServiceTest {
         MockEnvironment env = new MockEnvironment();
         env.setActiveProfiles("staging");
         UserLoginService service = new UserLoginService(userCertificateService, userDataService);
-        service.configureDemoAccount(env, true, "demo-student", "demo-token-value");
+        service.configureDemoAccount(new DemoAccount(env, true, "demo-student", "demo-token-value"));
 
         service.userLogin("session-demo", "demo-student", "demo-token-value", false);
 
@@ -65,7 +66,7 @@ class UserLoginServiceTest {
         MockEnvironment env = new MockEnvironment();
         env.setActiveProfiles("staging");
         UserLoginService service = new UserLoginService(userCertificateService, userDataService);
-        service.configureDemoAccount(env, true, "demo-student", "demo-token-value");
+        service.configureDemoAccount(new DemoAccount(env, true, "demo-student", "demo-token-value"));
 
         assertThrows(PasswordIncorrectException.class,
                 () -> service.userLogin("session-demo", "demo-student", "wrong-value", false));
@@ -79,7 +80,7 @@ class UserLoginServiceTest {
         MockEnvironment env = new MockEnvironment();
         env.setActiveProfiles("production");
         UserLoginService service = new UserLoginService(userCertificateService, userDataService);
-        service.configureDemoAccount(env, true, "demo-student", "demo-token-value");
+        service.configureDemoAccount(new DemoAccount(env, true, "demo-student", "demo-token-value"));
 
         service.userLogin("session-prod", "demo-student", "demo-token-value", false);
 

@@ -192,7 +192,7 @@ api:
           ocr:
             - pattern: 'Qwen/Qwen(?<version>[0-9]+(?:[.-][0-9]+)*)-VL-[0-9]+B(?:-A[0-9]+B)?-Instruct'
               image-input: true
-        priority: 3
+        priority: ${SILICONFLOW_PRIORITY:3}
       - id: openai
         region: OVERSEAS
         access-mode: DIRECT

@@ -19,6 +19,7 @@
 
 以上仅为技术栈类别说明，不代表完整依赖清单。
 
+
 ## 维护建议
 
 正式版本发布前，维护者应生成或更新第三方依赖许可证清单，并核对：
@@ -44,3 +45,5 @@ docker compose config
 - 根据实际发布物补齐依赖名称、版本和许可证信息
 
 最近更新：2026年4月25日
+
+[Ip2Region](https://github.com/lionsoul2014/ip2region) Java 查询库按 Apache License 2.0 使用。

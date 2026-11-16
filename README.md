@@ -110,6 +110,8 @@ npm run dev
 
 `JWT_SECRET`、`CRON_SECRET`、`ENCRYPT_PRIVATE_KEY` 需要定期轮换。轮换前先评估已签发 Token 和已加密数据的兼容策略。完整矩阵见 [`docs/environment-matrix.md`](docs/environment-matrix.md)。
 
+从 [ip2region 开源数据](https://github.com/lionsoul2014/ip2region/tree/master/data) 下载 `ip2region_v4.xdb` 和 `ip2region_v6.xdb`，通过只读挂载提供给服务端。默认目录为 `/data`，可用 `IP2REGION_IPV4_PATH` 和 `IP2REGION_IPV6_PATH` 覆盖。应用在本机查询 IP 属地。开源数据不定期更新，替换文件后重启服务。
+
 ## 技术栈
 
 | 端 | 技术 |

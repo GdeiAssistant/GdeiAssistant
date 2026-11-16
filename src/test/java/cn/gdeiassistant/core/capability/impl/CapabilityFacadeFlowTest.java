@@ -34,9 +34,9 @@ class CapabilityFacadeFlowTest {
         }
     }
     @Test void missingIpServicesProduceExplicitUnknownLocation(){
-        var maxmind=mock(MaxmindGeoIpProvider.class);var api=mock(IpApiProvider.class);var whois=mock(IpWhoisProvider.class);
+        var local=mock(Ip2RegionGeoIpProvider.class);var api=mock(IpApiProvider.class);var whois=mock(IpWhoisProvider.class);
         {
-            var service=new IpLocationService(maxmind,api,whois,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
+            var service=new IpLocationService(local,api,whois,registry,CircuitBreakerRegistry.ofDefaults(),Runnable::run,new OutboundIntegrationProperties());
             var record=service.resolve("192.0.2.1");assertEquals("-",record.getCountry());assertEquals("-",record.getArea());assertEquals("-",record.getNetwork());assertNotNull(service.getChain());
         }
     }

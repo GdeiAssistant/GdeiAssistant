@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import i18n from '../i18n'
+import { isDemoMockBuild, hasValidDemoMockSession } from '../services/data-source'
 
 const layoutModules = import.meta.glob('../layout/**/*.vue')
 const viewModules = import.meta.glob('../views/**/*.vue')
@@ -627,7 +628,17 @@ const router = createRouter({
 export const AUTH_WHITELIST = ['/login', '/logout', '/about', '/agreement', '/policy', '/license', '/announcement', '/download', '/covid19']
 
 export function hasToken(storage = globalThis?.localStorage) {
-  return !!storage?.getItem?.('token')
+  const token = storage?.getItem?.('token')
+  if (!token) return false
+  if (isDemoMockBuild() && !hasValidDemoMockSession(storage)) {
+    try {
+      storage?.removeItem?.('token')
+    } catch (_) {
+      // Ignore storage cleanup failures.
+    }
+    return false
+  }
+  return true
 }
 
 export function isWhitelisted(path) {

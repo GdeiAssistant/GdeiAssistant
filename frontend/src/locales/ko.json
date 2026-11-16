@@ -1380,7 +1380,10 @@
     "credentialNotice": "캠퍼스 자격 증명은 캠퍼스 인증, 빠른 인증, 세션 동기화에 사용될 수 있습니다. 본인 계정만 사용하세요. 저장을 거부하거나 설정·피드백을 통해 삭제하면 일부 조회나 빠른 인증을 사용할 수 없을 수 있습니다.",
     "mockCredentialHint": "데모 계정: gdeiassistant / gdeiassistant",
     "fillMockAction": "데모 채우기",
-    "editionLabel": "영남서원 에디션 · 캠퍼스 포털"
+    "editionLabel": "영남서원 에디션 · 캠퍼스 포털",
+    "demoBadge": "데모 데이터",
+    "demoDescription": "현재 로컬 데모 환경입니다. 모든 데이터는 로컬 시뮬레이션 데이터이며 실제 네트워크 요청이나 캠퍼스 계정 입력, 동의 절차가 필요하지 않습니다.",
+    "enterDemo": "데모 바로 시작"
   },
   "loginRecord": {
     "clientDevice": "{network} 클라이언트",

@@ -1380,7 +1380,10 @@
     "credentialNotice": "校園帳號憑證可能用於校園認證、快速認證與工作階段同步。請僅使用本人帳號；若您拒絕儲存相關憑證，或後續透過帳號設定、回饋管道申請刪除，部分校園查詢或快速認證功能可能無法使用。",
     "mockCredentialHint": "範例帳號：gdeiassistant / gdeiassistant",
     "fillMockAction": "填入範例",
-    "editionLabel": "嶺南書院版 · 校園入口"
+    "editionLabel": "嶺南書院版 · 校園入口",
+    "demoBadge": "演示資料",
+    "demoDescription": "目前為本地演示環境，所有資料均為模擬資料，不會連線校園網或發送真實請求，無需輸入真實帳號或勾選授權。",
+    "enterDemo": "一鍵進入演示"
   },
   "loginRecord": {
     "clientDevice": "{network} 客戶端",

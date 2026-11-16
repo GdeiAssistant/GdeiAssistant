@@ -266,7 +266,10 @@
     "credentialNotice": "Campus credentials may be used for campus authentication, quick auth, and session sync. Use only your own account. If you refuse to save credentials or later delete them via account settings or feedback, some campus queries or quick auth may become unavailable.",
     "mockCredentialHint": "Demo account: gdeiassistant / gdeiassistant",
     "fillMockAction": "Fill Demo",
-    "editionLabel": "Lingnan Academy · Campus Portal"
+    "editionLabel": "Lingnan Academy · Campus Portal",
+    "demoBadge": "Demo Data",
+    "demoDescription": "You are in the local demo environment. All data is simulated locally with no real network requests, campus credentials, or authorization required.",
+    "enterDemo": "Enter Demo"
   },
   "libraryPage": {
     "title": "Library",

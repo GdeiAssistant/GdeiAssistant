@@ -266,7 +266,10 @@
     "credentialNotice": "校园账号凭证可能用于校园认证、快速认证和会话同步。请仅使用本人账号；如您拒绝保存相关凭证或后续通过账号设置、反馈渠道申请删除，部分校园查询或快速认证功能可能不可用。",
     "mockCredentialHint": "示例账号：gdeiassistant / gdeiassistant",
     "fillMockAction": "填入示例",
-    "editionLabel": "岭南书院版 · 校园门户"
+    "editionLabel": "岭南书院版 · 校园门户",
+    "demoBadge": "演示数据",
+    "demoDescription": "当前为本地演示环境，所有数据均为模拟数据，不会连接校园网或发送真实请求，无需输入真实账号或勾选授权。",
+    "enterDemo": "一键进入演示"
   },
   "libraryPage": {
     "title": "图书馆",

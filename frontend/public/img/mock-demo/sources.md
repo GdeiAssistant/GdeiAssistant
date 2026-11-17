@@ -16,7 +16,7 @@
 | marketplace-books.jpg | https://commons.wikimedia.org/wiki/File:Books_in_stack_with_lamps_(Unsplash).jpg | CC0 |
 | marketplace-fan.jpg | https://commons.wikimedia.org/wiki/File:Electric_Fan_240x355.jpg | Public domain |
 | marketplace-umbrella.jpg | https://commons.wikimedia.org/wiki/File:Rain_on_a_blue_umbrella.jpg | CC0 |
-| lost-card.png | Project-generated synthetic illustration | CC0 1.0 |
+| lost-card.svg | Project-generated synthetic illustration | CC0 1.0 |
 | lost-id.jpg | https://commons.wikimedia.org/wiki/File:ID_card_Korea.jpg | Public domain |
 | lost-backpack.jpg | https://commons.wikimedia.org/wiki/File:Military_backpack_01.jpg | CC0 |
 | topic-study.jpg | https://commons.wikimedia.org/wiki/File:Laptop_on_desk_book_stacks_(Unsplash).jpg | CC0 |

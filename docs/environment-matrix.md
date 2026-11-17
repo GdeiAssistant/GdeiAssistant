@@ -27,7 +27,7 @@ GdeiAssistant 统一使用以下三套环境语义：
   - `CRON_SECRET`
   - `ENCRYPT_ENABLE=true` — 校园凭证等敏感字段加密，**禁止**在生产关闭
   - `ENCRYPT_PRIVATE_KEY`
-  - `REDIS_SSL_ENABLED=true` — 使用托管 Redis（Azure Cache、云厂商 Redis 等）时启用 TLS
+  - `REDIS_SSL_ENABLED=true` — 连接外部 Redis 时启用 TLS
 
 ### 密钥轮换建议
 
@@ -74,4 +74,4 @@ GdeiAssistant 统一使用以下三套环境语义：
 ### 托管数据库与传输安全说明
 
 - 本地集成测试与 CI 使用隔离 Docker 服务（MySQL 8.4、MongoDB 8.2、Redis 8.2），测试连接通过 `GDEI_UPGRADE_TEST_JDBC_BASE`、`GDEI_MONGO_TEST_PORT`、`GDEI_REDIS_TEST_PORT` 显式注入，测试夹具数据与演示数据隔离。
-- 外部托管 MySQL 与 MongoDB 实例需强制启用 TLS 与服务器证书校验；若演示环境使用不支持 TLS 的托管免费 Redis 实例（如 Redis Essentials Free），可临时保留 `REDIS_SSL_ENABLED=false` 以便演示连通，但正式 `production` 部署必须使用支持 TLS 的 Redis 服务并开启 `REDIS_SSL_ENABLED=true`。
+- 外部 MySQL、MongoDB 和 Redis 均需启用 TLS 并校验服务器证书。演示环境也适用这一要求。现有演示 Redis 若仍使用明文连接，视为未满足传输安全要求。先确认目标实例支持 TLS，再切换连接并验证。

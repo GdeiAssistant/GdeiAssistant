@@ -14,30 +14,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: '3.13'
-      - name: Verify checker regressions
-        run: python scripts/test_hygiene.py
-      - name: Check versioned instructions and repository hygiene
-        run: python scripts/check_hygiene.py
-      - name: Install workflow checker dependency
-        run: python -m pip install --disable-pip-version-check -r .github/requirements-ci.txt
-      - name: Verify workflow safety regressions
-        run: python .github/scripts/test_workflows.py
-      - name: Check workflow safety
-        run: python .github/scripts/check_workflows.py
-      - name: Check workflow syntax
-        shell: bash
-        run: |
-          set -euo pipefail
-          archive="$RUNNER_TEMP/actionlint.tar.gz"
-          curl --fail --silent --show-error --location --retry 2 \
-            https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz -o "$archive"
-          printf '%s  %s\n' '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8' "$archive" | sha256sum --check
-          tar -xzf "$archive" -C "$RUNNER_TEMP" actionlint
-          "$RUNNER_TEMP/actionlint" -shellcheck= -pyflakes=
+      - uses: GdeiAssistant/.github/actions/repository-hygiene@de373c6fc4ead5872cf9cef16e55110ed292e41c
       - name: Verify dependency policy regressions
         run: node --test .github/scripts/test-dependabot-policy.cjs
       - name: Verify frontend scope and failure handling
-        run: python .github/scripts/test_frontend_gate.py
+        run: python3 .github/scripts/test_frontend_gate.py
+      - name: Install verified Gitleaks for secret scan tests
+        run: bash .github/scripts/install-gitleaks.sh
+      - name: Verify secret scan regressions
+        env:
+          GITLEAKS_BIN: ${{ runner.temp }}/gitleaks-bin/gitleaks
+        run: python3 -m unittest discover -s .github/scripts -p "test_secret_scan.py"

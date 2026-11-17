@@ -20,7 +20,7 @@ jobs:
     permissions:
       contents: read
     env:
-      VITE_APP_BASE_API: https://gdeiassistant.azurewebsites.net/api
+      VITE_APP_BASE_API: ${{ vars.VITE_APP_BASE_API || 'https://gdeiassistant.azurewebsites.net/api' }}
       VITE_ENABLE_DEMO_MOCK: 'true'
     steps:
       - name: Checkout repository
@@ -45,4 +45,5 @@ jobs:
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: '"$RUNNER_TEMP/cloudflare-tools/node_modules/.bin/wrangler" pages deploy frontend/dist --project-name gdeiassistant --branch master'
+          CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT || 'gdeiassistant' }}
+        run: '"$RUNNER_TEMP/cloudflare-tools/node_modules/.bin/wrangler" pages deploy frontend/dist --project-name "$CLOUDFLARE_PAGES_PROJECT" --branch master'

@@ -1,7 +1,6 @@
 name: PR risk gate
 
-# Copy to .github/workflows/risk-gate.yml and replace Pigbibi/PrGovernance with
-# the owner's governance repository (for example Pigbibi/PrGovernance).
+# Evaluates PR governance metadata and writes required commit statuses.
 # The job names in this file are the required status check contexts; keep them.
 
 on:
@@ -18,9 +17,9 @@ on:
   push:
     branches: [main, master]
   # A merge made with GITHUB_TOKEN raises no push, and nothing raises an event
-  # for a resolved review thread, so a sweep closes both gaps.
+  # for a resolved review thread, so a daily sweep closes both gaps.
   schedule:
-    - cron: '17 */6 * * *'
+    - cron: '17 3 * * *'
   workflow_dispatch:
     inputs:
       pr_number:

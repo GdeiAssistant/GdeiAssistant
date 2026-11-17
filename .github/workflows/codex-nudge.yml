@@ -1,13 +1,12 @@
 name: Review request
 
-# Copy to .github/workflows/codex-nudge.yml and replace Pigbibi/PrGovernance.
 # Nudges Codex then Claude (see policy.review_routing). Cursor Bugbot must be
 # triggered by a human (`cursor review` / `bugbot run`); bot-posted triggers are ignored.
 # Optional org var GOVERNANCE_REVIEWERS_JSON overrides reviewer identities.
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '15 2,14 * * *'
   workflow_dispatch:
 
 permissions:

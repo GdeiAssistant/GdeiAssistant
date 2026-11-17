@@ -1,49 +1,23 @@
 # Third-Party Notices
 
-本项目包含前端、后端、构建、运行时和部署层面的第三方依赖。实际依赖集合以源码、锁文件、构建脚本和最终发布产物为准。
+本项目包含服务端、前端、构建脚本与公开演示资源层面的第三方开源组件及数据。实际依赖集合以仓库源码、依赖锁文件（`frontend/package-lock.json`、`build.gradle`）以及最终发布产物为准。
 
-## 说明
+## 关键组件与数据归属
 
-- 前端依赖通常以 `frontend/package-lock.json`、`frontend/package.json` 或其他实际存在的锁文件为准。
-- 后端依赖通常以 `build.gradle`、Gradle 解析结果和发布产物中的实际依赖为准。
-- Docker、基础镜像和运行时环境还可能引入额外的第三方组件及其许可证义务。
+- **Spring Boot / Spring Framework / MyBatis-Plus**：Apache License 2.0
+- **Vue 3 / Vue Router / Vue I18n / Vite / Tailwind CSS / Reka UI**：MIT License
+- **Lucide Icons（`lucide-vue-next`）**：ISC License
+- **Ip2Region Java 查询库**：Apache License 2.0（[lionsoul2014/ip2region](https://github.com/lionsoul2014/ip2region)）
+- **OpenCC4j**：Apache License 2.0（离线生成简繁地名对照）
+- **GeoNames 地名快照数据**：[Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)，署名 GeoNames（`https://www.geonames.org/`），详情见 [`docs/i18n/location-names.md`](docs/i18n/location-names.md)
+- **前端 Mock 演示图片**：CC0 / Public Domain（Wikimedia Commons 与项目合成素材，详情见 [`frontend/public/img/mock-demo/sources.md`](frontend/public/img/mock-demo/sources.md)）
 
-## 当前可从仓库确认的主要技术栈类别
+## 依赖核对命令
 
-- Vue 3
-- Vite
-- Spring Boot
-- Gradle
-- Docker
-- MySQL / Redis / MongoDB（按部署配置启用）
-
-以上仅为技术栈类别说明，不代表完整依赖清单。
-
-
-## 维护建议
-
-正式版本发布前，维护者应生成或更新第三方依赖许可证清单，并核对：
-
-- 前端包管理器锁文件
-- Gradle 依赖树
-- Docker 基础镜像和运行时镜像
-- 实际打包进发布物的第三方资源
-
-## 建议的核对命令
-
-以下命令可作为整理清单时的起点，不会自动生成完整许可证报告，仅用于排查实际依赖：
+正式构建或发行衍生版本前，可通过以下命令导出完整依赖树与容器运行时清单，核对具体版本与许可证义务：
 
 ```bash
-npm --prefix frontend ls --depth=0
+npm --prefix frontend ls --all
 ./gradlew dependencies
 docker compose config
 ```
-
-## TODO
-
-- 在正式发布流程中补充可复用的第三方许可证清单生成步骤
-- 根据实际发布物补齐依赖名称、版本和许可证信息
-
-最近更新：2026年4月25日
-
-[Ip2Region](https://github.com/lionsoul2014/ip2region) Java 查询库按 Apache License 2.0 使用。

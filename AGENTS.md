@@ -59,13 +59,13 @@ npm run check:location-names --prefix frontend
 ## 命名与文档
 
 - 文档语言按项目读者和现有约定选择，可使用英文、中文或其他语言；通用开发者资料默认优先英文，业务和本地化资料使用目标读者的语言。保持同一文档用语一致，不顺带整篇翻译或新增无维护需求的多语副本。
-- 新增文档文件名小写、`-` 连接，中文版后缀 `.zh-CN.md`；`README.md`、`AGENTS.md` 等工具约定文件保留固定名称。源码沿用现有语言命名。
+- 新增文档文件名小写、`-` 连接，单语文档不加语言后缀；仅中英双语对照副本使用 `.zh-CN.md` / `.en.md`。`README.md`、`AGENTS.md` 等工具约定文件保留固定名称。源码沿用现有语言命名。
 - 不提交审计报告、复盘、交接单、进度快照、升级计划。要追溯看 commit 历史。
 - 改文件名时同一次提交改完所有引用。
-- 提交前跑 `python scripts/check_hygiene.py`。
+- 仓库卫生检查统一由共享基线 `GdeiAssistant/.github/actions/repository-hygiene` 执行。
 
 <!-- repository-files:begin -->
-- 公开仓库（有 `LICENSE`）要有 `CONTRIBUTING.md`、`SECURITY.md`、`CODE_OF_CONDUCT.md` 和 issue / PR 模板；私有仓库至少要有 `SECURITY.md`。
+- 公开仓库（有 `LICENSE`）要有 `CONTRIBUTING.md`、`SECURITY.md` 和 issue / PR 模板（`CODE_OF_CONDUCT.md` 继承自 `GdeiAssistant/.github`）；私有仓库至少要有 `SECURITY.md`。
 - 公开的 `SECURITY.md` 写对外披露流程，不写凭据放在哪、怎么轮换；私有仓库反过来写。两套不合并。
 - 模板文件名用下划线：`pull_request_template.md`、`issue_template.md`，写成连字符不会被 GitHub 识别。
 <!-- repository-files:end -->

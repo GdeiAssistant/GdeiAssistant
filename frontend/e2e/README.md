@@ -1,20 +1,7 @@
-# Frontend smoke boundary
+# Frontend Smoke 测试边界
 
-Run the existing suite with `npm run test:e2e` from `frontend`.
+在 `frontend` 目录执行 `npm run test:e2e` 运行 Playwright 端到端冒烟测试。
 
-All specs import `test` and `expect` from `./fixtures.js`. The shared context
-fixture fulfills only the exact optional WeUI CDN script URL in `index.html`
-with a no-op JavaScript response, keeping tests independent of CDN availability.
+所有测试文件统一从 `./fixtures.js` 导入 `test` 与 `expect`。共享上下文夹具仅对 `index.html` 中引用的可选 WeUI CDN 脚本地址返回空操作脚本响应，不定义任何 SDK 全局变量，使测试不依赖外部 CDN 可用性。
 
-It defines no SDK globals and exercises the app's built-in controls. The
-production HTML, assertions, local-data setup, and API/upload mocks remain
-unchanged in their individual specs.
-
-The smoke suite verifies rendered application interactions with this SDK
-unavailable. Passing it does not verify the external SDK, its network delivery
-or production integration; those require separate integration evidence.
-
-所有用例统一从 `./fixtures.js` 导入测试接口，只对准确的可选 WeUI CDN
-脚本地址返回空操作脚本，不创建 SDK 全局变量。测试验证 SDK 不可用时
-的既有内置控件；不修改生产 HTML、应用、断言或各用例的 API 模拟，
-也不证明真实 CDN/SDK 集成成功。
+该测试套件验证外部 SDK 不可用时应用内置控件的真实渲染与交互，不修改生产 HTML、断言或接口模拟逻辑；它不能替代真实外部 CDN、SDK 网络投递或线上环境端到端集成验证。

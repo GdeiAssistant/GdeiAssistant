@@ -4,9 +4,8 @@
 
 ## License policy
 
-- 优先使用 **CC0** 或 **Public domain** 来源
-- 个别更贴近校园场景的图片会使用 **CC BY-SA 4.0**，并在下表明确标注来源和许可证
-- 主要来源：Wikimedia Commons
+- 全部演示图片采用 **CC0** 或 **Public domain** 来源，避免传染性共享许可冲突
+- 主要来源：Wikimedia Commons 与项目内置合成素材
 
 ## Files
 
@@ -17,7 +16,7 @@
 | marketplace-books.jpg | https://commons.wikimedia.org/wiki/File:Books_in_stack_with_lamps_(Unsplash).jpg | CC0 |
 | marketplace-fan.jpg | https://commons.wikimedia.org/wiki/File:Electric_Fan_240x355.jpg | Public domain |
 | marketplace-umbrella.jpg | https://commons.wikimedia.org/wiki/File:Rain_on_a_blue_umbrella.jpg | CC0 |
-| lost-card.png | https://commons.wikimedia.org/wiki/File:Yuntech_Student_ID_Card_2017.png | CC BY-SA 4.0 |
+| lost-card.png | Project-generated synthetic illustration | CC0 1.0 |
 | lost-id.jpg | https://commons.wikimedia.org/wiki/File:ID_card_Korea.jpg | Public domain |
 | lost-backpack.jpg | https://commons.wikimedia.org/wiki/File:Military_backpack_01.jpg | CC0 |
 | topic-study.jpg | https://commons.wikimedia.org/wiki/File:Laptop_on_desk_book_stacks_(Unsplash).jpg | CC0 |

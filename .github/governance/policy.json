@@ -7,8 +7,15 @@
       "@claude review"
     ]
   },
-  "r0_paths": [],
-  "r2_paths": [],
+  "r0_paths": [
+    "README.md"
+  ],
+  "r2_paths": [
+    "src/main/java/cn/gdeiassistant/core/campuscredential/",
+    "src/main/java/cn/gdeiassistant/core/userlogin/",
+    "src/main/java/cn/gdeiassistant/core/charge/",
+    "db-init/"
+  ],
   "dependabot_template_exemption": true,
   "max_evidence_age_hours": 168
 }

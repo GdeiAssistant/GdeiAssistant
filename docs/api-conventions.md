@@ -67,4 +67,4 @@
 ## WebSocket
 
 - `/api/social/realtime` 是 WebSocket 握手路径，不在 OpenAPI 中。
-- 握手后首帧发送认证信息，5 秒内未认证会被关闭；详细行为见 [`social-messaging-implementation.zh-CN.md`](social-messaging-implementation.zh-CN.md)。
+- 握手后首帧发送认证信息，5 秒内未认证会被关闭；详细行为见 [`social-messaging.md`](social-messaging.md)。

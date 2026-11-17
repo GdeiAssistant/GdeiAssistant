@@ -27,7 +27,7 @@ GdeiAssistant 统一使用以下三套环境语义：
   - `CRON_SECRET`
   - `ENCRYPT_ENABLE=true` — 校园凭证等敏感字段加密，**禁止**在生产关闭
   - `ENCRYPT_PRIVATE_KEY`
-  - `REDIS_SSL_ENABLED=true` — 使用托管 Redis（Azure Cache、云厂商 Redis 等）时启用 TLS
+  - `REDIS_SSL_ENABLED=true` — 连接外部 Redis 时启用 TLS
 
 ### 密钥轮换建议
 
@@ -57,7 +57,7 @@ GdeiAssistant 统一使用以下三套环境语义：
 
 ## Deployment notes
 
-- Azure App Service 适合作为演示环境后端入口，保留 `*.azurewebsites.net` 域名；前端可放在 Cloudflare Pages、Azure Static Web Apps Free 或其他静态托管；数据库建议改为外部实例。
+- Azure App Service 适合作为演示环境后端入口，保留 `*.azurewebsites.net` 域名；前端可部署在 Cloudflare Pages 或其他静态托管平台；数据库建议改为外部实例。
 - 本地根目录 `.env` 继续服务 `development`，建议保持 `SPRING_PROFILES_ACTIVE=development` 且默认指向 `localhost`。
 - 演示 / 生产建议改用各自独立的环境变量配置，不要和本地开发共用同一份真实凭据，也不要直接把本地 `.env` 上传到部署平台。
 - 当前 MySQL 仍按三套 schema（`DB_NAME` / `DB_NAME_LOG` / `DB_NAME_DATA`）组织；外部数据库也需要准备对应 schema，或者自行调整初始化策略。
@@ -69,12 +69,9 @@ GdeiAssistant 统一使用以下三套环境语义：
 - Azure Health Check 的请求间隔由平台决定。若用于流量路由，继续检查关键依赖，不因减少探测开销而改成只检查存活。
 - F1 不支持 Always On，允许空闲卸载。若启动或退出反复发生，先检查容器日志和计划级 `WPStopRequests` 配额，不要靠持续 ping 或重启处理 `QuotaExceeded`。
 - JVM 容器可通过环境变量 `JAVA_TOOL_OPTIONS=-XX:TieredStopAtLevel=1` 减少启动阶段的 JIT 编译开销。先在低流量环境验证；该选项可能降低长时间运行时的吞吐量。现有 `java -jar` 入口由 JVM 自动读取 `JAVA_TOOL_OPTIONS`，不读取 `JAVA_OPTS`。已有选项须保留，回滚时恢复原值；原本未设置则移除该变量。
-- 不直接缩小堆或全局启用 lazy initialization：先测量启动峰值和业务请求，避免 OOM 或把配置错误推迟到首次访问。修改 App Settings 会触发重启；不修改 plan、SKU、区域或网络配置，部署前后核对出站 IP。
+- 不直接缩小堆或全局启用 lazy initialization：先测量启动峰值和业务请求，避免 OOM 或把配置错误推迟到首次访问。修改 App Settings 会触发重启；调整参数时保持计划、SKU 与网络配置不变，部署前后核对出站 IP。
 
-## 当前演示环境核验（2026-10-07）
+### 托管数据库与传输安全说明
 
-当前 Azure 演示后端使用外置 TiDB Cloud、MongoDB Atlas 和 Redis Cloud；本地开发与 CI 使用隔离 Docker 服务（MySQL 8.4、MongoDB 8.0、Redis 8.2）。测试端口由 `GDEI_UPGRADE_TEST_JDBC_BASE`、`GDEI_MONGO_TEST_PORT`、`GDEI_REDIS_TEST_PORT` 显式提供，合成 fixture 不与演示数据共用。
-
-MySQL 演示连接要求 TLS 和服务器身份校验，Atlas 使用 TLS。Redis Cloud 经用户确认是免费 Essentials 30 MB，按[供应商文档](https://redis.io/docs/latest/operate/rc/security/database-security/tls-ssl/)不支持 TLS，因此现有演示实例的 `REDIS_SSL_ENABLED=false` 仍是明确未满足的传输安全目标。不能直接切为 true 造成连接故障，也不自动新增费用。正式生产须采用支持 TLS 的服务并验证证书；这项演示限制不改变上文生产配置要求。
-
-客户端正式渠道上传本轮暂缓；后端/Web 部署与合成测试继续，不使用真实校园登录、充值、挂失或注销作为测试数据。
+- 本地集成测试与 CI 使用隔离 Docker 服务（MySQL 8.4、MongoDB 8.2、Redis 8.2），测试连接通过 `GDEI_UPGRADE_TEST_JDBC_BASE`、`GDEI_MONGO_TEST_PORT`、`GDEI_REDIS_TEST_PORT` 显式注入，测试夹具数据与演示数据隔离。
+- 外部 MySQL、MongoDB 和 Redis 均需启用 TLS 并校验服务器证书。演示环境也适用这一要求。现有演示 Redis 若仍使用明文连接，视为未满足传输安全要求。先确认目标实例支持 TLS，再切换连接并验证。

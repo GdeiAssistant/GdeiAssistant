@@ -20,20 +20,6 @@ Desktop.ini
 .worktrees/
 worktrees/
 
-# 文档默认忽略，仅放行指定文档
-docs/**
-!docs/compliance-todo.md
-!docs/environment-matrix.md
-!docs/ai-services.zh-CN.md
-!docs/openapi.yaml
-!docs/api-conventions.md
-!docs/i18n/
-!docs/i18n/location-names.md
-!docs/operations/
-!docs/operations/free-smtp.zh-CN.md
-!docs/social-messaging-design.zh-CN.md
-!docs/social-messaging-implementation.zh-CN.md
-
 # ==================================
 # Spring Boot & Java
 # ==================================

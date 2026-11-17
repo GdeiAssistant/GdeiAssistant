@@ -33,4 +33,4 @@ redis-cli --scan --pattern 'gdeiassistant:*' | xargs -r redis-cli DEL
 
 ## 连接与配置
 
-应用通过 `application-*.yml` 中的 `spring.redis.*` 配置连接 Redis。确保 Redis 已启动且地址/端口/密码与配置一致即可，无需预先执行任何脚本。
+应用通过 `src/main/resources/application.yml` 中的 `spring.data.redis.*` 配置连接 Redis。确保 Redis 已启动且地址、端口与密码配置一致即可，无需预先执行任何脚本。

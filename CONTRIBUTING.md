@@ -59,8 +59,6 @@
 - `TRADEMARK.md`
 - `NOTICE`
 
-最近更新：2026年4月25日
-
 ## AI 辅助维护
 
 项目约束、验证要求和提交流程见 [AGENTS.md](AGENTS.md)。

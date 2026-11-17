@@ -6,7 +6,7 @@ const MOCK_IMAGE = {
   book: '/img/mock-demo/marketplace-books.jpg',
   data: '/img/mock-demo/marketplace-fan.jpg',
   spare: '/img/mock-demo/marketplace-umbrella.jpg',
-  lostandfound: '/img/mock-demo/lost-card.png',
+  lostandfound: '/img/mock-demo/lost-card.svg',
   card: '/img/mock-demo/lost-id.jpg',
   lostBackpack: '/img/mock-demo/lost-backpack.jpg',
   news: '/img/mock-demo/topic-study.jpg',

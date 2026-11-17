@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400" role="img" aria-label="Synthetic campus card illustration">
+  <rect width="640" height="400" fill="#F7F6F2"/>
+  <rect x="80" y="60" width="480" height="280" rx="10" fill="#FFFFFF" stroke="#D5DBD7"/>
+  <path d="M80 70a10 10 0 0 1 10-10h460a10 10 0 0 1 10 10v56H80z" fill="#0E7C61"/>
+  <rect x="484" y="80" width="44" height="26" rx="6" fill="#D97706"/>
+  <rect x="112" y="156" width="100" height="130" rx="6" fill="#E6F2EE" stroke="#D5DBD7"/>
+  <circle cx="162" cy="198" r="18" fill="#0E7C61"/>
+  <rect x="128" y="226" width="68" height="44" rx="8" fill="#8D9993"/>
+  <rect x="240" y="168" width="180" height="16" rx="3" fill="#1D2623"/>
+  <rect x="240" y="204" width="240" height="12" rx="3" fill="#8D9993"/>
+  <rect x="240" y="232" width="150" height="12" rx="3" fill="#8D9993"/>
+  <rect x="240" y="260" width="110" height="12" rx="3" fill="#0E7C61"/>
+</svg>

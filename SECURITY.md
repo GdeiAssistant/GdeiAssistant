@@ -2,7 +2,9 @@
 
 ## Reporting a vulnerability
 
-Report security vulnerabilities through [GitHub private vulnerability reporting](https://github.com/GdeiAssistant/GdeiAssistant/security/advisories/new). Do not post exploit details, credentials, private sessions or personal data in public issues or PRs. Include the affected version, impact and minimal redacted reproduction. The maintainer handles reports on a best-effort basis; no bounty or response-time guarantee is implied.
+Report security vulnerabilities through [GitHub private vulnerability reporting](https://github.com/GdeiAssistant/GdeiAssistant/security/advisories/new) or contact `private@gdeiassistant.cn`.
+
+Do not post exploit details, credentials, private sessions or personal data in public issues or PRs. Include the affected version, impact and minimal redacted reproduction. The maintainer handles reports on a best-effort basis; no bounty or response-time guarantee is implied.
 
 ## 支持版本
 
@@ -56,5 +58,3 @@ Report security vulnerabilities through [GitHub private vulnerability reporting]
 - 完整手机号、完整邮箱、完整校园账号、完整证件号
 - 完整取件码、详细住址、门禁信息、支付信息
 - 未脱敏数据库记录、日志原文、环境变量或密钥
-
-最近更新：2026年4月25日

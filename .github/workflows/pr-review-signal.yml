@@ -1,7 +1,6 @@
 name: PR review signal
 
-# Copy to .github/workflows/pr-review-signal.yml and replace nothing: this
-# workflow holds no permissions and runs no repository code. It exists because a
+# This workflow holds no permissions and runs no repository code. It exists because a
 # review event on a fork or Dependabot pull request gets a read-only token, so
 # the gate that publishes statuses has to be started by `workflow_run` instead.
 # Keep the workflow name; risk-gate.yml refers to it.

@@ -1,6 +1,6 @@
 # GdeiAssistant | 广东第二师范学院校园助手系统
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0-brightgreen.svg)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1-brightgreen.svg)
 ![JDK](https://img.shields.io/badge/JDK-17-blue.svg)
 ![Vue](https://img.shields.io/badge/Vue-3.5-4FC08D.svg)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF.svg)
@@ -116,7 +116,7 @@ npm run dev
 
 | 端 | 技术 |
 | --- | --- |
-| 后端 | JDK 17、Spring Boot 4.0、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 8.14、GraalVM Native Image（可选） |
+| 后端 | JDK 17、Spring Boot 4.1.1、MySQL 8.0、MyBatis-Plus、MongoDB、Redis、Gradle 9.7.1、GraalVM Native Image（可选） |
 | 前端 | Vue 3.5、Vue Router 5、Vue I18n 11、Vite 8、Tailwind CSS 4、Reka UI 2、Axios、Vitest 5、Playwright、Node.js 24.14.1 LTS |
 
 项目适配了 Docker 容器化和 GraalVM Native Image，可以编译成原生二进制运行。
@@ -129,7 +129,7 @@ npm run dev
 
 成绩、课表这些数据靠模拟登录拿到，但文本处理、图片识别这类任务走独立的 AI 服务层：境内外路由、直连与聚合平台、官方 `latest` 别名与定时模型更新都在那一层。
 
-接入方式和配置见 [AI 服务说明](docs/ai-services.zh-CN.md)。
+接入方式和配置见 [AI 服务说明](docs/ai-services.md)。
 
 ## 项目结构
 
@@ -142,7 +142,7 @@ GdeiAssistant/
 ├── db-init/                   # 数据库初始化
 │   ├── mysql/                 # 结构与 Mock 数据
 │   └── mongodb/
-├── docs/                      # 设计/实现说明（.gitignore 有例外放行）
+├── docs/                      # 架构、接口契约与运维说明
 ├── docker-compose.yml         # 本地全栈编排
 └── .env.template              # 环境变量模板
 ```
@@ -219,7 +219,7 @@ npm run test:e2e
 
 ## 贡献
 
-欢迎提 Issue 和 PR。开始之前请先读 [CONTRIBUTING.md](CONTRIBUTING.md) 和 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+欢迎提 Issue 和 PR。开始之前请先读 [CONTRIBUTING.md](CONTRIBUTING.md) 和组织行为准则 [CODE_OF_CONDUCT.md](https://github.com/GdeiAssistant/.github/blob/main/CODE_OF_CONDUCT.md)。
 
 安全漏洞**不要**开公开 Issue，按 [SECURITY.md](SECURITY.md) 里的方式私下报告。
 

@@ -19,5 +19,4 @@
 
 ```bash
 ./gradlew test --tests "cn.gdeiassistant.architecture.*"
-python3 scripts/check_hygiene.py
 ```

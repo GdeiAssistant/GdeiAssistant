@@ -269,17 +269,52 @@ class CampusCredentialServiceTest {
         User noConsentUser = new User("no-consent-user");
         User disabledUser = new User("disabled-user");
 
-        CampusCredentialService service = spy(campusCredentialService);
-        doReturn(true).when(service).isEffectiveQuickAuthEnabled("enabled-user");
-        doReturn(false).when(service).isEffectiveQuickAuthEnabled("no-consent-user");
-        doReturn(false).when(service).isEffectiveQuickAuthEnabled("disabled-user");
+        when(campusCredentialConsentMapper.selectUsernamesWithEffectiveQuickAuth(
+                List.of("enabled-user", "no-consent-user", "disabled-user"),
+                CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL
+        )).thenReturn(List.of("enabled-user"));
 
-        List<User> filtered = service.filterUsersWithEffectiveQuickAuth(
+        List<User> filtered = campusCredentialService.filterUsersWithEffectiveQuickAuth(
                 List.of(enabledUser, noConsentUser, disabledUser)
         );
 
         assertEquals(1, filtered.size());
         assertEquals("enabled-user", filtered.get(0).getUsername());
+        verify(campusCredentialConsentMapper, times(1)).selectUsernamesWithEffectiveQuickAuth(
+                List.of("enabled-user", "no-consent-user", "disabled-user"),
+                CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL
+        );
+        verifyNoInteractions(privacyMapper, userMapper);
+        verify(campusCredentialConsentMapper, never()).selectLatestConsent(anyString(), anyString());
+        verify(campusCredentialConsentMapper, never()).selectLatestActiveConsent(anyString(), anyString());
+    }
+
+    @Test
+    void filterUsersWithEffectiveQuickAuthDeduplicatesSkipsBlankAndHandlesEmptyBatch() {
+        User first = new User("enabled-user");
+        User duplicate = new User("enabled-user");
+        User blank = new User(" ");
+
+        when(campusCredentialConsentMapper.selectUsernamesWithEffectiveQuickAuth(
+                List.of("enabled-user"),
+                CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL
+        )).thenReturn(List.of("enabled-user"));
+
+        List<User> filtered = campusCredentialService.filterUsersWithEffectiveQuickAuth(
+                java.util.Arrays.asList(null, blank, first, duplicate)
+        );
+
+        assertEquals(1, filtered.size());
+        assertSame(first, filtered.get(0));
+        verify(campusCredentialConsentMapper, times(1)).selectUsernamesWithEffectiveQuickAuth(
+                List.of("enabled-user"),
+                CampusCredentialService.CONSENT_TYPE_CAMPUS_CREDENTIAL
+        );
+
+        assertTrue(campusCredentialService.filterUsersWithEffectiveQuickAuth(
+                java.util.Arrays.asList(null, new User(""), new User("  "))
+        ).isEmpty());
+        verifyNoMoreInteractions(campusCredentialConsentMapper);
     }
 
     private CampusCredentialConsentEntity consent(String scene, java.util.Date revokedAt) {

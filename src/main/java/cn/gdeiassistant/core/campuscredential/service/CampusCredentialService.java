@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,8 @@ public class CampusCredentialService {
     public static final String SCENE_SETTINGS = "SETTINGS";
     public static final String DEFAULT_POLICY_DATE = "2026-04-25";
     public static final String DEFAULT_EFFECTIVE_DATE = "2026-05-11";
+    private static final LocalDate DEFAULT_POLICY_LOCAL_DATE = parseConfiguredDate(DEFAULT_POLICY_DATE);
+    private static final LocalDate DEFAULT_EFFECTIVE_LOCAL_DATE = parseConfiguredDate(DEFAULT_EFFECTIVE_DATE);
 
     private static final Logger logger = LoggerFactory.getLogger(CampusCredentialService.class);
     private static final Set<String> SUPPORTED_SCENES = Set.of(
@@ -81,8 +84,8 @@ public class CampusCredentialService {
     public CampusCredentialStatusVO recordConsentByUsername(String username, CampusCredentialConsentDTO body) throws Exception {
         ensurePrivacyRow(username);
         String scene = normalizeScene(body != null ? body.getScene() : null, SCENE_SETTINGS);
-        java.util.Date policyDate = parseDate(null, DEFAULT_POLICY_DATE);
-        java.util.Date effectiveDate = parseDate(null, DEFAULT_EFFECTIVE_DATE);
+        java.util.Date policyDate = Date.valueOf(DEFAULT_POLICY_LOCAL_DATE);
+        java.util.Date effectiveDate = Date.valueOf(DEFAULT_EFFECTIVE_LOCAL_DATE);
         CampusCredentialConsentEntity activeConsent = campusCredentialConsentMapper
                 .selectLatestActiveConsent(username, CONSENT_TYPE_CAMPUS_CREDENTIAL);
         if (activeConsent == null) {
@@ -188,16 +191,30 @@ public class CampusCredentialService {
         if (users == null || users.isEmpty()) {
             return new ArrayList<>();
         }
-        List<User> filtered = new ArrayList<>();
-        Set<String> deduplicatedUsernames = new LinkedHashSet<>();
+        List<User> deduplicatedUsers = new ArrayList<>();
+        Set<String> seenUsernames = new LinkedHashSet<>();
         for (User user : users) {
-            if (user == null || StringUtils.isBlank(user.getUsername())) {
+            if (user == null || user.getUsername() == null || user.getUsername().isBlank()) {
                 continue;
             }
-            if (!deduplicatedUsernames.add(user.getUsername())) {
-                continue;
+            if (seenUsernames.add(user.getUsername())) {
+                deduplicatedUsers.add(user);
             }
-            if (isEffectiveQuickAuthEnabled(user.getUsername())) {
+        }
+        if (seenUsernames.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<String> enabledList = campusCredentialConsentMapper.selectUsernamesWithEffectiveQuickAuth(
+                new ArrayList<>(seenUsernames),
+                CONSENT_TYPE_CAMPUS_CREDENTIAL
+        );
+        if (enabledList == null || enabledList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        Set<String> enabledUsernames = new HashSet<>(enabledList);
+        List<User> filtered = new ArrayList<>();
+        for (User user : deduplicatedUsers) {
+            if (enabledUsernames.contains(user.getUsername())) {
                 filtered.add(user);
             }
         }
@@ -256,11 +273,9 @@ public class CampusCredentialService {
         return normalized;
     }
 
-    private java.util.Date parseDate(String value, String defaultValue) {
-        String raw = StringUtils.isBlank(value) ? defaultValue : value.trim();
+    private static LocalDate parseConfiguredDate(String raw) {
         try {
-            LocalDate localDate = LocalDate.parse(raw);
-            return Date.valueOf(localDate);
+            return LocalDate.parse(raw);
         } catch (Exception e) {
             throw new IllegalArgumentException(Messages.get("campuscredential.grantDateFormatInvalid"));
         }
@@ -274,7 +289,7 @@ public class CampusCredentialService {
         if (latestConsent != null && latestConsent.getPolicyDate() != null) {
             return latestConsent.getPolicyDate();
         }
-        return parseDate(null, DEFAULT_POLICY_DATE);
+        return Date.valueOf(DEFAULT_POLICY_LOCAL_DATE);
     }
 
     private java.util.Date resolveEffectiveDate(CampusCredentialConsentEntity activeConsent,
@@ -285,6 +300,6 @@ public class CampusCredentialService {
         if (latestConsent != null && latestConsent.getEffectiveDate() != null) {
             return latestConsent.getEffectiveDate();
         }
-        return parseDate(null, DEFAULT_EFFECTIVE_DATE);
+        return Date.valueOf(DEFAULT_EFFECTIVE_LOCAL_DATE);
     }
 }

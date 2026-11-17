@@ -103,6 +103,11 @@ class UserCertificateRedisIntegrationTest {
         ttl(key(UserCertificateDaoImpl.LOGIN_KEY_PREFIX, namespace), 3600);
         ttl(key(UserCertificateDaoImpl.SESSION_KEY_PREFIX, namespace), 600);
         ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, owner), 7 * 86400);
+
+        dao.saveUserLoginCertificate(namespace + "-extend", other, "synthetic-password");
+        ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, other), 3600);
+        dao.saveUserCookieCertificate(namespace + "-extend", other, "synthetic-password");
+        ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, other), 7 * 86400);
     }
 
     @Test

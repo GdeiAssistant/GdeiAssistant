@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
@@ -18,12 +19,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 @Repository
 public class UserCertificateDaoImpl implements UserCertificateDao {
 
     private static final TypeReference<Map<String, String>> MAP_STRING_STRING = new TypeReference<Map<String, String>>() {};
+    static final DefaultRedisScript<Long> INDEX_CREDENTIAL_SCRIPT = new DefaultRedisScript<>(
+            "redis.call('SADD', KEYS[1], ARGV[1]); " +
+                    "local ttl = redis.call('TTL', KEYS[1]); " +
+                    "local target = tonumber(ARGV[2]); " +
+                    "if ttl < 0 or ttl < target then redis.call('EXPIRE', KEYS[1], target) end; " +
+                    "return 1;",
+            Long.class
+    );
 
     static final String COOKIE_KEY_PREFIX = "cert:cookie:";
     static final String LOGIN_KEY_PREFIX = "cert:login:";
@@ -248,12 +256,12 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (username == null || username.isBlank()) {
             return;
         }
-        String indexKey = userIndexKey(username);
-        redisTemplate.opsForSet().add(indexKey, key);
-        Long remainingSeconds = redisTemplate.getExpire(indexKey, TimeUnit.SECONDS);
-        if (remainingSeconds == null || remainingSeconds < ttl.getSeconds()) {
-            redisTemplate.expire(indexKey, ttl);
-        }
+        redisTemplate.execute(
+                INDEX_CREDENTIAL_SCRIPT,
+                List.of(userIndexKey(username)),
+                key,
+                String.valueOf(ttl.getSeconds())
+        );
     }
 
     private void deleteCredentialsByUsername(String username, boolean sessionOnly) {

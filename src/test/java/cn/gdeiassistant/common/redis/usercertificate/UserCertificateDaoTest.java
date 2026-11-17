@@ -30,9 +30,7 @@ class UserCertificateDaoTest {
         try {
             RedisTemplate<String, String> redis = mock(RedisTemplate.class);
             ValueOperations<String, String> values = mock(ValueOperations.class);
-            SetOperations<String, String> sets = mock(SetOperations.class);
             when(redis.opsForValue()).thenReturn(values);
-            when(redis.opsForSet()).thenReturn(sets);
             UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
 
             String expectedLoginKey = UserCertificateDaoImpl.loginKey("session");
@@ -43,26 +41,28 @@ class UserCertificateDaoTest {
             verify(values).set(eq(expectedLoginKey), anyString(), eq(Duration.ofHours(1)));
             verify(redis, never()).expire(eq(expectedLoginKey), anyLong(), any(TimeUnit.class));
             verify(redis, never()).expire(eq(expectedLoginKey), any(Duration.class));
-            verify(sets).add(expectedIndexKey, expectedLoginKey);
-            verify(redis).expire(expectedIndexKey, Duration.ofHours(1));
+            verify(redis).execute(
+                    eq(UserCertificateDaoImpl.INDEX_CREDENTIAL_SCRIPT),
+                    eq(List.of(expectedIndexKey)),
+                    eq(expectedLoginKey),
+                    eq(String.valueOf(Duration.ofHours(1).getSeconds()))
+            );
+            verify(redis, never()).expire(eq(expectedIndexKey), any(Duration.class));
         } finally {
             new StringEncryptUtils().setEncryptConfig(null);
         }
     }
 
     @Test
-    void indexTtlDoesNotShrinkWhenShorterLivedSessionIsSavedAfterCookie() {
+    void indexUpdateScriptAtomicallyExtendsButNeverShrinksTtl() {
         AESEncryptConfig config = new AESEncryptConfig();
         config.setPrivateKey("synthetic-test-key");
         new StringEncryptUtils().setEncryptConfig(config);
         try {
             RedisTemplate<String, String> redis = mock(RedisTemplate.class);
             ValueOperations<String, String> values = mock(ValueOperations.class);
-            SetOperations<String, String> sets = mock(SetOperations.class);
             when(redis.opsForValue()).thenReturn(values);
-            when(redis.opsForSet()).thenReturn(sets);
             String indexKey = UserCertificateDaoImpl.userIndexKey("owner");
-            when(redis.getExpire(indexKey, TimeUnit.SECONDS)).thenReturn(604000L);
             UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
 
             UserCertificateEntity session = new UserCertificateEntity();
@@ -73,8 +73,17 @@ class UserCertificateDaoTest {
 
             dao.saveUserSessionCertificate("session", session);
 
-            verify(sets).add(indexKey, UserCertificateDaoImpl.sessionKey("session"));
+            verify(redis).execute(
+                    eq(UserCertificateDaoImpl.INDEX_CREDENTIAL_SCRIPT),
+                    eq(List.of(indexKey)),
+                    eq(UserCertificateDaoImpl.sessionKey("session")),
+                    eq(String.valueOf(Duration.ofMinutes(10).getSeconds()))
+            );
+            verify(redis, never()).getExpire(eq(indexKey), any(TimeUnit.class));
             verify(redis, never()).expire(eq(indexKey), any(Duration.class));
+            String lua = UserCertificateDaoImpl.INDEX_CREDENTIAL_SCRIPT.getScriptAsString();
+            assertTrue(lua.contains("SADD"));
+            assertTrue(lua.contains("if ttl < 0 or ttl < target then"));
         } finally {
             new StringEncryptUtils().setEncryptConfig(null);
         }

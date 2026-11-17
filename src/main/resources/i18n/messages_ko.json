@@ -57,7 +57,6 @@
   "common.addSuccess": "추가했습니다",
   "common.redis.accessTokenDeserializeFailed": "캐시된 액세스 토큰을 역직렬화하지 못했습니다",
   "common.redis.accessTokenSerializeFailed": "액세스 토큰을 직렬화하지 못했습니다",
-  "common.redis.credentialScanFailed": "캐시된 자격 증명을 검색하지 못했습니다",
   "common.redis.deserializeFailed": "캐시된 값을 역직렬화하지 못했습니다",
   "common.redis.deviceDeserializeFailed": "캐시된 기기 정보를 역직렬화하지 못했습니다",
   "common.redis.deviceSerializeFailed": "기기 정보를 직렬화하지 못했습니다",

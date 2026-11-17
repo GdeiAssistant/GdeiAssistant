@@ -1,34 +1,80 @@
 package cn.gdeiassistant.common.redis.usercertificate;
 
+import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
+import cn.gdeiassistant.common.pojo.entity.User;
+import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
+import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.SetOperations;
+import org.springframework.data.redis.core.ValueOperations;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import cn.gdeiassistant.common.pojo.encryption.AESEncryptConfig;
-import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.junit.jupiter.api.*;
-import org.springframework.data.redis.core.*;
-
-import java.util.concurrent.TimeUnit;
-
 class UserCertificateDaoTest {
+
     @Test
-    void loginCredentialIsWrittenWithTtlInOneCommand() {
+    void loginCredentialIsWrittenWithTtlInOneCommandAndIndexedForUser() {
         AESEncryptConfig config = new AESEncryptConfig();
         config.setPrivateKey("synthetic-test-key");
         new StringEncryptUtils().setEncryptConfig(config);
         try {
             RedisTemplate<String, String> redis = mock(RedisTemplate.class);
             ValueOperations<String, String> values = mock(ValueOperations.class);
+            SetOperations<String, String> sets = mock(SetOperations.class);
             when(redis.opsForValue()).thenReturn(values);
-            UserCertificateDaoImpl dao = new UserCertificateDaoImpl(null, new ObjectMapper(), redis);
+            when(redis.opsForSet()).thenReturn(sets);
+            UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
+
+            String expectedLoginKey = UserCertificateDaoImpl.loginKey("session");
+            String expectedIndexKey = UserCertificateDaoImpl.userIndexKey("owner");
 
             dao.saveUserLoginCertificate("session", "owner", "synthetic-password");
-            verify(values).set(anyString(), anyString(), eq(java.time.Duration.ofHours(1)));
-            verify(redis, never()).expire(anyString(), anyLong(), any(TimeUnit.class));
+
+            verify(values).set(eq(expectedLoginKey), anyString(), eq(Duration.ofHours(1)));
+            verify(redis, never()).expire(eq(expectedLoginKey), anyLong(), any(TimeUnit.class));
+            verify(redis, never()).expire(eq(expectedLoginKey), any(Duration.class));
+            verify(sets).add(expectedIndexKey, expectedLoginKey);
+            verify(redis).expire(expectedIndexKey, Duration.ofHours(1));
+        } finally {
+            new StringEncryptUtils().setEncryptConfig(null);
+        }
+    }
+
+    @Test
+    void indexTtlDoesNotShrinkWhenShorterLivedSessionIsSavedAfterCookie() {
+        AESEncryptConfig config = new AESEncryptConfig();
+        config.setPrivateKey("synthetic-test-key");
+        new StringEncryptUtils().setEncryptConfig(config);
+        try {
+            RedisTemplate<String, String> redis = mock(RedisTemplate.class);
+            ValueOperations<String, String> values = mock(ValueOperations.class);
+            SetOperations<String, String> sets = mock(SetOperations.class);
+            when(redis.opsForValue()).thenReturn(values);
+            when(redis.opsForSet()).thenReturn(sets);
+            String indexKey = UserCertificateDaoImpl.userIndexKey("owner");
+            when(redis.getExpire(indexKey, TimeUnit.SECONDS)).thenReturn(604000L);
+            UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
+
+            UserCertificateEntity session = new UserCertificateEntity();
+            session.setUser(new User("owner", "synthetic-password"));
+            session.setKeycode("k");
+            session.setNumber("10000000001");
+            session.setTimestamp(12L);
+
+            dao.saveUserSessionCertificate("session", session);
+
+            verify(sets).add(indexKey, UserCertificateDaoImpl.sessionKey("session"));
+            verify(redis, never()).expire(eq(indexKey), any(Duration.class));
         } finally {
             new StringEncryptUtils().setEncryptConfig(null);
         }
@@ -37,26 +83,21 @@ class UserCertificateDaoTest {
     @Test
     void redisDeletionFailureCannotBeMistakenForSuccessfulRevocation() {
         RedisTemplate<String, String> redis = mock(RedisTemplate.class);
-        ValueOperations<String, String> values = mock(ValueOperations.class);
-        when(redis.opsForValue()).thenReturn(values);
-        String key = "a".repeat(64);
-        when(values.get(key))
-                .thenReturn("{\"username\":\"owner\",\"password\":\"synthetic-encrypted\"}");
-        org.springframework.data.redis.connection.RedisConnection connection =
-                mock(org.springframework.data.redis.connection.RedisConnection.class);
-        org.springframework.data.redis.connection.RedisKeyCommands keys =
-                mock(org.springframework.data.redis.connection.RedisKeyCommands.class);
-        Cursor<byte[]> cursor = mock(Cursor.class);
-        when(connection.keyCommands()).thenReturn(keys);
-        when(keys.scan(any(ScanOptions.class))).thenReturn(cursor);
-        when(cursor.hasNext()).thenReturn(true, false);
-        when(cursor.next()).thenReturn(key.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        when(redis.execute(any(RedisCallback.class)))
-                .thenAnswer(i -> ((RedisCallback<?>) i.getArgument(0)).doInRedis(connection));
-        doThrow(new IllegalStateException("synthetic Redis unavailable")).when(redis).delete(key);
-        UserCertificateDaoImpl dao = new UserCertificateDaoImpl(null, new ObjectMapper(), redis);
+        SetOperations<String, String> sets = mock(SetOperations.class);
+        when(redis.opsForSet()).thenReturn(sets);
+
+        String indexKey = UserCertificateDaoImpl.userIndexKey("owner");
+        String loginKey = UserCertificateDaoImpl.loginKey("session");
+        String sessionKey = UserCertificateDaoImpl.sessionKey("session");
+        when(sets.members(indexKey)).thenReturn(Set.of(loginKey, sessionKey));
+        doThrow(new IllegalStateException("synthetic Redis unavailable"))
+                .when(redis).delete(List.of(loginKey));
+
+        UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
 
         assertThrows(
                 RuntimeException.class, () -> dao.deleteUserLoginCertificatesByUsername("owner"));
+        verify(redis, never()).execute(any(RedisCallback.class));
+        verify(sets, never()).remove(eq(indexKey), any());
     }
 }

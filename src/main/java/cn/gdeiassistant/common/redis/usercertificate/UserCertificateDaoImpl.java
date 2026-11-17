@@ -1,36 +1,64 @@
 package cn.gdeiassistant.common.redis.usercertificate;
 
-import org.springframework.beans.factory.annotation.Qualifier;
-
+import cn.gdeiassistant.common.i18n.Messages;
 import cn.gdeiassistant.common.pojo.entity.User;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
-import cn.gdeiassistant.common.tools.springutils.RedisDaoUtils;
 import cn.gdeiassistant.common.tools.utils.StringEncryptUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisCallback;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.stereotype.Repository;
 
-import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import cn.gdeiassistant.common.i18n.Messages;
 
 @Repository
 public class UserCertificateDaoImpl implements UserCertificateDao {
 
     private static final TypeReference<Map<String, String>> MAP_STRING_STRING = new TypeReference<Map<String, String>>() {};
 
-    private final String COOKIE_PREFIX = "USER_COOKIE_CERTIFICATE_";
+    static final String COOKIE_KEY_PREFIX = "cert:cookie:";
+    static final String LOGIN_KEY_PREFIX = "cert:login:";
+    static final String SESSION_KEY_PREFIX = "cert:session:";
+    static final String USER_INDEX_PREFIX = "cert:user:index:";
 
-    private final String LOGIN_PREFIX = "USER_LOGIN_CERTIFICATE_";
+    private static final Duration COOKIE_TTL = Duration.ofDays(7);
+    private static final Duration LOGIN_TTL = Duration.ofHours(1);
+    private static final Duration SESSION_TTL = Duration.ofMinutes(10);
 
-    private final String SESSION_PREFIX = "USER_SESSION_CERTIFICATE_";
+    private final ObjectMapper objectMapper;
+    private final RedisTemplate<String, String> redisTemplate;
+
+    @Autowired
+    public UserCertificateDaoImpl(ObjectMapper objectMapper,
+                                  @Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
+        this.objectMapper = objectMapper;
+        this.redisTemplate = redisTemplate;
+    }
+
+    static String cookieKey(String cookieId) {
+        return COOKIE_KEY_PREFIX + StringEncryptUtils.sha256HexString(cookieId);
+    }
+
+    static String loginKey(String sessionId) {
+        return LOGIN_KEY_PREFIX + StringEncryptUtils.sha256HexString(sessionId);
+    }
+
+    static String sessionKey(String sessionId) {
+        return SESSION_KEY_PREFIX + StringEncryptUtils.sha256HexString(sessionId);
+    }
+
+    static String userIndexKey(String username) {
+        return USER_INDEX_PREFIX + StringEncryptUtils.sha256HexString(username);
+    }
 
     private String encryptPassword(String password) {
         try {
@@ -48,116 +76,65 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         }
     }
 
-    private final RedisDaoUtils redisDaoUtils;
-
-    private final ObjectMapper objectMapper;
-
-    private final RedisTemplate<String, String> redisTemplate;
-
-    public UserCertificateDaoImpl(RedisDaoUtils redisDaoUtils, ObjectMapper objectMapper, @Qualifier("redisTemplate") RedisTemplate<String, String> redisTemplate) {
-        this.redisDaoUtils = redisDaoUtils;
-        this.objectMapper = objectMapper;
-        this.redisTemplate = redisTemplate;
-    }
-
     @Override
     public User queryUserCookieCertificate(String cookieId) {
-        String key = StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId);
-        String json = redisDaoUtils.get(key);
-        if (json == null || json.isEmpty()) return null;
-        try {
-            Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
-            User user = new User();
-            user.setUsername(map.get("username"));
-            user.setPassword(decryptPassword(map.get("password")));
-            return user;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(Messages.get("common.redis.loginCredentialDeserializeFailed"), e);
-        }
+        return queryUserCredential(cookieKey(cookieId), "common.redis.loginCredentialDeserializeFailed");
     }
 
     @Override
     public void saveUserCookieCertificate(String cookieId, String username, String password) {
-        Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        map.put("password", encryptPassword(password));
-        String key = StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId);
-        try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 7, TimeUnit.DAYS);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(Messages.get("common.redis.loginCredentialSerializeFailed"), e);
-        }
+        saveUserCredential(cookieKey(cookieId), username, password, COOKIE_TTL);
     }
 
     @Override
     public void updateUserCookieCertificateExpiration(String cookieId) {
-        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(COOKIE_PREFIX + cookieId), 7, TimeUnit.DAYS);
+        refreshCredentialExpiration(cookieKey(cookieId), COOKIE_TTL);
     }
 
     @Override
     public User queryUserLoginCertificate(String sessionId) {
-        String finalKey = StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId);
-        if (redisTemplate != null) {
-            try {
-                String json = redisTemplate.opsForValue().get(finalKey);
-                if (json != null && !json.isEmpty()) {
-                    Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
-                    User user = new User();
-                    user.setUsername(map.get("username"));
-                    user.setPassword(decryptPassword(map.get("password")));
-                    return user;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(Messages.get("common.redis.loginCredentialReadFailed"), e);
-            }
-        }
-        return null;
+        return queryUserCredential(loginKey(sessionId), "common.redis.loginCredentialReadFailed");
     }
 
     @Override
     public void updateUserLoginCertificateExpiration(String sessionId) {
-        redisDaoUtils.expire(StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId), 1, TimeUnit.HOURS);
+        refreshCredentialExpiration(loginKey(sessionId), LOGIN_TTL);
     }
 
     @Override
     public void deleteUserLoginCertificate(String sessionId) {
-        redisDaoUtils.delete(StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId));
+        deleteCredentialByKey(loginKey(sessionId));
     }
 
     @Override
     public void deleteUserSessionCertificate(String sessionId) {
-        redisDaoUtils.delete(StringEncryptUtils.sha256HexString(SESSION_PREFIX + sessionId));
+        deleteCredentialByKey(sessionKey(sessionId));
     }
 
     @Override
     public void deleteUserLoginCertificatesByUsername(String username) {
-        deleteCredentialEntriesByUsername(username, false);
+        deleteCredentialsByUsername(username, false);
     }
 
     @Override
     public void deleteUserSessionCertificatesByUsername(String username) {
-        deleteCredentialEntriesByUsername(username, true);
+        deleteCredentialsByUsername(username, true);
     }
 
     @Override
     public void saveUserLoginCertificate(String sessionId, String username, String password) {
-        if (redisTemplate == null) return;
-        Map<String, String> map = new HashMap<>();
-        map.put("username", username);
-        map.put("password", encryptPassword(password));
-        String finalKey = StringEncryptUtils.sha256HexString(LOGIN_PREFIX + sessionId);
-        try {
-            redisTemplate.opsForValue().set(finalKey, objectMapper.writeValueAsString(map), java.time.Duration.ofHours(1));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(Messages.get("common.redis.loginCredentialSerializeFailed"), e);
-        }
+        saveUserCredential(loginKey(sessionId), username, password, LOGIN_TTL);
     }
 
     @Override
     public UserCertificateEntity queryUserSessionCertificate(String sessionId) {
-        String key = StringEncryptUtils.sha256HexString(SESSION_PREFIX + sessionId);
-        String json = redisDaoUtils.get(key);
-        if (json == null || json.isEmpty()) return null;
+        if (redisTemplate == null) {
+            return null;
+        }
+        String json = redisTemplate.opsForValue().get(sessionKey(sessionId));
+        if (json == null || json.isEmpty()) {
+            return null;
+        }
         try {
             Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
             UserCertificateEntity entity = new UserCertificateEntity();
@@ -176,73 +153,133 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
 
     @Override
     public void saveUserSessionCertificate(String sessionId, UserCertificateEntity userCertificate) {
+        if (redisTemplate == null) {
+            return;
+        }
+        String username = userCertificate.getUser().getUsername();
         Map<String, String> map = new HashMap<>();
-        map.put("username", userCertificate.getUser().getUsername());
+        map.put("username", username);
         map.put("password", encryptPassword(userCertificate.getUser().getPassword()));
         map.put("keycode", userCertificate.getKeycode());
         map.put("number", userCertificate.getNumber());
         map.put("timestamp", String.valueOf(userCertificate.getTimestamp()));
-        String key = StringEncryptUtils.sha256HexString(SESSION_PREFIX + sessionId);
+        String key = sessionKey(sessionId);
         try {
-            redisDaoUtils.set(key, objectMapper.writeValueAsString(map), 10, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(map), SESSION_TTL);
+            indexCredentialKey(username, key, SESSION_TTL);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(Messages.get("common.redis.sessionCredentialSerializeFailed"), e);
         }
     }
 
-    private void deleteCredentialEntriesByUsername(String username, boolean requireSessionShape) {
+    private User queryUserCredential(String key, String failureMessageKey) {
+        if (redisTemplate == null) {
+            return null;
+        }
+        String json = redisTemplate.opsForValue().get(key);
+        if (json == null || json.isEmpty()) {
+            return null;
+        }
+        try {
+            Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
+            User user = new User();
+            user.setUsername(map.get("username"));
+            user.setPassword(decryptPassword(map.get("password")));
+            return user;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(Messages.get(failureMessageKey), e);
+        }
+    }
+
+    private void saveUserCredential(String key, String username, String password, Duration ttl) {
+        if (redisTemplate == null) {
+            return;
+        }
+        Map<String, String> map = new HashMap<>();
+        map.put("username", username);
+        map.put("password", encryptPassword(password));
+        try {
+            redisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(map), ttl);
+            indexCredentialKey(username, key, ttl);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(Messages.get("common.redis.loginCredentialSerializeFailed"), e);
+        }
+    }
+
+    private void refreshCredentialExpiration(String key, Duration ttl) {
+        if (redisTemplate == null) {
+            return;
+        }
+        String json = redisTemplate.opsForValue().get(key);
+        redisTemplate.expire(key, ttl);
+        if (json != null && !json.isEmpty()) {
+            try {
+                Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
+                String username = map.get("username");
+                if (username != null && !username.isBlank()) {
+                    indexCredentialKey(username, key, ttl);
+                }
+            } catch (JsonProcessingException ignored) {
+                // Keep TTL refresh resilient if an existing payload is malformed.
+            }
+        }
+    }
+
+    private void deleteCredentialByKey(String key) {
+        if (redisTemplate == null) {
+            return;
+        }
+        String json = redisTemplate.opsForValue().get(key);
+        if (json != null && !json.isEmpty()) {
+            try {
+                Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
+                String username = map.get("username");
+                if (username != null && !username.isBlank()) {
+                    redisTemplate.opsForSet().remove(userIndexKey(username), key);
+                }
+            } catch (JsonProcessingException ignored) {
+                // Still delete corrupt credential keys.
+            }
+        }
+        redisTemplate.delete(key);
+    }
+
+    private void indexCredentialKey(String username, String key, Duration ttl) {
+        if (username == null || username.isBlank()) {
+            return;
+        }
+        String indexKey = userIndexKey(username);
+        redisTemplate.opsForSet().add(indexKey, key);
+        Long remainingSeconds = redisTemplate.getExpire(indexKey, TimeUnit.SECONDS);
+        if (remainingSeconds == null || remainingSeconds < ttl.getSeconds()) {
+            redisTemplate.expire(indexKey, ttl);
+        }
+    }
+
+    private void deleteCredentialsByUsername(String username, boolean sessionOnly) {
         if (redisTemplate == null || username == null || username.isBlank()) {
             return;
         }
-        redisTemplate.execute((RedisCallback<Void>) connection -> {
-            ScanOptions scanOptions = ScanOptions.scanOptions().count(1000).build();
-            try (Cursor<byte[]> cursor = connection.keyCommands().scan(scanOptions)) {
-                while (cursor.hasNext()) {
-                    String key = new String(cursor.next(), StandardCharsets.UTF_8);
-                    if (!isHashedCredentialKey(key)) {
-                        continue;
-                    }
-                    deleteCredentialEntryIfMatches(username, requireSessionShape, key);
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(Messages.get("common.redis.credentialScanFailed"), e);
+        String indexKey = userIndexKey(username);
+        Set<String> indexedKeys = redisTemplate.opsForSet().members(indexKey);
+        if (indexedKeys == null || indexedKeys.isEmpty()) {
+            return;
+        }
+        List<String> keysToDelete = new ArrayList<>();
+        for (String key : indexedKeys) {
+            if (key == null) {
+                continue;
             }
-            return null;
-        });
-    }
-
-    private void deleteCredentialEntryIfMatches(String username, boolean requireSessionShape, String key) {
-        String json = redisTemplate.opsForValue().get(key);
-        if (json == null || json.isEmpty()) {
-            return;
-        }
-        Map<String, String> map;
-        try {
-            map = objectMapper.readValue(json, MAP_STRING_STRING);
-        } catch (JsonProcessingException ignored) {
-            // Ignore unrelated or malformed values, but never swallow a Redis deletion failure.
-            return;
-        }
-        if (!username.equals(map.get("username")) || !map.containsKey("password")) {
-            return;
-        }
-        boolean looksLikeSessionCredential = map.containsKey("keycode")
-                && map.containsKey("number") && map.containsKey("timestamp");
-        if (requireSessionShape == looksLikeSessionCredential) {
-            redisTemplate.delete(key);
-        }
-    }
-
-    private boolean isHashedCredentialKey(String key) {
-        if (key == null || key.length() != 64) {
-            return false;
-        }
-        for (int i = 0; i < key.length(); i++) {
-            char c = key.charAt(i);
-            if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f'))) {
-                return false;
+            boolean isSession = key.startsWith(SESSION_KEY_PREFIX);
+            boolean isLoginOrCookie = key.startsWith(LOGIN_KEY_PREFIX) || key.startsWith(COOKIE_KEY_PREFIX);
+            if ((sessionOnly && isSession) || (!sessionOnly && isLoginOrCookie)) {
+                keysToDelete.add(key);
             }
         }
-        return true;
+        if (keysToDelete.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(keysToDelete);
+        redisTemplate.opsForSet().remove(indexKey, keysToDelete.toArray());
     }
 }

@@ -11,7 +11,8 @@ vi.mock('../i18n', () => ({
     global: {
       t: (key) => ({
         'common.saveFailed': '操作失败',
-        'common.systemBusy': '系统繁忙，请稍后再试'
+        'common.systemBusy': '系统繁忙，请稍后再试',
+        'common.networkError': 'Network timeout, check your connection'
       }[key] || key),
       locale: { value: 'zh-CN' }
     }
@@ -47,8 +48,28 @@ describe('sanitizeMessage', () => {
     expect(sanitizeMessage('500 Internal Server Error')).toBe('系统繁忙，请稍后再试')
     expect(sanitizeMessage('AxiosError: Network Error')).toBe('系统繁忙，请稍后再试')
     expect(sanitizeMessage('NullPointerException at SocialController.java:88')).toBe('系统繁忙，请稍后再试')
+    expect(sanitizeMessage('at cn.gdeiassistant.core.ProfileController.save(ProfileController.java:42)')).toBe('系统繁忙，请稍后再试')
     expect(sanitizeMessage('Bearer abc.def.ghi')).toBe('系统繁忙，请稍后再试')
     expect(sanitizeMessage('password=super-secret')).toBe('系统繁忙，请稍后再试')
+  })
+
+  it('preserves legitimate business messages containing numeric limits or timeout wording', async () => {
+    const { sanitizeMessage } = await import('./request.js')
+    expect(sanitizeMessage('内容不能超过 500 个字符')).toBe('内容不能超过 500 个字符')
+    expect(sanitizeMessage('单次充值金额不得超过 502 元')).toBe('单次充值金额不得超过 502 元')
+    expect(sanitizeMessage('Verification timeout, please request a new code')).toBe('Verification timeout, please request a new code')
+  })
+
+  it('shows mapped Axios transport message directly without re-running sanitizeMessage', async () => {
+    const { default: service } = await import('./request.js')
+    const { showErrorTopTips } = await import('./toast.js'); vi.mocked(showErrorTopTips).mockClear()
+    await service.get('/synthetic', { adapter: async config => {
+      const error = new Error('timeout of 15000ms exceeded')
+      error.code = 'ECONNABORTED'
+      error.config = config
+      throw error
+    } }).catch(() => {})
+    expect(showErrorTopTips).toHaveBeenCalledExactlyOnceWith('Network timeout, check your connection')
   })
   it('keeps a replacement session when an old request returns 401', async () => {
     const { default: service } = await import('./request.js')

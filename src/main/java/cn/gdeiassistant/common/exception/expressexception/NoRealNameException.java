@@ -12,4 +12,12 @@ public class NoRealNameException extends ExpressGuessException {
     public NoRealNameException(String message) {
         super(message);
     }
+
+    private NoRealNameException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static NoRealNameException ofKey(String key, Object... args) {
+        return new NoRealNameException(key, args);
+    }
 }

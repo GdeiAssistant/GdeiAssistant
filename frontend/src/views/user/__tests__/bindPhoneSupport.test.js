@@ -1,16 +1,15 @@
 // @vitest-environment jsdom
 
-import fs from 'node:fs'
-import path from 'node:path'
-import { describe, expect, it } from 'vitest'
-import { localizeCountryCodes, loadCountryCodeCatalog, parseCountryCodesXml } from '../bindPhoneSupport'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  getFallbackCountryCodeItems,
+  loadCountryCodeCatalog,
+  localizeCountryCodes,
+} from '../bindPhoneSupport'
 
 describe('bindPhoneSupport', () => {
-  it('parses the bundled country code catalog with broad coverage', () => {
-    const xmlPath = path.resolve(process.cwd(), 'public/country_codes.xml')
-    const xml = fs.readFileSync(xmlPath, 'utf8')
-
-    const items = parseCountryCodesXml(xml)
+  it('provides broad static fallback coverage without XML parsing', () => {
+    const items = getFallbackCountryCodeItems()
 
     expect(items.length).toBeGreaterThan(150)
     expect(items.some((item) => item.code === '+1')).toBe(true)
@@ -18,6 +17,7 @@ describe('bindPhoneSupport', () => {
     expect(items.some((item) => item.code === '+81')).toBe(true)
     expect(items.some((item) => item.code === '+852')).toBe(true)
     expect(items.some((item) => item.code === '+886')).toBe(true)
+    expect(items.some((item) => item.code === '+86' && item.iso === 'CN')).toBe(true)
   })
 
   it('localizes country names from region metadata instead of keeping raw Chinese labels', () => {
@@ -30,40 +30,46 @@ describe('bindPhoneSupport', () => {
     expect(items[1].name).toContain('Japan')
   })
 
-
-  it('uses the bundled country list when remote catalog is skipped', async () => {
-    const fetchImpl = async (url) => {
-      const xmlPath = path.resolve(process.cwd(), 'public/country_codes.xml')
-      return new Response(fs.readFileSync(xmlPath, 'utf8'))
-    }
-
-    const items = await loadCountryCodeCatalog({
-      apiUrl: '',
-      locale: 'zh-CN',
-      fetchImpl,
+  it('loads remote catalog through unified request client and infers ISO statically', async () => {
+    const get = vi.fn().mockResolvedValue({
+      success: true,
+      data: [
+        { code: 86, flag: '🇨🇳', name: '中国' },
+        { code: 852, flag: '🇭🇰', name: '中国香港' },
+      ],
     })
 
-    expect(items.length).toBeGreaterThan(150)
-    expect(items.some((item) => item.code === '+86')).toBe(true)
+    const items = await loadCountryCodeCatalog({
+      locale: 'en',
+      requestClient: { get },
+    })
+
+    expect(get).toHaveBeenCalledWith('/phone/attribution', expect.objectContaining({
+      headers: { 'Accept-Language': 'en' },
+      skipErrorTip: true,
+    }))
+    expect(items).toEqual([
+      { iso: 'CN', code: '+86', emoji: '🇨🇳', rawName: '中国' },
+      { iso: 'HK', code: '+852', emoji: '🇭🇰', rawName: '中国香港' },
+    ])
   })
 
-  it('falls back to the bundled country list when remote requests time out', async () => {
-    const fetchImpl = (_url, init = {}) => new Promise((_, reject) => {
-      init.signal?.addEventListener('abort', () => reject(new Error('aborted')), { once: true })
-    })
+  it('uses static fallback when remote catalog is skipped or fails', async () => {
+    const get = vi.fn().mockRejectedValue(new Error('timeout'))
 
-    const items = await loadCountryCodeCatalog({
-      apiUrl: '/api/phone/attribution',
+    const skippedItems = await loadCountryCodeCatalog({
+      skipRemote: true,
       locale: 'zh-CN',
-      fetchImpl,
-      timeoutMs: 5,
+      requestClient: { get },
     })
+    expect(get).not.toHaveBeenCalled()
+    expect(skippedItems.length).toBeGreaterThan(150)
 
-    expect(items).toEqual([
-      expect.objectContaining({
-        iso: 'CN',
-        code: '+86',
-      }),
-    ])
+    const fallbackItems = await loadCountryCodeCatalog({
+      locale: 'zh-CN',
+      requestClient: { get },
+    })
+    expect(fallbackItems.length).toBeGreaterThan(150)
+    expect(fallbackItems.some((item) => item.iso === 'CN' && item.code === '+86')).toBe(true)
   })
 })

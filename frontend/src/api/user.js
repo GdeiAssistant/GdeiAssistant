@@ -33,54 +33,12 @@ export function logout() {
   return request.post('/auth/logout')
 }
 
-// ==================== 个人资料修改（application/json，对接后端 ProfileRestController） ====================
-
-/** POST /api/introduction  body: { introduction?: string } */
-export function updateIntroduction(data) {
-  return request.post('/introduction', data)
-}
-
-/** POST /api/profile/birthday  body: { year?, month?, date? } 全 null 表示清空 */
-export function updateBirthday(data) {
-  return request.post('/profile/birthday', data)
-}
-
-/** POST /api/profile/faculty  body: { faculty: number } 院系索引 */
-export function updateFaculty(data) {
-  return request.post('/profile/faculty', data)
-}
-
 /**
  * 获取资料统一字典
  * GET /api/profile/options
  */
 export function getProfileOptions() {
   return request.get('/profile/options')
-}
-
-/** POST /api/profile/location  body: { region: string, state?: string, city?: string } */
-export function updateLocation(data) {
-  return request.post('/profile/location', data)
-}
-
-/** POST /api/profile/hometown  body: { region: string, state?: string, city?: string } */
-export function updateHometown(data) {
-  return request.post('/profile/hometown', data)
-}
-
-/** POST /api/profile/major  body: { major: string } */
-export function updateMajor(data) {
-  return request.post('/profile/major', data)
-}
-
-/** POST /api/profile/enrollment  body: { year?: number } null/不传表示清空 */
-export function updateEnrollment(data) {
-  return request.post('/profile/enrollment', data)
-}
-
-/** POST /api/profile/nickname  body: { nickname: string } */
-export function updateNickname(data) {
-  return request.post('/profile/nickname', data)
 }
 
 /**

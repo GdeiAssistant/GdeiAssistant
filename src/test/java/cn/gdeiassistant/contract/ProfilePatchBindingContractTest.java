@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -94,6 +94,10 @@ class ProfilePatchBindingContractTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true));
 
-        verify(service).save(isNull(), eq(Map.of("nickname", "new")));
+        verify(service).save(isNull(), argThat(patch ->
+                patch != null
+                        && patch.hasField("nickname")
+                        && "new".equals(patch.getNickname())
+                        && patch.getUnknownFields().isEmpty()));
     }
 }

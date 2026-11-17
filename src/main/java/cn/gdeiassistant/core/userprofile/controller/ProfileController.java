@@ -12,10 +12,12 @@ import cn.gdeiassistant.core.userprofile.pojo.ProfileOptionsVO;
 import cn.gdeiassistant.core.userprofile.pojo.UserProfileVO;
 import cn.gdeiassistant.core.profile.service.ProfileLocationValidator;
 import cn.gdeiassistant.core.profile.service.ProfileMajorCatalog;
+import cn.gdeiassistant.core.profile.service.ProfilePatchService;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.userprofile.service.ProfileLocalizationService;
 import cn.gdeiassistant.core.userprofile.service.ProfileOptionsFacade;
 import cn.gdeiassistant.common.tools.utils.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,6 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +45,20 @@ public class ProfileController {
 
     private final ProfileLocalizationService profileLocalizationService;
 
+    private final ProfilePatchService profilePatchService;
+
     public ProfileController(UserProfileService userProfileService, ProfileResponseMapper profileResponseMapper, ProfileOptionsFacade profileOptionsFacade, ProfileLocationValidator profileLocationValidator, ProfileLocalizationService profileLocalizationService) {
+        this(userProfileService, profileResponseMapper, profileOptionsFacade, profileLocationValidator, profileLocalizationService, null);
+    }
+
+    @Autowired
+    public ProfileController(UserProfileService userProfileService, ProfileResponseMapper profileResponseMapper, ProfileOptionsFacade profileOptionsFacade, ProfileLocationValidator profileLocationValidator, ProfileLocalizationService profileLocalizationService, ProfilePatchService profilePatchService) {
         this.userProfileService = userProfileService;
         this.profileResponseMapper = profileResponseMapper;
         this.profileOptionsFacade = profileOptionsFacade;
         this.profileLocationValidator = profileLocationValidator;
         this.profileLocalizationService = profileLocalizationService;
+        this.profilePatchService = profilePatchService;
     }
 
     private final int AVATAR_MAX_SIZE = 1024 * 1024 * 2;
@@ -159,6 +168,36 @@ public class ProfileController {
         return result;
     }
 
+    private JsonResult saveViaPatch(HttpServletRequest request, ProfilePatchRequest patch, String fallbackMessage) throws Exception {
+        try {
+            profilePatchService.save((String) request.getAttribute("sessionId"), patch);
+            return new JsonResult(true);
+        } catch (ProfilePatchService.InvalidPatch e) {
+            String message = e.getErrors().values().stream().findFirst().orElse(fallbackMessage);
+            return failure(request, fallbackMessage != null ? fallbackMessage : message);
+        }
+    }
+
+    private JsonResult saveLocationViaPatch(HttpServletRequest request, String field, String region, String state, String city) throws Exception {
+        ProfilePatchRequest.LocationPatch location = new ProfilePatchRequest.LocationPatch();
+        location.setRegion(region);
+        location.setState(state);
+        location.setCity(city);
+        ProfilePatchRequest patch = new ProfilePatchRequest();
+        if ("location".equals(field)) {
+            patch.setLocation(location);
+        } else {
+            patch.setHometown(location);
+        }
+        try {
+            profilePatchService.save((String) request.getAttribute("sessionId"), patch);
+            return new JsonResult(true);
+        } catch (ProfilePatchService.InvalidPatch e) {
+            String message = e.getErrors().getOrDefault(field, "不合法的国家/地区代码");
+            return failure(request, message);
+        }
+    }
+
     /**
      * 更新用户个人简介
      *
@@ -169,17 +208,23 @@ public class ProfileController {
      */
     @RequestMapping(value = "/api/introduction", method = RequestMethod.POST)
     public JsonResult updateIntroduction(HttpServletRequest request, @RequestBody IntroductionUpdateRequest body) throws Exception {
-        String introduction = body != null ? body.getIntroduction() : null;
-        if (introduction != null && introduction.length() <= 80) {
-            if (introduction.isEmpty()) {
-                introduction = null;
-            } else {
-                introduction = HtmlUtils.htmlEscape(introduction);
-            }
-            userProfileService.updateIntroduction((String) request.getAttribute("sessionId"), introduction);
-            return new JsonResult(true);
+        String raw = body != null ? body.getIntroduction() : null;
+        if (raw == null) {
+            return failure(request, "个人简介长度不合法");
         }
-        return failure(request, "个人简介长度不合法");
+        ProfilePatchService.TextValidation validation = ProfilePatchService.validateAndEscapeText(
+                raw, ProfilePatchService.INTRODUCTION_MAX_LENGTH, true, false);
+        if (!validation.valid()) {
+            return failure(request, "个人简介长度不合法");
+        }
+        if (profilePatchService != null) {
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setIntroduction(raw);
+            return saveViaPatch(request, patch, "个人简介长度不合法");
+        }
+        String introduction = validation.escaped().isEmpty() ? null : validation.escaped();
+        userProfileService.updateIntroduction((String) request.getAttribute("sessionId"), introduction);
+        return new JsonResult(true);
     }
 
     /**
@@ -228,14 +273,28 @@ public class ProfileController {
         Integer month = body != null ? body.getMonth() : null;
         Integer date = body != null ? body.getDate() : null;
         if (year == null && month == null && date == null) {
+            if (profilePatchService != null) {
+                ProfilePatchRequest patch = new ProfilePatchRequest();
+                patch.setBirthday(null);
+                return saveViaPatch(request, patch, "请求参数不合法");
+            }
             userProfileService.resetBirthday((String) request.getAttribute("sessionId"));
             return new JsonResult(true);
         }
-        if (year != null && month != null && date != null) {
-            userProfileService.updateBirthday((String) request.getAttribute("sessionId"), year, month, date);
-            return new JsonResult(true);
+        if (ProfilePatchService.parseValidBirthday(year, month, date) == null) {
+            return failure(request, "请求参数不合法");
         }
-        return failure(request, "请求参数不合法");
+        if (profilePatchService != null) {
+            ProfilePatchRequest.BirthdayPatch birthday = new ProfilePatchRequest.BirthdayPatch();
+            birthday.setYear(year);
+            birthday.setMonth(month);
+            birthday.setDate(date);
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setBirthday(birthday);
+            return saveViaPatch(request, patch, "请求参数不合法");
+        }
+        userProfileService.updateBirthday((String) request.getAttribute("sessionId"), year, month, date);
+        return new JsonResult(true);
     }
 
     /**
@@ -248,13 +307,18 @@ public class ProfileController {
     @RequestMapping(value = "/api/profile/faculty", method = RequestMethod.POST)
     public JsonResult updateFaculty(HttpServletRequest request, @RequestBody FacultyUpdateRequest body) throws Exception {
         Integer faculty = body != null ? body.getFaculty() : null;
-        if (faculty != null && faculty >= 0 && faculty < UserProfileService.getFacultyMap().size()) {
-            String sessionId = (String) request.getAttribute("sessionId");
-            userProfileService.updateFaculty(sessionId, faculty);
-            userProfileService.updateMajor(sessionId, null);
-            return new JsonResult(true);
+        if (!ProfilePatchService.isValidFaculty(faculty)) {
+            return failure(request, "请求参数异常");
         }
-        return failure(request, "请求参数异常");
+        if (profilePatchService != null) {
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setFaculty(faculty);
+            return saveViaPatch(request, patch, "请求参数异常");
+        }
+        String sessionId = (String) request.getAttribute("sessionId");
+        userProfileService.updateFaculty(sessionId, faculty);
+        userProfileService.updateMajor(sessionId, null);
+        return new JsonResult(true);
     }
 
     /**
@@ -270,10 +334,11 @@ public class ProfileController {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return failure(request, "不合法的国家/地区代码");
         }
+        if (profilePatchService != null) {
+            return saveLocationViaPatch(request, "location", body.getRegion(), body.getState(), body.getCity());
+        }
         ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
-                HtmlUtils.htmlEscape(body.getRegion()),
-                body.getState() != null ? HtmlUtils.htmlEscape(body.getState()) : null,
-                body.getCity() != null ? HtmlUtils.htmlEscape(body.getCity()) : null);
+                body.getRegion(), body.getState(), body.getCity());
         if (!vr.isValid()) {
             return failure(request, vr.getErrorMessage());
         }
@@ -295,10 +360,11 @@ public class ProfileController {
         if (body == null || StringUtils.isBlank(body.getRegion())) {
             return failure(request, "不合法的国家/地区代码");
         }
+        if (profilePatchService != null) {
+            return saveLocationViaPatch(request, "hometown", body.getRegion(), body.getState(), body.getCity());
+        }
         ProfileLocationValidator.ValidationResult vr = profileLocationValidator.validate(
-                HtmlUtils.htmlEscape(body.getRegion()),
-                body.getState() != null ? HtmlUtils.htmlEscape(body.getState()) : null,
-                body.getCity() != null ? HtmlUtils.htmlEscape(body.getCity()) : null);
+                body.getRegion(), body.getState(), body.getCity());
         if (!vr.isValid()) {
             return failure(request, vr.getErrorMessage());
         }
@@ -321,6 +387,11 @@ public class ProfileController {
         if (major == null || major.isEmpty() || major.length() > 64) {
             return failure(request, "请求参数异常");
         }
+        if (profilePatchService != null) {
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setMajor(major);
+            return saveViaPatch(request, patch, "请求参数异常");
+        }
         String sessionId = (String) request.getAttribute("sessionId");
         ProfileVO profile = userProfileService.getSelfUserProfile(sessionId);
         if (profile == null || profile.getFaculty() == null || !ProfileMajorCatalog.isValidForFaculty(profile.getFaculty(), major)) {
@@ -342,8 +413,13 @@ public class ProfileController {
     @RequestMapping(value = "/api/profile/enrollment", method = RequestMethod.POST)
     public JsonResult updateEnrollment(HttpServletRequest request, @RequestBody EnrollmentUpdateRequest body) throws Exception {
         Integer enrollment = body != null ? body.getYear() : null;
-        if (enrollment != null && enrollment > LocalDate.now().getYear()) {
+        if (!ProfilePatchService.isValidEnrollment(enrollment)) {
             return failure(request, "请求参数不合法");
+        }
+        if (profilePatchService != null) {
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setEnrollment(enrollment);
+            return saveViaPatch(request, patch, "请求参数不合法");
         }
         if (enrollment != null) {
             userProfileService.updateEnrollment((String) request.getAttribute("sessionId"), enrollment);
@@ -363,12 +439,18 @@ public class ProfileController {
      */
     @RequestMapping(value = "/api/profile/nickname", method = RequestMethod.POST)
     public JsonResult updateNickname(HttpServletRequest request, @RequestBody NicknameUpdateRequest body) throws Exception {
-        String nickname = body != null ? body.getNickname() : null;
-        if (nickname == null || nickname.isEmpty() || nickname.length() > 32) {
+        String raw = body != null ? body.getNickname() : null;
+        ProfilePatchService.TextValidation validation = ProfilePatchService.validateAndEscapeText(
+                raw, ProfilePatchService.NICKNAME_MAX_LENGTH, false, false);
+        if (!validation.valid()) {
             return failure(request, "昵称长度不合法");
         }
-        nickname = HtmlUtils.htmlEscape(nickname);
-        userProfileService.updateNickname((String) request.getAttribute("sessionId"), nickname);
+        if (profilePatchService != null) {
+            ProfilePatchRequest patch = new ProfilePatchRequest();
+            patch.setNickname(raw);
+            return saveViaPatch(request, patch, "昵称长度不合法");
+        }
+        userProfileService.updateNickname((String) request.getAttribute("sessionId"), validation.escaped());
         return new JsonResult(true);
     }
 

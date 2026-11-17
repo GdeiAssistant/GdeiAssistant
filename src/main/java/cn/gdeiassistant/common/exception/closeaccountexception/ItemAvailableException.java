@@ -11,4 +11,12 @@ public class ItemAvailableException extends CloseAccountException {
     public ItemAvailableException(String message) {
         super(message);
     }
+
+    private ItemAvailableException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static ItemAvailableException ofKey(String key, Object... args) {
+        return new ItemAvailableException(key, args);
+    }
 }

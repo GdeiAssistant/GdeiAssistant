@@ -159,4 +159,53 @@ class InteractionNotificationServiceTest {
         assertFalse(result.get(2).getContent().contains("bob"));
         assertTrue(result.get(2).getContent().contains("已注销用户"));
     }
+
+    @Test
+    void shortUsernameOnlyReplacesLeadingActorAndPreservesCommentBody() {
+        when(userCertificateService.getUserLoginCertificate("sess1")).thenReturn(stubUser("receiver"));
+
+        InteractionNotificationEntity secret = makeEntity(10L, "ab", "ab 评论了你的树洞：about ab and test 点赞");
+        secret.setModule("secret");
+
+        InteractionNotificationEntity express = makeEntity(11L, "ab", "ab 评论了你的表白：about ab");
+        express.setModule("express");
+
+        InteractionNotificationEntity deleted = makeEntity(12L, "ab", "ab 评论了你的作品：about ab");
+        deleted.setModule("photograph");
+
+        InteractionNotificationEntity delPrefix = makeEntity(13L, "del_1", "del_1 评论了你的作品：id del_1 in text");
+        delPrefix.setModule("photograph");
+
+        when(interactionNotificationMapper.selectInteractionNotificationPage("receiver", 0, 10))
+                .thenReturn(List.of(secret, express, deleted, delPrefix));
+        when(userMapper.selectExistingUsernames(anyList())).thenReturn(Collections.emptyList());
+
+        List<InteractionMessageVO> result = interactionNotificationService.queryInteractionMessages("sess1", 0, 10);
+
+        assertEquals(4, result.size());
+        assertEquals("已注销用户 评论了你的树洞：about ab and test 点赞", result.get(0).getContent());
+        assertEquals("已注销用户 评论了你的表白：about ab", result.get(1).getContent());
+        assertEquals("已注销用户 评论了你的作品：about ab", result.get(2).getContent());
+        assertEquals("已注销用户 评论了你的作品：id del_1 in text", result.get(3).getContent());
+    }
+
+    @Test
+    void activeShortUsernameInSecretAndExpressDoesNotCorruptBodyWords() {
+        when(userCertificateService.getUserLoginCertificate("sess1")).thenReturn(stubUser("receiver"));
+
+        InteractionNotificationEntity secret = makeEntity(20L, "ab", "ab 评论了你的树洞：about ab and test 点赞");
+        secret.setModule("secret");
+
+        InteractionNotificationEntity express = makeEntity(21L, "ab", "ab 评论了你的表白：about ab");
+        express.setModule("express");
+
+        when(interactionNotificationMapper.selectInteractionNotificationPage("receiver", 0, 10))
+                .thenReturn(List.of(secret, express));
+        when(userMapper.selectExistingUsernames(anyList())).thenReturn(List.of("ab"));
+
+        List<InteractionMessageVO> result = interactionNotificationService.queryInteractionMessages("sess1", 0, 10);
+
+        assertEquals("匿名用户 评论了你的树洞：about ab and test 点赞", result.get(0).getContent());
+        assertEquals("有人 评论了你的表白：about ab", result.get(1).getContent());
+    }
 }

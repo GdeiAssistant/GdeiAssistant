@@ -12,4 +12,12 @@ public class IllegalPhoneNumberException extends SendSMSException {
     public IllegalPhoneNumberException(String message) {
         super(message);
     }
+
+    private IllegalPhoneNumberException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static IllegalPhoneNumberException ofKey(String key, Object... args) {
+        return new IllegalPhoneNumberException(key, args);
+    }
 }

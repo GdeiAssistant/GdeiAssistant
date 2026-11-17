@@ -12,4 +12,12 @@ public class DayFrequencyLimitException extends SendSMSException {
     public DayFrequencyLimitException(String message) {
         super(message);
     }
+
+    private DayFrequencyLimitException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static DayFrequencyLimitException ofKey(String key, Object... args) {
+        return new DayFrequencyLimitException(key, args);
+    }
 }

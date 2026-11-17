@@ -16,7 +16,7 @@ import en from '../locales/en.json'
 import ja from '../locales/ja.json'
 import ko from '../locales/ko.json'
 
-const api = vi.hoisted(() => Object.fromEntries(['getCurrentUserProfile', 'getLocationList', 'getProfileOptions', 'updateProfile', 'updateIntroduction', 'updateBirthday', 'updateFaculty', 'updateLocation', 'updateHometown', 'updateMajor', 'updateEnrollment', 'updateNickname'].map(name => [name, vi.fn()])))
+const api = vi.hoisted(() => Object.fromEntries(['getCurrentUserProfile', 'getLocationList', 'getProfileOptions', 'updateProfile'].map(name => [name, vi.fn()])))
 const social = vi.hoisted(() => ({ fetchSocialMe: vi.fn() }))
 const request = vi.hoisted(() => ({ get: vi.fn() }))
 vi.mock('../api/user.js', () => api)
@@ -54,8 +54,6 @@ beforeEach(() => {
   api.getLocationList.mockResolvedValue({ success: true, data: codeTree })
   social.fetchSocialMe.mockResolvedValue({ data: { id: 'demo' } })
   api.updateProfile.mockResolvedValue({ success: true })
-  api.updateMajor.mockResolvedValue({ success: true })
-  api.updateLocation.mockResolvedValue({ success: true })
 })
 afterEach(() => mounted.splice(0).forEach(unmount => unmount()))
 
@@ -79,8 +77,6 @@ describe('system dictionaries remain live when locale changes', () => {
       expect(host.textContent).toContain(locations.systemAreaLabel('广东 广州'))
     }
     expect(api.getCurrentUserProfile).toHaveBeenCalledTimes(1)
-    expect(api.updateLocation).not.toHaveBeenCalled()
-    expect(api.updateMajor).not.toHaveBeenCalled()
   }, 15000)
 
   it('updates an open major picker and saves its stable code after a language change', async () => {
@@ -95,7 +91,6 @@ describe('system dictionaries remain live when locale changes', () => {
     expect(choice).toBeDefined()
     choice.click()
     await flush()
-    expect(api.updateMajor).not.toHaveBeenCalled()
     buttonWith(ko.common.save).click()
     await flush()
     expect(api.updateProfile).toHaveBeenCalledExactlyOnceWith({ major: 'network_engineering' })
@@ -197,7 +192,6 @@ describe('profile loading and confirmed edits', () => {
     expect(buttonWith(zhCN.common.save).disabled).toBe(true)
     await editNickname(host, 'staged nickname')
     expect(api.updateProfile).not.toHaveBeenCalled()
-    expect(api.updateNickname).not.toHaveBeenCalled()
     buttonWith(zhCN.common.save).click()
     await flush()
     const savingButton = host.querySelector('.profile-save-button')
@@ -257,8 +251,6 @@ describe('profile field commits', () => {
     intro.dispatchEvent(new Event('input', { bubbles: true }))
     buttonWith(zhCN.common.confirm).click()
     await flush()
-    expect(api.updateBirthday).not.toHaveBeenCalled()
-    expect(api.updateIntroduction).not.toHaveBeenCalled()
     expect(api.updateProfile).not.toHaveBeenCalled()
     buttonWith(zhCN.common.save).click()
     await flush()

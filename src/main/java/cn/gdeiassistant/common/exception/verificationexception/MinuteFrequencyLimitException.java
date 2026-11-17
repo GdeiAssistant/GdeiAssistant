@@ -12,4 +12,12 @@ public class MinuteFrequencyLimitException extends SendSMSException {
     public MinuteFrequencyLimitException(String message) {
         super(message);
     }
+
+    private MinuteFrequencyLimitException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static MinuteFrequencyLimitException ofKey(String key, Object... args) {
+        return new MinuteFrequencyLimitException(key, args);
+    }
 }

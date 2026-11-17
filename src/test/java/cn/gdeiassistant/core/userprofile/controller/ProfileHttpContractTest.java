@@ -7,6 +7,7 @@ import cn.gdeiassistant.core.profile.pojo.vo.ProfileVO;
 import cn.gdeiassistant.core.profile.service.UserProfileService;
 import cn.gdeiassistant.core.ipaddress.service.IPAddressService;
 import cn.gdeiassistant.core.profile.service.ProfileLocationValidator;
+import cn.gdeiassistant.core.profile.service.ProfilePatchService;
 import cn.gdeiassistant.core.userprofile.controller.support.ProfileResponseMapper;
 import cn.gdeiassistant.core.userprofile.service.*;
 import org.junit.jupiter.api.*;
@@ -62,10 +63,12 @@ class ProfileHttpContractTest {
         update("/api/profile/nickname","{\"nickname\":\"<b>合成昵称</b>\"}",true);
         verify(service).updateNickname("synthetic-session","&lt;b&gt;合成昵称&lt;/b&gt;");
         update("/api/profile/nickname","{\"nickname\":\"\"}",false);update("/api/profile/nickname","{\"nickname\":\""+"字".repeat(33)+"\"}",false);
+        update("/api/profile/nickname","{\"nickname\":\""+"<".repeat(9)+"\"}",false);
         update("/api/introduction","{\"introduction\":\"<script>合成</script>\"}",true);
         verify(service).updateIntroduction("synthetic-session","&lt;script&gt;合成&lt;/script&gt;");
         update("/api/introduction","{\"introduction\":\"\"}",true);verify(service).updateIntroduction("synthetic-session",null);
         update("/api/introduction","{}",false);update("/api/introduction","{\"introduction\":\""+"字".repeat(81)+"\"}",false);
+        update("/api/introduction","{\"introduction\":\""+"<".repeat(21)+"\"}",false);
     }
     @Test void birthdayEnrollmentFacultyAndMajorHaveDistinctResetAndUpdateSemantics() throws Exception {
         update("/api/profile/birthday","{}",true);verify(service).resetBirthday("synthetic-session");
@@ -74,6 +77,7 @@ class ProfileHttpContractTest {
         update("/api/profile/enrollment","{}",true);verify(service).resetEnrollment("synthetic-session");
         update("/api/profile/enrollment","{\"year\":2024}",true);verify(service).updateEnrollment("synthetic-session",2024);
         update("/api/profile/enrollment","{\"year\":"+(LocalDate.now().getYear()+1)+"}",false);
+        update("/api/profile/enrollment","{\"year\":1899}",false);
         update("/api/profile/faculty","{\"faculty\":1}",true);verify(service).updateFaculty("synthetic-session",1);verify(service).updateMajor("synthetic-session",null);
         update("/api/profile/faculty","{\"faculty\":-1}",false);
         var profile=new ProfileVO();profile.setFaculty(1);when(service.getSelfUserProfile("synthetic-session")).thenReturn(profile);
@@ -100,5 +104,27 @@ class ProfileHttpContractTest {
         http.perform(delete("/api/profile/avatar").requestAttr("sessionId","synthetic-session")).andExpect(jsonPath("$.success").value(true));verify(service).deleteAvatar("synthetic-session");
         when(service.getSelfUserAvatar("synthetic-session")).thenReturn(null);
         http.perform(get("/api/profile/avatar").requestAttr("sessionId","synthetic-session")).andExpect(jsonPath("$.data").value(""));
+    }
+
+    @Test void singleFieldEndpointsDelegateToPatchServiceWhenWired() throws Exception {
+        var patchService = mock(ProfilePatchService.class);
+        var localization = new ProfileLocalizationService();
+        var mapper = new ProfileResponseMapper(service, ip, localization);
+        var delegated = new ProfileController(service, mapper, mock(ProfileOptionsFacade.class), new ProfileLocationValidator(), localization, patchService);
+        var delegatedMvc = MockMvcBuilders.standaloneSetup(delegated).setControllerAdvice(new GlobalRestExceptionHandler()).build();
+
+        delegatedMvc.perform(post("/api/profile/nickname").requestAttr("sessionId", "synthetic-session")
+                        .contentType("application/json").content("{\"nickname\":\"合成昵称\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true));
+        verify(patchService).save(eq("synthetic-session"), argThat(p -> p.hasField("nickname") && "合成昵称".equals(p.getNickname())));
+
+        doThrow(new ProfilePatchService.InvalidPatch(java.util.Map.of("location", "不合法的国家/地区代码")))
+                .when(patchService).save(eq("synthetic-session"), argThat(p -> p.hasField("location")));
+        delegatedMvc.perform(post("/api/profile/location").requestAttr("sessionId", "synthetic-session")
+                        .contentType("application/json").content("{\"region\":\"BAD\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(false))
+                .andExpect(jsonPath("$.message").value("不合法的国家/地区代码"));
     }
 }

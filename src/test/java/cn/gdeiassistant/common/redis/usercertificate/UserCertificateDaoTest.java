@@ -8,12 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,21 +90,24 @@ class UserCertificateDaoTest {
     @Test
     void redisDeletionFailureCannotBeMistakenForSuccessfulRevocation() {
         RedisTemplate<String, String> redis = mock(RedisTemplate.class);
-        SetOperations<String, String> sets = mock(SetOperations.class);
-        when(redis.opsForSet()).thenReturn(sets);
-
         String indexKey = UserCertificateDaoImpl.userIndexKey("owner");
-        String loginKey = UserCertificateDaoImpl.loginKey("session");
-        String sessionKey = UserCertificateDaoImpl.sessionKey("session");
-        when(sets.members(indexKey)).thenReturn(Set.of(loginKey, sessionKey));
         doThrow(new IllegalStateException("synthetic Redis unavailable"))
-                .when(redis).delete(List.of(loginKey));
+                .when(redis)
+                .execute(
+                        eq(UserCertificateDaoImpl.DELETE_CREDENTIALS_BY_USERNAME_SCRIPT),
+                        eq(List.of(indexKey)),
+                        eq("0"),
+                        eq(UserCertificateDaoImpl.SESSION_KEY_PREFIX),
+                        eq(UserCertificateDaoImpl.LOGIN_KEY_PREFIX),
+                        eq(UserCertificateDaoImpl.COOKIE_KEY_PREFIX)
+                );
 
         UserCertificateDaoImpl dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
 
         assertThrows(
                 RuntimeException.class, () -> dao.deleteUserLoginCertificatesByUsername("owner"));
         verify(redis, never()).execute(any(RedisCallback.class));
-        verify(sets, never()).remove(eq(indexKey), any());
+        assertTrue(UserCertificateDaoImpl.DELETE_CREDENTIALS_BY_USERNAME_SCRIPT.getScriptAsString().contains("DEL"));
+        assertTrue(UserCertificateDaoImpl.DELETE_CREDENTIALS_BY_USERNAME_SCRIPT.getScriptAsString().contains("SREM"));
     }
 }

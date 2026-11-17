@@ -14,11 +14,9 @@ import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Repository
 public class UserCertificateDaoImpl implements UserCertificateDao {
@@ -30,6 +28,32 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
                     "local target = tonumber(ARGV[2]); " +
                     "if ttl < 0 or ttl < target then redis.call('EXPIRE', KEYS[1], target) end; " +
                     "return 1;",
+            Long.class
+    );
+    static final DefaultRedisScript<Long> DELETE_KEY_AND_UNINDEX_SCRIPT = new DefaultRedisScript<>(
+            "local deleted = redis.call('DEL', KEYS[1]); " +
+                    "redis.call('SREM', KEYS[2], KEYS[1]); " +
+                    "return deleted;",
+            Long.class
+    );
+    static final DefaultRedisScript<Long> DELETE_CREDENTIALS_BY_USERNAME_SCRIPT = new DefaultRedisScript<>(
+            "local members = redis.call('SMEMBERS', KEYS[1]); " +
+                    "if #members == 0 then return 0 end; " +
+                    "local toDelete = {}; " +
+                    "for _, k in ipairs(members) do " +
+                    "  local isSession = string.sub(k, 1, #ARGV[2]) == ARGV[2]; " +
+                    "  local isLoginOrCookie = (string.sub(k, 1, #ARGV[3]) == ARGV[3]) or (string.sub(k, 1, #ARGV[4]) == ARGV[4]); " +
+                    "  if (ARGV[1] == '1' and isSession) or (ARGV[1] ~= '1' and isLoginOrCookie) then " +
+                    "    table.insert(toDelete, k); " +
+                    "  end; " +
+                    "end; " +
+                    "if #toDelete == 0 then return 0 end; " +
+                    "for i = 1, #toDelete, 1000 do " +
+                    "  local last = math.min(i + 999, #toDelete); " +
+                    "  redis.call('DEL', unpack(toDelete, i, last)); " +
+                    "  redis.call('SREM', KEYS[1], unpack(toDelete, i, last)); " +
+                    "end; " +
+                    "return #toDelete;",
             Long.class
     );
 
@@ -237,17 +261,22 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (redisTemplate == null) {
             return;
         }
+        String indexKey = null;
         String json = redisTemplate.opsForValue().get(key);
         if (json != null && !json.isEmpty()) {
             try {
                 Map<String, String> map = objectMapper.readValue(json, MAP_STRING_STRING);
                 String username = map.get("username");
                 if (username != null && !username.isBlank()) {
-                    redisTemplate.opsForSet().remove(userIndexKey(username), key);
+                    indexKey = userIndexKey(username);
                 }
             } catch (JsonProcessingException ignored) {
                 // Still delete corrupt credential keys.
             }
+        }
+        if (indexKey != null) {
+            redisTemplate.execute(DELETE_KEY_AND_UNINDEX_SCRIPT, List.of(key, indexKey));
+            return;
         }
         redisTemplate.delete(key);
     }
@@ -268,26 +297,13 @@ public class UserCertificateDaoImpl implements UserCertificateDao {
         if (redisTemplate == null || username == null || username.isBlank()) {
             return;
         }
-        String indexKey = userIndexKey(username);
-        Set<String> indexedKeys = redisTemplate.opsForSet().members(indexKey);
-        if (indexedKeys == null || indexedKeys.isEmpty()) {
-            return;
-        }
-        List<String> keysToDelete = new ArrayList<>();
-        for (String key : indexedKeys) {
-            if (key == null) {
-                continue;
-            }
-            boolean isSession = key.startsWith(SESSION_KEY_PREFIX);
-            boolean isLoginOrCookie = key.startsWith(LOGIN_KEY_PREFIX) || key.startsWith(COOKIE_KEY_PREFIX);
-            if ((sessionOnly && isSession) || (!sessionOnly && isLoginOrCookie)) {
-                keysToDelete.add(key);
-            }
-        }
-        if (keysToDelete.isEmpty()) {
-            return;
-        }
-        redisTemplate.delete(keysToDelete);
-        redisTemplate.opsForSet().remove(indexKey, keysToDelete.toArray());
+        redisTemplate.execute(
+                DELETE_CREDENTIALS_BY_USERNAME_SCRIPT,
+                List.of(userIndexKey(username)),
+                sessionOnly ? "1" : "0",
+                SESSION_KEY_PREFIX,
+                LOGIN_KEY_PREFIX,
+                COOKIE_KEY_PREFIX
+        );
     }
 }

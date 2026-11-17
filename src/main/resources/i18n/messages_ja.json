@@ -57,7 +57,6 @@
   "common.addSuccess": "追加しました",
   "common.redis.accessTokenDeserializeFailed": "キャッシュされたアクセストークンを復元できませんでした",
   "common.redis.accessTokenSerializeFailed": "アクセストークンをシリアライズできませんでした",
-  "common.redis.credentialScanFailed": "キャッシュされた認証情報の走査に失敗しました",
   "common.redis.deserializeFailed": "キャッシュされた値を復元できませんでした",
   "common.redis.deviceDeserializeFailed": "キャッシュされた端末情報を復元できませんでした",
   "common.redis.deviceSerializeFailed": "端末情報をシリアライズできませんでした",

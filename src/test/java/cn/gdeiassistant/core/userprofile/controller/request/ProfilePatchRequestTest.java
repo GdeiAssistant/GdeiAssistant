@@ -13,40 +13,58 @@ class ProfilePatchRequestTest {
     private final JsonMapper mapper = new JsonMapper();
 
     @Test
-    void absentFieldsAreNotIncluded() throws Exception {
+    void absentFieldsAreNotMarkedProvided() throws Exception {
         ProfilePatchRequest request = mapper.readValue("{\"nickname\":\"new\"}", ProfilePatchRequest.class);
 
-        assertEquals(Map.of("nickname", "new"), request.toPatchMap());
+        assertTrue(request.hasField("nickname"));
+        assertEquals("new", request.getNickname());
+        assertFalse(request.hasField("introduction"));
+        assertFalse(request.hasField("birthday"));
+        assertFalse(request.hasField("enrollment"));
+        assertFalse(request.hasField("faculty"));
+        assertFalse(request.hasField("major"));
+        assertFalse(request.hasField("location"));
+        assertFalse(request.hasField("hometown"));
+        assertTrue(request.getUnknownFields().isEmpty());
     }
 
     @Test
-    void explicitNullIsIncludedForClearing() throws Exception {
+    void explicitNullIsMarkedProvidedForClearing() throws Exception {
         ProfilePatchRequest request = mapper.readValue("{\"birthday\":null,\"introduction\":null}", ProfilePatchRequest.class);
 
-        Map<String, Object> patch = request.toPatchMap();
-        assertTrue(patch.containsKey("birthday"));
-        assertNull(patch.get("birthday"));
-        assertTrue(patch.containsKey("introduction"));
-        assertNull(patch.get("introduction"));
+        assertTrue(request.hasField("birthday"));
+        assertNull(request.getBirthday());
+        assertTrue(request.hasField("introduction"));
+        assertNull(request.getIntroduction());
+        assertFalse(request.hasField("nickname"));
     }
 
     @Test
-    void nestedObjectsKeepTheirWireShape() throws Exception {
+    void nestedObjectsKeepTheirTypedShape() throws Exception {
         ProfilePatchRequest request = mapper.readValue(
                 "{\"birthday\":{\"year\":2000,\"month\":1,\"date\":2},"
                         + "\"location\":{\"region\":\"CN\",\"state\":\"44\",\"city\":\"1\"}}",
                 ProfilePatchRequest.class);
 
-        Map<String, Object> patch = request.toPatchMap();
-        assertEquals(Map.of("year", 2000, "month", 1, "date", 2), patch.get("birthday"));
-        assertEquals(Map.of("region", "CN", "state", "44", "city", "1"), patch.get("location"));
+        assertTrue(request.hasField("birthday"));
+        assertNotNull(request.getBirthday());
+        assertEquals(2000, request.getBirthday().getYear());
+        assertEquals(1, request.getBirthday().getMonth());
+        assertEquals(2, request.getBirthday().getDate());
+
+        assertTrue(request.hasField("location"));
+        assertNotNull(request.getLocation());
+        assertEquals("CN", request.getLocation().getRegion());
+        assertEquals("44", request.getLocation().getState());
+        assertEquals("1", request.getLocation().getCity());
     }
 
     @Test
     void unknownFieldsReachTheServiceForRejection() throws Exception {
         ProfilePatchRequest request = mapper.readValue("{\"username\":\"bob\"}", ProfilePatchRequest.class);
 
-        assertEquals(Map.of("username", "bob"), request.toPatchMap());
+        assertEquals(Map.of("username", "bob"), request.getUnknownFields());
+        assertFalse(request.hasField("username"));
     }
 
     @Test
@@ -58,16 +76,26 @@ class ProfilePatchRequestTest {
                         + "\"hometown\":null}",
                 ProfilePatchRequest.class);
 
-        Map<String, Object> patch = request.toPatchMap();
-        assertEquals("n", patch.get("nickname"));
-        assertEquals("i", patch.get("introduction"));
-        assertEquals(2024, patch.get("enrollment"));
-        assertEquals(1, patch.get("faculty"));
-        assertEquals("m", patch.get("major"));
-        assertEquals(Map.of("year", 2000, "month", 2, "date", 3), patch.get("birthday"));
-        assertEquals(Map.of("region", "CN", "state", "44", "city", "1"), patch.get("location"));
-        assertTrue(patch.containsKey("hometown"));
-        assertNull(patch.get("hometown"));
+        assertTrue(request.hasField("nickname"));
+        assertEquals("n", request.getNickname());
+        assertTrue(request.hasField("introduction"));
+        assertEquals("i", request.getIntroduction());
+        assertTrue(request.hasField("enrollment"));
+        assertEquals(2024, request.getEnrollment());
+        assertTrue(request.hasField("faculty"));
+        assertEquals(1, request.getFaculty());
+        assertTrue(request.hasField("major"));
+        assertEquals("m", request.getMajor());
+        assertTrue(request.hasField("birthday"));
+        assertEquals(2000, request.getBirthday().getYear());
+        assertEquals(2, request.getBirthday().getMonth());
+        assertEquals(3, request.getBirthday().getDate());
+        assertTrue(request.hasField("location"));
+        assertEquals("CN", request.getLocation().getRegion());
+        assertEquals("44", request.getLocation().getState());
+        assertEquals("1", request.getLocation().getCity());
+        assertTrue(request.hasField("hometown"));
+        assertNull(request.getHometown());
     }
 
     @Test

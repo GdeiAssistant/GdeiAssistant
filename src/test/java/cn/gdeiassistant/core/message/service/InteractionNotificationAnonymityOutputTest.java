@@ -91,4 +91,28 @@ class InteractionNotificationAnonymityOutputTest {
         assertEquals(actor, entity.getActorUsername());
         assertEquals(actor + " 评论了你的树洞", entity.getContent());
     }
+
+    @Test
+    void shortActorAnonymizationNeverReplacesInsideCommentDetail() {
+        when(userCertificateService.getUserLoginCertificate("sid")).thenReturn(new User("receiver"));
+
+        InteractionNotificationEntity secret = new InteractionNotificationEntity();
+        secret.setModule("secret");
+        secret.setActorUsername("ab");
+        secret.setReceiverUsername("receiver");
+        secret.setContent("ab 评论了你的树洞：about ab and user 点赞");
+
+        InteractionNotificationEntity express = new InteractionNotificationEntity();
+        express.setModule("express");
+        express.setActorUsername("ab");
+        express.setReceiverUsername("receiver");
+        express.setContent("ab 评论了你的表白：about ab");
+
+        when(interactionNotificationMapper.selectInteractionNotificationPage("receiver", 0, 10))
+                .thenReturn(List.of(secret, express));
+
+        List<InteractionMessageVO> results = service.queryInteractionMessages("sid", 0, 10);
+        assertEquals("匿名用户 评论了你的树洞：about ab and user 点赞", results.get(0).getContent());
+        assertEquals("有人 评论了你的表白：about ab", results.get(1).getContent());
+    }
 }

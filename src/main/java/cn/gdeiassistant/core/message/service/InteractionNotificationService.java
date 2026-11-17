@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +27,10 @@ public class InteractionNotificationService {
 
     private static final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final ZoneId ZONE_ID = ZoneId.of("Asia/Shanghai");
+    private static final Pattern LEADING_TREEHOLE_ACTOR_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,24}(?=\\s*[点赞评论])");
+    private static final List<String> NOTIFICATION_VERB_PREFIXES = List.of(
+            "评论", "点赞", "向你", "通过", "拒绝", "接取", "已确认", "猜中", "参与", "关注", "与你"
+    );
 
     private final UserCertificateService userCertificateService;
 
@@ -95,9 +100,10 @@ public class InteractionNotificationService {
         for (InteractionNotificationEntity entity : entityList) {
             String originalActor = entity.getActorUsername();
             if (deletedActors.contains(originalActor)) {
-                // Replace original username in content, then mark actor as anonymous
+                // Replace leading actor username in content, then mark actor as anonymous
                 if (entity.getContent() != null) {
-                    entity.setContent(entity.getContent().replace(originalActor, AnonymizeUtils.sanitizeUsername("del_")));
+                    entity.setContent(replaceLeadingActor(
+                            entity.getContent(), originalActor, AnonymizeUtils.sanitizeUsername("del_")));
                 }
                 entity.setActorUsername("del_legacy");
             }
@@ -175,10 +181,11 @@ public class InteractionNotificationService {
         if (content == null || content.isBlank()) {
             return AnonymizeUtils.treeholeAnonymousLabel() + " 与你的树洞产生了互动";
         }
-        // 先按已记录的身份隐藏，避免账号字符或长度变化绕过匿名处理。
+        // 仅替换前缀主语位置的发起人标识，避免短用户名误伤评论正文。
         String sanitized = StringUtils.isNotBlank(actorUsername)
-                ? content.replace(actorUsername, AnonymizeUtils.treeholeAnonymousLabel()) : content;
-        return sanitized.replaceAll("\\b[a-zA-Z0-9_]{3,24}\\b(?=\\s*[点赞评论])", AnonymizeUtils.treeholeAnonymousLabel());
+                ? replaceLeadingActor(content, actorUsername, AnonymizeUtils.treeholeAnonymousLabel())
+                : content;
+        return LEADING_TREEHOLE_ACTOR_PATTERN.matcher(sanitized).replaceFirst(AnonymizeUtils.treeholeAnonymousLabel());
     }
 
     private String anonymizeExpressNotificationContent(String content, String actorUsername) {
@@ -187,10 +194,10 @@ public class InteractionNotificationService {
         }
         String sanitized = content;
         if (StringUtils.isNotBlank(actorUsername) && !actorUsername.startsWith("del_")) {
-            sanitized = sanitized.replace(actorUsername, "有人");
+            sanitized = replaceLeadingActor(sanitized, actorUsername, "有人");
         }
         if (actorUsername != null && actorUsername.startsWith("del_")) {
-            sanitized = sanitized.replace(actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
+            sanitized = replaceLeadingActor(sanitized, actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
         }
         return sanitized;
     }
@@ -201,9 +208,32 @@ public class InteractionNotificationService {
 
     private String anonymizeContent(String content, String actorUsername) {
         if (content != null && actorUsername != null && actorUsername.startsWith("del_")) {
-            return content.replace(actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
+            return replaceLeadingActor(content, actorUsername, AnonymizeUtils.sanitizeUsername(actorUsername));
         }
         return content;
+    }
+
+    private static String replaceLeadingActor(String content, String actorUsername, String replacement) {
+        if (content == null || actorUsername == null || actorUsername.isBlank() || !content.startsWith(actorUsername)) {
+            return content;
+        }
+        int end = actorUsername.length();
+        if (end < content.length()) {
+            char next = content.charAt(end);
+            if (!Character.isWhitespace(next) && !startsWithNotificationVerb(content, end)) {
+                return content;
+            }
+        }
+        return replacement + content.substring(end);
+    }
+
+    private static boolean startsWithNotificationVerb(String content, int offset) {
+        for (String verb : NOTIFICATION_VERB_PREFIXES) {
+            if (content.startsWith(verb, offset)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String normalizeModule(String module) {

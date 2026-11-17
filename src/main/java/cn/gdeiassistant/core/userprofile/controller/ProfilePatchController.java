@@ -23,7 +23,7 @@ public class ProfilePatchController {
     @RequestMapping(value = "/api/profile", method = {RequestMethod.PATCH, RequestMethod.POST})
     public ResponseEntity<? extends JsonResult> save(HttpServletRequest request, @RequestBody ProfilePatchRequest patch) throws Exception {
         try {
-            service.save((String) request.getAttribute("sessionId"), patch == null ? null : patch.toPatchMap());
+            service.save((String) request.getAttribute("sessionId"), patch);
             return ResponseEntity.ok(new JsonResult(true));
         } catch (ProfilePatchService.InvalidPatch e) {
             return ResponseEntity.badRequest().body(new ValidationResult(e.getErrors()));

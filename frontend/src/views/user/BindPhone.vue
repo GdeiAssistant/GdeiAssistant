@@ -37,7 +37,6 @@ const sending = ref(false)
 const showUnbindDialog = ref(false)
 const isUnbinding = ref(false)
 let timerId = null
-const phoneAttributionApi = `${import.meta.env.VITE_APP_BASE_API ?? '/api'}/phone/attribution`
 
 const codeButtonText = computed(() => {
   if (countdown.value > 0) {
@@ -57,7 +56,7 @@ function validatePhone(value, countryCode) {
 
 async function loadCountryCodes() {
   rawCountryCodes.value = await loadCountryCodeCatalog({
-    apiUrl: isMockMode() ? '' : phoneAttributionApi,
+    skipRemote: isMockMode(),
     locale: locale.value,
   })
 }

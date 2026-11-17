@@ -6,10 +6,17 @@ package cn.gdeiassistant.common.exception.databaseexception;
 public class UserNotExistException extends DataNotExistException {
 
     public UserNotExistException() {
-
     }
 
     public UserNotExistException(String message) {
         super(message);
+    }
+
+    private UserNotExistException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static UserNotExistException ofKey(String key, Object... args) {
+        return new UserNotExistException(key, args);
     }
 }

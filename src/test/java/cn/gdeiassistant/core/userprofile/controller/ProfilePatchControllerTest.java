@@ -40,7 +40,7 @@ class ProfilePatchControllerTest {
 
         assertEquals(200, response.getStatusCode().value());
         assertTrue(response.getBody() != null && response.getBody().isSuccess());
-        verify(service).save("synthetic-session", Map.of("nickname", "合成昵称"));
+        verify(service).save("synthetic-session", body);
     }
 
     @Test

@@ -11,4 +11,12 @@ public class HourFrequencyLimitException extends SendSMSException {
     public HourFrequencyLimitException(String message) {
         super(message);
     }
+
+    private HourFrequencyLimitException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static HourFrequencyLimitException ofKey(String key, Object... args) {
+        return new HourFrequencyLimitException(key, args);
+    }
 }

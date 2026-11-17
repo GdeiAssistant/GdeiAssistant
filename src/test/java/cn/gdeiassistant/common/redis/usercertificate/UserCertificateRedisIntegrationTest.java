@@ -38,7 +38,7 @@ class UserCertificateRedisIntegrationTest {
         redis = new RedisConfig().redisTemplate(factory);
         utils = new RedisDaoUtils(redis);
 
-        dao = new UserCertificateDaoImpl(utils, new ObjectMapper(), redis);
+        dao = new UserCertificateDaoImpl(new ObjectMapper(), redis);
 
         AESEncryptConfig c = new AESEncryptConfig();
         c.setPrivateKey("synthetic-integration-encryption");
@@ -58,7 +58,7 @@ class UserCertificateRedisIntegrationTest {
     }
 
     String key(String prefix, String id) {
-        return StringEncryptUtils.sha256HexString(prefix + id);
+        return prefix + StringEncryptUtils.sha256HexString(id);
     }
 
     UserCertificateEntity session() {
@@ -92,16 +92,22 @@ class UserCertificateRedisIntegrationTest {
         assertEquals(12L, e.getTimestamp());
         for (String prefix :
                 new String[] {
-                    "USER_COOKIE_CERTIFICATE_",
-                    "USER_LOGIN_CERTIFICATE_",
-                    "USER_SESSION_CERTIFICATE_"
+                    UserCertificateDaoImpl.COOKIE_KEY_PREFIX,
+                    UserCertificateDaoImpl.LOGIN_KEY_PREFIX,
+                    UserCertificateDaoImpl.SESSION_KEY_PREFIX
                 }) {
             assertFalse(
                     redis.opsForValue().get(key(prefix, namespace)).contains("synthetic-password"));
         }
-        ttl(key("USER_COOKIE_CERTIFICATE_", namespace), 7 * 86400);
-        ttl(key("USER_LOGIN_CERTIFICATE_", namespace), 3600);
-        ttl(key("USER_SESSION_CERTIFICATE_", namespace), 600);
+        ttl(key(UserCertificateDaoImpl.COOKIE_KEY_PREFIX, namespace), 7 * 86400);
+        ttl(key(UserCertificateDaoImpl.LOGIN_KEY_PREFIX, namespace), 3600);
+        ttl(key(UserCertificateDaoImpl.SESSION_KEY_PREFIX, namespace), 600);
+        ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, owner), 7 * 86400);
+
+        dao.saveUserLoginCertificate(namespace + "-extend", other, "synthetic-password");
+        ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, other), 3600);
+        dao.saveUserCookieCertificate(namespace + "-extend", other, "synthetic-password");
+        ttl(key(UserCertificateDaoImpl.USER_INDEX_PREFIX, other), 7 * 86400);
     }
 
     @Test
@@ -109,12 +115,12 @@ class UserCertificateRedisIntegrationTest {
         dao.saveUserCookieCertificate(namespace, owner, "synthetic-password");
         dao.saveUserLoginCertificate(namespace, owner, "synthetic-password");
         dao.saveUserSessionCertificate(namespace, session());
-        redis.expire(key("USER_COOKIE_CERTIFICATE_", namespace), 1, TimeUnit.SECONDS);
-        redis.expire(key("USER_LOGIN_CERTIFICATE_", namespace), 1, TimeUnit.SECONDS);
+        redis.expire(key(UserCertificateDaoImpl.COOKIE_KEY_PREFIX, namespace), 1, TimeUnit.SECONDS);
+        redis.expire(key(UserCertificateDaoImpl.LOGIN_KEY_PREFIX, namespace), 1, TimeUnit.SECONDS);
         dao.updateUserCookieCertificateExpiration(namespace);
         dao.updateUserLoginCertificateExpiration(namespace);
-        ttl(key("USER_COOKIE_CERTIFICATE_", namespace), 7 * 86400);
-        ttl(key("USER_LOGIN_CERTIFICATE_", namespace), 3600);
+        ttl(key(UserCertificateDaoImpl.COOKIE_KEY_PREFIX, namespace), 7 * 86400);
+        ttl(key(UserCertificateDaoImpl.LOGIN_KEY_PREFIX, namespace), 3600);
         dao.deleteUserLoginCertificate(namespace);
         dao.deleteUserSessionCertificate(namespace);
         assertNull(dao.queryUserLoginCertificate(namespace));
@@ -155,7 +161,7 @@ class UserCertificateRedisIntegrationTest {
         assertNull(dao.queryUserCookieCertificate(namespace));
         assertNull(dao.queryUserLoginCertificate(namespace));
         assertNull(dao.queryUserSessionCertificate(namespace));
-        String k = key("USER_LOGIN_CERTIFICATE_", namespace);
+        String k = key(UserCertificateDaoImpl.LOGIN_KEY_PREFIX, namespace);
         redis.opsForValue().set(k, "invalid-json");
         try {
             assertThrows(RuntimeException.class, () -> dao.queryUserLoginCertificate(namespace));

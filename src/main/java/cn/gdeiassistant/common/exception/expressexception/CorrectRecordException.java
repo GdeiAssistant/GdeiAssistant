@@ -12,4 +12,12 @@ public class CorrectRecordException extends ExpressGuessException {
     public CorrectRecordException(String message) {
         super(message);
     }
+
+    private CorrectRecordException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static CorrectRecordException ofKey(String key, Object... args) {
+        return new CorrectRecordException(key, args);
+    }
 }

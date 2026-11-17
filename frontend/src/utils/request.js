@@ -19,12 +19,13 @@ export function sanitizeMessage(raw) {
 
   const lower = s.toLowerCase()
   if (
-    /status\s*code|request\s*failed|econnrefused|enetunreach|econnreset|socket hang up|network\s*error|timeout|error\s*message|stack\s*trace|axioserror|sqlException|nullpointer|at\s+\S+\s*\(/i.test(lower)
-    || /^\d{3}$/.test(s)
-    || /\b(500|502|503|504)\b/.test(s)
+    /status\s*code|request\s*failed|econnrefused|enetunreach|econnreset|socket hang up|network\s*error|error\s*message|stack\s*trace|axioserror|sqlexception|nullpointer/i.test(lower)
+    || /\bat\s+[a-z0-9_$]+(?:\.[a-z0-9_$]+)+\(/i.test(s)
+    || /\bat\s+[a-z0-9_$.]+\.(?:java|kt|js|mjs|ts):\d+/i.test(s)
+    || /^\d{3}(?:\s+(?:internal server error|bad gateway|service unavailable|gateway timeout))?$/i.test(s)
     || /^(error|exception)\s*:/i.test(s)
     || /[A-Za-z]+(Error|Exception)\b/.test(s)
-    || /bearer\s+[a-z0-9._\-+=/]+/i.test(s)
+    || /\bbearer\s+[a-z0-9._\-+=/]+/i.test(s)
     || /\b(api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret)\s*[=:]\s*\S+/i.test(s)
   ) {
     return _t('common.systemBusy')
@@ -292,11 +293,10 @@ service.interceptors.response.use(
       return Promise.reject(error)
     }
 
-    // 其他 HTTP / 网络错误仍按原有映射逻辑处理
+    // 其他 HTTP / 网络错误直接映射为本地化友好提示，不再二次经过 sanitizeMessage
     const friendlyMessage = mapErrorToMessage(error, { isLoginRequest })
-    const safeMessage = sanitizeMessage(friendlyMessage)
     try {
-      if (!error.config?.skipErrorTip) showErrorTopTips(safeMessage)
+      if (!error.config?.skipErrorTip) showErrorTopTips(friendlyMessage)
     } catch (_) {}
 
     return Promise.reject(error)

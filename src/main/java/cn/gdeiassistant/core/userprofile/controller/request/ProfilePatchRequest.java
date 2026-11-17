@@ -1,10 +1,12 @@
 package cn.gdeiassistant.core.userprofile.controller.request;
 
+import cn.gdeiassistant.core.profile.service.ProfilePatchService;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import tools.jackson.databind.annotation.JsonDeserialize;
 import org.jspecify.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Set;
  * Partial profile update. Fields that are absent stay unchanged; explicit
  * null clears the field where the service allows it.
  */
-public class ProfilePatchRequest {
+public class ProfilePatchRequest implements ProfilePatchService.PatchInput {
 
     @JsonDeserialize(using = StrictStringDeserializer.class)
     private String nickname;
@@ -119,31 +121,18 @@ public class ProfilePatchRequest {
         unknown.put(name, value);
     }
 
-    /**
-     * Converts the typed payload back to the map consumed by ProfilePatchService
-     * so unrecognised fields still surface through the service's field errors.
-     */
-    public Map<String, Object> toPatchMap() {
-        Map<String, Object> patch = new LinkedHashMap<>();
-        for (String field : provided) {
-            switch (field) {
-                case "nickname" -> patch.put("nickname", nickname);
-                case "introduction" -> patch.put("introduction", introduction);
-                case "enrollment" -> patch.put("enrollment", enrollment);
-                case "faculty" -> patch.put("faculty", faculty);
-                case "major" -> patch.put("major", major);
-                case "birthday" -> patch.put("birthday", birthday == null ? null : birthday.toMap());
-                case "location" -> patch.put("location", location == null ? null : location.toMap());
-                case "hometown" -> patch.put("hometown", hometown == null ? null : hometown.toMap());
-                default -> {
-                }
-            }
-        }
-        patch.putAll(unknown);
-        return patch;
+    @Override
+    public boolean hasField(String name) {
+        return name != null && provided.contains(name);
     }
 
-    public static class BirthdayPatch {
+    @Override
+    @JsonIgnore
+    public Map<String, Object> getUnknownFields() {
+        return Collections.unmodifiableMap(unknown);
+    }
+
+    public static class BirthdayPatch implements ProfilePatchService.BirthdayInput {
         @JsonDeserialize(using = StrictIntegerDeserializer.class)
         private Integer year;
         @JsonDeserialize(using = StrictIntegerDeserializer.class)
@@ -174,17 +163,9 @@ public class ProfilePatchRequest {
         public void setDate(Integer date) {
             this.date = date;
         }
-
-        Map<String, Object> toMap() {
-            Map<String, Object> values = new LinkedHashMap<>();
-            values.put("year", year);
-            values.put("month", month);
-            values.put("date", date);
-            return values;
-        }
     }
 
-    public static class LocationPatch {
+    public static class LocationPatch implements ProfilePatchService.LocationInput {
         @JsonDeserialize(using = StrictStringDeserializer.class)
         private String region;
         @Nullable
@@ -216,14 +197,6 @@ public class ProfilePatchRequest {
 
         public void setCity(String city) {
             this.city = city;
-        }
-
-        Map<String, Object> toMap() {
-            Map<String, Object> values = new LinkedHashMap<>();
-            values.put("region", region);
-            values.put("state", state);
-            values.put("city", city);
-            return values;
         }
     }
 }

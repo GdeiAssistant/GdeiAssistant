@@ -11,4 +11,12 @@ public class UserStateErrorException extends CloseAccountException {
     public UserStateErrorException(String message) {
         super(message);
     }
+
+    private UserStateErrorException(String key, Object[] args) {
+        super(key, args, null);
+    }
+
+    public static UserStateErrorException ofKey(String key, Object... args) {
+        return new UserStateErrorException(key, args);
+    }
 }

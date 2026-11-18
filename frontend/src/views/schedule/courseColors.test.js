@@ -46,6 +46,32 @@ describe('assignCoursePairs', () => {
   })
 })
 
+describe('term-keyed assignment across week switches', () => {
+  const term = [
+    block('earlybird', 0, 0, 2, { minScheduleWeek: 1, maxScheduleWeek: 8 }),
+    block('shared', 1, 0, 2, { minScheduleWeek: 1, maxScheduleWeek: 16 }),
+    block('latecomer', 0, 0, 2, { minScheduleWeek: 9, maxScheduleWeek: 16 })
+  ]
+  const inWeek = (list, week) => list.filter((s) => week >= s.minScheduleWeek && week <= s.maxScheduleWeek)
+
+  it('keeps one pair for a course in the week-2 and week-12 views', () => {
+    const termPairs = assignCoursePairs(term)
+    const shared = termPairs.get('shared')
+    // The view only filters blocks; the pair comes from the term-wide assignment.
+    const week2 = inWeek(term, 2).map((s) => termPairs.get(s.scheduleName))
+    const week12 = inWeek(term, 12).map((s) => termPairs.get(s.scheduleName))
+    expect(week2).toContain(shared)
+    expect(week12).toContain(shared)
+    expect(assignCoursePairs(term).get('shared')).toBe(shared)
+  })
+
+  it('documents the regression: a week-12 subset alone would recolour the course', () => {
+    const termPairs = assignCoursePairs(term)
+    const week12Pairs = assignCoursePairs(inWeek(term, 12))
+    expect(week12Pairs.get('shared')).not.toBe(termPairs.get('shared'))
+  })
+})
+
 describe('grid geometry', () => {
   it('skips the lunch and dinner bands', () => {
     expect([0, 3, 4, 7, 8, 11].map(periodGridRow)).toEqual([2, 5, 7, 10, 12, 15])

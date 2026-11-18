@@ -80,7 +80,9 @@ const showEmptyState = computed(() => {
 })
 
 // 课程配色按课程名分配（RE-REVIEW 2.2），忽略服务端按位置下发的 colorCode；token 见 --c-course-N-bg/ink/stripe
-const coursePairs = computed(() => assignCoursePairs(scheduleResult.value?.scheduleList))
+// 配色取自整学期课表（week=0），转周不变色；整学期列表未返回前回退到当前周响应
+const termScheduleList = ref(null)
+const coursePairs = computed(() => assignCoursePairs(termScheduleList.value ?? scheduleResult.value?.scheduleList))
 
 function getCoursePair(course) {
   return coursePairs.value.get(String(course.scheduleName ?? '').trim()) || 1
@@ -114,6 +116,23 @@ async function fetchSchedule() {
     // The request layer reports current failures; cancellation is silent.
   } finally {
     if (task.isCurrent()) loading.value = false
+  }
+}
+
+let termRequestId = 0
+
+// 课表数据可能变化（刷新缓存、增删自定义课程）后调用：先作废旧列表，再重新拉取整学期课表
+async function refreshTermSchedule() {
+  const requestId = ++termRequestId
+  termScheduleList.value = null
+  try {
+    const res = await getSchedule(0)
+    if (requestId !== termRequestId) return
+    if (res && res.success && res.data && Array.isArray(res.data.scheduleList)) {
+      termScheduleList.value = res.data.scheduleList
+    }
+  } catch (error) {
+    // 失败时沿用当前周响应配色；错误由请求层统一提示
   }
 }
 
@@ -152,6 +171,7 @@ async function onRefreshSchedule() {
     if (res && res.success) {
       hideLoading()
       toastSuccess(scheduleMessages.value.syncSuccess)
+      refreshTermSchedule()
       await fetchSchedule()
     }
   } catch (e) {
@@ -247,6 +267,7 @@ async function submitAddCustom() {
     await addCustomSchedule(payload)
     toastSuccess(scheduleMessages.value.addSuccess)
     showAddCustomDialog.value = false
+    refreshTermSchedule()
     await fetchSchedule()
   } catch (e) {
     // 错误由 request.js 全局拦截器统一提示
@@ -265,6 +286,7 @@ async function handleDeleteCustomCourse() {
     try {
       await deleteCustomSchedule(position, courseId)
       toastSuccess(scheduleMessages.value.deleteSuccess)
+      refreshTermSchedule()
       await fetchSchedule()
     } catch (e) {
       // 错误由 request.js 全局拦截器统一提示
@@ -294,6 +316,7 @@ function closeCourseDetail() {
 
 onMounted(() => {
   fetchSchedule()
+  refreshTermSchedule()
 })
 </script>
 

@@ -279,7 +279,7 @@ public class UserProfileService {
      * @param introductionContent
      * @return
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void updateIntroduction(String sessionId, String introductionContent) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (user == null) {

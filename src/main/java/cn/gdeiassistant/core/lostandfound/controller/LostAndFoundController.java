@@ -108,7 +108,7 @@ public class LostAndFoundController {
         if (list != null && !list.isEmpty()) {
             return new DataJsonResult<>(true, list.get(0));
         }
-        return new DataJsonResult<>(false, "获取失物招领物品预览图失败");
+        return new DataJsonResult<>(false, Messages.forLanguage("lostandfound.previewLoadFailed", request.getHeader("Accept-Language")));
     }
 
     @RequestMapping(value = "/api/lostandfound/founditem/type/{type}/start/{start}", method = RequestMethod.GET)
@@ -157,19 +157,19 @@ public class LostAndFoundController {
         if (imageKeys != null) {
             for (String imageKey : imageKeys) {
                 if (StringUtils.isBlank(imageKey)) {
-                    return new JsonResult(false, "不合法的图片文件");
+                    return new JsonResult(false, Messages.forLanguage("upload.invalidImage", request.getHeader("Accept-Language")));
                 }
                 uploadedKeyCount++;
             }
         }
         if (uploadedKeyCount > 4) {
-            return new JsonResult(false, "不合法的图片文件");
+            return new JsonResult(false, Messages.forLanguage("upload.invalidImage", request.getHeader("Accept-Language")));
         }
         if (uploadedFileCount == 0 && uploadedKeyCount == 0) {
-            return new JsonResult(false, "不合法的图片文件");
+            return new JsonResult(false, Messages.forLanguage("upload.invalidImage", request.getHeader("Accept-Language")));
         }
         if (uploadedKeyCount > 0 && uploadedFileCount > 0) {
-            return new JsonResult(false, "不支持混合上传图片参数");
+            return new JsonResult(false, Messages.forLanguage("upload.mixedImageParamsUnsupported", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         try {

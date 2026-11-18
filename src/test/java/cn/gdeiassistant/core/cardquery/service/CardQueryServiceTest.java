@@ -34,7 +34,7 @@ import java.util.*;
 class CardQueryServiceTest {
     @Mock UserCertificateService certificates;
     @Mock HttpClientUtils clients;
-    @Mock CardClient cards;
+    CardClient cards;
     @Mock ImageRecognitionService recognition;
     @Mock CloseableHttpClient http;
     CardQueryService service;
@@ -42,11 +42,13 @@ class CardQueryServiceTest {
 
     @BeforeEach
     void setup() throws Exception {
+        cards = spy(new CardClient(
+                clients,
+                "http://ecard.gdei.edu.cn",
+                "https://security.gdei.edu.cn/cas/login",
+                "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
         service = new CardQueryService(
                 clients,
-                "https://security.gdei.edu.cn/cas/login",
-                "http://ecard.gdei.edu.cn:8050/LoginCas.aspx",
-                "http://ecard.gdei.edu.cn",
                 recognition,
                 certificates,
                 cards);
@@ -114,7 +116,7 @@ class CardQueryServiceTest {
     @Test
     void cardInfoParsesFieldsAndClosesSession() throws Exception {
         login();
-        when(cards.fetchCardBasicInfoDocument("session")).thenReturn(Jsoup.parse(info()));
+        doReturn(Jsoup.parse(info())).when(cards).fetchCardBasicInfoDocument("session");
         var r = service.cardInfoQuery("session");
         assertEquals("Synthetic Student", r.getName());
         assertEquals("100001", r.getCardNumber());
@@ -123,15 +125,16 @@ class CardQueryServiceTest {
         assertEquals("正常", r.getCardLostState());
         assertEquals("未冻结", r.getCardFreezeState());
         verify(http).close();
-        verify(clients, times(2)).syncHttpClientCookieStore("session", cookies);
+        verify(clients, times(1)).syncHttpClientCookieStore("session", cookies);
     }
 
     @Test
     void currentDayTradesIncludeAllPages() throws Exception {
         login();
-        when(cards.fetchCardBasicInfoDocument("session")).thenReturn(Jsoup.parse(info()));
-        when(cards.fetchCardTrjnListDocument(eq("session"), eq(0), anyInt()))
-                .thenReturn(Jsoup.parse(trades(true, false)));
+        doReturn(Jsoup.parse(info())).when(cards).fetchCardBasicInfoDocument("session");
+        doReturn(Jsoup.parse(trades(true, false)))
+                .when(cards)
+                .fetchCardTrjnListDocument(eq("session"), eq(0), anyInt());
         var r = service.cardQuery("session", date(true));
         assertEquals(2, r.getCardList().size());
         assertEquals("Shop", r.getCardList().get(0).getMerchantName());
@@ -139,14 +142,16 @@ class CardQueryServiceTest {
         assertEquals("18.00", r.getCardList().get(0).getAccountBalance());
         verify(cards).fetchCardTrjnListDocument("session", 0, 2);
         verify(http).close();
+        verify(clients, times(1)).syncHttpClientCookieStore("session", cookies);
     }
 
     @Test
     void historicalTradesUseRequestedDateAndPagination() throws Exception {
         login();
-        when(cards.fetchCardBasicInfoDocument("session")).thenReturn(Jsoup.parse(info()));
-        when(cards.fetchCardTrjnListByDateDocument(eq("session"), eq(2020), eq(1), eq(1), anyInt()))
-                .thenReturn(Jsoup.parse(trades(false, false)));
+        doReturn(Jsoup.parse(info())).when(cards).fetchCardBasicInfoDocument("session");
+        doReturn(Jsoup.parse(trades(false, false)))
+                .when(cards)
+                .fetchCardTrjnListByDateDocument(eq("session"), eq(2020), eq(1), eq(1), anyInt());
         assertEquals(2, service.cardQuery("session", date(false)).getCardList().size());
         verify(cards).fetchCardTrjnListByDateDocument("session", 2020, 1, 1, 2);
     }
@@ -154,14 +159,16 @@ class CardQueryServiceTest {
     @Test
     void emptyCurrentAndHistoricalRecordsAreEmptyLists() throws Exception {
         login();
-        when(cards.fetchCardBasicInfoDocument("session")).thenReturn(Jsoup.parse(info()));
-        when(cards.fetchCardTrjnListDocument("session", 0, 1))
-                .thenReturn(Jsoup.parse(trades(true, true)));
+        doReturn(Jsoup.parse(info())).when(cards).fetchCardBasicInfoDocument("session");
+        doReturn(Jsoup.parse(trades(true, true)))
+                .when(cards)
+                .fetchCardTrjnListDocument("session", 0, 1);
         assertTrue(service.cardQuery("session", date(true)).getCardList().isEmpty());
         reset(http);
         login();
-        when(cards.fetchCardTrjnListByDateDocument("session", 2020, 1, 1, 1))
-                .thenReturn(Jsoup.parse(trades(false, true)));
+        doReturn(Jsoup.parse(trades(false, true)))
+                .when(cards)
+                .fetchCardTrjnListByDateDocument("session", 2020, 1, 1, 1);
         assertTrue(service.cardQuery("session", date(false)).getCardList().isEmpty());
     }
 
@@ -171,7 +178,8 @@ class CardQueryServiceTest {
                 response(200, "<div class='pcclient'></div><input id='tokens'><input id='stamp'>"),
                 response(200, "<div class='pcclient'></div>"));
         assertThrows(PasswordIncorrectException.class, () -> service.cardLost("session", "012"));
-        verifyNoInteractions(cards);
+        verify(cards, never()).fetchLossCardPageDocument(anyString());
+        verify(cards, never()).submitSetCardLost(anyString(), anyString(), anyString());
         verify(http).close();
     }
 
@@ -189,17 +197,19 @@ class CardQueryServiceTest {
 
     void loss() throws Exception {
         login();
-        when(cards.fetchLossCardPageDocument("session"))
-                .thenReturn(Jsoup.parse("<img id='imgCheckCode' src='synthetic.png'>"));
-        when(cards.fetchKeyPadImage("session")).thenReturn(new byte[] {1});
+        doReturn(Jsoup.parse("<img id='imgCheckCode' src='synthetic.png'>"))
+                .when(cards)
+                .fetchLossCardPageDocument("session");
+        doReturn(new byte[] {1}).when(cards).fetchKeyPadImage("session");
         java.io.ByteArrayOutputStream png = new java.io.ByteArrayOutputStream();
         javax.imageio.ImageIO.write(
                 new java.awt.image.BufferedImage(1, 1, java.awt.image.BufferedImage.TYPE_INT_RGB),
                 "png",
                 png);
         lenient()
-                .when(cards.fetchCheckcodeImage("session", "synthetic.png"))
-                .thenReturn(png.toByteArray());
+                .doReturn(png.toByteArray())
+                .when(cards)
+                .fetchCheckcodeImage("session", "synthetic.png");
         lenient().when(recognition.characterNumberRecognize(anyString())).thenReturn("0123456789");
         lenient()
                 .when(
@@ -211,11 +221,13 @@ class CardQueryServiceTest {
     @Test
     void simulatedLossSubmissionMapsKeyboardAndChecksServerResult() throws Exception {
         loss();
-        when(cards.submitSetCardLost("session", "210", "1234"))
-                .thenReturn("{\"ret\":true,\"msg\":\"ok\"}");
+        doReturn("{\"ret\":true,\"msg\":\"ok\"}")
+                .when(cards)
+                .submitSetCardLost("session", "210", "1234");
         service.cardLost("session", "012");
         verify(cards).submitSetCardLost("session", "210", "1234");
         verify(http).close();
+        verify(clients, times(1)).syncHttpClientCookieStore("session", cookies);
     }
 
     @Test
@@ -239,8 +251,9 @@ class CardQueryServiceTest {
     @Test
     void upstreamLossRejectionRemainsFailure() throws Exception {
         loss();
-        when(cards.submitSetCardLost(anyString(), anyString(), anyString()))
-                .thenReturn("{\"ret\":false,\"msg\":\"查询密码错误\"}");
+        doReturn("{\"ret\":false,\"msg\":\"查询密码错误\"}")
+                .when(cards)
+                .submitSetCardLost(anyString(), anyString(), anyString());
         assertThrows(PasswordIncorrectException.class, () -> service.cardLost("session", "012"));
     }
 }

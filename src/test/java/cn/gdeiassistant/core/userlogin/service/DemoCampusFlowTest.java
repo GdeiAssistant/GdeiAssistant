@@ -62,7 +62,7 @@ class DemoCampusFlowTest {
 
     @Test
     void demoCardReadsWorkAndCardLossCannotReachTheCampusSystem() throws Exception {
-        CardQueryService cardService = new CardQueryService(httpClients, null, null, null, null, certificates, null);
+        CardQueryService cardService = new CardQueryService(httpClients, null, certificates, null);
         CardQuery date = new CardQuery();
         date.setYear(2026);
         date.setMonth(11);

@@ -147,7 +147,7 @@ public class MarketplaceService {
     }
 
     /** 发布：DTO -> Entity -> 持久化，返回带 id 的 Entity 供上传图片使用 */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public MarketplaceItemEntity publishItem(MarketplacePublishDTO dto, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         MarketplaceItemEntity entity = new MarketplaceItemEntity();

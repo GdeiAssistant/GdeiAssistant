@@ -77,7 +77,7 @@ public class ExpressService {
         return expressCommentConverter.toVOList(list);
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void addExpressComment(int expressId, String sessionId, String comment) throws DataNotExistException {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
             throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
@@ -118,7 +118,7 @@ public class ExpressService {
         expressMapper.insertExpress(entity);
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void likeExpress(int expressId, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
@@ -144,14 +144,14 @@ public class ExpressService {
         }
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public boolean guessExpress(int expressId, String sessionId, String name) throws NoRealNameException, DataNotExistException, CorrectRecordException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         ExpressEntity entity = expressMapper.selectExpressById(expressId, user.getUsername());
         if (entity == null) {
             throw new DataNotExistException(Messages.get("express.confessionMissing"));
         }
-        int correctTime = expressMapper.selectCorrectExpressGuessRecord(user.getUsername());
+        int correctTime = expressMapper.selectCorrectExpressGuessRecord(expressId, user.getUsername());
         if (correctTime > 0) {
             throw new CorrectRecordException(Messages.get("express.nameAlreadyGuessed"));
         }

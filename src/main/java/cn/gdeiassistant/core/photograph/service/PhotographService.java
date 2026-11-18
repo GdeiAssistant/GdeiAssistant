@@ -151,7 +151,7 @@ public class PhotographService {
         return entity.getId();
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void addPhotographComment(int id, String comment, String sessionId) throws DataNotExistException {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
             throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
@@ -219,7 +219,7 @@ public class PhotographService {
         return storedAssets.generatePresignedUrl("photograph/" + id + "_" + index + ".jpg", 30, TimeUnit.MINUTES);
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void likePhotograph(int id, String sessionId) throws DataNotExistException {
         Integer photographCount = photographMapper.selectPhotographCountById(id);
         if (photographCount == null || photographCount == 0) {

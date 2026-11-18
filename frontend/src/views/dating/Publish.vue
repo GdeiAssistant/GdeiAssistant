@@ -232,6 +232,6 @@ async function submit() {
 }
 
 .community-dating-warning {
-  color: var(--c-warning);
+  color: var(--c-warning-ink);
 }
 </style>

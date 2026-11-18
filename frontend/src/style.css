@@ -24,33 +24,27 @@
   --color-text-primary: var(--c-text-1);
   --color-text-secondary: var(--c-text-2);
   --color-text-muted: var(--c-text-3);
+  --color-primary-ink: var(--c-primary-ink);
   --color-danger: var(--c-danger);
+  --color-danger-ink: var(--c-danger-ink);
+  --color-danger-soft: var(--c-danger-soft);
   --color-warning: var(--c-warning);
+  --color-warning-ink: var(--c-warning-ink);
+  --color-warning-soft: var(--c-warning-soft);
+  --color-success: var(--c-success);
+  --color-success-ink: var(--c-success-ink);
+  --color-success-soft: var(--c-success-soft);
   --color-info: var(--c-info);
   --color-purple: var(--c-purple);
   --color-pink: var(--c-pink);
   --color-cyan: var(--c-cyan);
   --color-orange: var(--c-orange);
 
-  /* Legacy palette utilities still used by a few views follow the brand semantics. */
-  --color-green-500: var(--c-primary);
-  --color-green-600: var(--c-primary-hover);
-  --color-emerald-500: var(--c-primary);
-  --color-red-500: var(--c-danger);
-  --color-red-600: var(--c-danger);
-  --color-red-50: color-mix(in srgb, var(--c-danger) 9%, var(--c-surface));
-  --color-amber-500: var(--c-warning);
-  --color-amber-600: var(--c-warning);
-  --color-amber-50: color-mix(in srgb, var(--c-warning) 10%, var(--c-surface));
-
   --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
 
-  /* Type scale shared with the apps: display 30 / title 24 / headline 17 / body 15 / callout 13 / caption 12 */
-  --text-headline: 17px;
-  --text-body: 15px;
-  --text-callout: 13px;
+  /* Type scale: generated --ds-font-* (28/22/17/15/14/12), mapped in @theme inline below. */
 
   /* Radius scale: compact 4 / small 6 / control 10 / card 14 / sheet 20 / pill full */
   --radius-xs: 4px;
@@ -79,19 +73,9 @@
   color-scheme: light;
 
   /* Audited shared palette comes from design/tokens.json. Extra Web roles stay here. */
-  --c-bg: #F7F6F2;
-  --c-surface: #FFFFFF;
-  --c-surface-elevated: #FFFFFF;
-  --c-surface-subtle: #F0EEE8;
+  --c-surface-subtle: var(--c-surface-sunken);
   --c-surface-raised: var(--c-surface-elevated);
-  --c-border: #E5E2DC;
-  --c-divider: #ECE9E2;
-  --c-text-1: #14231F;
-  --c-text-2: #5C6662;
-  --c-text-3: #78827E;
-  --c-primary-hover: #0A634E;
   --c-info: var(--c-text-2);
-  --c-on-primary: #FFFFFF;
 
   --radius-control: 10px;
   --radius-compact: 6px;
@@ -101,11 +85,11 @@
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 18%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #F0EEE8;
+  --c-surface-hover: var(--c-surface-sunken);
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
-  --c-fill-2: #F0EEE8;
+  --c-fill-2: var(--c-surface-sunken);
   --c-fill-3: #E6E3DC;
   --c-shadow: rgb(20 35 31 / 6%);
   --color-bg-primary: var(--c-surface);
@@ -122,22 +106,6 @@
   /* Shared scrim behind modal layers (dark in both themes so content above stays readable) */
   --c-scrim: rgb(13 19 17 / 50%);
 
-  /* Timetable course block palette: content colors for distinguishing courses */
-  --c-course-1: #2F8FA6;
-  --c-course-2: #0E7C61;
-  --c-course-3: #C85A32;
-  --c-course-4: #C56E64;
-  --c-course-5: #1D4ED8;
-  --c-course-6: #6D28D9;
-  --c-course-7: #3A9FB4;
-  --c-course-8: #D08A63;
-  --c-course-9: #4B6FA5;
-  --c-course-10: #2F9E95;
-  --c-course-11: #B96F84;
-  --c-course-12: #7B8FCB;
-  --c-course-13: #4F9EC4;
-  --c-course-14: #83A85D;
-
   /* Community module tag colors: low saturation, only for small marks */
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);
@@ -149,8 +117,8 @@
   --c-photograph: var(--c-primary);
 
   /* Solid deep brand surface (login visual column & editorial highlight rail) */
-  --c-brand-deep: #0E7C61;
-  --c-on-brand-deep: #FFFFFF;
+  --c-brand-deep: var(--c-band);
+  --c-on-brand-deep: var(--c-on-band);
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
   --c-tip-bg: linear-gradient(135deg, rgba(255, 247, 237, 0.96), rgba(255, 241, 242, 0.94));
@@ -194,28 +162,18 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-bg: #0D1311;
-  --c-surface: #151E1B;
-  --c-surface-elevated: #1C2724;
-  --c-surface-subtle: #111916;
+  --c-surface-subtle: var(--c-surface-sunken);
   --c-surface-raised: var(--c-surface-elevated);
-  --c-border: #22302B;
-  --c-divider: #1D2925;
-  --c-text-1: #F1EFEA;
-  --c-text-2: #8D9B95;
-  --c-text-3: #6E7D78;
-  --c-primary-hover: #5EEAD4;
   --c-info: var(--c-text-2);
-  --c-on-primary: #091512;
 
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 22%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #1C2724;
+  --c-surface-hover: var(--c-surface-sunken);
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
-  --c-fill-2: #1C2724;
+  --c-fill-2: var(--c-surface-sunken);
   --c-fill-3: #24322D;
   --c-shadow: rgb(0 0 0 / 38%);
   --color-bg-primary: var(--c-bg);
@@ -232,8 +190,8 @@
   --c-scrim: rgb(5 10 8 / 60%);
 
   /* Solid deep brand surface (login visual column & editorial highlight rail) */
-  --c-brand-deep: #0F3A2E;
-  --c-on-brand-deep: #F1EFEA;
+  --c-brand-deep: var(--c-band);
+  --c-on-brand-deep: var(--c-on-band);
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
   --c-tip-bg: linear-gradient(135deg, rgba(84, 28, 28, 0.92), rgba(63, 24, 34, 0.94));
@@ -242,22 +200,6 @@
   --c-tip-text: #FFF1F2;
   --c-tip-icon-bg: rgba(255, 232, 163, 0.14);
   --c-tip-icon: #FCD34D;
-
-  /* Dark timetable course blocks: same hues, darkened to sit on the dark surface */
-  --c-course-1: #2A6E7E;
-  --c-course-2: #1E6B5C;
-  --c-course-3: #8A4A30;
-  --c-course-4: #8A5049;
-  --c-course-5: #29468E;
-  --c-course-6: #5B2E94;
-  --c-course-7: #2E7484;
-  --c-course-8: #8F5F42;
-  --c-course-9: #4A6891;
-  --c-course-10: #28796F;
-  --c-course-11: #7E5261;
-  --c-course-12: #5E6E99;
-  --c-course-13: #3E7186;
-  --c-course-14: #61794A;
 
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);
@@ -273,74 +215,7 @@
   --shadow-lg: 0 12px 36px rgb(0 0 0 / 48%);
 }
 
-/* ── Orthogonal Campus Theme Accents (Light × Dark) ─────── */
-:root[data-accent="banyan"],
-[data-theme="light"][data-accent="banyan"] {
-  --c-primary: #0E7C61;
-  --c-primary-soft: #E4F3EE;
-  --c-primary-hover: #0A634E;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #0E7C61;
-}
-
-[data-theme="dark"][data-accent="banyan"] {
-  --c-primary: #2DD4BF;
-  --c-primary-soft: #12332A;
-  --c-primary-hover: #5EEAD4;
-  --c-on-primary: #091512;
-  --c-brand-deep: #0F3A2E;
-}
-
-:root[data-accent="kapok"],
-[data-theme="light"][data-accent="kapok"] {
-  --c-primary: #C85A32;
-  --c-primary-soft: #FBECE6;
-  --c-primary-hover: #A94824;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #9F4322;
-}
-
-[data-theme="dark"][data-accent="kapok"] {
-  --c-primary: #FB923C;
-  --c-primary-soft: #361F14;
-  --c-primary-hover: #FDBA74;
-  --c-on-primary: #1A0D06;
-  --c-brand-deep: #3B2014;
-}
-
-:root[data-accent="haizhu"],
-[data-theme="light"][data-accent="haizhu"] {
-  --c-primary: #1D4ED8;
-  --c-primary-soft: #E8EFFD;
-  --c-primary-hover: #1E40AF;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #1E3A8A;
-}
-
-[data-theme="dark"][data-accent="haizhu"] {
-  --c-primary: #60A5FA;
-  --c-primary-soft: #142642;
-  --c-primary-hover: #93C5FD;
-  --c-on-primary: #081121;
-  --c-brand-deep: #142645;
-}
-
-:root[data-accent="bauhinia"],
-[data-theme="light"][data-accent="bauhinia"] {
-  --c-primary: #6D28D9;
-  --c-primary-soft: #F1EAFF;
-  --c-primary-hover: #5B21B6;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #4C1D95;
-}
-
-[data-theme="dark"][data-accent="bauhinia"] {
-  --c-primary: #A78BFA;
-  --c-primary-soft: #24183D;
-  --c-primary-hover: #C4B5FD;
-  --c-on-primary: #120A24;
-  --c-brand-deep: #251942;
-}
+/* Campus theme accents (banyan, kapok, haizhu, bauhinia) are generated into design-tokens.generated.css. */
 
 /* ── Base Resets ────────────────────────────────────────── */
 
@@ -437,7 +312,7 @@ a:focus-visible {
 }
 
 .editorial-eyebrow {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -463,7 +338,7 @@ a:focus-visible {
 
 .campus-page-title {
   color: var(--c-text-1);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 650;
   letter-spacing: -0.01em;

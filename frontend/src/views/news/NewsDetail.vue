@@ -131,7 +131,7 @@ onMounted(() => {
 
       <!-- Content card -->
       <div v-else class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
-        <p v-if="error" class="text-sm text-red-500 mb-3">{{ error }}</p>
+        <p v-if="error" class="text-sm text-danger mb-3">{{ error }}</p>
 
         <p class="text-xs font-semibold text-[var(--c-primary)] mb-2.5">{{ sourceLabel }}</p>
         <h2 class="text-2xl font-bold text-[var(--c-text)] leading-snug">{{ displayTitle }}</h2>

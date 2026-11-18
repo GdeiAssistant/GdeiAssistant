@@ -370,7 +370,7 @@ async function handleSubmit() {
 }
 
 .feedback-counter--warning {
-  color: var(--c-warning);
+  color: var(--c-warning-ink);
 }
 
 .feedback-preview {

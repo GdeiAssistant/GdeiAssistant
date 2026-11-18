@@ -86,10 +86,12 @@ describe('academic page request ownership', () => {
 
   it('late schedule responses cannot overwrite either courses or the chosen week', async () => {
     const old = deferred(), current = deferred()
-    mocks.getSchedule.mockReturnValueOnce(old.promise).mockReturnValueOnce(current.promise)
+    const weekQueue = [old.promise, current.promise]
+    mocks.getSchedule.mockImplementation((week) => (week === 0 ? Promise.resolve(schedule('整学期', 0)) : weekQueue.shift()))
     await mount(Schedule); await click('schedule.selectWeek'); await click('schedule.weekLabel:2')
     expect(mocks.getSchedule.mock.calls[0][1].signal.aborted).toBe(true)
-    expect(mocks.getSchedule.mock.calls[1][0]).toBe(2)
+    expect(mocks.getSchedule.mock.calls[1][0]).toBe(0)
+    expect(mocks.getSchedule.mock.calls[2][0]).toBe(2)
     current.resolve(schedule('当前课表', 2)); await flush(); old.resolve(schedule('过期课表', 1)); await flush()
     expect(root.textContent).toContain('当前课表'); expect(root.textContent).toContain('schedule.weekLabel:2')
     expect(root.textContent).not.toContain('过期课表')
@@ -100,7 +102,7 @@ describe('academic page request ownership', () => {
     mocks.updateScheduleCache.mockRejectedValue(new Error('synthetic outage'))
     await mount(Schedule); await click('schedule.more'); await click('schedule.action.refresh')
     expect(mocks.hideLoading).toHaveBeenCalled(); expect(mocks.success).not.toHaveBeenCalled()
-    expect(mocks.getSchedule).toHaveBeenCalledTimes(1); expect(root.textContent).toContain('保留课程')
+    expect(mocks.getSchedule).toHaveBeenCalledTimes(2); expect(root.textContent).toContain('保留课程')
   })
 
   it('custom courses validate required fields and overlap before posting', async () => {
@@ -118,6 +120,7 @@ describe('academic page request ownership', () => {
     await click('schedule.addDialog.submit')
     expect(mocks.addCustomSchedule).toHaveBeenCalledWith({ scheduleName: '合成课程', scheduleLocation: '合成教室',
       scheduleLength: 1, position: 1, minScheduleWeek: 1, maxScheduleWeek: 1 })
-    expect(mocks.getSchedule).toHaveBeenCalledTimes(2)
+    expect(mocks.getSchedule).toHaveBeenCalledTimes(4)
+    expect(mocks.getSchedule.mock.calls.filter(([week]) => week === 0)).toHaveLength(2)
   })
 })

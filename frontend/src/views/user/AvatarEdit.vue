@@ -23,7 +23,7 @@
           <div class="flex flex-col items-center gap-4 mt-8 px-2">
             <button
               type="button"
-              class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-red-500 bg-transparent text-red-500 cursor-pointer"
+              class="w-4/5 max-w-[300px] py-3 px-6 text-base rounded-lg border border-danger bg-transparent text-danger cursor-pointer"
               @click="handleDelete"
             >{{ t('avatarEdit.delete') }}</button>
             <button

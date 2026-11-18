@@ -1,6 +1,13 @@
 # Shared Design Tokens (`Warm Editorial Lingnan Academy`)
 
-`tokens.json` defines the shared **Lingnan Editorial** visual baseline across Web, Android, iOS, and WeChat Mini Program: 8 light/dark color pairs (`primary`, `primary-soft`, `bg`, `surface`, `text-1`, `text-2`, `danger`, `warning`), 6 reference font sizes (`28/22/17/15/14/12`), `10`-unit card radius, and `16`-unit page spacing.
+`tokens.json` (version 2) defines the shared **Lingnan Editorial** visual baseline across Web, Android, iOS, and WeChat Mini Program:
+
+- `colors`: 25 light/dark roles: surfaces (`bg`, `surface`, `surface-sunken`, `surface-elevated`, `border`, `divider`), text (`text-1..3`), primary (`primary`, `primary-hover`, `primary-soft`, `primary-ink`, `on-primary`, `band`, `on-band`) and status (`danger`, `warning`, `success`, each with `-ink` and `-soft`). Fills and stripes use the plain role; any text uses the `-ink` role.
+- `accents`: per-accent overrides (`kapok`, `haizhu`, `bauhinia`) of the six accent-dependent primary roles. `banyan` is the base palette.
+- `course`: eight timetable/category pairs. `course-N-bg` and `course-N-ink` are the fill and its text; `course-N-stripe` is the 4px stripe (hue in light, ink in dark).
+- 6 reference font sizes (`28/22/17/15/14/12`), `10`-unit card radius, and `16`-unit page spacing.
+
+Usage rule: dark `text-3` must not be set on dark `primary-soft` (4.11:1); use `text-2` there (4.73:1).
 
 Run `node design/generate-tokens.mjs` from any working directory to regenerate:
 

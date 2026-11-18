@@ -311,7 +311,7 @@ onMounted(() => {
 }
 
 .account-status--warning {
-  color: var(--c-warning);
+  color: var(--c-warning-ink);
 }
 
 .account-status--muted {
@@ -326,7 +326,7 @@ onMounted(() => {
 }
 
 .account-danger-action--warning {
-  --account-danger-accent: var(--c-warning);
+  --account-danger-accent: var(--c-warning-ink);
 }
 
 .account-danger-action--danger {

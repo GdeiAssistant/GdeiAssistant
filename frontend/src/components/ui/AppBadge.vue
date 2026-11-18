@@ -23,7 +23,7 @@ const badgeVariants = cva(
       variant: {
         default: 'bg-[var(--c-fill-2)] text-[var(--c-text-2)]',
         success: 'bg-[var(--c-primary-soft)] text-[var(--c-primary)]',
-        warning: 'bg-[color-mix(in_srgb,var(--c-warning)_14%,var(--c-surface))] text-[var(--c-warning)]',
+        warning: 'bg-[color-mix(in_srgb,var(--c-warning)_14%,var(--c-surface))] text-[var(--c-warning-ink)]',
         danger: 'bg-[color-mix(in_srgb,var(--c-danger)_12%,var(--c-surface))] text-[var(--c-danger)]',
         info: 'bg-[var(--c-fill-2)] text-[var(--c-text-1)]',
         module: '',

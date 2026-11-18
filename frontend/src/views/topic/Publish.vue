@@ -124,7 +124,7 @@ async function submit() {
           maxlength="250"
           rows="8"
         ></textarea>
-        <div class="absolute bottom-2.5 right-4 text-xs" :class="content.length > 250 ? 'text-red-600' : 'text-[var(--c-text-3)]'">
+        <div class="absolute bottom-2.5 right-4 text-xs" :class="content.length > 250 ? 'text-danger' : 'text-[var(--c-text-3)]'">
           {{ content.length }}/250
         </div>
       </div>

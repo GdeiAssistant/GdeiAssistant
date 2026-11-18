@@ -40,17 +40,6 @@
   --color-cyan: var(--c-cyan);
   --color-orange: var(--c-orange);
 
-  /* Legacy palette utilities still used by a few views follow the brand semantics. */
-  --color-green-500: var(--c-primary);
-  --color-green-600: var(--c-primary-hover);
-  --color-emerald-500: var(--c-primary);
-  --color-red-500: var(--c-danger);
-  --color-red-600: var(--c-danger);
-  --color-red-50: color-mix(in srgb, var(--c-danger) 9%, var(--c-surface));
-  --color-amber-500: var(--c-warning);
-  --color-amber-600: var(--c-warning);
-  --color-amber-50: color-mix(in srgb, var(--c-warning) 10%, var(--c-surface));
-
   --font-serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "STSong", Georgia, serif;
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;

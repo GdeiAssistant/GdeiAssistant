@@ -154,11 +154,7 @@ watch(
 }
 
 .marketplace-price {
-  color: color-mix(in srgb, var(--c-ershou) 18%, var(--c-warning));
-}
-
-[data-theme="dark"] .marketplace-price {
-  color: var(--c-warning);
+  color: var(--c-warning-ink);
 }
 
 </style>

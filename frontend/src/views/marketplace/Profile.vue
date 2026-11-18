@@ -356,7 +356,7 @@ watch(() => route.fullPath, () => {
 }
 
 .marketplace-price {
-  color: var(--c-warning);
+  color: var(--c-warning-ink);
 }
 
 .marketplace-tab-item {

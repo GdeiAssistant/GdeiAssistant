@@ -165,7 +165,7 @@ function confirmRenew() {
                   <span class="text-sm text-[var(--c-text-2)]">{{ t('libraryPage.borrow.returnDate') }}</span>
                   <span
                     class="text-sm font-medium"
-                    :class="isReturnDateUrgent(item.returnDate) ? 'text-red-500' : 'text-[var(--c-text)]'"
+                    :class="isReturnDateUrgent(item.returnDate) ? 'text-danger' : 'text-[var(--c-text)]'"
                   >{{ item.returnDate || '—' }}</span>
                 </div>
                 <div class="flex justify-between py-2.5">

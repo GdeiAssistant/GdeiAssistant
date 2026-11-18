@@ -428,7 +428,7 @@
   background: var(--c-primary-hover) !important;
 }
 
-/* 跑腿与失物页面残留的蓝/琥珀/红色工具类映射为品牌语义色 */
+/* 跑腿与失物页面残留的蓝色工具类映射为品牌语义色 */
 .community-delivery-page .bg-blue-500,
 .community-lostandfound-page .bg-blue-500,
 .community-lostandfound-page [class*="from-blue-500"][class*="to-blue-400"] {
@@ -436,26 +436,7 @@
   color: var(--c-on-primary) !important;
 }
 
-.community-delivery-page .bg-amber-500,
-.community-lostandfound-page .bg-amber-500 {
-  background: var(--c-warning) !important;
-}
-
-.community-lostandfound-page .bg-green-500 {
-  background: var(--c-primary) !important;
-}
-
-.community-delivery-page .text-red-500 {
-  color: var(--c-danger) !important;
-}
-
-.community-delivery-page .bg-amber-100 {
-  background: color-mix(in srgb, var(--c-warning) 14%, var(--c-surface)) !important;
-  color: color-mix(in srgb, var(--c-warning) 70%, var(--c-text-1)) !important;
-}
-
 .community-delivery-page .bg-blue-100,
-.community-delivery-page .bg-green-100,
 .community-lostandfound-page .bg-blue-50 {
   background: var(--c-primary-soft) !important;
   color: var(--c-primary) !important;

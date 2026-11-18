@@ -285,7 +285,7 @@ onUnmounted(() => {
             >{{ t('common.cancel') }}</button>
             <button
               type="button"
-              class="flex-1 py-3.5 text-center text-headline text-red-500 font-medium cursor-pointer bg-transparent"
+              class="flex-1 py-3.5 text-center text-headline text-danger font-medium cursor-pointer bg-transparent"
               @click="confirmUnbind"
             >{{ t('bindEmail.confirmUnbind') }}</button>
           </div>

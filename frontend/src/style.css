@@ -24,8 +24,16 @@
   --color-text-primary: var(--c-text-1);
   --color-text-secondary: var(--c-text-2);
   --color-text-muted: var(--c-text-3);
+  --color-primary-ink: var(--c-primary-ink);
   --color-danger: var(--c-danger);
+  --color-danger-ink: var(--c-danger-ink);
+  --color-danger-soft: var(--c-danger-soft);
   --color-warning: var(--c-warning);
+  --color-warning-ink: var(--c-warning-ink);
+  --color-warning-soft: var(--c-warning-soft);
+  --color-success: var(--c-success);
+  --color-success-ink: var(--c-success-ink);
+  --color-success-soft: var(--c-success-soft);
   --color-info: var(--c-info);
   --color-purple: var(--c-purple);
   --color-pink: var(--c-pink);
@@ -47,10 +55,7 @@
   --font-sans: "PingFang SC", "HarmonyOS Sans SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, monospace;
 
-  /* Type scale shared with the apps: display 30 / title 24 / headline 17 / body 15 / callout 13 / caption 12 */
-  --text-headline: 17px;
-  --text-body: 15px;
-  --text-callout: 13px;
+  /* Type scale: generated --ds-font-* (28/22/17/15/14/12), mapped in @theme inline below. */
 
   /* Radius scale: compact 4 / small 6 / control 10 / card 14 / sheet 20 / pill full */
   --radius-xs: 4px;
@@ -79,19 +84,9 @@
   color-scheme: light;
 
   /* Audited shared palette comes from design/tokens.json. Extra Web roles stay here. */
-  --c-bg: #F7F6F2;
-  --c-surface: #FFFFFF;
-  --c-surface-elevated: #FFFFFF;
-  --c-surface-subtle: #F0EEE8;
+  --c-surface-subtle: var(--c-surface-sunken);
   --c-surface-raised: var(--c-surface-elevated);
-  --c-border: #E5E2DC;
-  --c-divider: #ECE9E2;
-  --c-text-1: #14231F;
-  --c-text-2: #5C6662;
-  --c-text-3: #78827E;
-  --c-primary-hover: #0A634E;
   --c-info: var(--c-text-2);
-  --c-on-primary: #FFFFFF;
 
   --radius-control: 10px;
   --radius-compact: 6px;
@@ -101,11 +96,11 @@
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 18%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #F0EEE8;
+  --c-surface-hover: var(--c-surface-sunken);
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
-  --c-fill-2: #F0EEE8;
+  --c-fill-2: var(--c-surface-sunken);
   --c-fill-3: #E6E3DC;
   --c-shadow: rgb(20 35 31 / 6%);
   --color-bg-primary: var(--c-surface);
@@ -149,8 +144,8 @@
   --c-photograph: var(--c-primary);
 
   /* Solid deep brand surface (login visual column & editorial highlight rail) */
-  --c-brand-deep: #0E7C61;
-  --c-on-brand-deep: #FFFFFF;
+  --c-brand-deep: var(--c-band);
+  --c-on-brand-deep: var(--c-on-band);
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
   --c-tip-bg: linear-gradient(135deg, rgba(255, 247, 237, 0.96), rgba(255, 241, 242, 0.94));
@@ -194,28 +189,18 @@
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --c-bg: #0D1311;
-  --c-surface: #151E1B;
-  --c-surface-elevated: #1C2724;
-  --c-surface-subtle: #111916;
+  --c-surface-subtle: var(--c-surface-sunken);
   --c-surface-raised: var(--c-surface-elevated);
-  --c-border: #22302B;
-  --c-divider: #1D2925;
-  --c-text-1: #F1EFEA;
-  --c-text-2: #8D9B95;
-  --c-text-3: #6E7D78;
-  --c-primary-hover: #5EEAD4;
   --c-info: var(--c-text-2);
-  --c-on-primary: #091512;
 
   --c-primary-50: var(--c-primary-soft);
   --c-primary-100: color-mix(in srgb, var(--c-primary) 22%, var(--c-surface));
   --c-primary-light: var(--c-primary-soft);
-  --c-surface-hover: #1C2724;
+  --c-surface-hover: var(--c-surface-sunken);
   --c-border-light: var(--c-divider);
   --c-card: var(--c-surface);
   --c-text: var(--c-text-1);
-  --c-fill-2: #1C2724;
+  --c-fill-2: var(--c-surface-sunken);
   --c-fill-3: #24322D;
   --c-shadow: rgb(0 0 0 / 38%);
   --color-bg-primary: var(--c-bg);
@@ -232,8 +217,8 @@
   --c-scrim: rgb(5 10 8 / 60%);
 
   /* Solid deep brand surface (login visual column & editorial highlight rail) */
-  --c-brand-deep: #0F3A2E;
-  --c-on-brand-deep: #F1EFEA;
+  --c-brand-deep: var(--c-band);
+  --c-on-brand-deep: var(--c-on-band);
 
   /* Imperative top warning tip (utils/toast.js inline styles) */
   --c-tip-bg: linear-gradient(135deg, rgba(84, 28, 28, 0.92), rgba(63, 24, 34, 0.94));
@@ -273,74 +258,7 @@
   --shadow-lg: 0 12px 36px rgb(0 0 0 / 48%);
 }
 
-/* ── Orthogonal Campus Theme Accents (Light × Dark) ─────── */
-:root[data-accent="banyan"],
-[data-theme="light"][data-accent="banyan"] {
-  --c-primary: #0E7C61;
-  --c-primary-soft: #E4F3EE;
-  --c-primary-hover: #0A634E;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #0E7C61;
-}
-
-[data-theme="dark"][data-accent="banyan"] {
-  --c-primary: #2DD4BF;
-  --c-primary-soft: #12332A;
-  --c-primary-hover: #5EEAD4;
-  --c-on-primary: #091512;
-  --c-brand-deep: #0F3A2E;
-}
-
-:root[data-accent="kapok"],
-[data-theme="light"][data-accent="kapok"] {
-  --c-primary: #C85A32;
-  --c-primary-soft: #FBECE6;
-  --c-primary-hover: #A94824;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #9F4322;
-}
-
-[data-theme="dark"][data-accent="kapok"] {
-  --c-primary: #FB923C;
-  --c-primary-soft: #361F14;
-  --c-primary-hover: #FDBA74;
-  --c-on-primary: #1A0D06;
-  --c-brand-deep: #3B2014;
-}
-
-:root[data-accent="haizhu"],
-[data-theme="light"][data-accent="haizhu"] {
-  --c-primary: #1D4ED8;
-  --c-primary-soft: #E8EFFD;
-  --c-primary-hover: #1E40AF;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #1E3A8A;
-}
-
-[data-theme="dark"][data-accent="haizhu"] {
-  --c-primary: #60A5FA;
-  --c-primary-soft: #142642;
-  --c-primary-hover: #93C5FD;
-  --c-on-primary: #081121;
-  --c-brand-deep: #142645;
-}
-
-:root[data-accent="bauhinia"],
-[data-theme="light"][data-accent="bauhinia"] {
-  --c-primary: #6D28D9;
-  --c-primary-soft: #F1EAFF;
-  --c-primary-hover: #5B21B6;
-  --c-on-primary: #FFFFFF;
-  --c-brand-deep: #4C1D95;
-}
-
-[data-theme="dark"][data-accent="bauhinia"] {
-  --c-primary: #A78BFA;
-  --c-primary-soft: #24183D;
-  --c-primary-hover: #C4B5FD;
-  --c-on-primary: #120A24;
-  --c-brand-deep: #251942;
-}
+/* Campus theme accents (banyan, kapok, haizhu, bauhinia) are generated into design-tokens.generated.css. */
 
 /* ── Base Resets ────────────────────────────────────────── */
 

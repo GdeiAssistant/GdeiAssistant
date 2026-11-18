@@ -17,7 +17,7 @@ const { accent: currentAccent, updateAccent: selectAccent } = useThemeAccent()
 
 const accentSwatches = [
   { id: 'banyan', lightHex: '#0E7C61', darkHex: '#2DD4BF' },
-  { id: 'kapok', lightHex: '#C85A32', darkHex: '#FB923C' },
+  { id: 'kapok', lightHex: '#B54B24', darkHex: '#FB923C' },
   { id: 'haizhu', lightHex: '#1D4ED8', darkHex: '#60A5FA' },
   { id: 'bauhinia', lightHex: '#6D28D9', darkHex: '#A78BFA' },
 ]

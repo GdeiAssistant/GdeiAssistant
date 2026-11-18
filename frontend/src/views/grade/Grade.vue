@@ -159,7 +159,7 @@ onMounted(() => {
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="editorial-serif text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.first') }}</span>
+              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.first') }}</span>
               <span class="tabular-num font-mono text-xs text-[var(--c-text-2)]">
                 GPA: {{ gradeResult.firstTermGPA != null ? gradeResult.firstTermGPA : '—' }}
               </span>
@@ -200,7 +200,7 @@ onMounted(() => {
         <AppCard>
           <template #header>
             <div class="flex items-center justify-between w-full">
-              <span class="editorial-serif text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.second') }}</span>
+              <span class="text-sm font-semibold text-[var(--c-text-1)]">{{ t('gradePage.term.second') }}</span>
               <span class="tabular-num font-mono text-xs text-[var(--c-text-2)]">
                 GPA: {{ gradeResult.secondTermGPA != null ? gradeResult.secondTermGPA : '—' }}
               </span>

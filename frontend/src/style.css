@@ -344,7 +344,7 @@ a:focus-visible {
 }
 
 .editorial-eyebrow {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -370,7 +370,7 @@ a:focus-visible {
 
 .campus-page-title {
   color: var(--c-text-1);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 650;
   letter-spacing: -0.01em;

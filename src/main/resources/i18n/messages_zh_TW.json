@@ -1,4 +1,5 @@
 {
+  "announcement.notFound": "公告不存在或已刪除",
   "auth.accountCleanupPending": "帳號註銷清理尚未完成，請稍後重新登入",
   "auth.passwordIncorrect": "使用者帳號或密碼錯誤，請檢查後重試",
   "auth.passwordIncorrect.simple": "帳號或密碼錯誤",
@@ -53,6 +54,7 @@
   "interaction.topic.like.title": "話題收到新按讚",
   "library.password.required": "請輸入圖書館密碼",
   "library.renew.missingIdentifier": "缺少圖書編號或續借代碼",
+  "lostandfound.previewLoadFailed": "獲取失物招領物品預覽圖失敗",
   "marketplace.invalidPrice": "商品價格不合法",
   "marketplace.offUnavailable": "已下架的二手交易資訊不能查看",
   "marketplace.preview.failed": "取得二手交易商品預覽圖失敗",

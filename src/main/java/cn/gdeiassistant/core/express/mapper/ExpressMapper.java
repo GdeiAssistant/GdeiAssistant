@@ -109,8 +109,8 @@ public interface ExpressMapper {
     List<ExpressLike> selectReceivedExpressLikePage(@Param("username") String username,
             @Param("start") int start, @Param("size") int size);
 
-    @Select("select count(id) from express_guess where username=#{username} and result=1")
-    Integer selectCorrectExpressGuessRecord(String username);
+    @Select("select count(id) from express_guess where express_id=#{expressId} and username=#{username} and result=1")
+    Integer selectCorrectExpressGuessRecord(@Param("expressId") int expressId, @Param("username") String username);
 
     @Insert("insert into express_guess (express_id,username,result,create_time) values(#{expressId},#{username},#{result},now())")
     void insertExpressGuess(@Param("expressId") int expressId, @Param("username") String username, @Param("result") int result);

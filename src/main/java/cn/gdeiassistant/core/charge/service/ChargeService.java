@@ -16,6 +16,7 @@ import cn.gdeiassistant.integration.httpclient.HttpClientSession;
 import cn.gdeiassistant.common.pojo.entity.UserCertificateEntity;
 import cn.gdeiassistant.core.charge.mapper.ChargeMapper;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
+import cn.gdeiassistant.integration.card.CardClient;
 import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
@@ -31,6 +32,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -46,8 +48,6 @@ public class ChargeService {
 
     private final HttpClientUtils httpClientUtils;
 
-    private final String casLoginUrl;
-    private final String cardLoginUrl;
     private final String cardBaseUrl;
     private final String paymentBaseUrl;
     private final String alipayGatewayUrl;
@@ -58,15 +58,22 @@ public class ChargeService {
 
     private final UserCertificateService userCertificateService;
 
-    public ChargeService(HttpClientUtils httpClientUtils, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}") String cardLoginUrl, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String cardBaseUrl, @Value("${campus.upstream.payment-base-url:https://epay.gdei.edu.cn:8443/synpay/web}") String paymentBaseUrl, @Value("${campus.upstream.alipay-gateway-url:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}") String alipayGatewayUrl, ChargeMapper chargeMapper, UserCertificateService userCertificateService) {
+    private final CardClient cardClient;
+
+    public ChargeService(HttpClientUtils httpClientUtils, String casLoginUrl, String cardLoginUrl, String cardBaseUrl, String paymentBaseUrl, String alipayGatewayUrl, ChargeMapper chargeMapper, UserCertificateService userCertificateService) {
+        this(httpClientUtils, cardBaseUrl, paymentBaseUrl, alipayGatewayUrl, chargeMapper, userCertificateService,
+                new CardClient(httpClientUtils, cardBaseUrl, casLoginUrl, cardLoginUrl));
+    }
+
+    @Autowired
+    public ChargeService(HttpClientUtils httpClientUtils, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String cardBaseUrl, @Value("${campus.upstream.payment-base-url:https://epay.gdei.edu.cn:8443/synpay/web}") String paymentBaseUrl, @Value("${campus.upstream.alipay-gateway-url:https://mapi.alipay.com/gateway.do?_input_charset=utf-8}") String alipayGatewayUrl, ChargeMapper chargeMapper, UserCertificateService userCertificateService, CardClient cardClient) {
         this.httpClientUtils = httpClientUtils;
-        this.casLoginUrl = casLoginUrl;
-        this.cardLoginUrl = cardLoginUrl;
         this.cardBaseUrl = cardBaseUrl;
         this.paymentBaseUrl = paymentBaseUrl;
         this.alipayGatewayUrl = alipayGatewayUrl;
         this.chargeMapper = chargeMapper;
         this.userCertificateService = userCertificateService;
+        this.cardClient = cardClient;
     }
 
     /**
@@ -86,7 +93,7 @@ public class ChargeService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), false);
             //发送充值请求
             Map<String, String> ecardDataMap = sendChargeRequest(httpClient, amount);
@@ -99,6 +106,9 @@ public class ChargeService {
         } catch (AmountNotAvailableException e) {
             logger.error("校园卡充值异常：", e);
             throw new AmountNotAvailableException(Messages.get("charge.amountOutOfRange"));
+        } catch (PasswordIncorrectException e) {
+            logger.error("校园卡充值密码错误：", e);
+            throw e;
         } catch (IOException e) {
             logger.error("校园卡充值异常：", e);
             throw new NetWorkTimeoutException(Messages.get("grade.networkTimeout"));
@@ -117,137 +127,6 @@ public class ChargeService {
                 httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
-    }
-
-    /**
-     * 登录支付管理平台
-     *
-     * @param httpClient
-     * @param username
-     * @param password
-     * @param autoRedirect
-     * @throws ServerErrorException
-     * @throws IOException
-     * @throws PasswordIncorrectException
-     */
-    private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws ServerErrorException, IOException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet(casLoginUrl);
-        HttpResponse httpResponse = httpClient.execute(httpGet);
-        Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
-            //封装需要提交的数据
-            List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-            basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
-            basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
-            basicNameValuePairs.add(new BasicNameValuePair("username", username));
-            basicNameValuePairs.add(new BasicNameValuePair("password", password));
-            basicNameValuePairs.add(new BasicNameValuePair("service", cardLoginUrl));
-            basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
-            basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost(casLoginUrl);
-            //绑定表单参数
-            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-            httpResponse = httpClient.execute(httpPost);
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                if (document.getElementsByClass("pcclient").size() > 0) {
-                    throw new PasswordIncorrectException(Messages.get("charge.credentialsIncorrect"));
-                }
-                //获取html页面中的首个URL地址,进入支付系统页面
-                httpGet = new HttpGet(document.select("a").first().attr("href"));
-                //请求后,若账号正确会进行两次302重定向,进入支付系统主页
-                httpResponse = httpClient.execute(httpGet);
-                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (autoRedirect) {
-                    //判断是否成功跳转至支付平台页面
-                    if (httpResponse.getStatusLine().getStatusCode() == 200
-                            && document.getElementsByClass("clear main").size() > 0) {
-                        return;
-                    }
-                } else {
-                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                        httpResponse = httpClient.execute(httpGet);
-                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            //判断是否成功跳转至支付平台页面
-                            if (httpResponse.getStatusLine().getStatusCode() == 200
-                                    && document.getElementsByClass("clear main").size() > 0) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            if (autoRedirect) {
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
-                    //开启自动重定向时的自动登录
-                    httpGet = new HttpGet(cardLoginUrl);
-                    httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        httpGet = new HttpGet(document.select("a").first().attr("href"));
-                        httpResponse = httpClient.execute(httpGet);
-                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            httpGet = new HttpGet(cardBaseUrl);
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                    //未开启自动重定向时的自动登录
-                    httpGet = new HttpGet(java.net.URI.create(casLoginUrl).resolve(".").resolve(httpResponse.getFirstHeader("Location").getValue()));
-                    httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200
-                            && document.select("span[class='style2']").size() > 0) {
-                        httpGet = new HttpGet(cardBaseUrl);
-                        httpResponse = httpClient.execute(httpGet);
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200
-                                && document.getElementsByClass("main clear").size() > 0) {
-                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                return;
-                            }
-                            httpGet = new HttpGet(cardLoginUrl);
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                httpResponse = httpClient.execute(httpGet);
-                                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                    httpGet = new HttpGet(document.select("a").first().attr("href"));
-                                    httpResponse = httpClient.execute(httpGet);
-                                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                        httpResponse = httpClient.execute(httpGet);
-                                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                            httpResponse = httpClient.execute(httpGet);
-                                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                                                if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        throw new ServerErrorException(Messages.get("charge.paymentPlatformError"));
     }
 
     /**

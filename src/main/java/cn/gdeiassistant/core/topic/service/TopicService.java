@@ -126,7 +126,7 @@ public class TopicService {
         return toPublicTopicVO(entity);
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void likeTopic(int id, String sessionId) throws DataNotExistException {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         TopicEntity entity = topicMapper.selectTopicById(id, user.getUsername());

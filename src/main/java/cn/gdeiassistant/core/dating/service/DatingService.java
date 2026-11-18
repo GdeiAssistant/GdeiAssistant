@@ -226,7 +226,7 @@ public class DatingService {
         );
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void updateRoommatePickState(Integer id, Integer state) throws DataNotExistException, NoAccessException {
         DatingPickEntity entity = datingMapper.selectDatingPickById(id);
         if (entity == null) throw new DataNotExistException(Messages.get("dating.pickRecordMissing"));

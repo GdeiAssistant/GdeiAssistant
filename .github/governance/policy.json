@@ -14,7 +14,11 @@
     "src/main/java/cn/gdeiassistant/core/campuscredential/",
     "src/main/java/cn/gdeiassistant/core/userlogin/",
     "src/main/java/cn/gdeiassistant/core/charge/",
-    "db-init/"
+    "db-init/",
+    "Dockerfile*",
+    "docker-compose*.yml",
+    "nginx/**",
+    "scripts/**"
   ],
   "dependabot_template_exemption": true,
   "max_evidence_age_hours": 168

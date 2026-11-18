@@ -21,20 +21,14 @@ import cn.gdeiassistant.integration.httpclient.HttpClientUtils;
 import cn.gdeiassistant.common.tools.utils.ImageEncodeUtils;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayInputStream;
@@ -50,10 +44,6 @@ public class CardQueryService {
 
     private final HttpClientUtils httpClientUtils;
 
-    private final String casLoginUrl;
-    private final String cardLoginUrl;
-    private final String cardBaseUrl;
-
     private final Logger logger = LoggerFactory.getLogger(CardQueryService.class);
 
     private final ImageRecognitionService imageRecognitionService;
@@ -62,14 +52,16 @@ public class CardQueryService {
 
     private final CardClient cardClient;
 
-    public CardQueryService(HttpClientUtils httpClientUtils, @Value("${campus.upstream.cas-login-url:https://security.gdei.edu.cn/cas/login}") String casLoginUrl, @Value("${campus.upstream.card-login-url:http://ecard.gdei.edu.cn:8050/LoginCas.aspx}") String cardLoginUrl, @Value("${campus.upstream.card-base-url:http://ecard.gdei.edu.cn}") String cardBaseUrl, ImageRecognitionService imageRecognitionService, UserCertificateService userCertificateService, CardClient cardClient) {
+    @Autowired
+    public CardQueryService(HttpClientUtils httpClientUtils, ImageRecognitionService imageRecognitionService, UserCertificateService userCertificateService, CardClient cardClient) {
         this.httpClientUtils = httpClientUtils;
-        this.casLoginUrl = casLoginUrl;
-        this.cardLoginUrl = cardLoginUrl;
-        this.cardBaseUrl = cardBaseUrl;
         this.imageRecognitionService = imageRecognitionService;
         this.userCertificateService = userCertificateService;
         this.cardClient = cardClient;
+    }
+
+    public CardQueryService(HttpClientUtils httpClientUtils, String casLoginUrl, String cardLoginUrl, String cardBaseUrl, ImageRecognitionService imageRecognitionService, UserCertificateService userCertificateService, CardClient cardClient) {
+        this(httpClientUtils, imageRecognitionService, userCertificateService, cardClient);
     }
 
     /**
@@ -84,7 +76,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             Document document = cardClient.fetchCardBasicInfoDocument(sessionId);
@@ -107,9 +99,6 @@ public class CardQueryService {
                 } catch (IOException e) {
                     logger.error("关闭饭卡基本信息查询 HttpClient 失败", e);
                 }
-            }
-            if (cookieStore != null) {
-                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             }
         }
     }
@@ -138,7 +127,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            loginCardSystem(httpClient, userCertificate.getUser().getUsername(),
+            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername(),
                     userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             CardInfo cardInfo = parseCardInfoFromDocument(cardClient.fetchCardBasicInfoDocument(sessionId));
@@ -164,9 +153,6 @@ public class CardQueryService {
                     logger.error("关闭消费流水查询 HttpClient 失败", e);
                 }
             }
-            if (cookieStore != null) {
-                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
-            }
         }
     }
 
@@ -181,7 +167,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             submitCardLostViaClient(sessionId, cardPassword);
@@ -204,125 +190,7 @@ public class CardQueryService {
                     logger.error("关闭校园卡挂失 HttpClient 失败", e);
                 }
             }
-            if (cookieStore != null) {
-                httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
-            }
         }
-    }
-
-    /**
-     * 登录支付管理平台（CAS + ecard，严禁修改 CAS 相关逻辑）
-     */
-    private void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect) throws IOException, ServerErrorException, PasswordIncorrectException {
-        HttpGet httpGet = new HttpGet(casLoginUrl);
-        HttpResponse httpResponse = httpClient.execute(httpGet);
-        Document document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-        if (httpResponse.getStatusLine().getStatusCode() == 200 && document.getElementsByClass("pcclient").size() > 0) {
-            List<BasicNameValuePair> basicNameValuePairs = new ArrayList<>();
-            basicNameValuePairs.add(new BasicNameValuePair("imageField.x", "0"));
-            basicNameValuePairs.add(new BasicNameValuePair("imageField.y", "0"));
-            basicNameValuePairs.add(new BasicNameValuePair("username", username));
-            basicNameValuePairs.add(new BasicNameValuePair("password", password));
-            basicNameValuePairs.add(new BasicNameValuePair("service", cardLoginUrl));
-            basicNameValuePairs.add(new BasicNameValuePair("tokens", document.getElementById("tokens").val()));
-            basicNameValuePairs.add(new BasicNameValuePair("stamp", document.getElementById("stamp").val()));
-            HttpPost httpPost = new HttpPost(casLoginUrl);
-            httpPost.setEntity(new UrlEncodedFormEntity(basicNameValuePairs, StandardCharsets.UTF_8));
-            httpResponse = httpClient.execute(httpPost);
-            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                if (document.getElementsByClass("pcclient").size() > 0) {
-                    throw new PasswordIncorrectException(Messages.get("charge.credentialsIncorrect"));
-                }
-                httpGet = new HttpGet(document.select("a").first().attr("href"));
-                httpResponse = httpClient.execute(httpGet);
-                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                if (autoRedirect) {
-                    if (httpResponse.getStatusLine().getStatusCode() == 200
-                            && document.getElementsByClass("clear main").size() > 0) {
-                        return;
-                    }
-                } else {
-                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                        httpResponse = httpClient.execute(httpGet);
-                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (httpResponse.getStatusLine().getStatusCode() == 200
-                                    && document.getElementsByClass("clear main").size() > 0) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            if (autoRedirect) {
-                if (httpResponse.getStatusLine().getStatusCode() == 200 && document.select("span[class='style2']").size() > 0) {
-                    httpGet = new HttpGet(cardLoginUrl);
-                    httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                        httpGet = new HttpGet(document.select("a").first().attr("href"));
-                        httpResponse = httpClient.execute(httpGet);
-                        if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                            httpGet = new HttpGet(cardBaseUrl);
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                return;
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                    httpGet = new HttpGet(java.net.URI.create(casLoginUrl).resolve(".").resolve(httpResponse.getFirstHeader("Location").getValue()));
-                    httpResponse = httpClient.execute(httpGet);
-                    document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                    if (httpResponse.getStatusLine().getStatusCode() == 200
-                            && document.select("span[class='style2']").size() > 0) {
-                        httpGet = new HttpGet(cardBaseUrl);
-                        httpResponse = httpClient.execute(httpGet);
-                        document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                        if (httpResponse.getStatusLine().getStatusCode() == 200
-                                && document.getElementsByClass("main clear").size() > 0) {
-                            if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                return;
-                            }
-                            httpGet = new HttpGet(cardLoginUrl);
-                            httpResponse = httpClient.execute(httpGet);
-                            document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                            if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                httpResponse = httpClient.execute(httpGet);
-                                if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                    httpGet = new HttpGet(document.select("a").first().attr("href"));
-                                    httpResponse = httpClient.execute(httpGet);
-                                    if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                        httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                        httpResponse = httpClient.execute(httpGet);
-                                        if (httpResponse.getStatusLine().getStatusCode() == 302) {
-                                            httpGet = new HttpGet(httpResponse.getFirstHeader("Location").getValue());
-                                            httpResponse = httpClient.execute(httpGet);
-                                            if (httpResponse.getStatusLine().getStatusCode() == 200) {
-                                                document = Jsoup.parse(EntityUtils.toString(httpResponse.getEntity()));
-                                                if (document.select("div[class='right menu_a'] span em").size() > 0) {
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        throw new ServerErrorException(Messages.get("charge.paymentPlatformError"));
     }
 
     private static CardInfo parseCardInfoFromDocument(Document document) {

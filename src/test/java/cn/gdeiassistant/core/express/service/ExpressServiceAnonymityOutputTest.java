@@ -87,7 +87,7 @@ class ExpressServiceAnonymityOutputTest {
         assertEquals(Boolean.TRUE, detail.getCanGuess());
         assertEquals("真名", entity.getRealname());
 
-        when(expressMapper.selectCorrectExpressGuessRecord("viewer")).thenReturn(0);
+        when(expressMapper.selectCorrectExpressGuessRecord(5, "viewer")).thenReturn(0);
         assertTrue(expressService.guessExpress(5, "sid", "真名"));
     }
 

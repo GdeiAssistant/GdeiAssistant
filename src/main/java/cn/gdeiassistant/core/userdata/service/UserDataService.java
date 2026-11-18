@@ -378,7 +378,7 @@ public class UserDataService {
      * @param user
      * @return
      */
-    @Transactional(value="appTransactionManager", isolation=Isolation.READ_COMMITTED)
+    @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void syncUserData(User user) throws Exception {
         syncUserData(user, true);
     }
@@ -389,7 +389,7 @@ public class UserDataService {
      * @param user
      * @param persistCredential true 表示允许更新 MySQL 中保存的校园凭证；false 表示仅初始化账号相关资料
      */
-    @Transactional(value="appTransactionManager", isolation=Isolation.READ_COMMITTED)
+    @Transactional(value = "appTransactionManager", isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
     public void syncUserData(User user, boolean persistCredential) throws Exception {
         cn.gdeiassistant.core.user.pojo.entity.CampusAccountView queryUser = userMapper.selectUser(user.getUsername());
         if (queryUser != null) {

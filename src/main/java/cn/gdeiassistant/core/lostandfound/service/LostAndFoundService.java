@@ -138,7 +138,7 @@ public class LostAndFoundService {
         return toItemVOList(lostAndFoundMapper.selectItemByItemType(1, type, start, 10));
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public LostAndFoundItemVO addLostAndFoundItem(LostAndFoundPublishDTO dto, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         LostAndFoundItemEntity item = dtoToEntity(dto);

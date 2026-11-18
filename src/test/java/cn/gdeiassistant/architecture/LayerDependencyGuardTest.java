@@ -306,6 +306,30 @@ class LayerDependencyGuardTest {
         }
     }
 
+    @Test
+    void transactionalMethodsThrowingCheckedExceptionsDeclareRollbackForException() throws IOException {
+        Pattern txWithThrows = Pattern.compile(
+                "(@Transactional(?:\\s*\\([^)]*\\))?)\\s+"
+                        + "(?:public|protected|private)\\s+[\\w<>\\[\\], ?]+\\s+\\w+\\s*\\([^)]*\\)\\s*throws\\s+[^{]+\\{");
+        Pattern rollbackForException = Pattern.compile(
+                "rollbackFor\\s*=\\s*(?:Exception|Throwable)\\.class");
+        List<String> offenders = new ArrayList<>();
+        for (Path file : javaFilesUnder(CORE)) {
+            String source = Files.readString(file);
+            Matcher matcher = txWithThrows.matcher(source);
+            while (matcher.find()) {
+                String annotation = matcher.group(1);
+                if (!rollbackForException.matcher(annotation).find()) {
+                    int line = source.substring(0, matcher.start()).split("\n", -1).length;
+                    offenders.add(CORE.relativize(file).toString().replace('\\', '/') + ":" + line);
+                }
+            }
+        }
+        assertTrue(offenders.isEmpty(),
+                "@Transactional methods throwing checked exceptions must declare rollbackFor = Exception.class: "
+                        + offenders);
+    }
+
     private static List<Path> javaFilesUnder(Path root) throws IOException {
         try (Stream<Path> files = Files.walk(root)) {
             return files.filter(p -> p.toString().endsWith(".java"))

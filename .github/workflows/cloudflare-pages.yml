@@ -1,19 +1,20 @@
 name: Cloudflare Pages Deploy
 
 on:
-  push:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Frontend CI"]
+    types:
+      - completed
     branches:
       - master
-    paths:
-      - 'frontend/**'
-  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   deploy:
-    if: github.ref == 'refs/heads/master'
+    if: ${{ (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/master') || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master') }}
     environment: web-production
     name: Build and Deploy to Cloudflare Pages
     runs-on: ubuntu-latest
@@ -25,6 +26,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
 
       - name: Set up Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0

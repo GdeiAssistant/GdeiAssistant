@@ -62,7 +62,7 @@ public class FeedbackController {
     public JsonResult postFunctionalFeedback(HttpServletRequest request, @Validated Feedback feedback, MultipartFile[] images) throws IOException, SendEmailException {
         byte[][] attachments = readAttachments(images);
         if (attachments == null) {
-            return new JsonResult(false, "不合法的图片文件");
+            return new JsonResult(false, Messages.forLanguage("upload.invalidImage", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         feedbackService.sendFeedbackEmail(sessionId, feedback.getContent(), attachments);
@@ -83,7 +83,7 @@ public class FeedbackController {
     public JsonResult postTicketFeedback(HttpServletRequest request, @Validated ClassifiedFeedback feedback, MultipartFile[] images) throws IOException, SendEmailException {
         byte[][] attachments = readAttachments(images);
         if (attachments == null) {
-            return new JsonResult(false, "不合法的图片文件");
+            return new JsonResult(false, Messages.forLanguage("upload.invalidImage", request.getHeader("Accept-Language")));
         }
         String sessionId = (String) request.getAttribute("sessionId");
         feedbackService.sendTicketEmail(sessionId, feedback.getContent(), feedback.getType()

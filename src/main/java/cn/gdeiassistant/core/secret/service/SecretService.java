@@ -186,7 +186,7 @@ public class SecretService {
         }
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void addSecretComment(int id, String sessionId, String comment) throws Exception {
         if (comment == null || comment.trim().isEmpty() || comment.length() > 50) {
             throw new IllegalArgumentException(Messages.get("express.commentLengthInvalid"));
@@ -212,7 +212,7 @@ public class SecretService {
         );
     }
 
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void changeUserLikeState(boolean like, int id, String sessionId) throws Exception {
         User user = userCertificateService.getUserLoginCertificate(sessionId);
         if (like) {
@@ -242,7 +242,7 @@ public class SecretService {
     /**
      * 定时清理树洞内容（可由 Scheduler 触发）。
      */
-    @Transactional("appTransactionManager")
+    @Transactional(value = "appTransactionManager", rollbackFor = Exception.class)
     public void deleteTimerSecretInfos() throws Exception {
         List<SecretContentEntity> list = secretMapper.selectNotRemovedSecrets();
         for (SecretContentEntity entity : list) {

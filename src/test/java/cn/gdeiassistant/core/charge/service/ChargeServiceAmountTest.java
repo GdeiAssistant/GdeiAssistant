@@ -1,6 +1,7 @@
 package cn.gdeiassistant.core.charge.service;
 
 import cn.gdeiassistant.common.exception.chargeexception.AmountNotAvailableException;
+import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
 import cn.gdeiassistant.core.userlogin.service.UserCertificateService;
 import org.junit.jupiter.api.Test;
 
@@ -35,5 +36,26 @@ class ChargeServiceAmountTest {
             assertThrows(AmountNotAvailableException.class, () -> service.chargeRequest("synthetic-session", amount));
         }
         verifyNoInteractions(certificates);
+    }
+
+    @Test void rethrowsPasswordIncorrectExceptionWithoutWrappingInServerError() throws Exception {
+        UserCertificateService certificates = mock(UserCertificateService.class);
+        var certificate = new cn.gdeiassistant.common.pojo.entity.UserCertificateEntity();
+        certificate.setUser(new cn.gdeiassistant.common.pojo.entity.User("synthetic-user", "wrong-password"));
+        when(certificates.getUserSessionCertificate("synthetic-session")).thenReturn(certificate);
+        var pool = mock(cn.gdeiassistant.integration.httpclient.HttpClientUtils.class);
+        var client = mock(org.apache.http.impl.client.CloseableHttpClient.class);
+        var loginFormResponse = mock(org.apache.http.client.methods.CloseableHttpResponse.class);
+        when(loginFormResponse.getStatusLine()).thenReturn(new org.apache.http.message.BasicStatusLine(org.apache.http.HttpVersion.HTTP_1_1, 200, "OK"));
+        when(loginFormResponse.getEntity()).thenReturn(new org.apache.http.entity.StringEntity("<div class='pcclient'></div><input id='tokens' value='t'><input id='stamp' value='s'>"));
+        var rejectedResponse = mock(org.apache.http.client.methods.CloseableHttpResponse.class);
+        when(rejectedResponse.getStatusLine()).thenReturn(new org.apache.http.message.BasicStatusLine(org.apache.http.HttpVersion.HTTP_1_1, 200, "OK"));
+        when(rejectedResponse.getEntity()).thenReturn(new org.apache.http.entity.StringEntity("<div class='pcclient'></div>"));
+        when(client.execute(any(org.apache.http.client.methods.HttpUriRequest.class))).thenReturn(loginFormResponse, rejectedResponse);
+        when(pool.getHttpClient("synthetic-session", false, 15)).thenReturn(
+                new cn.gdeiassistant.integration.httpclient.HttpClientSession(client, new org.apache.http.impl.client.BasicCookieStore()));
+        ChargeService service = new ChargeService(pool, "https://security.gdei.edu.cn/cas/login", "http://ecard.gdei.edu.cn:8050/LoginCas.aspx", "http://ecard.gdei.edu.cn", "https://epay.gdei.edu.cn:8443/synpay/web", "https://mapi.alipay.com/gateway.do?_input_charset=utf-8", null, certificates);
+        assertThrows(PasswordIncorrectException.class,
+                () -> service.chargeRequest("synthetic-session", 50));
     }
 }

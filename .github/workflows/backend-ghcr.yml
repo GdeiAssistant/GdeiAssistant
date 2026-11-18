@@ -2,16 +2,12 @@ name: Publish Backend Image
 
 on:
   workflow_dispatch:
-  push:
+  workflow_run:
+    workflows: ["Backend CI"]
+    types:
+      - completed
     branches:
       - master
-    paths:
-      - 'Dockerfile.backend'
-      - 'build.gradle'
-      - 'settings.gradle'
-      - 'gradlew'
-      - 'gradle/**'
-      - 'src/**'
 permissions:
   contents: read
   packages: write
@@ -21,12 +17,16 @@ env:
 
 jobs:
   build-and-push:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master') }}
     name: Build and Push Backend Image
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          persist-credentials: false
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4

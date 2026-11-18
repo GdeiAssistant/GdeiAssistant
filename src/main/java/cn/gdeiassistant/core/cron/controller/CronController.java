@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 
 @RestController
 public class CronController {
@@ -48,7 +50,11 @@ public class CronController {
      * Returns true if authentication passes, false if a 403 response was sent.
      */
     private boolean authenticateCron(String secret, HttpServletResponse response) throws IOException {
-        if (cronSecret == null || cronSecret.isEmpty() || secret == null || !secret.equals(cronSecret)) {
+        boolean authorized = cronSecret != null && !cronSecret.isEmpty() && secret != null
+                && MessageDigest.isEqual(
+                        secret.getBytes(StandardCharsets.UTF_8),
+                        cronSecret.getBytes(StandardCharsets.UTF_8));
+        if (!authorized) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");

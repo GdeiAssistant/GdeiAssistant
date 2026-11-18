@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: GdeiAssistant/.github/actions/repository-hygiene@de373c6fc4ead5872cf9cef16e55110ed292e41c
+      - uses: GdeiAssistant/.github/actions/repository-hygiene@6d342d39a5a3c8aa74120c51911d0461aa8fc747
       - name: Verify dependency policy regressions
         run: node --test .github/scripts/test-dependabot-policy.cjs
       - name: Verify frontend scope and failure handling

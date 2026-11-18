@@ -20,7 +20,7 @@ jobs:
           persist-credentials: false
       - name: Validate pull request commit messages
         if: github.event_name == 'pull_request'
-        uses: GdeiAssistant/.github/actions/commitlint@de373c6fc4ead5872cf9cef16e55110ed292e41c
+        uses: GdeiAssistant/.github/actions/commitlint@6d342d39a5a3c8aa74120c51911d0461aa8fc747
         with:
           base-sha: ${{ github.event.pull_request.base.sha }}
           head-sha: ${{ github.event.pull_request.head.sha }}

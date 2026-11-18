@@ -66,7 +66,7 @@ public class CardClient {
     /**
      * Authenticate against CAS and the ecard payment platform.
      */
-    public void loginCardSystem(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect)
+    public void establishCardSession(CloseableHttpClient httpClient, String username, String password, boolean autoRedirect)
             throws IOException, ServerErrorException, PasswordIncorrectException {
         HttpGet httpGet = new HttpGet(casLoginUrl);
         HttpResponse httpResponse = httpClient.execute(httpGet);

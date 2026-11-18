@@ -70,7 +70,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.establishCardSession(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             Document document = cardClient.fetchCardBasicInfoDocument(sessionId);
@@ -121,7 +121,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername(),
+            cardClient.establishCardSession(httpClient, userCertificate.getUser().getUsername(),
                     userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             CardInfo cardInfo = parseCardInfoFromDocument(cardClient.fetchCardBasicInfoDocument(sessionId));
@@ -161,7 +161,7 @@ public class CardQueryService {
             HttpClientSession httpClientSession = httpClientUtils.getHttpClient(sessionId, true, 15);
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
-            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.establishCardSession(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), true);
             httpClientUtils.syncHttpClientCookieStore(sessionId, cookieStore);
             submitCardLostViaClient(sessionId, cardPassword);

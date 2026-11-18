@@ -93,7 +93,7 @@ public class ChargeService {
             httpClient = httpClientSession.getCloseableHttpClient();
             cookieStore = httpClientSession.getCookieStore();
             //登录支付管理平台
-            cardClient.loginCardSystem(httpClient, userCertificate.getUser().getUsername()
+            cardClient.establishCardSession(httpClient, userCertificate.getUser().getUsername()
                     , userCertificate.getUser().getPassword(), false);
             //发送充值请求
             Map<String, String> ecardDataMap = sendChargeRequest(httpClient, amount);

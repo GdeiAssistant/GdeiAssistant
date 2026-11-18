@@ -1,7 +1,5 @@
 package cn.gdeiassistant.core.cardquery.service;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import cn.gdeiassistant.common.enums.recognition.CheckCodeTypeEnum;
 import cn.gdeiassistant.common.exception.commonexception.NetWorkTimeoutException;
 import cn.gdeiassistant.common.exception.commonexception.PasswordIncorrectException;
@@ -58,10 +56,6 @@ public class CardQueryService {
         this.imageRecognitionService = imageRecognitionService;
         this.userCertificateService = userCertificateService;
         this.cardClient = cardClient;
-    }
-
-    public CardQueryService(HttpClientUtils httpClientUtils, String casLoginUrl, String cardLoginUrl, String cardBaseUrl, ImageRecognitionService imageRecognitionService, UserCertificateService userCertificateService, CardClient cardClient) {
-        this(httpClientUtils, imageRecognitionService, userCertificateService, cardClient);
     }
 
     /**

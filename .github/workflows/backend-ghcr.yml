@@ -17,15 +17,22 @@ env:
 
 jobs:
   build-and-push:
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master') }}
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.event == 'push' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' && github.event.workflow_run.head_repository.full_name == github.repository) }}
     name: Build and Push Backend Image
     runs-on: ubuntu-latest
 
     steps:
+      - name: Resolve target revision
+        id: rev
+        run: |
+          SHA="${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}"
+          echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
+          echo "short=${SHA:0:7}" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ steps.rev.outputs.sha }}
           persist-credentials: false
 
       - name: Set up Docker Buildx
@@ -44,14 +51,14 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,prefix=sha-
+            type=raw,value=sha-${{ steps.rev.outputs.short }}
             type=ref,event=branch
             type=raw,value=latest,enable={{is_default_branch}}
           labels: |
             org.opencontainers.image.title=GdeiAssistant Backend
             org.opencontainers.image.description=Spring Boot backend image for GdeiAssistant
             org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.revision=${{ steps.rev.outputs.sha }}
 
       - name: Build and push image
         uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7
@@ -59,7 +66,7 @@ jobs:
           context: .
           file: ./Dockerfile.backend
           push: true
-          build-args: GDEI_BUILD_REVISION=${{ github.sha }}
+          build-args: GDEI_BUILD_REVISION=${{ steps.rev.outputs.sha }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha

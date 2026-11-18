@@ -49,9 +49,6 @@ class CardQueryServiceTest {
                 "http://ecard.gdei.edu.cn:8050/LoginCas.aspx"));
         service = new CardQueryService(
                 clients,
-                "https://security.gdei.edu.cn/cas/login",
-                "http://ecard.gdei.edu.cn:8050/LoginCas.aspx",
-                "http://ecard.gdei.edu.cn",
                 recognition,
                 certificates,
                 cards);

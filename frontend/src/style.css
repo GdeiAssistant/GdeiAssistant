@@ -106,22 +106,6 @@
   /* Shared scrim behind modal layers (dark in both themes so content above stays readable) */
   --c-scrim: rgb(13 19 17 / 50%);
 
-  /* Timetable course block palette: content colors for distinguishing courses */
-  --c-course-1: #2F8FA6;
-  --c-course-2: #0E7C61;
-  --c-course-3: #C85A32;
-  --c-course-4: #C56E64;
-  --c-course-5: #1D4ED8;
-  --c-course-6: #6D28D9;
-  --c-course-7: #3A9FB4;
-  --c-course-8: #D08A63;
-  --c-course-9: #4B6FA5;
-  --c-course-10: #2F9E95;
-  --c-course-11: #B96F84;
-  --c-course-12: #7B8FCB;
-  --c-course-13: #4F9EC4;
-  --c-course-14: #83A85D;
-
   /* Community module tag colors: low saturation, only for small marks */
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);
@@ -216,22 +200,6 @@
   --c-tip-text: #FFF1F2;
   --c-tip-icon-bg: rgba(255, 232, 163, 0.14);
   --c-tip-icon: #FCD34D;
-
-  /* Dark timetable course blocks: same hues, darkened to sit on the dark surface */
-  --c-course-1: #2A6E7E;
-  --c-course-2: #1E6B5C;
-  --c-course-3: #8A4A30;
-  --c-course-4: #8A5049;
-  --c-course-5: #29468E;
-  --c-course-6: #5B2E94;
-  --c-course-7: #2E7484;
-  --c-course-8: #8F5F42;
-  --c-course-9: #4A6891;
-  --c-course-10: #28796F;
-  --c-course-11: #7E5261;
-  --c-course-12: #5E6E99;
-  --c-course-13: #3E7186;
-  --c-course-14: #61794A;
 
   --c-ershou: var(--c-primary);
   --c-lostandfound: var(--c-primary);

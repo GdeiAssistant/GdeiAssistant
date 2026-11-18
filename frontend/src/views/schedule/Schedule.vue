@@ -14,6 +14,7 @@ import {
   createSectionOptions,
   createWeekOptions
 } from './scheduleContent'
+import { assignCoursePairs, blockGridRow, periodGridRow, SCHEDULE_GRID_ROWS, LUNCH_BAND_ROW, DINNER_BAND_ROW } from './courseColors'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -78,22 +79,21 @@ const showEmptyState = computed(() => {
   return !!scheduleResult.value && filteredList.value.length === 0
 })
 
-// 课程颜色配置（token 值见 style.css --c-course-*，深色模式有对应降明度变体）
-const COURSE_COLOR_COUNT = 14
+// 课程配色按课程名分配（RE-REVIEW 2.2），忽略服务端按位置下发的 colorCode；token 见 --c-course-N-bg/ink/stripe
+const coursePairs = computed(() => assignCoursePairs(scheduleResult.value?.scheduleList))
 
-function getCourseColor(course) {
-  if (course.colorCode) return course.colorCode
-  const index = (course.position || 0) % COURSE_COLOR_COUNT + 1
-  return `var(--c-course-${index})`
+function getCoursePair(course) {
+  return coursePairs.value.get(String(course.scheduleName ?? '').trim()) || 1
 }
 
 function getCourseStyle(course) {
-  const color = getCourseColor(course)
+  const pair = getCoursePair(course)
   return {
     gridColumn: course.column + 2,
-    gridRow: `${course.row + 2} / span ${course.scheduleLength}`,
-    borderLeftColor: color,
-    backgroundColor: `color-mix(in srgb, ${color} 12%, var(--c-surface))`,
+    gridRow: blockGridRow(course.row, course.scheduleLength),
+    borderLeftColor: `var(--c-course-${pair}-stripe)`,
+    backgroundColor: `var(--c-course-${pair}-bg)`,
+    color: `var(--c-course-${pair}-ink)`,
   }
 }
 
@@ -329,8 +329,8 @@ onMounted(() => {
     </div>
 
     <!-- Schedule grid: horizontal scroll container keeps the wide table usable on tablets -->
-    <div class="relative w-full min-h-[500px] bg-[var(--c-surface)] overflow-x-auto">
-      <div class="grid min-h-[500px] min-w-[640px]" style="grid-template-columns: 30px repeat(7, 1fr); grid-template-rows: 36px repeat(12, 1fr);">
+    <div class="relative w-full bg-[var(--c-surface)] overflow-x-auto">
+      <div class="grid min-w-[640px]" :style="{ gridTemplateColumns: '30px repeat(7, 1fr)', gridTemplateRows: SCHEDULE_GRID_ROWS }">
         <!-- Corner cell -->
         <div class="flex items-center justify-center text-xs text-[var(--c-text-3)] border-[0.5px] border-[var(--c-divider)] bg-[var(--c-surface)]" style="grid-column: 1; grid-row: 1;"></div>
 
@@ -355,7 +355,7 @@ onMounted(() => {
           v-for="row in 12"
           :key="'index-' + row"
           class="flex items-center justify-center text-xs font-mono tabular-num text-[var(--c-text-3)] bg-[var(--c-surface)] border-[0.5px] border-[var(--c-divider)] border-r-[1px] min-w-[30px]"
-          :style="{ gridColumn: 1, gridRow: row + 1 }"
+          :style="{ gridColumn: 1, gridRow: periodGridRow(row - 1) }"
         >
           {{ row }}
         </div>
@@ -367,11 +367,20 @@ onMounted(() => {
           class="border-[0.5px] border-[var(--c-divider)]"
           :style="{
             gridColumn: (index % 7) + 2,
-            gridRow: Math.floor(index / 7) + 2,
+            gridRow: periodGridRow(Math.floor(index / 7)),
             backgroundColor: (index % 7) === todayIndex
               ? 'color-mix(in srgb, var(--c-primary) 8%, var(--c-bg))'
               : 'var(--c-bg)'
           }"
+        ></div>
+
+        <!-- Lunch and dinner bands -->
+        <div
+          v-for="bandRow in [LUNCH_BAND_ROW, DINNER_BAND_ROW]"
+          :key="'band-' + bandRow"
+          class="schedule-band"
+          :style="{ gridColumn: '1 / -1', gridRow: bandRow }"
+          aria-hidden="true"
         ></div>
 
         <!-- Empty state -->
@@ -397,13 +406,14 @@ onMounted(() => {
           v-for="(course, index) in filteredList"
           :key="'course-' + index"
           type="button"
-          class="m-[2px] px-1 py-1.5 rounded-r-md border-l-[3px] overflow-hidden flex items-center justify-center text-center cursor-pointer transition duration-[0.12s] active:scale-[0.98]"
+          class="schedule-course m-[2px] px-1 py-1.5 rounded-r-md border-l-4 overflow-hidden flex items-center justify-center text-center cursor-pointer transition duration-[0.12s] active:scale-[0.98]"
+          :class="{ 'schedule-course--selected': selectedCourse === course }"
           :style="getCourseStyle(course)"
           @click="openCourseDetail(course)"
         >
           <div class="flex flex-col items-center justify-center gap-0.5 w-full min-h-0 break-all leading-tight">
-            <span class="text-xs font-semibold text-[var(--c-text-1)]">{{ course.scheduleName }}</span>
-            <span class="text-[10px] text-[var(--c-text-2)]">{{ course.scheduleLocation }}</span>
+            <span class="text-xs font-semibold">{{ course.scheduleName }}</span>
+            <span class="text-xs">{{ course.scheduleLocation }}</span>
           </div>
         </button>
       </div>
@@ -614,6 +624,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.schedule-band {
+  background: var(--c-surface-sunken);
+}
+
+/* Selection is a 2px primary-ink ring, never a fill (p1 shares the banyan hue). */
+.schedule-course--selected {
+  box-shadow: inset 0 0 0 2px var(--c-primary-ink);
+}
+
 .schedule-course-delete {
   border: 1px solid color-mix(in srgb, var(--c-danger) 42%, transparent);
   background: color-mix(in srgb, var(--c-danger) 8%, var(--c-surface));

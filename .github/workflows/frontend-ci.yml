@@ -78,6 +78,9 @@ jobs:
       - name: Check JavaScript syntax
         run: npm run check:syntax
 
+      - name: Lint frontend
+        run: npm run lint
+
       - name: Run unit tests and report coverage
         run: npm run test:coverage
 

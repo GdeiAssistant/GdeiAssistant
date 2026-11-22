@@ -258,7 +258,7 @@ function getProgressBg(theme) {
 
 function voiceIcon(playingState) {
   if (playingState) return '/img/secret/voice_pressed.png'
-  return useLightVoiceAsset(secret?.theme, isDark.value)
+  return useLightVoiceAsset(secret.value?.theme, isDark.value)
     ? '/img/secret/voice_normal.png'
     : '/img/secret/voice_normal_white.png'
 }

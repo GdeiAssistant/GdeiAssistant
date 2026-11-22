@@ -1,0 +1,32 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
+	"formatter": {
+		"enabled": false
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"preset": "recommended",
+			"suspicious": {
+				"useIterableCallbackReturn": "off",
+				"noAssignInExpressions": "off"
+			},
+			"complexity": {
+				"noExcessiveCognitiveComplexity": {
+					"level": "warn",
+					"options": {
+						"maxAllowedComplexity": 20
+					}
+				}
+			}
+		}
+	},
+	"files": {
+		"includes": ["src/**"]
+	}
+}

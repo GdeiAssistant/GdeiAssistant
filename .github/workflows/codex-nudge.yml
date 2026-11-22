@@ -1,12 +1,15 @@
 name: Review request
 
+# Copy to .github/workflows/codex-nudge.yml and replace Pigbibi/PrGovernance.
 # Nudges Codex then Claude (see policy.review_routing). Cursor Bugbot must be
 # triggered by a human (`cursor review` / `bugbot run`); bot-posted triggers are ignored.
 # Optional org var GOVERNANCE_REVIEWERS_JSON overrides reviewer identities.
 
 on:
   schedule:
-    - cron: '15 2,14 * * *'
+    - cron: '*/20 * * * *'
+  issue_comment:
+    types: [created]
   workflow_dispatch:
 
 permissions:
@@ -23,11 +26,16 @@ concurrency:
 jobs:
   nudge:
     name: Request a review
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.pull_request &&
+       github.event.comment.user.type == 'Bot' &&
+       github.event.comment.user.login != 'github-actions[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Request
-        uses: Pigbibi/PrGovernance/pr-governance@ccda8de572d2893272b0137526ef3e2d45e5eee7
+        uses: Pigbibi/PrGovernance/pr-governance@3d44e3d057681d5ae2730ad76af2f53b72d26767
         env:
           GOVERNANCE_REVIEWERS_JSON: ${{ vars.GOVERNANCE_REVIEWERS_JSON }}
           GOVERNANCE_DISPATCH_MENTIONS_JSON: ${{ vars.GOVERNANCE_DISPATCH_MENTIONS_JSON }}

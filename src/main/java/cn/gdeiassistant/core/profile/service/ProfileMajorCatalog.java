@@ -80,10 +80,17 @@ public final class ProfileMajorCatalog {
             return null;
         }
         int facultyIndex = facultyCode;
-        if (facultyIndex < 0 || facultyIndex >= OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY.length) {
+        String[][] majorOptions = OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY;
+        if (facultyIndex < 0 || facultyIndex >= majorOptions.length) {
             return null;
         }
-        String[] labels = OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY[facultyIndex];
+        String[] labels = null;
+        for (int i = 0; i < majorOptions.length; i++) {
+            if (i == facultyIndex) {
+                labels = majorOptions[i];
+                break;
+            }
+        }
         if (labels == null) {
             return null;
         }

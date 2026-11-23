@@ -45,7 +45,8 @@ public class ApiAuthInterceptor implements HandlerInterceptor {
         if (path.startsWith("/api")) {
             String sessionId = (String) request.getAttribute("sessionId");
             if (sessionId == null || sessionId.isEmpty()) {
-                log.error("401拦截原因: 请求中无 sessionId（可能 Authorization 头为空或格式不对、JWT 解析或验签失败、Redis 中无对应 Session） path={}", path);
+                String safePath = path.replace('\r', '_').replace('\n', '_').replace('\t', '_');
+                log.error("401拦截原因: 请求中无 sessionId（可能 Authorization 头为空或格式不对、JWT 解析或验签失败、Redis 中无对应 Session） path={}", safePath);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");

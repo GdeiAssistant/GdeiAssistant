@@ -479,12 +479,10 @@ function buildRoommatePickPayload(pick, communityState) {
 }
 
 function handleSecondhand(path, method, data, token, utils) {
-  // 前端视图使用 /api/marketplace/* 路径，mock 内部统一用 /api/marketplace/* 处理
-  const normalizedPath = path.replace(/^\/api\/marketplace\//, '/api/marketplace/')
-  if (!/^\/api\/marketplace\//.test(normalizedPath)) {
+  // 前端视图使用 /api/marketplace/* 路径
+  if (!/^\/api\/marketplace\//.test(path)) {
     return null
   }
-  path = normalizedPath
 
   const authError = utils.ensureAuthorized(token)
   if (authError) {

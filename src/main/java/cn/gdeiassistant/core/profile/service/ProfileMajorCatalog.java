@@ -76,10 +76,18 @@ public final class ProfileMajorCatalog {
     }
 
     public static MajorDefinition resolveForFaculty(Integer facultyCode, String majorValue) {
-        if (facultyCode == null || majorValue == null || facultyCode < 0 || facultyCode >= OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY.length) {
+        if (facultyCode == null || majorValue == null) {
             return null;
         }
-        for (String label : OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY[facultyCode]) {
+        int facultyIndex = facultyCode;
+        if (facultyIndex < 0 || facultyIndex >= OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY.length) {
+            return null;
+        }
+        String[] labels = OptionConstantUtils.MAJOR_OPTIONS_BY_FACULTY[facultyIndex];
+        if (labels == null) {
+            return null;
+        }
+        for (String label : labels) {
             String code = codeForLabel(label);
             if (majorValue.equals(code) || majorValue.equals(label)) {
                 return new MajorDefinition(code, label);

@@ -1,4 +1,5 @@
 <script setup>
+import AppButton from '@/components/ui/AppButton.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -172,13 +173,13 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
         </div>
 
         <!-- Search button -->
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 transition-opacity"
           @click="doSearch"
         >
           {{ t('spare.search') }}
-        </button>
+        </AppButton>
       </div>
     </template>
 

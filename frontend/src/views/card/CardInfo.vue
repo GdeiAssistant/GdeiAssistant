@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { queryCardInfo, reportCardLost } from '@/api/card'
 import { useToast } from '@/composables/useToast'
+import AppInput from '@/components/ui/AppInput.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -150,12 +151,11 @@ onMounted(() => {
           </div>
           <div class="px-5 pb-5">
             <p class="text-sm text-[var(--c-text-2)] mb-3">{{ t('card.info.dialogDescription') }}</p>
-            <input
+            <AppInput
               v-model="verifyPassword"
               type="password"
               :placeholder="t('card.info.dialogPlaceholder')"
               maxlength="20"
-              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
               @keyup.enter="confirmReportLoss"
             />
           </div>

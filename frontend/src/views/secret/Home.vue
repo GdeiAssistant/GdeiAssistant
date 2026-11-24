@@ -131,7 +131,7 @@ onMounted(() => {
           :style="{ backgroundColor: noteBg(item.theme), color: noteText(item.theme), animationDelay: index * 0.05 + 's' }"
         >
           <a href="javascript:;" class="community-secret-note-link block h-full no-underline text-inherit" @click.prevent="goDetail(item.id)">
-            <section class="editorial-serif flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
+            <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit">
               <template v-if="item.type === 0">
                 {{ item.content }}
               </template>

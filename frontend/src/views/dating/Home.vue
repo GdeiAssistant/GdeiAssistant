@@ -123,7 +123,7 @@ onUnmounted(() => {
         <div class="community-desktop-card-media w-full aspect-square bg-[var(--c-surface-subtle)] rounded-lg overflow-hidden mb-3">
           <img :src="(item.images && item.images[0]) || item.image || '/img/dating/default-avatar.png'" :alt="item.name" class="w-full h-full object-cover" />
         </div>
-        <h2 class="community-dating-card-title editorial-serif m-0 mb-1.5 text-xl font-semibold leading-tight">{{ item.name }}</h2>
+        <h2 class="community-dating-card-title m-0 mb-1.5 text-xl font-semibold leading-tight">{{ item.name }}</h2>
         <div class="text-[var(--c-text-2)] text-base mt-0.5 leading-relaxed">{{ item.faculty }} {{ getGradeText(item.grade) }} {{ copy.studentSuffix }}</div>
         <div class="text-[var(--c-text-2)] text-base mt-0.5 leading-relaxed">{{ copy.fromPrefix }} {{ item.hometown || copy.unknown }}</div>
         <p class="text-[var(--c-text-2)] text-sm mt-2 leading-relaxed">{{ item.content }}</p>

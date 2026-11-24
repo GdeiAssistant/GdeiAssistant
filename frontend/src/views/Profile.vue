@@ -13,7 +13,7 @@
           </div>
         </RouterLink>
         <div class="min-w-0 flex-1">
-          <p class="editorial-serif text-xl font-semibold text-[var(--c-text-1)] truncate">
+          <p class="text-xl font-semibold text-[var(--c-text-1)] truncate">
             {{ userInfo.nickname || userInfo.username }}
           </p>
           <p class="text-sm text-[var(--c-text-3)] mt-0.5 truncate tabular-num">

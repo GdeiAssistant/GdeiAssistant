@@ -244,7 +244,7 @@ onMounted(() => {
         <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('cetPage.resultDisclaimer') }}</p>
 
         <div class="ui-panel bg-[var(--c-surface)] p-6 border border-[var(--c-border)]">
-          <h2 class="editorial-serif text-xl font-bold text-center mb-1">{{ cetResult.name }}</h2>
+          <h2 class="text-xl font-bold text-center mb-1">{{ cetResult.name }}</h2>
           <p class="text-sm text-[var(--c-text-2)] text-center">{{ cetResult.type }}</p>
           <p class="text-sm text-[var(--c-text-2)] text-center mb-4">{{ cetResult.school }}</p>
 

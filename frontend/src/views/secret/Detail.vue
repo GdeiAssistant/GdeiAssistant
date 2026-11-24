@@ -288,7 +288,7 @@ onBeforeUnmount(() => {
         class="mx-2.5 mt-5 text-center text-headline leading-[26px] relative h-[240px] rounded-[var(--radius-card)] border border-[var(--c-border)] border-l-[3px] border-l-[var(--c-secret)]"
         :style="{ backgroundColor: noteBg(secret.theme), color: noteText(secret.theme) }"
       >
-        <section class="editorial-serif flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
+        <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
           <template v-if="secret.type === 0">
             {{ secret.content }}
           </template>

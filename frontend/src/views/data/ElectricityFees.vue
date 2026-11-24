@@ -8,6 +8,8 @@ import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
 
 import { createElectricityResultFields } from './dataContent'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -133,34 +135,32 @@ const resetQuery = () => {
           <!-- 姓名 -->
           <div>
             <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('electricityFees.field.name') }}</label>
-            <input
+            <AppInput
               v-model="form.name"
               type="text"
               maxlength="10"
               :placeholder="t('electricityFees.placeholder.name')"
-              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             />
           </div>
 
           <!-- 学号 -->
           <div>
             <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('electricityFees.field.number') }}</label>
-            <input
+            <AppInput
               v-model="form.number"
               type="text"
               maxlength="11"
               :placeholder="t('electricityFees.placeholder.number')"
               inputmode="numeric"
-              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             />
           </div>
         </form>
 
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
           @click="submitQuery"
-        >{{ t('electricityFees.submit') }}</button>
+        >{{ t('electricityFees.submit') }}</AppButton>
       </div>
 
       <!-- Query result -->

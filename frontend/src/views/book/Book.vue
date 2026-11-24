@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getBorrowedBooks, renewBook } from '@/api/collection'
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -108,21 +110,20 @@ function confirmRenew() {
       <div class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">
         <div>
           <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('libraryPage.borrow.passwordLabel') }}</label>
-          <input
+          <AppInput
             v-model="borrowPassword"
             type="password"
             :placeholder="t('libraryPage.borrow.passwordPlaceholder')"
             maxlength="20"
-            class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             @keyup.enter="fetchBorrowed"
           />
         </div>
 
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
           @click="fetchBorrowed"
-        >{{ hasQueriedBorrow ? t('libraryPage.borrow.refresh') : t('libraryPage.borrow.query') }}</button>
+        >{{ hasQueriedBorrow ? t('libraryPage.borrow.refresh') : t('libraryPage.borrow.query') }}</AppButton>
       </div>
 
       <!-- Loading state -->
@@ -194,12 +195,12 @@ function confirmRenew() {
       <div class="ui-modal fixed z-50 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-48px)] max-w-sm bg-[var(--c-surface)] rounded-2xl p-6 shadow-xl">
         <h3 class="text-base font-bold text-center text-[var(--c-text)]">{{ t('libraryPage.borrow.renewDialogTitle') }}</h3>
         <p class="mt-2 text-sm text-center text-[var(--c-text-2)]">{{ t('libraryPage.borrow.renewDialogDescription') }}</p>
-        <input
+        <AppInput
           v-model="verifyPassword"
           type="password"
           :placeholder="t('libraryPage.borrow.renewDialogPlaceholder')"
           maxlength="20"
-          class="ui-control mt-4 w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+          class="mt-4"
           @keyup.enter="confirmRenew"
         />
         <div class="flex gap-3 mt-5">
@@ -208,11 +209,11 @@ function confirmRenew() {
             class="flex-1 py-2.5 text-sm font-semibold border border-[var(--c-border)] rounded-lg hover:bg-[var(--c-surface-hover)] transition-colors"
             @click="closePasswordDialog"
           >{{ t('common.cancel') }}</button>
-          <button
+          <AppButton
             type="button"
-            class="ui-btn-primary flex-1 py-2.5 text-sm font-semibold text-[var(--c-on-primary)] bg-[var(--c-primary)] rounded-lg hover:opacity-90 transition-opacity"
+            class="ui-btn-primary flex-1 py-2.5 transition-opacity"
             @click="confirmRenew"
-          >{{ t('common.confirm') }}</button>
+          >{{ t('common.confirm') }}</AppButton>
         </div>
       </div>
     </template>

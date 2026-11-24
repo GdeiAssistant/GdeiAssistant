@@ -4,7 +4,7 @@
     <AppCard>
       <div class="flex items-center gap-4 px-5 pt-5 pb-3">
         <RouterLink to="/user/avatar-edit" class="shrink-0">
-          <div class="profile-avatar-ring w-16 h-16 rounded-full p-[2px]">
+          <div class="profile-avatar-ring w-16 h-16 rounded-full p-0.5">
             <img
               :src="userInfo.avatar"
               :alt="$t('profile.avatar')"

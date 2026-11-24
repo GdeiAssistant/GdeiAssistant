@@ -210,7 +210,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
               class="px-4 py-3.5"
             >
               <div class="flex items-baseline justify-between gap-3 mb-1.5">
-                <h4 class="editorial-serif text-base font-semibold text-[var(--c-text-1)]">{{ item.name || item.number || '—' }}</h4>
+                <h4 class="text-base font-semibold text-[var(--c-text-1)]">{{ item.name || item.number || '—' }}</h4>
                 <span class="font-mono tabular-num text-xs text-[var(--c-primary)]">{{ item.number || '—' }}</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 text-xs text-[var(--c-text-2)]">

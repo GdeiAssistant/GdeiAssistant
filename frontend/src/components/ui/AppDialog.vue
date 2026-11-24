@@ -105,7 +105,7 @@ function onOpenChange(val) {
 .dialog-title {
   margin: 0 0 8px;
   color: var(--c-text-1);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -0.015em;

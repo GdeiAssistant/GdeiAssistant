@@ -99,7 +99,7 @@ onMounted(() => {
             class="block px-4 py-3.5 hover:bg-[var(--c-surface-hover)] transition-colors no-underline"
             @click.prevent="openDetail(item)"
           >
-            <h4 class="editorial-serif text-base font-semibold text-[var(--c-text-1)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
+            <h4 class="text-base font-semibold text-[var(--c-text-1)] break-all leading-snug">{{ item.bookname || '—' }}</h4>
             <p class="mt-1 text-sm text-[var(--c-text-2)]">
               <span class="text-[var(--c-text-3)]">{{ t('libraryPage.list.author') }}</span>{{ item.author || '—' }}
             </p>

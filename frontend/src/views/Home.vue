@@ -751,7 +751,7 @@ const todayLabel = computed(() => {
 }
 
 .home-rail__balance-fallback {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 20px;
   font-weight: 700;
 }

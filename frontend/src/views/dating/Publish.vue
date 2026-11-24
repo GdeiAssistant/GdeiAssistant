@@ -159,7 +159,7 @@ async function submit() {
     <CommunityHeader :title="copy.title" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <div class="community-dating-shell w-[90%] mx-auto mt-4 p-6 rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
-      <div class="community-dating-shell__title text-[22px] font-bold mb-6 pl-2">{{ copy.title }}</div>
+      <div class="community-dating-shell__title text-title font-bold mb-6 pl-2">{{ copy.title }}</div>
 
       <!-- Photo upload -->
       <div class="community-dating-upload w-full min-h-[200px] rounded-lg mb-6 flex items-center justify-center overflow-hidden relative cursor-pointer" @click="$refs.fileInput.click()">

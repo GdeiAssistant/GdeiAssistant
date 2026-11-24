@@ -63,8 +63,10 @@ const accentTables = [
 const header = '// Generated from design/tokens.json. Run node design/generate-tokens.mjs; do not edit.\n';
 const cssHeader = '/* Generated from design/tokens.json; do not edit. */\n';
 const cssVars = (roles, theme) => roles.map(([name, pair]) => `  --c-${name}: ${pair[theme]};`).join('\n');
+// Web type is rem (1rem = 16px) so the root font-size preference reaches it; wxss stays rpx.
+const cssFont = (name, factor, unit) => (unit === 'px' ? `${source.font[name] / 16}rem` : `${source.font[name] * factor}${unit}`);
 const cssScale = (factor, unit) => [
-  ...fontKeys.map((name) => `  --ds-font-${name}: ${source.font[name] * factor}${unit};`),
+  ...fontKeys.map((name) => `  --ds-font-${name}: ${cssFont(name, factor, unit)};`),
   `  --radius-card: ${source.radius.card * factor}${unit};`,
   `  --space-page: ${source.space.page * factor}${unit};`,
 ].join('\n');

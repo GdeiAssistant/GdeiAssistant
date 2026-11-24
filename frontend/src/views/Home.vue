@@ -426,7 +426,7 @@ const todayLabel = computed(() => {
   background: var(--c-surface);
   color: var(--c-text-2);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -496,7 +496,7 @@ const todayLabel = computed(() => {
 .home-focal-card__heading p {
   margin: 2px 0 0;
   color: var(--c-text-2);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 
 .home-focal-card__action {
@@ -553,7 +553,7 @@ const todayLabel = computed(() => {
 .home-today__lesson {
   color: var(--c-primary);
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
 }
 
@@ -567,7 +567,7 @@ const todayLabel = computed(() => {
 .home-today__course strong {
   overflow: hidden;
   color: var(--c-text-1);
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -575,14 +575,14 @@ const todayLabel = computed(() => {
 
 .home-today__course small {
   color: var(--c-text-2);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 
 .home-today__empty {
   margin: 0;
   border-top: 1px solid var(--c-divider);
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   padding: 14px 0 2px;
 }
 
@@ -679,7 +679,7 @@ const todayLabel = computed(() => {
 .home-directory__title {
   flex: 1;
   min-width: 0;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 600;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -725,7 +725,7 @@ const todayLabel = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   letter-spacing: 0.04em;
   opacity: 0.9;
@@ -758,7 +758,7 @@ const todayLabel = computed(() => {
 
 .home-rail__card-desc {
   margin: 8px 0 0;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   line-height: 1.5;
   opacity: 0.82;
 }
@@ -768,7 +768,7 @@ const todayLabel = computed(() => {
   align-items: center;
   gap: 4px;
   margin-top: 14px;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
 }
 
@@ -789,7 +789,7 @@ const todayLabel = computed(() => {
   background: transparent;
   color: var(--c-primary);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
@@ -846,7 +846,7 @@ const todayLabel = computed(() => {
 .home-empty {
   border-top: 1px solid var(--c-border);
   color: var(--c-text-3);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   padding: 48px 20px;
   text-align: center;
 }

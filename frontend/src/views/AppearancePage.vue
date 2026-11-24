@@ -218,7 +218,7 @@ function isLocaleSelected(code) {
   display: none;
   margin: 0 0 24px;
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 700;
   letter-spacing: -0.015em;
 }
@@ -274,7 +274,7 @@ function isLocaleSelected(code) {
 }
 
 .accent-option__name {
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 500;
 }
 
@@ -303,7 +303,7 @@ function isLocaleSelected(code) {
   background: transparent;
   color: var(--c-text-1);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   text-align: left;
   cursor: pointer;
   transition: background-color 0.16s ease, border-color 0.16s ease;
@@ -340,7 +340,7 @@ function isLocaleSelected(code) {
   gap: 6px;
   min-height: 20px;
   padding: 0 2px;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 500;
 }
 
@@ -441,7 +441,7 @@ function isLocaleSelected(code) {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   color: var(--c-text-3);
 }
 

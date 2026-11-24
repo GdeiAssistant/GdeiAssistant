@@ -37,7 +37,7 @@ export function showErrorTopTips(message) {
     'border:1px solid var(--c-tip-border)',
     'box-shadow:var(--c-tip-shadow)',
     'backdrop-filter:blur(18px)',
-    'font-size:14px',
+    'font-size:var(--ds-font-callout)',
     'font-weight:700',
     'line-height:1.45',
     'text-align:left',
@@ -61,7 +61,7 @@ export function showErrorTopTips(message) {
     'border-radius:999px',
     'background:var(--c-tip-icon-bg)',
     'color:var(--c-tip-icon)',
-    'font-size:14px',
+    'font-size:var(--ds-font-callout)',
     'font-weight:900'
   ].join(';')
 

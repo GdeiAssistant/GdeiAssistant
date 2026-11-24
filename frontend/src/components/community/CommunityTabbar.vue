@@ -168,7 +168,7 @@ function goTo(path) {
   }
 
   .community-tabbar__item p {
-    font-size: 14px;
+    font-size: var(--ds-font-callout);
   }
 }
 

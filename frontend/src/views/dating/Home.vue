@@ -157,7 +157,7 @@ onUnmounted(() => {
       class="community-mobile-only-action fixed right-5 bottom-6 w-12 h-12 rounded-full bg-[var(--c-dating)] shadow-[var(--shadow-md)] flex items-center justify-center z-[100] cursor-pointer transition-transform active:scale-[0.98]"
       @click="router.push('/dating/publish')"
     >
-      <span class="text-[28px] leading-none text-white font-light">+</span>
+      <span class="text-display leading-none text-white font-light">+</span>
     </div>
   </div>
 </template>
@@ -240,7 +240,7 @@ onUnmounted(() => {
 
   .community-dating-switch__item {
     min-height: 48px;
-    font-size: 15px;
+    font-size: var(--ds-font-body);
   }
 }
 </style>

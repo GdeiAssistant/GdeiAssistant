@@ -310,7 +310,7 @@ watch(() => route.fullPath, () => {
 }
 
 .community-delivery-empty-icon {
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 900;
   line-height: 1;
 }

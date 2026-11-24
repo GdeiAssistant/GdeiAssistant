@@ -70,7 +70,7 @@ const props = defineProps({
 }
 
 .notice-body {
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   color: var(--c-text-2);
   line-height: 1.7;
 }
@@ -103,7 +103,7 @@ const props = defineProps({
 }
 
 .notice-empty__text {
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   color: var(--color-text-tertiary);
   font-weight: 600;
 }

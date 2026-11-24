@@ -149,7 +149,7 @@ onUnmounted(() => {
     <CommunityHeader :title="t('express.title')" moduleColor="var(--c-express)" />
 
     <!-- 导航栏正下方：居中的浅粉色粗体标题 -->
-    <h2 class="express-banner-title editorial-serif text-center text-[22px] font-semibold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title editorial-serif text-center text-title font-semibold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 下拉刷新指示器 -->
     <div class="flex items-center justify-center overflow-hidden text-xs text-[var(--c-text-3)]" :style="{ height: pullY + 'px' }">

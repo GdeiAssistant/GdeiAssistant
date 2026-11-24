@@ -243,7 +243,7 @@ async function handleSubmit() {
               v-if="screenshots.length < maxScreenshots"
               class="feedback-upload w-20 h-20 rounded-lg border border-dashed flex flex-col items-center justify-center text-xs cursor-pointer"
             >
-              <span class="text-[22px] leading-none mb-0.5">+</span>
+              <span class="text-title leading-none mb-0.5">+</span>
               <span>{{ t('feedback.form.addImage') }}</span>
               <input
                 type="file"

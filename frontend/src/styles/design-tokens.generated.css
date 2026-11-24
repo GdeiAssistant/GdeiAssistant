@@ -50,12 +50,12 @@
   --c-course-8-bg: #E2EBD9;
   --c-course-8-ink: #436420;
   --c-course-8-stripe: #5F8F2E;
-  --ds-font-display: 28px;
-  --ds-font-title: 22px;
-  --ds-font-headline: 17px;
-  --ds-font-body: 15px;
-  --ds-font-callout: 14px;
-  --ds-font-caption: 12px;
+  --ds-font-display: 1.75rem;
+  --ds-font-title: 1.375rem;
+  --ds-font-headline: 1.0625rem;
+  --ds-font-body: 0.9375rem;
+  --ds-font-callout: 0.875rem;
+  --ds-font-caption: 0.75rem;
   --radius-card: 10px;
   --space-page: 16px;
 }

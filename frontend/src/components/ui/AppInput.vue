@@ -59,7 +59,7 @@ defineEmits(['update:modelValue'])
   border-radius: var(--radius-control);
   background: var(--c-surface);
   color: var(--c-text-1);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   outline: none;
   padding: 0 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -73,6 +73,6 @@ defineEmits(['update:modelValue'])
 .app-input__error {
   margin-top: 6px;
   color: var(--c-danger);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 </style>

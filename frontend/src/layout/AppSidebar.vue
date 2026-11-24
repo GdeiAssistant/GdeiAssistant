@@ -186,7 +186,7 @@ function avatarInitial() {
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 500;
   padding: 0 12px;
   text-align: left;

@@ -151,7 +151,7 @@ onMounted(async () => {
   margin: 0;
   color: var(--c-text-1);
   font-family: var(--font-serif);
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.2;
@@ -161,7 +161,7 @@ onMounted(async () => {
   max-width: 560px;
   margin: 6px 0 0;
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   line-height: 1.6;
 }
 
@@ -180,7 +180,7 @@ onMounted(async () => {
   border-radius: var(--radius-control);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 600;
   padding: 0 16px;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
@@ -252,13 +252,13 @@ onMounted(async () => {
 .community-module-layout__rail-head h2 {
   margin: 0;
   color: var(--c-text-1);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 650;
 }
 
 .community-module-layout__rail-head span {
   color: var(--c-text-3);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 
 .community-module-layout__activity-list {
@@ -298,7 +298,7 @@ onMounted(async () => {
 .community-module-layout__activity-list small {
   margin-top: 2px;
   color: var(--c-text-3);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 
 .community-module-layout__rail-icon {

@@ -542,7 +542,7 @@ onMounted(() => {
 <style scoped>
 .profile-introduction-preview { max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .profile-editor { border: 0; padding: 0; margin: 0; min-width: 0; }
-.profile-save-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; color: var(--c-text-2); font-size: 14px; }
+.profile-save-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; color: var(--c-text-2); font-size: var(--ds-font-callout); }
 .profile-save-button { min-height: 44px; padding: 0 24px; border: 0; border-radius: var(--radius-control); background: var(--c-primary); color: var(--c-on-primary); font: inherit; font-weight: 600; cursor: pointer; transition: background-color 0.16s ease; }
 .profile-save-button:hover:not(:disabled) { background: var(--c-primary-hover); }
 .profile-save-button:disabled { opacity: .5; cursor: default; }
@@ -564,7 +564,7 @@ onMounted(() => {
   background: var(--c-surface);
   color: var(--c-text-1);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   outline: none;
   padding: 12px 14px;
   box-sizing: border-box;
@@ -595,7 +595,7 @@ onMounted(() => {
   color: var(--c-text-1);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 640;
   padding: 12px 10px;
   text-align: left;
@@ -621,7 +621,7 @@ onMounted(() => {
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 760;
   padding: 0 18px;
 }

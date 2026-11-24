@@ -75,7 +75,7 @@ function submit() {
     <CommunityHeader :title="t('express.publish.title')" moduleColor="var(--c-express)" backTo="/express/home" />
 
     <!-- 浅粉色粗体标题 -->
-    <h2 class="express-banner-title text-center text-[22px] font-bold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
+    <h2 class="express-banner-title text-center text-title font-bold mx-4 mt-4 mb-5 leading-tight">{{ t('express.bannerTitle') }}</h2>
 
     <!-- 手账风表单 -->
     <div>

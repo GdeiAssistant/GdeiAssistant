@@ -11,7 +11,7 @@ Usage rule: dark `text-3` must not be set on dark `primary-soft` (4.11:1); use `
 
 Run `node design/generate-tokens.mjs` from any working directory to regenerate:
 
-- `frontend/src/styles/design-tokens.generated.css` (`px` CSS custom properties)
+- `frontend/src/styles/design-tokens.generated.css` (CSS custom properties: colours, `rem` type sizes, `px` radius and spacing)
 - `design/generated/GeneratedDesignTokens.kt` (Compose `sp` / `dp` object)
 - `design/generated/GeneratedDesignTokens.swift` (SwiftUI `CGFloat` / RGB constants)
 - `design/generated/design-tokens.wxss` (`2 rpx` per reference unit for WeChat Mini Program)

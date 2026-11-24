@@ -107,7 +107,7 @@ function getActionLabel(item) {
 }
 
 .card-title {
-  font-size: 17px;
+  font-size: var(--ds-font-headline);
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 0;
@@ -178,7 +178,7 @@ function getActionLabel(item) {
 }
 
 .interaction-empty__text {
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   color: var(--color-text-tertiary);
   font-weight: 600;
 }
@@ -214,14 +214,14 @@ function getActionLabel(item) {
 .interaction-item__title {
   flex: 1;
   min-width: 0;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 780;
   color: var(--c-text-1);
 }
 
 .interaction-item__time {
   flex-shrink: 0;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   color: var(--c-text-3);
 }
 
@@ -248,12 +248,12 @@ function getActionLabel(item) {
 }
 
 .interaction-item__module {
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   color: var(--c-primary);
 }
 
 .interaction-item__action {
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   color: var(--c-text-2);
   background: color-mix(in srgb, var(--c-primary) 8%, var(--c-surface));
   border-radius: 999px;
@@ -261,7 +261,7 @@ function getActionLabel(item) {
 }
 
 .interaction-item__state {
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   display: inline-flex;
   align-items: center;

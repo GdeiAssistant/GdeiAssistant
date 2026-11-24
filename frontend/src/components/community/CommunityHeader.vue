@@ -134,7 +134,7 @@ function handleBack() {
   }
 
   .community-header h1 {
-    font-size: 17px;
+    font-size: var(--ds-font-headline);
     text-align: left;
   }
 }

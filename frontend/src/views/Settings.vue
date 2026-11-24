@@ -225,7 +225,7 @@ function confirmLogout() {
 }
 
 .settings-page .campus-list-row > span {
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 500;
 }
 

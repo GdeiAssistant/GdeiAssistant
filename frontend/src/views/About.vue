@@ -318,7 +318,7 @@ onMounted(() => {
   background: transparent;
   color: var(--c-text-1);
   cursor: pointer;
-  font-size: 17px;
+  font-size: var(--ds-font-headline);
   font-weight: 700;
 }
 
@@ -421,7 +421,7 @@ onMounted(() => {
   justify-content: space-between;
   min-height: 52px;
   padding: 0 20px;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 600;
 }
 
@@ -448,7 +448,7 @@ onMounted(() => {
   min-height: 44px;
   padding: 0 20px 0 32px;
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
 }
 
 .about-menu-link:hover {
@@ -495,7 +495,7 @@ onMounted(() => {
   border-radius: var(--radius-control);
   background: var(--c-primary);
   color: var(--c-on-primary);
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.16s ease;
@@ -590,7 +590,7 @@ onMounted(() => {
   max-width: 68ch;
   margin: 0;
   color: var(--c-text-2);
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   line-height: 1.8;
 }
 

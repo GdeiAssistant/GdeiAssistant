@@ -115,7 +115,7 @@ function onOpenChange(val) {
 .dialog-body {
   margin-bottom: 24px;
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   line-height: 1.7;
 }
 
@@ -134,7 +134,7 @@ function onOpenChange(val) {
   border-radius: var(--radius-control);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 600;
   padding: 0 18px;
   transition: background-color 0.15s ease, border-color 0.15s ease;

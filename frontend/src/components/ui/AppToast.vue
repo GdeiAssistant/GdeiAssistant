@@ -48,7 +48,7 @@ const { toasts } = useToast()
   background: var(--c-text-1);
   box-shadow: var(--shadow-md);
   color: var(--c-bg);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 500;
   line-height: 1.5;
   padding: 10px 16px;

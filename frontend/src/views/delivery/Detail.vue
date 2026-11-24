@@ -156,7 +156,7 @@ onMounted(async () => {
           <div class="text-xl font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
           <div class="community-delivery-reward-block flex items-baseline">
             <span class="text-xl font-bold mr-0.5">&#xffe5;</span>
-            <span class="text-[28px] font-bold">{{ item.reward.toFixed(2) }}</span>
+            <span class="text-display font-bold">{{ item.reward.toFixed(2) }}</span>
           </div>
         </div>
 

@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCetNumber, saveCetNumber } from '@/api/cet'
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -68,37 +70,35 @@ onMounted(() => {
           <!-- 考号 -->
           <div>
             <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.examNumberLabel') }}</label>
-            <input
+            <AppInput
               v-model="examNumber"
               type="text"
               inputmode="numeric"
               maxlength="15"
               :placeholder="t('cetPage.examNumberPlaceholder')"
-              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             />
           </div>
 
           <!-- 姓名 -->
           <div>
             <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.nameLabel') }}</label>
-            <input
+            <AppInput
               v-model="name"
               type="text"
               maxlength="20"
               :placeholder="t('cetPage.namePlaceholder')"
-              class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             />
           </div>
         </div>
 
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
           :disabled="saving"
           @click="submitSave"
         >
           {{ saving ? t('cetPage.saving') : t('common.save') }}
-        </button>
+        </AppButton>
       </div>
     </div>
   </div>

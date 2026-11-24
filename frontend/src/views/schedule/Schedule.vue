@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { useLatestRequest } from '@/composables/useLatestRequest'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
@@ -334,10 +335,7 @@ onMounted(() => {
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center py-20">
-      <div class="flex flex-col items-center gap-2">
-        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-        <span class="text-xs text-[var(--c-text-3)]">{{ t('common.loading') }}</span>
-      </div>
+      <AppLoading :label="t('common.loading')" />
     </div>
 
     <!-- Week selector pill -->

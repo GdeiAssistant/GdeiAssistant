@@ -1,7 +1,7 @@
 <template>
   <div class="social-page space-y-3">
     <h1 class="text-lg font-semibold">{{ title }}</h1>
-    <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <div v-else-if="error" class="text-sm text-[var(--c-text-tertiary)]">
       {{ $t('common.networkError') }}
       <button type="button" class="social-text-action text-sm text-[var(--c-primary)]" @click="load()">{{ $t('common.retry') }}</button>
@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import AuthAvatar from '../../components/social/AuthAvatar.vue'
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

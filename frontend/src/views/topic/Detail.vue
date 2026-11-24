@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getTopicById, postTopicByIdLike } from "../../api/topicEndpoints.js"
 
 import { ref, onMounted } from 'vue'
@@ -60,10 +61,7 @@ onMounted(async () => {
   <div class="min-h-screen bg-[var(--c-bg)]">
     <CommunityHeader :title="t('topic.detail.title')" moduleColor="var(--c-topic)" @back="router.back()" backTo="" />
 
-    <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i>
-      <span>{{ t('common.loading') }}</span>
-    </div>
+    <AppLoading v-if="loading" :label="t('common.loading')" class="py-4" />
 
     <div v-else-if="topic" class="p-4">
       <div class="ui-panel bg-[var(--c-surface)] rounded-xl p-4 shadow-sm">

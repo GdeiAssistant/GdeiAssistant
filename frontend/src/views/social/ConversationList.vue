@@ -4,7 +4,7 @@
       <h1 class="text-lg font-semibold">{{ $t('social.chatsTitle') }}</h1>
       <RouterLink to="/social/search" class="social-text-action text-sm text-[var(--c-primary)]">{{ $t('social.searchAction') }}</RouterLink>
     </div>
-    <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <div v-else-if="error" class="text-sm text-[var(--c-text-tertiary)]">
       {{ $t('common.networkError') }}
       <button type="button" class="social-text-action text-sm text-[var(--c-primary)]" @click="load(loadEpoch)">{{ $t('common.retry') }}</button>
@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import AuthAvatar from '../../components/social/AuthAvatar.vue'
 import { useI18n } from 'vue-i18n'
 import { chatMessagePreview } from './chatImageSupport.js'

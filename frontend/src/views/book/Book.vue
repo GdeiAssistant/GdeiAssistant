@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -128,10 +129,7 @@ function confirmRenew() {
 
       <!-- Loading state -->
       <template v-if="borrowLoading && borrowList.length === 0">
-        <div class="flex items-center justify-center gap-2 py-10 text-sm text-[var(--c-text-2)]">
-          <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-          {{ t('common.loading') }}
-        </div>
+        <AppLoading :label="t('common.loading')" class="py-10" />
       </template>
 
       <template v-else>

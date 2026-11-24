@@ -11,7 +11,7 @@
     </header>
     <div ref="listEl" class="social-message-list min-h-0 flex-1 overflow-y-auto" @scroll="onScroll">
       <div v-if="loadingOlder" class="text-center text-xs text-[var(--c-text-tertiary)] py-2">{{ $t('common.loading') }}</div>
-      <div v-if="loading" class="social-chat-empty">{{ $t('common.loading') }}</div>
+      <AppLoading v-if="loading" :label="$t('common.loading')" class="social-chat-empty" />
       <div v-else-if="!messages.length" class="social-chat-empty"><MessageCircle :size="28" /><p>{{ $t('social.noMessages') }}</p></div>
       <template v-for="(msg, index) in messages" :key="msg.localKey || msg.id">
         <div v-if="showDate(msg, index)" class="social-date-separator">{{ messageDate(msg.createdAt) }}</div>
@@ -50,6 +50,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { refreshMessageUnread } from '@/composables/useMessageUnread'
 import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'

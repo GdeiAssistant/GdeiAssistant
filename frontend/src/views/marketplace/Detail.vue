@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getMarketplaceItemById } from "../../api/marketplaceEndpoints.js"
 
 import { ref, onMounted } from 'vue'
@@ -117,10 +118,7 @@ onMounted(async () => {
     <!-- 加载中 -->
     <div v-if="loading" class="marketplace-detail-state-shell px-4 pt-4">
       <div class="marketplace-detail-state-card">
-        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
-          <div class="w-6 h-6 border-2 border-[var(--c-border)] marketplace-detail-spinner-accent rounded-full animate-spin"></div>
-          <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
-        </div>
+        <AppLoading :label="t('communityCommon.loading')" class="py-16" />
       </div>
     </div>
 
@@ -227,10 +225,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.marketplace-detail-spinner-accent {
-  border-top-color: var(--c-primary) !important;
-}
-
 .marketplace-detail-hero {
   border-bottom: 1px solid var(--c-divider);
   background: var(--c-surface);

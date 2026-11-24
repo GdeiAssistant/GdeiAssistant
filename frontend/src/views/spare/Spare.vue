@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import AppButton from '@/components/ui/AppButton.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
@@ -197,10 +198,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
 
       <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <!-- Loading -->
-        <div v-if="loading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
-          <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
-          <span class="text-sm">{{ t('common.loading') }}</span>
-        </div>
+        <AppLoading v-if="loading" :label="t('common.loading')" class="py-16" />
 
         <!-- Results ledger -->
         <template v-else>

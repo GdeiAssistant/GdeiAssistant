@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getLostFoundItemById } from "../../api/lostandfoundEndpoints.js"
 
 import { ref, onMounted } from 'vue'
@@ -85,10 +86,7 @@ function copyText(text) {
     <!-- Loading -->
     <div v-if="loading" class="community-lostandfound-detail-state-shell px-4 pt-4">
       <div class="community-lostandfound-detail-state-card">
-        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
-          <span class="w-6 h-6 border-2 border-[var(--c-border)] border-t-[var(--c-lostandfound)] rounded-full animate-spin"></span>
-          <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
-        </div>
+        <AppLoading :label="t('communityCommon.loading')" class="py-16" />
       </div>
     </div>
 

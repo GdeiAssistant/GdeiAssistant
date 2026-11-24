@@ -17,7 +17,7 @@
         {{ $t('social.searchAction') }}
       </button>
     </div>
-    <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <div v-else-if="error" class="text-sm text-[var(--c-text-tertiary)]">
       {{ $t('common.networkError') }}
       <button type="button" class="social-text-action text-sm text-[var(--c-primary)]" @click="search()">{{ $t('common.retry') }}</button>
@@ -41,6 +41,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import AuthAvatar from '../../components/social/AuthAvatar.vue'
 import { ref, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'

@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-3">
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-    </div>
+    <AppLoading v-if="loading" class="py-12" />
 
     <template v-else>
       <div
@@ -34,6 +32,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getInformationAnnouncementPage } from "../../api/informationEndpoints.js"
 
 import { ref, onMounted } from 'vue'

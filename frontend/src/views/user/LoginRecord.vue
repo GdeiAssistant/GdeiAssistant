@@ -13,10 +13,7 @@
     <!-- Content -->
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
-      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16">
-        <div class="login-record-loading w-5 h-5 border-2 border-[var(--c-border)] rounded-full animate-spin"></div>
-        <p class="login-record-muted mt-3 text-sm">{{ t('common.loading') }}</p>
-      </div>
+      <AppLoading v-if="isLoading" :label="t('common.loading')" class="py-16" />
 
       <!-- Empty -->
       <div v-else-if="records.length === 0" class="flex items-center justify-center py-16">
@@ -43,6 +40,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getIpPage020 } from "../../api/ipEndpoints.js"
 
 import { ChevronLeft } from 'lucide-vue-next'
@@ -125,10 +123,6 @@ onMounted(() => {
 .login-record-muted,
 .login-record-meta {
   color: var(--c-text-3);
-}
-
-.login-record-loading {
-  border-top-color: var(--c-primary);
 }
 
 .login-record-card {

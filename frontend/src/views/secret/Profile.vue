@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getSecretProfilePage0, getSecretProfilePage } from "../../api/secretEndpoints.js"
 
 import { ref, onMounted } from 'vue'
@@ -60,10 +61,7 @@ onMounted(() => {
   <div class="min-h-screen bg-[var(--c-bg)]" style="--module-color: var(--c-secret)">
     <CommunityHeader :title="t('secret.profile.title')" moduleColor="var(--c-secret)" backTo="/secret/home" />
 
-    <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
-      <span>{{ t('common.loading') }}</span>
-    </div>
+    <AppLoading v-if="loading" :label="t('common.loading')" class="py-16" />
 
     <!-- 发布的树洞消息列表 -->
     <div v-else class="p-2">

@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -73,10 +74,7 @@ onMounted(() => {
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
-      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
-        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
-        <span class="text-sm">{{ t('common.loading') }}</span>
-      </div>
+      <AppLoading v-if="isLoading" :label="t('common.loading')" class="py-16" />
 
       <!-- Has data -->
       <template v-if="!isLoading && hasData">

@@ -8,7 +8,7 @@
       {{ $t('social.backToPrivacySettings') }}
     </button>
     <h1 class="text-lg font-semibold">{{ $t('social.blocksTitle') }}</h1>
-    <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <div
       v-for="user in items"
       :key="user.id"
@@ -27,6 +27,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { fetchBlocks, unblockUser } from '../../api/social.js'

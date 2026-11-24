@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getMarketplaceItemById, postMarketplaceItemById, postMarketplaceItem } from "../../api/marketplaceEndpoints.js"
 
 import { computed, onMounted, ref } from 'vue'
@@ -265,7 +266,7 @@ onMounted(() => {
 
       <!-- 表单 -->
       <section class="marketplace-publish-form px-5">
-        <p v-if="pageLoading" class="mt-4 text-[var(--c-text-3)] text-sm text-center">{{ t('marketplace.publish.loading') }}</p>
+        <AppLoading v-if="pageLoading" :label="t('marketplace.publish.loading')" class="mt-4" />
 
         <div :class="formRowClass(frmErrors.name)" class="relative pl-[90px] text-base min-h-[70px] pb-2.5">
           <p class="absolute left-0 text-[var(--c-text-1)] h-[70px] leading-[70px]">{{ t('marketplace.publish.field.name') }}</p>

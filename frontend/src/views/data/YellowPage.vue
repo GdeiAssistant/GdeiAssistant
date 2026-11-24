@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getDataYellowpage } from "../../api/dataEndpoints.js"
 
 import { ChevronLeft } from 'lucide-vue-next'
@@ -66,10 +67,7 @@ onMounted(() => {
     </div>
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
-      <div v-if="loading" class="flex flex-col items-center gap-3 py-14">
-        <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-        <span class="text-sm text-[var(--c-text-3)]">{{ t('common.loading') }}</span>
-      </div>
+      <AppLoading v-if="loading" :label="t('common.loading')" class="py-14" />
 
       <div v-else class="space-y-5">
         <div

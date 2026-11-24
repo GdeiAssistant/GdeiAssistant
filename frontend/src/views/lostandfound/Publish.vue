@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getLostFoundItemById, postLostFoundItemById, postLostFoundItem } from "../../api/lostandfoundEndpoints.js"
 
 import { computed, onMounted, ref } from 'vue'
@@ -238,7 +239,7 @@ onMounted(() => {
         {{ t('lostandfound.publish.privacyHint') }}
       </div>
 
-      <p v-if="pageLoading" class="mt-4 text-center text-[var(--c-text-3)] text-sm">{{ t('lostandfound.publish.loading') }}</p>
+      <AppLoading v-if="pageLoading" :label="t('lostandfound.publish.loading')" class="mt-4" />
 
       <section class="community-lostandfound-card mx-2.5 overflow-hidden rounded-2xl">
         <!-- 寻找类型 -->

@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getDatingPickMyReceived, getDatingPickMySent, getDatingProfileMy, postDatingPickById, postDatingProfileByIdState } from "../../api/datingEndpoints.js"
 
 import { computed, ref, onMounted, watch } from 'vue'
@@ -217,9 +218,7 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 1: Received -->
     <div v-if="activeTab === 0" class="p-4">
-      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
-      </div>
+      <AppLoading v-if="loading" :label="t('communityCommon.loading')" class="py-4" />
       <div v-else-if="receivedList.length === 0" class="dating-empty-state">
         <div class="dating-empty-state__icon">
           <Sparkles class="size-7" />
@@ -253,9 +252,7 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 2: Sent -->
     <div v-if="activeTab === 1" class="p-4">
-      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
-      </div>
+      <AppLoading v-if="loading" :label="t('communityCommon.loading')" class="py-4" />
       <div v-else-if="sentList.length === 0" class="dating-empty-state">
         <div class="dating-empty-state__icon">
           <Sparkles class="size-7" />
@@ -292,9 +289,7 @@ watch(() => route.fullPath, () => {
 
     <!-- Tab 3: My posts -->
     <div v-if="activeTab === 2" class="p-4">
-      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-dating)] rounded-full animate-spin"></i> {{ t('communityCommon.loading') }}
-      </div>
+      <AppLoading v-if="loading" :label="t('communityCommon.loading')" class="py-4" />
       <div v-else-if="postsList.length === 0" class="dating-empty-state">
         <div class="dating-empty-state__icon">
           <Sparkles class="size-7" />

@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import AppButton from '@/components/ui/AppButton.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { resetSocialRealtimeOnAuthChange } from '../../composables/useSocialRealtime.js'
@@ -164,7 +165,7 @@ onMounted(() => {
               {{ t('about.account.refresh') }}
             </button>
           </div>
-          <p v-if="loading" class="mt-3 text-sm text-[var(--c-text-3)]">{{ t('about.account.loading') }}</p>
+          <AppLoading v-if="loading" :label="t('about.account.loading')" class="mt-3" />
           <template v-else-if="hasLiveStatus">
             <div class="mt-3 grid gap-2 sm:grid-cols-3">
               <div class="rounded-lg bg-[var(--c-bg)] px-3 py-3">

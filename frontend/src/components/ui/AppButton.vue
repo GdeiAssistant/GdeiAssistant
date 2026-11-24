@@ -36,7 +36,8 @@ const buttonVariants = cva(
         destructive: 'bg-[var(--c-danger)] text-[var(--c-on-primary)] hover:bg-[color-mix(in_srgb,var(--c-danger)_88%,var(--c-text-1))]',
       },
       size: {
-        sm: 'text-callout min-h-9 px-3.5',
+        // Visual stays 36px; the pseudo-element extends the hit area to 44px (WCAG 2.5.5 target size).
+        sm: "relative text-callout min-h-9 px-3.5 before:absolute before:inset-x-0 before:-inset-y-1 before:content-['']",
         md: 'text-sm min-h-11 px-5',
       },
     },

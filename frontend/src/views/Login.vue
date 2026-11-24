@@ -289,7 +289,7 @@ function handleThirdPartyLogin(type) {
   font-size: var(--ds-font-caption);
   font-weight: 600;
   letter-spacing: 0.06em;
-  opacity: 0.85;
+  color: var(--c-on-band-muted);
 }
 
 .login-visual__mark {
@@ -307,7 +307,7 @@ function handleThirdPartyLogin(type) {
 
 .login-visual__eyebrow {
   margin: 0 0 10px;
-  color: color-mix(in srgb, var(--c-on-brand-deep) 78%, transparent);
+  color: var(--c-on-band-muted);
 }
 
 .login-visual h2 {

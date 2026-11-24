@@ -728,7 +728,7 @@ const todayLabel = computed(() => {
   font-size: var(--ds-font-caption);
   font-weight: 600;
   letter-spacing: 0.04em;
-  opacity: 0.9;
+  color: var(--c-on-band-muted);
 }
 
 .home-rail__balance {
@@ -747,7 +747,7 @@ const todayLabel = computed(() => {
 
 .home-rail__balance-unit {
   font-size: 13px;
-  opacity: 0.85;
+  color: var(--c-on-band-muted);
 }
 
 .home-rail__balance-fallback {
@@ -760,7 +760,7 @@ const todayLabel = computed(() => {
   margin: 8px 0 0;
   font-size: var(--ds-font-caption);
   line-height: 1.5;
-  opacity: 0.82;
+  color: var(--c-on-band-muted);
 }
 
 .home-rail__card-link {

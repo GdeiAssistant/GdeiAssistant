@@ -9,7 +9,7 @@ if (process.argv.slice(2).some((arg) => arg !== '--check')) throw new Error('Usa
 const colorKeys = [
   'bg', 'surface', 'surface-sunken', 'surface-elevated', 'border', 'divider',
   'text-1', 'text-2', 'text-3',
-  'primary', 'primary-hover', 'primary-soft', 'primary-ink', 'on-primary', 'band', 'on-band',
+  'primary', 'primary-hover', 'primary-soft', 'primary-ink', 'on-primary', 'band', 'on-band', 'on-band-muted',
   'danger', 'danger-ink', 'danger-soft',
   'warning', 'warning-ink', 'warning-soft',
   'success', 'success-ink', 'success-soft',

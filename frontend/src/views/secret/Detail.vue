@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { postSecretByIdLike, postSecretByIdComment, getSecretById, getSecretByIdComments } from "../../api/secretEndpoints.js"
 
 import { Inbox } from 'lucide-vue-next'
@@ -278,10 +279,7 @@ onBeforeUnmount(() => {
     <div class="min-h-screen bg-[var(--c-bg)] pb-14" style="--module-color: var(--c-secret)">
     <CommunityHeader :title="t('secret.detail.title')" moduleColor="var(--c-secret)" backTo="/secret/home" />
 
-    <div v-if="loading" class="flex items-center justify-center py-16 gap-2.5 text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-secret)] rounded-full animate-spin"></i>
-      <span>{{ t('common.loading') }}</span>
-    </div>
+    <AppLoading v-if="loading" :label="t('common.loading')" class="py-16" />
 
     <div v-else-if="secret" class="min-h-full pb-16 pt-4">
       <!-- 树洞卡片 -->
@@ -290,7 +288,7 @@ onBeforeUnmount(() => {
         class="mx-2.5 mt-5 text-center text-headline leading-[26px] relative h-[240px] rounded-[var(--radius-card)] border border-[var(--c-border)] border-l-[3px] border-l-[var(--c-secret)]"
         :style="{ backgroundColor: noteBg(secret.theme), color: noteText(secret.theme) }"
       >
-        <section class="editorial-serif flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
+        <section class="flex flex-col items-center justify-center text-center min-h-[150px] p-5 box-border text-inherit cursor-pointer" @click="playAudio">
           <template v-if="secret.type === 0">
             {{ secret.content }}
           </template>

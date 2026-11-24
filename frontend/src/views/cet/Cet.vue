@@ -8,6 +8,8 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getCetNumber, queryCetScore } from '@/api/cet'
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 
 
 const router = useRouter()
@@ -141,13 +143,13 @@ onMounted(() => {
             <div>
               <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.examNumberLabel') }}</label>
               <div class="flex gap-2">
-                <input
-                  :value="examNumber"
+                <AppInput
+                  :model-value="examNumber"
                   type="text"
                   inputmode="numeric"
                   maxlength="15"
                   :placeholder="t('cetPage.examNumberPlaceholder')"
-                  class="ui-control flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+                  class="flex-1 min-w-0"
                   @input="onExamNumberInput"
                 />
                 <button
@@ -163,12 +165,11 @@ onMounted(() => {
             <!-- 姓名 -->
             <div>
               <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.nameLabel') }}</label>
-              <input
+              <AppInput
                 v-model="name"
                 type="text"
                 maxlength="20"
                 :placeholder="t('cetPage.namePlaceholder')"
-                class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
               />
             </div>
 
@@ -176,12 +177,12 @@ onMounted(() => {
             <div>
               <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('cetPage.captchaLabel') }}</label>
               <div class="flex gap-3 items-center">
-                <input
+                <AppInput
                   v-model="vcode"
                   type="text"
                   maxlength="10"
                   :placeholder="t('cetPage.captchaPlaceholder')"
-                  class="ui-control flex-1 min-w-0 px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
+                  class="flex-1 min-w-0"
                 />
                 <img
                   v-if="vcodeUrl"
@@ -199,11 +200,11 @@ onMounted(() => {
             </div>
           </div>
 
-          <button
+          <AppButton
             type="button"
-            class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+            class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
             @click="submitQuery"
-          >{{ t('cetPage.submit') }}</button>
+          >{{ t('cetPage.submit') }}</AppButton>
         </div>
 
         <p class="mt-5 text-center text-sm text-[var(--c-text-2)]">
@@ -243,7 +244,7 @@ onMounted(() => {
         <p class="text-center text-sm text-[var(--c-text-2)] mb-5">{{ t('cetPage.resultDisclaimer') }}</p>
 
         <div class="ui-panel bg-[var(--c-surface)] p-6 border border-[var(--c-border)]">
-          <h2 class="editorial-serif text-xl font-bold text-center mb-1">{{ cetResult.name }}</h2>
+          <h2 class="text-xl font-bold text-center mb-1">{{ cetResult.name }}</h2>
           <p class="text-sm text-[var(--c-text-2)] text-center">{{ cetResult.type }}</p>
           <p class="text-sm text-[var(--c-text-2)] text-center mb-4">{{ cetResult.school }}</p>
 
@@ -269,11 +270,11 @@ onMounted(() => {
         </div>
 
         <div class="mt-5 space-y-3">
-          <button
+          <AppButton
             type="button"
-            class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-90"
+            class="ui-btn-primary w-full py-2.5 transition-opacity"
             @click="reQuery"
-          >{{ t('cetPage.reQuery') }}</button>
+          >{{ t('cetPage.reQuery') }}</AppButton>
           <button
             type="button"
             class="w-full bg-[var(--c-surface)] text-[var(--c-text)] border border-[var(--c-border)] rounded-lg py-2.5 font-semibold transition-opacity hover:opacity-80"

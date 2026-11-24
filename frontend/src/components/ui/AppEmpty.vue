@@ -84,13 +84,13 @@ const actionStyle = computed(() => {
   border-radius: var(--radius-card);
   background: color-mix(in srgb, var(--empty-accent) 12%, var(--c-surface));
   color: var(--empty-accent);
-  font-size: 28px;
+  font-size: var(--ds-font-display);
 }
 
 .app-empty__title {
   margin: 0;
   color: var(--c-text-1);
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 650;
 }
 

@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -74,13 +75,13 @@ function doQuery() {
       </div>
 
       <!-- Search button -->
-      <button
+      <AppButton
         type="button"
-        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
+        class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 transition-opacity"
         @click="doQuery"
       >
         {{ t('graduateExam.search') }}
-      </button>
+      </AppButton>
 
       <p class="mt-4 text-center text-sm text-[var(--c-text-secondary)]">{{ t('graduateExam.wish') }}</p>
 

@@ -286,10 +286,10 @@ function handleThirdPartyLogin(type) {
 }
 
 .login-visual__edition {
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   letter-spacing: 0.06em;
-  opacity: 0.85;
+  color: var(--c-on-band-muted);
 }
 
 .login-visual__mark {
@@ -307,7 +307,7 @@ function handleThirdPartyLogin(type) {
 
 .login-visual__eyebrow {
   margin: 0 0 10px;
-  color: color-mix(in srgb, var(--c-on-brand-deep) 78%, transparent);
+  color: var(--c-on-band-muted);
 }
 
 .login-visual h2 {
@@ -390,7 +390,7 @@ function handleThirdPartyLogin(type) {
 .login-panel__brand p {
   margin: 4px 0 0;
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
 }
 
 .login-panel__notice {
@@ -399,7 +399,7 @@ function handleThirdPartyLogin(type) {
   border-radius: var(--radius-control);
   background: var(--c-primary-soft);
   color: var(--c-text-1);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   line-height: 1.7;
 }
 
@@ -429,7 +429,7 @@ function handleThirdPartyLogin(type) {
   border-radius: var(--radius-control);
   background: var(--c-bg);
   color: var(--c-text-1);
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
@@ -450,7 +450,7 @@ function handleThirdPartyLogin(type) {
   gap: 10px;
   align-items: start;
   color: var(--c-text-2);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   line-height: 1.7;
   cursor: pointer;
 }
@@ -470,7 +470,7 @@ function handleThirdPartyLogin(type) {
   background: var(--c-primary);
   color: var(--c-on-primary);
   font: inherit;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 650;
   cursor: pointer;
   transition: background-color 0.15s ease;
@@ -529,7 +529,7 @@ function handleThirdPartyLogin(type) {
   background: var(--c-surface);
   color: var(--c-primary);
   font: inherit;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 600;
   padding: 3px 8px;
   cursor: pointer;
@@ -581,7 +581,7 @@ function handleThirdPartyLogin(type) {
   gap: 12px;
   margin-top: 8px;
   color: var(--c-text-2);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   line-height: 1.6;
 }
 
@@ -597,7 +597,7 @@ function handleThirdPartyLogin(type) {
 
 .login-links {
   color: var(--c-text-2);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   line-height: 1.8;
 }
 
@@ -617,7 +617,7 @@ function handleThirdPartyLogin(type) {
   padding-top: 16px;
   border-top: 1px solid var(--c-divider);
   color: var(--c-text-3);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 
 .login-third-party > div {

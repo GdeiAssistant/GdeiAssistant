@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -69,14 +70,14 @@ function confirmEvaluate() {
       </div>
 
       <!-- Submit button -->
-      <button
+      <AppButton
         type="button"
         :disabled="isLoading"
-        class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 disabled:opacity-50 transition-opacity"
+        class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 disabled:opacity-50 transition-opacity"
         @click="doEvaluate"
       >
         {{ t('evaluatePage.submitAction') }}
-      </button>
+      </AppButton>
 
       <p class="mt-4 text-center text-xs text-[var(--c-text-secondary)]">
         {{ t('evaluatePage.riskNotice') }}

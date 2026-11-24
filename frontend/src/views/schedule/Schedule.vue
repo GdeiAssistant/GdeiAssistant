@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { useLatestRequest } from '@/composables/useLatestRequest'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted, watch } from 'vue'
@@ -334,10 +335,7 @@ onMounted(() => {
 
     <!-- Loading -->
     <div v-if="loading" class="flex items-center justify-center py-20">
-      <div class="flex flex-col items-center gap-2">
-        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-        <span class="text-xs text-[var(--c-text-3)]">{{ t('common.loading') }}</span>
-      </div>
+      <AppLoading :label="t('common.loading')" />
     </div>
 
     <!-- Week selector pill -->
@@ -429,7 +427,7 @@ onMounted(() => {
           v-for="(course, index) in filteredList"
           :key="'course-' + index"
           type="button"
-          class="schedule-course m-[2px] px-1 py-1.5 rounded-r-md border-l-4 overflow-hidden flex items-center justify-center text-center cursor-pointer transition duration-[0.12s] active:scale-[0.98]"
+          class="schedule-course m-0.5 px-1 py-1.5 rounded-r-md border-l-4 overflow-hidden flex items-center justify-center text-center cursor-pointer transition duration-[0.12s] active:scale-[0.98]"
           :class="{ 'schedule-course--selected': selectedCourse === course }"
           :style="getCourseStyle(course)"
           @click="openCourseDetail(course)"

@@ -37,7 +37,7 @@ const actions = createCardActions(t)
           class="ui-panel flex flex-col items-start p-5 bg-[var(--c-surface)] border border-[var(--c-border)] text-left hover:bg-[var(--c-surface-hover)] transition-colors"
           @click="router.push(item.path)"
         >
-          <span class="editorial-serif text-xl font-bold text-[var(--c-text-1)]">{{ item.title }}</span>
+          <span class="text-xl font-bold text-[var(--c-text-1)]">{{ item.title }}</span>
           <span class="mt-2 text-sm leading-relaxed text-[var(--c-text-2)]">{{ item.description }}</span>
         </button>
       </div>

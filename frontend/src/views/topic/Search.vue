@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { postTopicByIdLike, getTopicKeywordPage050 } from "../../api/topicEndpoints.js"
 
 import { Heart } from 'lucide-vue-next'
@@ -78,7 +79,7 @@ function getImageGridCols(count) {
       >{{ t('topic.searchAction') }}</button>
     </div>
 
-    <div v-if="searching" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]"><i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-topic)] rounded-full animate-spin"></i> {{ t('topic.searching') }}</div>
+    <AppLoading v-if="searching" :label="t('topic.searching')" class="py-4" />
     <div v-else-if="searchResults.length === 0 && keyword" class="ui-empty-state flex flex-col items-center py-16 text-[var(--c-text-3)]">
       <p class="text-sm">{{ t('topic.searchEmpty') }}</p>
     </div>

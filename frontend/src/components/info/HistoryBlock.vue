@@ -39,7 +39,7 @@ defineProps({
 }
 
 .card-title {
-  font-size: 17px;
+  font-size: var(--ds-font-headline);
   font-weight: 600;
   color: var(--color-text-primary);
   margin-bottom: 12px;
@@ -58,7 +58,7 @@ defineProps({
 }
 
 .history-lead {
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   color: var(--color-text-primary);
   margin: 0 0 12px;
   line-height: 1.5;
@@ -70,7 +70,7 @@ defineProps({
 }
 
 .history-desc {
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   color: var(--color-text-secondary);
   line-height: 1.6;
   margin: 0 0 8px;

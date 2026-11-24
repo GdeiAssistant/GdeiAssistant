@@ -9,7 +9,7 @@
     </button>
     <h1 class="text-lg font-semibold">{{ $t('social.dmPrivacyTitle') }}</h1>
     <p class="text-sm text-[var(--c-text-tertiary)]">{{ $t('social.dmPrivacyHint') }}</p>
-    <p v-if="loading" role="status" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</p>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <button v-if="loadFailed" type="button" class="min-h-11 px-4 py-2 rounded-lg" @click="load">
       {{ $t('common.retry') }}
     </button>
@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'

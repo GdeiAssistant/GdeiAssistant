@@ -1,4 +1,6 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { resetSocialRealtimeOnAuthChange } from '../../composables/useSocialRealtime.js'
 import { computed, onMounted, ref } from 'vue'
@@ -163,7 +165,7 @@ onMounted(() => {
               {{ t('about.account.refresh') }}
             </button>
           </div>
-          <p v-if="loading" class="mt-3 text-sm text-[var(--c-text-3)]">{{ t('about.account.loading') }}</p>
+          <AppLoading v-if="loading" :label="t('about.account.loading')" class="mt-3" />
           <template v-else-if="hasLiveStatus">
             <div class="mt-3 grid gap-2 sm:grid-cols-3">
               <div class="rounded-lg bg-[var(--c-bg)] px-3 py-3">
@@ -216,15 +218,15 @@ onMounted(() => {
               >
                 {{ t('about.account.disableQuickAuth') }}
               </button>
-              <button
+              <AppButton
                 v-else
                 type="button"
-                class="ui-btn-primary w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-[var(--c-on-primary)] cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+                class="ui-btn-primary w-full border border-[var(--c-primary)] px-4 py-2.5 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
                 :disabled="submitting || !canEnableQuickAuth"
                 @click="toggleQuickAuth(true)"
               >
                 {{ t('about.account.enableQuickAuth') }}
-              </button>
+              </AppButton>
               <p
                 v-if="!status.quickAuthEnabled && !canEnableQuickAuth"
                 class="m-0 text-xs leading-5 text-[var(--c-text-3)]"
@@ -261,13 +263,13 @@ onMounted(() => {
         </div>
 
         <div class="mt-4 grid gap-3 md:grid-cols-2">
-            <button
+            <AppButton
               type="button"
-              class="ui-btn-primary w-full rounded-lg border border-[var(--c-primary)] bg-[var(--c-primary)] px-4 py-2.5 text-sm text-[var(--c-on-primary)] cursor-pointer"
+              class="ui-btn-primary w-full border border-[var(--c-primary)] px-4 py-2.5 cursor-pointer"
               @click="router.push('/user/feedback')"
             >
               {{ t('about.account.feedbackAction') }}
-            </button>
+            </AppButton>
             <button
               type="button"
               class="w-full rounded-lg border border-[var(--c-border)] bg-transparent px-4 py-2.5 text-sm text-[var(--c-text-2)] cursor-pointer"

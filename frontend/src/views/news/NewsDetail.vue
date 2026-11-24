@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getInformationNewsById } from "../../api/informationEndpoints.js"
 
 import { ChevronLeft } from 'lucide-vue-next'
@@ -124,10 +125,7 @@ onMounted(() => {
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
-      <div v-if="loading" class="flex flex-col items-center gap-3 py-14">
-        <span class="inline-block w-5 h-5 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></span>
-        <span class="text-sm text-[var(--c-text-3)]">{{ t('news.detail.loading') }}</span>
-      </div>
+      <AppLoading v-if="loading" :label="t('news.detail.loading')" class="py-14" />
 
       <!-- Content card -->
       <div v-else class="ui-panel bg-[var(--c-surface)] rounded-2xl p-5 shadow-sm border border-[var(--c-border)]">

@@ -173,7 +173,7 @@
   border-radius: var(--radius-card);
   background: var(--c-fill-2);
   color: var(--c-text-3);
-  font-size: 28px;
+  font-size: var(--ds-font-display);
 }
 
 .community-empty__text {
@@ -234,7 +234,7 @@
 .community-dialog__title {
   padding: 20px 20px 8px;
   text-align: left;
-  font-size: 17px;
+  font-size: var(--ds-font-headline);
   font-weight: 600;
   color: var(--c-text-1);
 }
@@ -485,7 +485,7 @@
 
   .community-module-layout .community-desktop-switch > a {
     min-height: 48px;
-    font-size: 15px !important;
+    font-size: var(--ds-font-body) !important;
     font-weight: 600;
     line-height: 48px !important;
   }

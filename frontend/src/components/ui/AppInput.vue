@@ -1,4 +1,8 @@
 <script setup>
+import { computed, useAttrs } from 'vue'
+
+defineOptions({ inheritAttrs: false })
+
 defineProps({
   label: {
     type: String,
@@ -23,14 +27,22 @@ defineProps({
 })
 
 defineEmits(['update:modelValue'])
+
+// class/style go to the wrapper (layout); everything else (maxlength, inputmode, listeners...) to the input.
+const attrs = useAttrs()
+const inputAttrs = computed(() => {
+  const { class: _class, style: _style, ...rest } = attrs
+  return rest
+})
 </script>
 
 <template>
-  <div class="app-input">
+  <div class="app-input" :class="$attrs.class" :style="$attrs.style">
     <label v-if="label" class="app-input__label">
       {{ label }}
     </label>
     <input
+      v-bind="inputAttrs"
       :type="type"
       :value="modelValue"
       :placeholder="placeholder"
@@ -59,7 +71,7 @@ defineEmits(['update:modelValue'])
   border-radius: var(--radius-control);
   background: var(--c-surface);
   color: var(--c-text-1);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   outline: none;
   padding: 0 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -73,6 +85,6 @@ defineEmits(['update:modelValue'])
 .app-input__error {
   margin-top: 6px;
   color: var(--c-danger);
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
 }
 </style>

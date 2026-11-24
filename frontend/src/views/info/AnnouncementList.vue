@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-3">
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-    </div>
+    <AppLoading v-if="loading" class="py-12" />
 
     <template v-else>
       <div
@@ -13,7 +11,7 @@
       >
         <div class="flex items-start justify-between gap-3">
           <span class="text-body font-semibold text-[var(--c-text-1)] flex-1">{{ item.title }}</span>
-          <span class="text-[12px] text-[var(--c-text-3)] shrink-0 mt-0.5">{{ item.publishTime }}</span>
+          <span class="text-caption text-[var(--c-text-3)] shrink-0 mt-0.5">{{ item.publishTime }}</span>
         </div>
         <p class="mt-1.5 text-callout text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
       </div>
@@ -34,6 +32,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getInformationAnnouncementPage } from "../../api/informationEndpoints.js"
 
 import { ref, onMounted } from 'vue'

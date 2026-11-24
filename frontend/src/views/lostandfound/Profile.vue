@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getLostFoundProfile, postLostFoundItemByIdDidfound } from "../../api/lostandfoundEndpoints.js"
 
 import { computed, onMounted, onUnmounted, nextTick, ref, watch } from 'vue'
@@ -203,7 +204,7 @@ watch(() => route.fullPath, () => {
         <!-- Lost list -->
         <div :class="activeStat !== 'lost' ? 'hidden!' : 'block'">
           <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
-            <p class="community-lostandfound-loading text-center mb-6 text-sm">{{ t('common.loading') }}</p>
+            <AppLoading :label="t('common.loading')" class="mb-6" />
           </div>
           <template v-else>
             <div v-if="lostList.length === 0" class="community-lostandfound-profile-empty-shell">
@@ -239,7 +240,7 @@ watch(() => route.fullPath, () => {
         <!-- Found list -->
         <div :class="activeStat !== 'found' ? 'hidden!' : 'block'">
           <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
-            <p class="community-lostandfound-loading text-center mb-6 text-sm">{{ t('common.loading') }}</p>
+            <AppLoading :label="t('common.loading')" class="mb-6" />
           </div>
           <template v-else>
             <div v-if="foundList.length === 0" class="community-lostandfound-profile-empty-shell">
@@ -275,7 +276,7 @@ watch(() => route.fullPath, () => {
         <!-- Did Found list -->
         <div :class="activeStat !== 'didfound' ? 'hidden!' : 'block'">
           <div v-if="loading" class="relative pt-[170px] min-h-[200px] text-center">
-            <p class="community-lostandfound-loading text-center mb-6 text-sm">{{ t('common.loading') }}</p>
+            <AppLoading :label="t('common.loading')" class="mb-6" />
           </div>
           <template v-else>
             <div v-if="didFoundList.length === 0" class="community-lostandfound-profile-empty-shell">
@@ -365,7 +366,6 @@ watch(() => route.fullPath, () => {
   display: none !important;
 }
 
-.community-lostandfound-loading,
 .community-lostandfound-title,
 .community-lostandfound-dialog-confirm {
   color: var(--c-primary);
@@ -380,7 +380,7 @@ watch(() => route.fullPath, () => {
 }
 
 .community-lostandfound-profile-empty-icon {
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 900;
   line-height: 1;
 }

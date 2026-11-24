@@ -17,6 +17,7 @@ page,
   --c-on-primary: #FFFFFF;
   --c-band: #0E7C61;
   --c-on-band: #FFFFFF;
+  --c-on-band-muted: #EAF6F2;
   --c-danger: #BF3B3B;
   --c-danger-ink: #AE2E2E;
   --c-danger-soft: #FBE9E9;
@@ -77,6 +78,7 @@ page,
   --c-on-primary: #091512;
   --c-band: #0F3A2E;
   --c-on-band: #F1EFEA;
+  --c-on-band-muted: #9DC8BA;
   --c-danger: #F07171;
   --c-danger-ink: #F07171;
   --c-danger-soft: #3A1E1E;

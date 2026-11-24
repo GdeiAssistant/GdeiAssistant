@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getMarketplaceProfile, postMarketplaceItemStateById } from "../../api/marketplaceEndpoints.js"
 
 import { computed, onMounted, onUnmounted, nextTick, ref, watch } from 'vue'
@@ -209,7 +210,7 @@ watch(() => route.fullPath, () => {
 
       <!-- Doing List -->
       <div v-show="activeStat === 'doing'">
-        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
+        <AppLoading v-if="loading" :label="t('common.loading')" class="py-6 m-0 bg-[var(--c-surface)] rounded" />
         <template v-else>
           <div v-for="item in doingList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">
@@ -246,7 +247,7 @@ watch(() => route.fullPath, () => {
 
       <!-- Sold List -->
       <div v-show="activeStat === 'sold'">
-        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
+        <AppLoading v-if="loading" :label="t('common.loading')" class="py-6 m-0 bg-[var(--c-surface)] rounded" />
         <template v-else>
           <div v-for="item in soldList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)]">
@@ -280,7 +281,7 @@ watch(() => route.fullPath, () => {
 
       <!-- Off List -->
       <div v-show="activeStat === 'off'">
-        <p v-if="loading" class="text-center text-[var(--c-text-3)] text-sm py-6 m-0 bg-[var(--c-surface)] rounded">{{ t('common.loading') }}</p>
+        <AppLoading v-if="loading" :label="t('common.loading')" class="py-6 m-0 bg-[var(--c-surface)] rounded" />
         <template v-else>
           <div v-for="item in offList" :key="item.id" class="ui-panel bg-[var(--c-surface)] rounded-xl shadow-sm transition-transform duration-[0.12s] active:scale-[0.98] mb-2 overflow-hidden">
             <div class="relative pl-[75px] p-2 min-h-[60px] border-b border-[var(--c-border)] cursor-pointer" @click="goDetail(item.id)">

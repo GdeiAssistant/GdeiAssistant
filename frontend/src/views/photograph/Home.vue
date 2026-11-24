@@ -219,7 +219,7 @@ onMounted(() => {
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
-  font-size: 15px;
+  font-size: var(--ds-font-body);
   font-weight: 850;
   line-height: 1;
   transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;

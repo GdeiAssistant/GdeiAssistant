@@ -1,6 +1,6 @@
 <template>
   <div class="social-page space-y-4">
-    <div v-if="loading" class="text-sm text-[var(--c-text-tertiary)]">{{ $t('common.loading') }}</div>
+    <AppLoading v-if="loading" :label="$t('common.loading')" />
     <template v-else-if="user">
       <div class="social-profile-summary">
         <div class="flex items-center gap-3">
@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {

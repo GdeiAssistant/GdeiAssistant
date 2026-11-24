@@ -169,7 +169,7 @@ onMounted(() => {
 }
 
 .community-lostandfound-empty-icon {
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 900;
   line-height: 1;
 }
@@ -219,7 +219,7 @@ onMounted(() => {
 
   .lostandfound-card__body h5 {
     margin-bottom: 8px !important;
-    font-size: 17px !important;
+    font-size: var(--ds-font-headline) !important;
     font-weight: 850;
     line-height: 1.25;
   }

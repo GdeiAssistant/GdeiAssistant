@@ -1,9 +1,7 @@
 <template>
   <div>
     <p v-if="loadError" role="alert">{{ t('common.networkError') }}</p>
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-    </div>
+    <AppLoading v-if="loading" class="py-12" />
 
     <div v-else-if="item" class="ui-panel bg-[var(--c-surface)] border border-[var(--c-border)] rounded-[14px] px-5 py-5">
       <h1 class="text-[18px] font-bold text-[var(--c-text-1)] leading-tight">{{ item.title }}</h1>
@@ -18,6 +16,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getInformationAnnouncementById } from "../../api/informationEndpoints.js"
 
 import request from '@/utils/request'

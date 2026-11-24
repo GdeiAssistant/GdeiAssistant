@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import { queryCardRecord } from '@/api/card'
 import { useToast } from '@/composables/useToast'
 import { formatCardAmount } from './cardContent'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -131,11 +132,11 @@ onMounted(() => {
           </div>
         </div>
 
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
           @click="reQuery"
-        >{{ t('card.list.retry') }}</button>
+        >{{ t('card.list.retry') }}</AppButton>
       </div>
     </template>
   </div>

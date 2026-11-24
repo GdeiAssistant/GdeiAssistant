@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { getPhotographById, postPhotographByIdComment, postPhotographByIdLike } from "../../api/photographEndpoints.js"
 
 import { ref, onMounted, computed } from 'vue'
@@ -119,10 +120,7 @@ onMounted(async () => {
     <CommunityHeader :title="copy.detailTitle" moduleColor="var(--c-photograph)" @back="goBack" :backTo="''" :showBack="true" />
 
     <!-- Loading -->
-    <div v-if="loading" class="flex items-center justify-center gap-2 py-16 text-sm text-[var(--c-text-3)]">
-      <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-photograph)] rounded-full animate-spin"></i>
-      <span>{{ t('common.loading') }}</span>
-    </div>
+    <AppLoading v-if="loading" :label="t('common.loading')" class="py-16" />
 
     <div v-else-if="work" class="pb-20">
       <!-- Stats bar -->

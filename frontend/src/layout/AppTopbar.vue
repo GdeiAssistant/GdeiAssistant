@@ -118,7 +118,7 @@ function openPalette() {
   color: var(--c-text-2);
   cursor: pointer;
   font: inherit;
-  font-size: 12px;
+  font-size: var(--ds-font-caption);
   font-weight: 500;
   transition: border-color 0.15s ease, color 0.15s ease;
 }

@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
@@ -6,6 +7,7 @@ import { queryKaoyanScore } from '@/api/graduateExam'
 import { useToast } from '@/composables/useToast'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { GraduationCap, ChevronLeft } from 'lucide-vue-next'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -72,10 +74,7 @@ onMounted(() => {
 
     <div class="subpage-body max-w-lg mx-auto px-4 py-6">
       <!-- Loading -->
-      <div v-if="isLoading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
-        <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
-        <span class="text-sm">{{ t('common.loading') }}</span>
-      </div>
+      <AppLoading v-if="isLoading" :label="t('common.loading')" class="py-16" />
 
       <!-- Has data -->
       <template v-if="!isLoading && hasData">
@@ -114,13 +113,13 @@ onMounted(() => {
         </div>
 
         <!-- Re-query button -->
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 transition-opacity"
           @click="reQuery"
         >
           {{ t('graduateExam.reQuery') }}
-        </button>
+        </AppButton>
       </template>
 
       <!-- No data -->

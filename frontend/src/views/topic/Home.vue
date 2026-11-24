@@ -207,7 +207,7 @@ onUnmounted(() => {
 .community-topic-empty p {
   max-width: 320px;
   color: var(--c-text-2);
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 650;
   line-height: 1.7;
 }
@@ -221,7 +221,7 @@ onUnmounted(() => {
   color: var(--c-on-primary);
   cursor: pointer;
   font: inherit;
-  font-size: 14px;
+  font-size: var(--ds-font-callout);
   font-weight: 850;
   box-shadow: none;
   transition: transform 0.18s ease, box-shadow 0.18s ease;

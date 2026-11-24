@@ -4,6 +4,8 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useToast } from '@/composables/useToast'
+import AppButton from '@/components/ui/AppButton.vue'
+import AppInput from '@/components/ui/AppInput.vue'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -41,20 +43,19 @@ function goBack() {
       <div class="ui-panel bg-[var(--c-surface)] rounded-[var(--radius-card)] p-5 border border-[var(--c-border)]">
         <div>
           <label class="text-sm font-medium text-[var(--c-text-2)] mb-1.5 block">{{ t('libraryPage.search.keywordLabel') }}</label>
-          <input
+          <AppInput
             v-model="keyword"
             type="text"
             :placeholder="t('libraryPage.search.keywordPlaceholder')"
-            class="ui-control w-full px-3 py-2.5 border border-[var(--c-border)] rounded-lg text-sm focus:border-[var(--c-primary)] focus:ring-2 focus:ring-[var(--c-primary)]/10 outline-none bg-[var(--c-surface)]"
             @keyup.enter="doSearch"
           />
         </div>
 
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary w-full bg-[var(--c-primary)] text-[var(--c-on-primary)] rounded-lg py-2.5 font-semibold mt-6 transition-opacity hover:opacity-90"
+          class="ui-btn-primary w-full py-2.5 mt-6 transition-opacity"
           @click="doSearch"
-        >{{ t('libraryPage.search.submit') }}</button>
+        >{{ t('libraryPage.search.submit') }}</AppButton>
       </div>
     </div>
   </div>

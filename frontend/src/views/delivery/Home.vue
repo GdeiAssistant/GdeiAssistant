@@ -101,7 +101,7 @@ onUnmounted(() => {
       >
         <!-- Header -->
         <div class="flex justify-between items-center mb-4">
-          <div class="editorial-serif text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
+          <div class="text-lg font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
           <div class="community-delivery-reward-block flex items-baseline tabular-num">
             <span class="text-lg font-bold mr-0.5">&#xffe5;</span>
             <span class="text-2xl font-bold">{{ item.reward.toFixed(2) }}</span>

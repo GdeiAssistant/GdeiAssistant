@@ -96,7 +96,7 @@ function handleBack() {
   overflow: hidden;
   margin: 0;
   color: var(--c-text-1);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-size: 16px;
   font-weight: 700;
   text-align: center;
@@ -134,7 +134,7 @@ function handleBack() {
   }
 
   .community-header h1 {
-    font-size: 17px;
+    font-size: var(--ds-font-headline);
     text-align: left;
   }
 }

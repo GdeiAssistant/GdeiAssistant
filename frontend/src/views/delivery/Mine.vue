@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { ref, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -141,9 +142,7 @@ watch(() => route.fullPath, () => {
 
     <!-- Published list -->
     <div v-if="activeTab === 'published'" class="p-4 animate-[fade-in_0.3s_ease_both]">
-      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-delivery)] rounded-full animate-spin"></i> {{ t('common.loading') }}
-      </div>
+      <AppLoading v-if="loading" :label="t('common.loading')" class="py-4" />
       <div v-else-if="publishedList.length === 0" class="community-delivery-empty-shell">
         <AppEmpty
           :title="t('delivery.mine.emptyPublished')"
@@ -200,9 +199,7 @@ watch(() => route.fullPath, () => {
 
     <!-- Accepted list -->
     <div v-if="activeTab === 'accepted'" class="p-4 animate-[fade-in_0.3s_ease_both]">
-      <div v-if="loading" class="flex items-center justify-center gap-2 py-4 text-sm text-[var(--c-text-3)]">
-        <i class="w-5 h-5 border-2 border-[var(--c-border)] border-t-[var(--c-delivery)] rounded-full animate-spin"></i> {{ t('common.loading') }}
-      </div>
+      <AppLoading v-if="loading" :label="t('common.loading')" class="py-4" />
       <div v-else-if="acceptedList.length === 0" class="community-delivery-empty-shell">
         <AppEmpty
           :title="t('delivery.mine.emptyAccepted')"
@@ -310,7 +307,7 @@ watch(() => route.fullPath, () => {
 }
 
 .community-delivery-empty-icon {
-  font-size: 28px;
+  font-size: var(--ds-font-display);
   font-weight: 900;
   line-height: 1;
 }

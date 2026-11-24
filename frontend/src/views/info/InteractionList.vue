@@ -1,8 +1,6 @@
 <template>
   <div class="space-y-3">
-    <div v-if="loading" class="flex justify-center py-12">
-      <div class="w-6 h-6 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin"></div>
-    </div>
+    <AppLoading v-if="loading" class="py-12" />
 
     <div v-else-if="loadError" role="alert" class="p-4">{{ t('common.networkError') }}<button type="button" @click="reload">{{ t('common.retry') }}</button></div>
     <template v-else>
@@ -16,7 +14,7 @@
         @click="handleSelect(item)"
       >
         <div class="flex items-start justify-between gap-3">
-          <span class="text-[14px] font-semibold text-[var(--c-text-1)] flex-1 leading-snug">{{ item.title }}</span>
+          <span class="text-callout font-semibold text-[var(--c-text-1)] flex-1 leading-snug">{{ item.title }}</span>
           <span class="text-[11px] text-[var(--c-text-3)] shrink-0 mt-0.5">{{ item.createdAt }}</span>
         </div>
         <p class="mt-1 text-callout text-[var(--c-text-2)] line-clamp-2">{{ item.content }}</p>
@@ -53,6 +51,7 @@
 </template>
 
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { postInformationMessageByIdRead } from "../../api/informationEndpoints.js"
 
 import request from '@/utils/request'

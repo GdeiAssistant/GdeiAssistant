@@ -1,4 +1,6 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
+import AppButton from '@/components/ui/AppButton.vue'
 import { ChevronLeft } from 'lucide-vue-next'
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -172,13 +174,13 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
         </div>
 
         <!-- Search button -->
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 transition-opacity"
           @click="doSearch"
         >
           {{ t('spare.search') }}
-        </button>
+        </AppButton>
       </div>
     </template>
 
@@ -196,10 +198,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
 
       <div class="subpage-body max-w-lg mx-auto px-4 py-6">
         <!-- Loading -->
-        <div v-if="loading" class="flex flex-col items-center justify-center py-16 text-[var(--c-text-secondary)]">
-          <div class="w-8 h-8 border-2 border-[var(--c-primary)] border-t-transparent rounded-full animate-spin mb-3"></div>
-          <span class="text-sm">{{ t('common.loading') }}</span>
-        </div>
+        <AppLoading v-if="loading" :label="t('common.loading')" class="py-16" />
 
         <!-- Results ledger -->
         <template v-else>
@@ -211,7 +210,7 @@ const isEmpty = computed(() => !loading.value && spareList.value.length === 0)
               class="px-4 py-3.5"
             >
               <div class="flex items-baseline justify-between gap-3 mb-1.5">
-                <h4 class="editorial-serif text-base font-semibold text-[var(--c-text-1)]">{{ item.name || item.number || '—' }}</h4>
+                <h4 class="text-base font-semibold text-[var(--c-text-1)]">{{ item.name || item.number || '—' }}</h4>
                 <span class="font-mono tabular-num text-xs text-[var(--c-primary)]">{{ item.number || '—' }}</span>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 text-xs text-[var(--c-text-2)]">

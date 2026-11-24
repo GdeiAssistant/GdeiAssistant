@@ -120,7 +120,7 @@ onMounted(async () => {
     <CommunityHeader :title="t('feature.dating.name')" moduleColor="var(--c-dating)" backTo="/dating/home" />
 
     <div v-if="item" class="community-dating-shell w-[90%] mx-auto mt-4 p-6 rounded-xl shadow-sm overflow-hidden animate-[slide-up_0.4s_ease_both]">
-      <div class="community-dating-shell__title text-[22px] font-bold mb-4">{{ item.name }}</div>
+      <div class="community-dating-shell__title text-title font-bold mb-4">{{ item.name }}</div>
       <button
         v-if="item.authorId"
         type="button"

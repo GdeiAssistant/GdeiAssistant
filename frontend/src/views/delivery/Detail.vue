@@ -1,4 +1,5 @@
 <script setup>
+import AppLoading from '@/components/ui/AppLoading.vue'
 import { computed, ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
@@ -142,10 +143,7 @@ onMounted(async () => {
 
     <div v-if="loading" class="community-delivery-detail-state-shell p-4">
       <div class="community-delivery-detail-state-card">
-        <div class="ui-empty-state flex flex-col items-center justify-center py-16 px-5 text-[var(--c-text-3)]">
-          <span class="w-6 h-6 border-2 border-[var(--c-border)] border-t-[var(--c-delivery)] rounded-full animate-spin"></span>
-          <p class="mt-3 text-sm">{{ t('communityCommon.loading') }}</p>
-        </div>
+        <AppLoading :label="t('communityCommon.loading')" class="py-16" />
       </div>
     </div>
 
@@ -156,7 +154,7 @@ onMounted(async () => {
           <div class="text-xl font-semibold text-[var(--c-text-1)]">{{ getTypeText(item.type) }}</div>
           <div class="community-delivery-reward-block flex items-baseline">
             <span class="text-xl font-bold mr-0.5">&#xffe5;</span>
-            <span class="text-[28px] font-bold">{{ item.reward.toFixed(2) }}</span>
+            <span class="text-display font-bold">{{ item.reward.toFixed(2) }}</span>
           </div>
         </div>
 

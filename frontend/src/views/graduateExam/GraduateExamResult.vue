@@ -6,6 +6,7 @@ import { queryKaoyanScore } from '@/api/graduateExam'
 import { useToast } from '@/composables/useToast'
 import AppEmpty from '@/components/ui/AppEmpty.vue'
 import { GraduationCap, ChevronLeft } from 'lucide-vue-next'
+import AppButton from '@/components/ui/AppButton.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -114,13 +115,13 @@ onMounted(() => {
         </div>
 
         <!-- Re-query button -->
-        <button
+        <AppButton
           type="button"
-          class="ui-btn-primary mt-6 w-full py-3 rounded-xl bg-[var(--c-primary)] text-[var(--c-on-primary)] text-body font-medium active:opacity-80 transition-opacity"
+          class="ui-btn-primary mt-6 w-full py-3 active:opacity-80 transition-opacity"
           @click="reQuery"
         >
           {{ t('graduateExam.reQuery') }}
-        </button>
+        </AppButton>
       </template>
 
       <!-- No data -->
